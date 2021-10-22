@@ -1,15 +1,12 @@
+import Address from "./address";
+
 interface Family {
     name: String,
     password: String,
     salt: Number,
     email: String,
     phoneNumber: String,
-    address: {
-        street: String,
-        civicNumber: String,
-        city: String
-        // coordinates
-    },
+    address: Address,
     type: String
 }
 

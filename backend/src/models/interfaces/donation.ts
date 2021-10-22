@@ -1,3 +1,5 @@
+import Address from "./address";
+
 interface Donation {
     user: String, // non ne sono sicuro
     chat: [
@@ -14,12 +16,7 @@ interface Donation {
     ],
     expirationDate: Date,
     creationDate: Date,
-    address: {
-        street: String,
-        civicNumber: String,
-        city: String
-        // coordinates
-    },
+    address: Address,
     additionalInformations: String,
     pickUpPeriods: [
         {

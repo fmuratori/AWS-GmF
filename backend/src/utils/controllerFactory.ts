@@ -24,5 +24,21 @@ class ControllerFactory<T> {
                 data: { list }
             })
         })
+
+    find = (model: Model<T>) =>
+        catchAsync(async (req: Request, res: Response) => {
+            const list = await model.find(req.body.filter, req.body.projection)
+
+            if(!list) {
+                console.log("no element found")
+                return
+            }
+
+            res.status(200).json({
+                status: "success",
+                results: list.length,
+                data: {list}
+            })
+        })
 }
 export default ControllerFactory
