@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import Food from "./interfaces/food";
-import { ObjectId } from 'mongodb';
 
-interface FoodModel extends Document, Food{ }
+interface FoodDocument extends Document, Food{ }
 
 const foodSchema = new mongoose.Schema({
     expirationDate: Date,
@@ -13,4 +12,5 @@ const foodSchema = new mongoose.Schema({
     labels: [String]
 })
 
-export default mongoose.model<Food>('Food', foodSchema)
+export {FoodDocument}
+export default mongoose.model<FoodDocument>('Food', foodSchema)

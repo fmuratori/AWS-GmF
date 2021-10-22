@@ -1,4 +1,9 @@
-interface Donation {
+import mongoose from "mongoose";
+import Donation from "./interfaces/donation";
+
+interface DonationDocument extends Document, Donation{ }
+
+const donationSchema = new mongoose.Schema({
     user: String, // non ne sono sicuro
     chat: [
         {
@@ -31,6 +36,7 @@ interface Donation {
     pickUpDate: Date,
     status: String,
     volunteer: String // non ne sono sicuro
-}
+})
 
-export default Donation
+export {DonationDocument}
+export default mongoose.model<DonationDocument>('Donation', donationSchema)
