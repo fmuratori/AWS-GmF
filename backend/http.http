@@ -12,7 +12,7 @@ content-type: application/json
     "name": "carne"
 }
 
-### REGISTER ENDPOINT
+### REGISTER
 POST http://localhost:3000/api/user/register
 accept: application/json 
 content-type: application/json
@@ -36,12 +36,38 @@ content-type: application/json
     }
 }
 
-### ENDPOINT DI LOGIN
+### LOGIN
 POST http://localhost:3000/api/user/login
-accept: application/json 
+accept: application/json
 content-type: application/json
 
 {
     "username": "admin",
     "password": "admin"
+}
+
+### UPDATE USER
+POST http://localhost:3000/api/user/update
+accept: application/json
+content-type: application/json
+
+{
+    "_id": "6172e6a4df4d0325895749e2",
+    "name": "pippo-updated",
+    "surname": "pluto",
+    "username": "pippo3",
+    "password": "admin",
+    "email": "abc@fgh.it",
+    "phoneNumber": "12345",
+    "type": "test",
+    "address": {
+        "street": "vai nuova",
+        "civicNumber": "123/a",
+        "city": "faenza",
+        "coordinates": {
+            "x": 123,
+            "y": 456
+        },
+        "fake": "not to add"
+    }
 }

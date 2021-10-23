@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { Model } from "mongoose"
+import { FilterQuery, Model } from "mongoose"
 import catchAsync from "./catchAsync"
 
 class ControllerFactory<T> {
@@ -29,7 +29,7 @@ class ControllerFactory<T> {
         catchAsync(async (req: Request, res: Response) => {
             const list = await model.find(req.body.filter, req.body.projection)
 
-            if(!list) {
+            if (!list) {
                 console.log("no element found")
                 return
             }
@@ -37,8 +37,31 @@ class ControllerFactory<T> {
             res.status(200).json({
                 status: "success",
                 results: list.length,
-                data: {list}
+                data: { list }
             })
         })
+
+    findOne = (model: Model<T>, filter: FilterQuery<T>, projection: any | null) =>
+        catchAsync(async (req: Request, res: Response) => {
+            console.log(filter)
+            const elem = await model.findOne(filter, projection)
+
+            console.log(elem)
+            if (!elem) {
+                console.log("no element found")
+                return
+            }
+
+            res.status(200).json({
+                status: "success",
+                data: { elem }
+            })
+        })
+
+    editOne = (model: Model<T>, filter: FilterQuery<T>, projection: any | null) =>
+        catchAsync(async (req: Request, res: Response) => {
+            const elem = await model.findOne(filter, projection)
+        })
+
 }
 export default ControllerFactory
