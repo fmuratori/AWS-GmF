@@ -5,8 +5,8 @@ const factory = new ControllerFactory<FamilyDocument>()
 
 class FamilyController {
 
-	addFamily = factory.add(FamilyModel)
-	listFamily = factory.list_all(FamilyModel)
+	add = factory.add(FamilyModel)
+	listAll = factory.listAll(FamilyModel)
 
 }
 

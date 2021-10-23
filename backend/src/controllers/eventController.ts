@@ -5,8 +5,8 @@ const factory = new ControllerFactory<EventDocument>()
 
 class EventController {
 
-	addFood = factory.add(EventModel)
-	listFood = factory.list_all(EventModel)
+	add = factory.add(EventModel)
+	listAll = factory.listAll(EventModel)
 
 }
 

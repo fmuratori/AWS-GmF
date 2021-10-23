@@ -14,7 +14,7 @@ class ControllerFactory<T> {
             })
         })
 
-    list_all = (model: Model<T>) =>
+    listAll = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
             const list = await model.find()
 

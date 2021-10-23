@@ -7,8 +7,8 @@ const factory = new ControllerFactory<FoodDocument>()
 
 class FoodController {
 
-	addFood = factory.add(FoodModel)
-	listFood = factory.list_all(FoodModel)
+	add = factory.add(FoodModel)
+	listAll = factory.listAll(FoodModel)
 
 	listOrderedByNumber = catchAsync(async (req: Request, res: Response) => {
 		var list = await FoodModel.find().sort(

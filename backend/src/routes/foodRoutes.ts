@@ -4,8 +4,8 @@ import FoodController from '../controllers/foodController'
 const router: Router = express.Router()
 const foodController = new FoodController()
 
-router.get('/list-all', foodController.listFood)
-router.post('/add', foodController.addFood)
+router.get('/list-all', foodController.listAll)
+router.post('/add', foodController.add)
 
 router.get('/list-all-ordered', foodController.listOrderedByNumber)
 router.post('/add-or-update', foodController.addOrUpdate)

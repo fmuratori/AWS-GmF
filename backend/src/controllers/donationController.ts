@@ -5,8 +5,8 @@ const factory = new ControllerFactory<DonationDocument>()
 
 class DonationController {
 
-	addDonation = factory.add(DonationModel)
-	listDonation = factory.list_all(DonationModel)
+	add = factory.add(DonationModel)
+	listAll = factory.listAll(DonationModel)
 
 }
 
