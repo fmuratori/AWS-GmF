@@ -8,7 +8,7 @@ const factory = new ControllerFactory<FoodDocument>()
 class FoodController {
 
 	add = factory.add(FoodModel)
-	listAll = factory.listAll(FoodModel)
+	listAll = factory.findMany(FoodModel)
 
 	addOrUpdate = catchAsync(async (req: Request, res: Response) => {
 		var elem = await FoodModel.findOne({

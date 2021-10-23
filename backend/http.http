@@ -93,3 +93,50 @@ content-type: application/json
         "fake": "not to add"
     }
 }
+
+### EVENT: add
+POST http://localhost:3000/api/event/add
+accept: application/json 
+content-type: application/json
+
+{
+    "name": "evento 2",
+    "address": {
+        "street": "via nuova",
+        "civicNumber": 13,
+        "city": "faenza",
+        "coordinates": {
+            "x": 1.121282,
+            "y": 2.385032
+        }
+    },
+    "date": "2021-10-29",
+    "ownerVolunteer_id": "123"
+}
+
+### EVENT: list all
+GET http://localhost:3000/api/event/list-all
+accept: application/json 
+content-type: application/json
+
+### EVENT: find many
+GET http://localhost:3000/api/event/list-all
+accept: application/json 
+content-type: application/json
+
+{
+    "filter": {
+        "name": "evento abc"
+    }
+}
+
+### EVENT: list all ordered
+GET http://localhost:3000/api/event/list-all
+accept: application/json 
+content-type: application/json
+
+{
+    "sortBy": {
+        "date": 1
+    }
+}

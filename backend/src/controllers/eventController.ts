@@ -6,7 +6,7 @@ const factory = new ControllerFactory<EventDocument>()
 class EventController {
 
 	add = factory.add(EventModel)
-	listAll = factory.listAll(EventModel)
+	listAll = factory.findMany(EventModel)
 
 }
 

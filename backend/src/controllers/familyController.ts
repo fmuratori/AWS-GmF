@@ -6,7 +6,7 @@ const factory = new ControllerFactory<FamilyDocument>()
 class FamilyController {
 
 	add = factory.add(FamilyModel)
-	listAll = factory.listAll(FamilyModel)
+	listAll = factory.findMany(FamilyModel)
 
 }
 

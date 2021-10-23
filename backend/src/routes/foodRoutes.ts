@@ -7,8 +7,6 @@ const foodController = new FoodController()
 router.get('/list-all', foodController.listAll)
 router.post('/add', foodController.add)
 
-router.get('/list-all-ordered', foodController.listOrderedByNumber)
 router.post('/add-or-update', foodController.addOrUpdate)
-
 
 export default router

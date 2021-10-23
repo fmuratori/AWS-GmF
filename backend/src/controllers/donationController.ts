@@ -6,7 +6,7 @@ const factory = new ControllerFactory<DonationDocument>()
 class DonationController {
 
 	add = factory.add(DonationModel)
-	listAll = factory.listAll(DonationModel)
+	listAll = factory.findMany(DonationModel)
 
 }
 
