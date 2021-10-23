@@ -43,10 +43,8 @@ class ControllerFactory<T> {
 
     findOne = (model: Model<T>, filter: FilterQuery<T>, projection: any | null) =>
         catchAsync(async (req: Request, res: Response) => {
-            console.log(filter)
             const elem = await model.findOne(filter, projection)
 
-            console.log(elem)
             if (!elem) {
                 console.log("no element found")
                 return

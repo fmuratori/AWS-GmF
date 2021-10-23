@@ -36,7 +36,6 @@ class UserController {
 			status: "success",
 			data: { user }
 		})
-
 	})
 
 	update = catchAsync(async (req: Request, res: Response) => {
@@ -47,17 +46,17 @@ class UserController {
 			return
 		}
 
-		if(req.body.name) user.name = req.body.name
-		if(req.body.surname) user.surname = req.body.surname
-		if(req.body.username) user.username = req.body.username
-		if(req.body.password) user.password = req.body.password
-		if(req.body.email) user.email = req.body.email
-		if(req.body.phoneNumber) user.phoneNumber = req.body.phoneNumber
-		if(req.body.type) user.type = req.body.type
-		if(req.body.address) user.address = req.body.address
+		if (req.body.name) user.name = req.body.name
+		if (req.body.surname) user.surname = req.body.surname
+		if (req.body.username) user.username = req.body.username
+		if (req.body.password) user.password = req.body.password
+		if (req.body.email) user.email = req.body.email
+		if (req.body.phoneNumber) user.phoneNumber = req.body.phoneNumber
+		if (req.body.type) user.type = req.body.type
+		if (req.body.address) user.address = req.body.address
 
 		const updatedUser = await UserModel.findByIdAndUpdate(user._id, user)
-		
+
 		res.status(200).json({
 			status: "success",
 			data: { updatedUser }
