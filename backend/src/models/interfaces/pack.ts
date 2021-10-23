@@ -1,8 +1,8 @@
 interface Pack {
-    foods: [String], // non ne sono sicuro
-    deliveryVolunteer: String, // non ne sono sicuro
+    food_ids: [String],
+    deliveryVolunteer_id: String,
     status: String,
-    family: String, // non ne sono sicuro
+    family_id: String, 
     qrCodeImage: String, // la stringa in base64 potrebbe essere troppo lunga
     deliveryDate: Date,
     deliveryTime: {

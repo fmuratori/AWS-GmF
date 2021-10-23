@@ -1,13 +1,9 @@
 import Address from "./utilInterfaces/address";
 
 interface Family {
-    name: String,
-    password: String,
-    salt: Number,
-    email: String,
     phoneNumber: String,
-    address: Address,
-    type: String
+    componentsNumber: Number,
+    address: Address
 }
 
 export default Family

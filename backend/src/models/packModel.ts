@@ -1,25 +1,42 @@
 import mongoose from "mongoose";
-import FoodModel from "./foodModel";
 import Pack from "./interfaces/pack";
-import UserModel from "./userModel";
 
-interface PackDocument extends Document, Pack{ }
+interface PackDocument extends Document, Pack { }
 
 const packSchema = new mongoose.Schema({
-    foods: [{
-        type: FoodModel,
-        required: [true, "missing field foods"]
-    }], // non ne sono sicuro
-    deliveryVolunteer: UserModel, // non ne sono sicuro
-    status: String,
-    family: String, // non ne sono sicuro
-    qrCodeImage: String, // la stringa in base64 potrebbe essere troppo lunga
-    deliveryDate: Date,
+    food_ids: {
+        type: [String],
+        required: [true, "missing required field food_ids"]
+    },
+    deliveryVolunteer_id: {
+        type: String,
+        required: [true, "missing required field deliveryVolunteer_id"]
+    },
+    status: {
+        type: String,
+        default: () => "pending"
+    },
+    family_id: {
+        type: String,
+        required: [true, "missing required field family_id"]
+    },
+    qrCodeImage: {
+        type: String,
+        required: false
+    }, // la stringa in base64 potrebbe essere troppo lunga
+    deliveryDate: {
+        type: Date,
+        required: false
+    },
     deliveryTime: {
-        startTime: String,
-        endTime: String
+        type: {
+            startTime: String,
+            endTime: String
+        },
+        required: false
     }
+
 })
 
-export {PackDocument}
+export { PackDocument }
 export default mongoose.model<PackDocument>('Pack', packSchema)
