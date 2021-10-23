@@ -1,4 +1,4 @@
-import Address from "./address";
+import Address from "./utilInterfaces/address";
 
 interface Family {
     name: String,

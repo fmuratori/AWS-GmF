@@ -31,7 +31,7 @@ content-type: application/json
 {
     "name": "pippo",
     "surname": "pluto",
-    "username": "pippo3",
+    "username": "nuovoUtente",
     "password": "admin",
     "email": "abc@fgh.it",
     "phoneNumber": "12345",

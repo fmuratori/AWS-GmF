@@ -1,42 +1,70 @@
 import mongoose from "mongoose";
 import Donation from "./interfaces/donation";
 
-interface DonationDocument extends Document, Donation{ }
+interface DonationDocument extends Document, Donation { }
 
 const donationSchema = new mongoose.Schema({
-    user: String, // non ne sono sicuro
-    chat: [
-        {
-            user: String,
+    user_id: {
+        type: String,
+        required: [true, "missing required field user_id"]
+    },
+    chat: {
+        type: [{
+            user_id: String,
             text: String,
             visualized: Boolean
-        }
-    ],
-    foods: [
-        {
-            name: String
-        }
-    ],
-    expirationDate: Date,
-    creationDate: Date,
-    address: {
-        street: String,
-        civicNumber: String,
-        city: String
-        // coordinates
+        }],
+        default: () => []
     },
-    additionalInformations: String,
-    pickUpPeriods: [
-        {
+    food_ids: {
+        type: [String],
+        required: [true, "missing required field foods"]
+    },
+    expirationDate: {
+        type: Date,
+        required: [true, "missing required field expirationDate"]
+    },
+    creationDate: {
+        type: Date,
+        default: () => new Date()
+    },
+    address: {
+        type: {
+            street: String,
+            civicNumber: String,
+            city: String,
+            coordinates: {
+                x: Number,
+                y: Number
+            }
+        },
+        required: [true, "missing required field address"]
+    },
+    additionalInformations: {
+        type: String,
+        required: false
+    },
+    pickUpPeriods: {
+        type: [{
             weekDay: String,
             startTime: String,
             endTime: String
-        }
-    ],
-    pickUpDate: Date,
-    status: String,
-    volunteer: String // non ne sono sicuro
+        }],
+        required: [true, "missing required field pickUpPeriods"]
+    },
+    pickUpDate: {
+        type: Date,
+        required: false
+    },
+    status: {
+        type: String,
+        default: () => "pending"
+    },
+    volunteer_id: {
+        type: String,
+        required: false
+    }
 })
 
-export {DonationDocument}
+export { DonationDocument }
 export default mongoose.model<DonationDocument>('Donation', donationSchema)

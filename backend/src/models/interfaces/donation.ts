@@ -1,19 +1,15 @@
-import Address from "./address";
+import Address from "./utilInterfaces/address";
+
+interface ChatNode {
+    user: String,
+    text: String,
+    visualized: Boolean
+}
 
 interface Donation {
-    user: String, // non ne sono sicuro
-    chat: [
-        {
-            user: String,
-            text: String,
-            visualized: Boolean
-        }
-    ],
-    foods: [
-        {
-            name: String
-        }
-    ],
+    user_id: String,
+    chat: [ChatNode],
+    food_ids: [String],
     expirationDate: Date,
     creationDate: Date,
     address: Address,

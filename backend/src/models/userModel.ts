@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
                 y: Number
             }
         },
-        required: [false]
+        required: false
     }
 })
 
