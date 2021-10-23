@@ -14,9 +14,15 @@ class ControllerFactory<T> {
             })
         })
 
+        /**
+         * @param model mongoose model
+         * @returns all document in the collection
+         * optional req.body.sortBy: {sortingParam:X}
+         * X=1 -> ascending order, x=-1 -> descending order
+         */
     listAll = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
-            const list = await model.find()
+            const list = await model.find().sort(req.body.sortBy)
 
             res.status(200).json({
                 status: "success",

@@ -10,17 +10,6 @@ class FoodController {
 	add = factory.add(FoodModel)
 	listAll = factory.listAll(FoodModel)
 
-	listOrderedByNumber = catchAsync(async (req: Request, res: Response) => {
-		var list = await FoodModel.find().sort(
-			{ number: -1 }
-		)
-
-		res.status(200).json({
-			status: "success",
-			data: { list }
-		})
-	})
-
 	addOrUpdate = catchAsync(async (req: Request, res: Response) => {
 		var elem = await FoodModel.findOne({
 			name: req.body.name,

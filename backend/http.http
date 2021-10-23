@@ -3,6 +3,17 @@ GET http://localhost:3000/api/food/list-all
 accept: application/json 
 content-type: application/json
 
+###
+GET http://localhost:3000/api/food/list-all
+accept: application/json 
+content-type: application/json
+
+{
+    "sortBy": {
+        "number": 1
+    }
+}
+
 ### ADD FOOD
 ### if exists an elem with same name and expiration date, will update it
 #POST http://localhost:3000/api/food/add
@@ -12,8 +23,8 @@ content-type: application/json
 
 {
     //required fields
-    "name": "pesce",
-    "number": 5,
+    "name": "acqua",
+    "number": 9,
     "expirationDate": "2021-10-23" 
 
     //optional fields
