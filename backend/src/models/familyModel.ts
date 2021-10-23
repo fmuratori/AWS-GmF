@@ -4,18 +4,26 @@ import Family from "./interfaces/family";
 interface FamilyDocument extends Document, Family{ }
 
 const familySchema = new mongoose.Schema({
-    name: String,
-    password: String,
-    salt: Number,
-    email: String,
-    phoneNumber: String,
-    address: {
-        street: String,
-        civicNumber: String,
-        city: String
-        // coordinates
+    phoneNumber: {
+        type: String,
+        required: [true, "missing required field phoneNumber"]
     },
-    type: String
+    componentsNumber: {
+        type: Number,
+        required: [true, "missing required field componentsNumber"]
+    },
+    address: {
+        type: {
+            street: String,
+            civicNumber: String,
+            city: String,
+            coordinates: {
+                x: Number,
+                y: Number
+            }
+        },
+        required: [true, "missing required field address"]
+    }
 })
 
 export {FamilyDocument}

@@ -6,31 +6,31 @@ interface UserDocument extends Document, User{ }
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "missing field name"]
+        required: [true, "missing required field name"]
     },
     surname: {
         type: String,
-        required: [true, "missing field surname"]
+        required: [true, "missing required field surname"]
     },
     username: {
         type: String,
-        required: [true, "missing field username"]
+        required: [true, "missing required field username"]
     },
     password: {
         type: String,
-        required: [true, "missing field password"]
+        required: [true, "missing required field password"]
     },
     email: {
         type: String,
-        required: [true, "missing field email"]
+        required: [true, "missing required field email"]
     },
     phoneNumber: {
         type: String,
-        required: [true, "missing field phone number"]
+        required: [true, "missing required field phoneNumber"]
     },
     type: {        
         type: String,
-        required: [true, "missing field type"]
+        required: [true, "missing required field type"]
     },
     address: {
         type: {
