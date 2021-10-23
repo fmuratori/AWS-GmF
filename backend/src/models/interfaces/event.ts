@@ -6,7 +6,7 @@ interface Event {
     address: Address,
     image: String, // la stringa in base64 potrebbe essere troppo lunga
     date: Date,
-    representativeVolunteer: String, // non ne sono sicuro 
+    ownerVolunteer_id: String
 }
 
 export default Event

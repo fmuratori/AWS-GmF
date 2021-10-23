@@ -4,17 +4,38 @@ import Event from "./interfaces/event";
 interface EventDocument extends Document, Event{ }
 
 const eventSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    address: {
-        street: String,
-        civicNumber: String,
-        city: String
-        // coordinates
+    name: {
+        type: String,
+        required: [true, "missing required field name"]
     },
-    image: String, // la stringa in base64 potrebbe essere troppo lunga
-    date: Date,
-    representativeVolunteer: String, // non ne sono sicuro 
+    description: {
+        type: String,
+        required: false
+    },
+    address: {
+        type: {
+            street: String,
+            civicNumber: String,
+            city: String,
+            coordinates: {
+                x: Number,
+                y: Number
+            }
+        },
+        required: [true, "missing required field address"]
+    },
+    image: {
+        type: String,
+        required: false
+    }, // la stringa in base64 potrebbe essere troppo lunga
+    date: {
+        type: Date,
+        required: [true, "missing required field date"]
+    },
+    ownerVolunteer_id: {
+        type: String,
+        required: [true, "missing required field ownerVolunteer_id"]
+    }
 })
 
 export {EventDocument}
