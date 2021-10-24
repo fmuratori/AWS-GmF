@@ -56,10 +56,4 @@ export default class ControllerFactory<T> {
                 data: { elem }
             })
         })
-
-    editOne = (model: Model<T>, filter: FilterQuery<T>, projection: any | null) =>
-        catchAsync(async (req: Request, res: Response) => {
-            const elem = await model.findById(req.body._id)
-        })
-
 }
