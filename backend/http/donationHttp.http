@@ -1,0 +1,91 @@
+### EVENT: add
+POST http://localhost:3000/api/event/add
+accept: application/json 
+content-type: application/json
+
+{
+    "name": "evento 2",
+    "address": {
+        "street": "via nuova",
+        "civicNumber": 13,
+        "city": "faenza",
+        "coordinates": {
+            "x": 1.121282,
+            "y": 2.385032
+        }
+    },
+    "date": "2021-10-29",
+    "ownerVolunteer_id": "6172e6a4df4d0325895749e2"
+}
+
+### EVENT: list all
+GET http://localhost:3000/api/event/list-all
+accept: application/json 
+content-type: application/json
+
+### EVENT: find many
+GET http://localhost:3000/api/event/list-all
+accept: application/json 
+content-type: application/json
+
+{
+    "filter": {
+        "name": "evento abc"
+    }
+}
+
+### EVENT: list all ordered
+GET http://localhost:3000/api/event/list-all
+accept: application/json 
+content-type: application/json
+
+{
+    "sortBy": {
+        "date": 1
+    },
+    "pageSize": 2,
+    "page": 2
+}
+
+### DONATION list all
+GET http://localhost:3000/api/donation/list-all
+accept: application/json 
+content-type: application/json
+
+### DONATION add
+POST http://localhost:3000/api/donation/add
+accept: application/json 
+content-type: application/json
+
+{
+    "user_id": "6172e6a4df4d0325895749e2",
+    "chat":[
+        {
+            "user_id": "6172e6a4df4d0325895749e2",
+            "text": "ciao",
+            "visualized": true
+            }
+    ],
+    "food_ids": [
+        "617477acd81bbdee93050b51",
+        "617477acd81bbdee93050b51"
+    ],
+    "expirationDate": "2023-10-23",
+    "address": {
+        "street": "via nuova",
+        "civicNumber": 13,
+        "city": "faenza",
+        "coordinates": {
+            "x": 1.121282,
+            "y": 2.385032
+        }
+    },
+    "pickUpPeriod": [
+        {
+            "weekDay": "Monday",
+            "startTime": "8:00",
+            "endTime": "12:00"
+        }
+    ]
+
+}
