@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "./interfaces/user";
 
-interface UserDocument extends Document, User{ }
+export interface UserDocument extends Document, User{ }
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -51,5 +51,4 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-export {UserDocument}
 export default mongoose.model<UserDocument>('User', userSchema)

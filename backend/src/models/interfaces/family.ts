@@ -1,9 +1,7 @@
 import Address from "./utilInterfaces/address";
 
-interface Family {
+export default interface Family {
     phoneNumber: String,
     componentsNumber: Number,
     address: Address
 }
-
-export default Family

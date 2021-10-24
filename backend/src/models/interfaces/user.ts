@@ -1,6 +1,6 @@
 import Address from "./utilInterfaces/address";
 
-interface User {
+export default interface User {
     name: String,
     surname: String,
     username: String,
@@ -10,5 +10,3 @@ interface User {
     type: String,
     address: Address
 }
-
-export default User

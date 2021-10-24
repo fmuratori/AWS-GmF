@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Event from "./interfaces/event";
 
-interface EventDocument extends Document, Event{ }
+export interface EventDocument extends Document, Event{ }
 
 const eventSchema = new mongoose.Schema({
     name: {
@@ -45,5 +45,4 @@ const eventSchema = new mongoose.Schema({
     }
 })
 
-export {EventDocument}
 export default mongoose.model<EventDocument>('Event', eventSchema)

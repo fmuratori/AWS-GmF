@@ -1,6 +1,6 @@
 import Address from "./utilInterfaces/address";
 
-interface Event {
+export default interface Event {
     name: String,
     description: String,
     address: Address,
@@ -8,5 +8,3 @@ interface Event {
     date: Date,
     ownerVolunteer_id: String
 }
-
-export default Event

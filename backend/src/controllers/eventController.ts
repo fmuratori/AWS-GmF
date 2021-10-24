@@ -3,11 +3,9 @@ import ControllerFactory from '../utils/controllerFactory';
 
 const factory = new ControllerFactory<EventDocument>()
 
-class EventController {
+export default class EventController {
 
 	add = factory.add(EventModel)
 	listAll = factory.findMany(EventModel)
 
 }
-
-export default EventController

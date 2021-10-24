@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import { FilterQuery, Model } from "mongoose"
 import catchAsync from "./catchAsync"
 
-class ControllerFactory<T> {
+export default class ControllerFactory<T> {
 
     /**
      * add a new document in the collection
@@ -61,4 +61,3 @@ class ControllerFactory<T> {
         })
 
 }
-export default ControllerFactory

@@ -25,7 +25,7 @@ content-type: application/json
     //required fields
     "name": "acqua",
     "number": 9,
-    "expirationDate": "2021-10-23" 
+    "expirationDate": "2021-01-23" 
 
     //optional fields
     //"weight": 10,

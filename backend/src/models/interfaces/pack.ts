@@ -1,4 +1,4 @@
-interface Pack {
+export default interface Pack {
     food_ids: [String],
     deliveryVolunteer_id: String,
     status: String,
@@ -7,5 +7,3 @@ interface Pack {
     deliveryDate: Date,
     deliveryPeriod: String
 }
-
-export default Pack

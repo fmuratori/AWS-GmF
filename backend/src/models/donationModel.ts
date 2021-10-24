@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Donation from "./interfaces/donation";
 
-interface DonationDocument extends Document, Donation { }
+export interface DonationDocument extends Document, Donation { }
 
 const donationSchema = new mongoose.Schema({
     user_id: {
@@ -71,5 +71,4 @@ const donationSchema = new mongoose.Schema({
     }
 })
 
-export { DonationDocument }
 export default mongoose.model<DonationDocument>('Donation', donationSchema)

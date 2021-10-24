@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Pack from "./interfaces/pack";
 
-interface PackDocument extends Document, Pack { }
+export interface PackDocument extends Document, Pack { }
 
 const packSchema = new mongoose.Schema({
     food_ids: {
@@ -43,5 +43,4 @@ const packSchema = new mongoose.Schema({
     }
 })
 
-export { PackDocument }
 export default mongoose.model<PackDocument>('Pack', packSchema)

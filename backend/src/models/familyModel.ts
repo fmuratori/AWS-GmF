@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Family from "./interfaces/family";
 
-interface FamilyDocument extends Document, Family{ }
+export interface FamilyDocument extends Document, Family{ }
 
 const familySchema = new mongoose.Schema({
     phoneNumber: {
@@ -27,5 +27,4 @@ const familySchema = new mongoose.Schema({
     }
 })
 
-export {FamilyDocument}
 export default mongoose.model<FamilyDocument>('Family', familySchema)

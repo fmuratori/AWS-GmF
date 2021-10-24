@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import UserModel from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
 
-class UserController {
+export default class UserController {
 
 	register = catchAsync(async (req: Request, res: Response) => {
 		const user = await UserModel.findOne({ username: req.body.username })
@@ -63,5 +63,3 @@ class UserController {
 		})
 	})
 }
-
-export default UserController

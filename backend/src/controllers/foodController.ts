@@ -5,7 +5,7 @@ import ControllerFactory from '../utils/controllerFactory';
 
 const factory = new ControllerFactory<FoodDocument>()
 
-class FoodController {
+export default class FoodController {
 
 	add = factory.add(FoodModel)
 	listAll = factory.findMany(FoodModel)
@@ -42,5 +42,3 @@ class FoodController {
 	})
 
 }
-
-export default FoodController

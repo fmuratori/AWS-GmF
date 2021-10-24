@@ -6,7 +6,7 @@ interface ChatNode {
     visualized: Boolean
 }
 
-interface Donation {
+export default interface Donation {
     user_id: String,
     chat: [ChatNode],
     food_ids: [String],
@@ -23,5 +23,3 @@ interface Donation {
     status: String,
     volunteer: String // non ne sono sicuro
 }
-
-export default Donation

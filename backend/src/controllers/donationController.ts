@@ -3,11 +3,9 @@ import ControllerFactory from '../utils/controllerFactory';
 
 const factory = new ControllerFactory<DonationDocument>()
 
-class DonationController {
+export default class DonationController {
 
 	add = factory.add(DonationModel)
 	listAll = factory.findMany(DonationModel)
 
 }
-
-export default DonationController

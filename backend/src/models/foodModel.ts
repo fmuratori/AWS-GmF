@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Food from "./interfaces/food";
 
-interface FoodDocument extends Document, Food { }
+export interface FoodDocument extends Document, Food { }
 
 const foodSchema = new mongoose.Schema({
     name: {
@@ -37,5 +37,4 @@ const foodSchema = new mongoose.Schema({
     }
 })
 
-export { FoodDocument }
 export default mongoose.model<FoodDocument>('Food', foodSchema)

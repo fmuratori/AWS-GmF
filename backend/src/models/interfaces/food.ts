@@ -1,4 +1,4 @@
-interface Food {
+export default interface Food {
     name: String,
     number: Number,
     expirationDate:  Date,
@@ -6,5 +6,3 @@ interface Food {
     description: String,
     labels: [String]
 }
-
-export default Food
