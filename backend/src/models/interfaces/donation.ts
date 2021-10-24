@@ -1,5 +1,4 @@
 import Address from "./utilInterfaces/address";
-import PickUpPeriod from "./utilInterfaces/pickUpPeriod";
 
 interface ChatNode {
     user: String,
@@ -15,7 +14,11 @@ interface Donation {
     creationDate: Date,
     address: Address,
     additionalInformations: String,
-    pickUpPeriods: [PickUpPeriod],
+    pickUpPeriods: [{
+        weekDay: String,
+        startTime: String,
+        endTime: String
+    }],
     pickUpDate: Date,
     status: String,
     volunteer: String // non ne sono sicuro

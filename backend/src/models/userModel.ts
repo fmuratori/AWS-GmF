@@ -14,15 +14,19 @@ const userSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        required: [true, "missing required field username"]
+        required: [true, "missing required field username"],
+        unique: true
     },
     password: {
         type: String,
-        required: [true, "missing required field password"]
+        required: [true, "missing required field password"],
+        select: false
     },
     email: {
         type: String,
-        required: [true, "missing required field email"]
+        required: [true, "missing required field email"],
+        lowercase: true,
+        unique: true
     },
     phoneNumber: {
         type: String,
@@ -30,7 +34,8 @@ const userSchema = new mongoose.Schema({
     },
     type: {        
         type: String,
-        required: [true, "missing required field type"]
+        default: () => "user",
+        enum: ["user", "volunteer", "trusted"]
     },
     address: {
         type: {

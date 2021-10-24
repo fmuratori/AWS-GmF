@@ -1,5 +1,3 @@
-import PickUpPeriod from "./utilInterfaces/pickUpPeriod";
-
 interface Pack {
     food_ids: [String],
     deliveryVolunteer_id: String,
@@ -7,7 +5,7 @@ interface Pack {
     family_id: String, 
     qrCodeImage: String, // la stringa in base64 potrebbe essere troppo lunga
     deliveryDate: Date,
-    deliveryPeriod: PickUpPeriod
+    deliveryPeriod: String
 }
 
 export default Pack

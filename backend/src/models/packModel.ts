@@ -14,7 +14,8 @@ const packSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: () => "pending"
+        default: () => "ready",
+        enum: ["ready", "planned delivery", "delivered"]
     },
     family_id: {
         type: String,
@@ -26,16 +27,20 @@ const packSchema = new mongoose.Schema({
     }, // la stringa in base64 potrebbe essere troppo lunga
     deliveryDate: {
         type: Date,
-        required: false
-    },
-    deliveryTime: {
-        type: {
-            startTime: String,
-            endTime: String
-        },
-        required: false
-    }
+        required: false,
+        validate: {
+            validator(this: PackDocument, deliveryDate: Date): Boolean {
+                return new Date() < deliveryDate
+            },
+            message: "deliveryDate shound be a future date"
+        }
 
+    },
+    deliveryPeriod: {
+        type: String,
+        required: false,
+        enum: ["8-12", "14-18", "18-20"]
+    }
 })
 
 export { PackDocument }

@@ -11,25 +11,30 @@ const foodSchema = new mongoose.Schema({
     number: {
         type: Number,
         required: false,
-        default: () => 1
+        default: () => 1,
+        min: 0
     },
     expirationDate: {
         type: Date,
-        // required: [true, "missing field expirationDate"]
-        default: () => new Date()
+        validate: {
+            validator(this: FoodDocument, expirationDate: Date): Boolean {
+                return new Date() < expirationDate
+            },
+            message: "Cannot store expired food"
+        }
     },
     weight: {
         type: Number,
-        required: false
+        required: false,
     },
     description: {
         type: String,
         required: false
     },
-    labels: [{
-        type: String,
+    labels: {
+        type: [String],
         required: false
-    }]
+    }
 })
 
 export { FoodDocument }
