@@ -1,16 +1,25 @@
-import mongoose from "mongoose";
+import mongoose, { PopulatedDoc } from "mongoose";
+import Family from "./interfaces/family";
+import Food from "./interfaces/food";
 import Pack from "./interfaces/pack";
+import User from "./interfaces/user";
 
-export interface PackDocument extends Document, Pack { }
+export interface PackDocument extends Document, Pack {
+    Food?: PopulatedDoc<Food & Document>
+    User?: PopulatedDoc<User & Document>
+    Family?: PopulatedDoc<Family & Document>
+ }
 
 const packSchema = new mongoose.Schema({
     food_ids: {
-        type: [String],
-        required: [true, "missing required field food_ids"]
+        type: [mongoose.Types.ObjectId],
+        required: [true, "missing required field food_ids"],
+        ref: "Food"
     },
     deliveryVolunteer_id: {
-        type: String,
-        required: [true, "missing required field deliveryVolunteer_id"]
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field deliveryVolunteer_id"],
+        ref: "User"
     },
     status: {
         type: String,
@@ -18,8 +27,9 @@ const packSchema = new mongoose.Schema({
         enum: ["ready", "planned delivery", "delivered"]
     },
     family_id: {
-        type: String,
-        required: [true, "missing required field family_id"]
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field family_id"],
+        ref: "Family"
     },
     qrCodeImage: {
         type: String,

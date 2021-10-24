@@ -1,7 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { PopulatedDoc } from "mongoose";
 import Event from "./interfaces/event";
+import User from "./interfaces/user";
 
-export interface EventDocument extends Document, Event{ }
+export interface EventDocument extends Document, Event{
+    user?: PopulatedDoc<User & Document>
+ }
 
 const eventSchema = new mongoose.Schema({
     name: {
@@ -40,8 +43,9 @@ const eventSchema = new mongoose.Schema({
 
     },
     ownerVolunteer_id: {
-        type: String,
-        required: [true, "missing required field ownerVolunteer_id"]
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field ownerVolunteer_id"],
+        ref: "User"
     }
 })
 

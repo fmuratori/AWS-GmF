@@ -32,6 +32,8 @@ export default class ControllerFactory<T> {
             const list = await model
                 .find(req.body.filter, req.body.projection)
                 .sort(req.body.sortBy)
+                .skip(req.body.page * req.body.pageSize)
+                .limit(req.body.pageSize)
 
             res.status(200).json({
                 status: "success",

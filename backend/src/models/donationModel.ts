@@ -1,24 +1,32 @@
-import mongoose from "mongoose";
+import mongoose, { PopulatedDoc } from "mongoose";
 import Donation from "./interfaces/donation";
+import Food from "./interfaces/food";
+import User from "./interfaces/user";
 
-export interface DonationDocument extends Document, Donation { }
+export interface DonationDocument extends Document, Donation { 
+    Food?: PopulatedDoc<Food & Document>
+    User?: PopulatedDoc<User & Document>
+}
 
 const donationSchema = new mongoose.Schema({
     user_id: {
-        type: String,
-        required: [true, "missing required field user_id"]
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field user_id"],
+        ref: "User"
     },
     chat: {
         type: [{
-            user_id: String,
+            user_id: mongoose.Types.ObjectId,
             text: String,
             visualized: Boolean
         }],
-        default: () => []
+        default: () => [],
+        ref: "User"
     },
     food_ids: {
-        type: [String],
-        required: [true, "missing required field foods"]
+        type: [mongoose.Types.ObjectId],
+        required: [true, "missing required field foods"],
+        ref: "Food"
     },
     expirationDate: {
         type: Date,
@@ -66,8 +74,9 @@ const donationSchema = new mongoose.Schema({
         enum: ["waiting", "selected", "withdrawn"]
     },
     volunteer_id: {
-        type: String,
-        required: false
+        type: mongoose.Types.ObjectId,
+        required: false,
+        ref: "User"
     }
 })
 
