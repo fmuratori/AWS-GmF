@@ -26,6 +26,23 @@ app.use('/api/food', foodRouter)
 app.use('/api/pack', packRoutes)
 app.use('/api/user', userRoutes)
 
+import socket from 'socket.io'
+import http from 'http'
+const server: http.Server = new http.Server(app)
+const io = new socket.Server(server)
+
+io.on('connection', (socket) => {
+  console.log('user connected')
+  
+  socket.on('chat message', (msg) => {
+    io.emit('emit message', msg)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
+})
+
 app.use(function (req, res) {
   res.status(404).send({ url: req.originalUrl + ' not found' })
 });
