@@ -1,0 +1,47 @@
+###
+GET http://localhost:3000/api/food/list-all
+accept: application/json 
+content-type: application/json
+
+###
+POST http://localhost:3000/api/food/add
+accept: application/json 
+content-type: application/json
+
+{
+    "name": "carne"
+}
+
+### REGISTER ENDPOINT
+POST http://localhost:3000/api/user/register
+accept: application/json 
+content-type: application/json
+
+{
+    "name": "pippo",
+    "surname": "pluto",
+    "username": "pippo3",
+    "password": "admin",
+    "email": "abc@fgh.it",
+    "phoneNumber": "12345",
+    "type": "test",
+    "address": {
+        "street": "vai abc",
+        "civicNumber": "123/a",
+        "city": "faenza",
+        "coordinates": {
+            "x": 123,
+            "y": 456
+        }
+    }
+}
+
+### ENDPOINT DI LOGIN
+POST http://localhost:3000/api/user/login
+accept: application/json 
+content-type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
