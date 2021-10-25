@@ -1,15 +1,18 @@
 <template lang="pug">
-  div(class="home")
-      p ASD
+  div()
+      Navbar
+      
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-// import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import Navbar from "@/components/Navbar.vue";
 
 export default Vue.extend({
   name: "Home",
-  components: {},
+  components: {
+    Navbar,
+  },
 });
 </script>
 
