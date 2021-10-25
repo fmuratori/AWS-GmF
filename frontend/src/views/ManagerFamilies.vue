@@ -16,7 +16,7 @@ import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 export default Vue.extend({
-  name: "ManagerDonations",
+  name: "ManagerFamilies",
   components: {
     Navbar,
     Sidebar,

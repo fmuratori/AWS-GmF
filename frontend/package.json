@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.23.0",
+    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.1.0",

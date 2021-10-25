@@ -19,7 +19,7 @@
             label() Area Utente
 
         div 
-          b-row()
+          b-row(@click="changePage('ManagerDonations')")
             b-col(cols=1)
               b-icon(icon="circle")
             b-col(cols=8)
@@ -27,13 +27,13 @@
             b-col(cols=1)
               // "dash"
               b-icon(icon="plus") 
-          b-row()
+          b-row(@click="changePage('ManagerDonationsCreate')")
             b-col(cols=1)
             b-col(cols=8)
               label Crea donazione
             b-col(cols=1)
               b-icon(icon="chevron-right")
-          b-row()
+          b-row(@click="changePage('ManagerDonationsList')")
             b-col(cols=1)
             b-col(cols=8)
               label Tue donazioni
@@ -41,7 +41,7 @@
               b-icon(icon="chevron-right")
 
         div 
-          b-row()
+          b-row(@click="changePage('ManagerFamilies')")
             b-col(cols=1)
               b-icon(icon="circle")
             b-col(cols=8)
@@ -49,13 +49,13 @@
             b-col(cols=1)
               // "dash"
               b-icon(icon="plus") 
-          b-row()
+          b-row(@click="changePage('ManagerFamiliesSubscribe')")
             b-col(cols=1)
             b-col(cols=8)
               label Segnala famiglia
             b-col(cols=1)
               b-icon(icon="chevron-right")
-          b-row()
+          b-row(@click="changePage('ManagerFamilies')")
             b-col(cols=1)
             b-col(cols=8)
               label Tue segnalazioni
@@ -67,14 +67,16 @@
 <script lang="ts">
 import Vue from "vue";
 
-
 export default Vue.extend({
   name: "Sidebar",
   components: {},
+  methods: {
+    changePage(pageName: string) {
+      this.$router.replace({ name: pageName })
+    },
+  },
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
+<style scoped></style>
