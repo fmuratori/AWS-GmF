@@ -21,5 +21,5 @@ export default interface Donation {
     }],
     pickUpDate: Date,
     status: String,
-    volunteer: String // non ne sono sicuro
+    volunteer: String
 }

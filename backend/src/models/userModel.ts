@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import User from "./interfaces/user";
-import bcrypt from 'bcrypt'
 
 export interface UserDocument extends Document, User { }
 
