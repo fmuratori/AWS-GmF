@@ -20,11 +20,11 @@ app.use('/api/food', foodRouter)
 app.use('/api/pack', packRoutes)
 app.use('/api/user', userRoutes)
 
-app.use(function (req, res) {
+app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + ' not found' })
 });
 
-app.listen(PORT, function () {
+app.listen(PORT, () => {
   console.log('Node API server started on port ' + PORT);
 });
 
