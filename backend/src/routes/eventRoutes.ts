@@ -4,7 +4,7 @@ import EventController from '../controllers/eventController'
 const router: Router = express.Router()
 const eventController = new EventController()
 
-router.get('/list-all', eventController.listFood)
-router.post('/add', eventController.addFood)
+router.get('/list-all', eventController.listAll)
+router.post('/add', eventController.add)
 
 export default router

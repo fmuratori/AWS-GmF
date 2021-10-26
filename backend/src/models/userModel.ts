@@ -1,36 +1,41 @@
 import mongoose from "mongoose";
 import User from "./interfaces/user";
 
-interface UserDocument extends Document, User{ }
+export interface UserDocument extends Document, User{ }
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "missing field name"]
+        required: [true, "missing required field name"]
     },
     surname: {
         type: String,
-        required: [true, "missing field surname"]
+        required: [true, "missing required field surname"]
     },
     username: {
         type: String,
-        required: [true, "missing field username"]
+        required: [true, "missing required field username"],
+        unique: true
     },
     password: {
         type: String,
-        required: [true, "missing field password"]
+        required: [true, "missing required field password"],
+        select: false
     },
     email: {
         type: String,
-        required: [true, "missing field email"]
+        required: [true, "missing required field email"],
+        lowercase: true,
+        unique: true
     },
     phoneNumber: {
         type: String,
-        required: [true, "missing field phone number"]
+        required: [true, "missing required field phoneNumber"]
     },
     type: {        
         type: String,
-        required: [true, "missing field type"]
+        default: () => "user",
+        enum: ["user", "volunteer", "trusted"]
     },
     address: {
         type: {
@@ -42,9 +47,8 @@ const userSchema = new mongoose.Schema({
                 y: Number
             }
         },
-        required: [false]
+        required: false
     }
 })
 
-export {UserDocument}
 export default mongoose.model<UserDocument>('User', userSchema)

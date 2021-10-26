@@ -1,12 +1,10 @@
-import Address from "./address";
+import Address from "./utilInterfaces/address";
 
-interface Event {
+export default interface Event {
     name: String,
     description: String,
     address: Address,
     image: String, // la stringa in base64 potrebbe essere troppo lunga
     date: Date,
-    representativeVolunteer: String, // non ne sono sicuro 
+    ownerVolunteer_id: String
 }
-
-export default Event

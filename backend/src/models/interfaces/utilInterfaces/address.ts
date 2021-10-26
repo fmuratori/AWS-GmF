@@ -1,4 +1,4 @@
-interface Address {
+export default interface Address {
     street: String,
     civicNumber: String,
     city: String,
@@ -7,5 +7,3 @@ interface Address {
         y: Number
     }
 }
-
-export default Address

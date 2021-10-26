@@ -1,20 +1,56 @@
-import mongoose from "mongoose";
+import mongoose, { PopulatedDoc } from "mongoose";
+import Family from "./interfaces/family";
+import Food from "./interfaces/food";
 import Pack from "./interfaces/pack";
+import User from "./interfaces/user";
 
-interface PackDocument extends Document, Pack{ }
+export interface PackDocument extends Document, Pack {
+    Food?: PopulatedDoc<Food & Document>
+    User?: PopulatedDoc<User & Document>
+    Family?: PopulatedDoc<Family & Document>
+ }
 
 const packSchema = new mongoose.Schema({
-    foods: [String], // non ne sono sicuro
-    deliveryVolunteer: String, // non ne sono sicuro
-    status: String,
-    family: String, // non ne sono sicuro
-    qrCodeImage: String, // la stringa in base64 potrebbe essere troppo lunga
-    deliveryDate: Date,
-    deliveryTime: {
-        startTime: String,
-        endTime: String
+    food_ids: {
+        type: [mongoose.Types.ObjectId],
+        required: [true, "missing required field food_ids"],
+        ref: "Food"
+    },
+    deliveryVolunteer_id: {
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field deliveryVolunteer_id"],
+        ref: "User"
+    },
+    status: {
+        type: String,
+        default: () => "ready",
+        enum: ["ready", "planned delivery", "delivered"]
+    },
+    family_id: {
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field family_id"],
+        ref: "Family"
+    },
+    qrCodeImage: {
+        type: String,
+        required: false
+    }, // la stringa in base64 potrebbe essere troppo lunga
+    deliveryDate: {
+        type: Date,
+        required: false,
+        validate: {
+            validator(this: PackDocument, deliveryDate: Date): Boolean {
+                return new Date() < deliveryDate
+            },
+            message: "deliveryDate shound be a future date"
+        }
+
+    },
+    deliveryPeriod: {
+        type: String,
+        required: false,
+        enum: ["8-12", "14-18", "18-20"]
     }
 })
 
-export {PackDocument}
 export default mongoose.model<PackDocument>('Pack', packSchema)

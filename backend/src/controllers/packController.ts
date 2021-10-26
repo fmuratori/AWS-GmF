@@ -3,11 +3,9 @@ import ControllerFactory from '../utils/controllerFactory';
 
 const factory = new ControllerFactory<FoodDocument>()
 
-class FoodController {
+export default class FoodController {
 
-	addFood = factory.add(FoodModel)
-	listFood = factory.list_all(FoodModel)
+	add = factory.add(FoodModel)
+	listAll = factory.findMany(FoodModel)
 
 }
-
-export default FoodController

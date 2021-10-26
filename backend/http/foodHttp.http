@@ -1,0 +1,35 @@
+###
+GET http://localhost:3000/api/food/list-all
+accept: application/json 
+content-type: application/json
+
+###
+GET http://localhost:3000/api/food/list-all
+accept: application/json 
+content-type: application/json
+
+{
+    "sortBy": {
+        "number": 1
+    }
+}
+
+### ADD FOOD
+### if exists an elem with same name and expiration date, will update it
+#POST http://localhost:3000/api/food/add
+POST http://localhost:3000/api/food/add-or-update
+accept: application/json 
+content-type: application/json
+
+{
+    //required fields
+    "name": "acqua",
+    "number": 9,
+    "expirationDate": "2021-01-23" 
+
+    //optional fields
+    //"weight": 10,
+    //"description": "bla bla bla",
+    //"label": ["label1", "label2", "label3"]
+
+}

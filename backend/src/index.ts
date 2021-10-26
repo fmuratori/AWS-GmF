@@ -1,6 +1,6 @@
 import express, { Application } from 'express'
 import cors from 'cors'
-import mongoose, { ConnectOptions } from 'mongoose'
+import mongoose from 'mongoose'
 import donationRouter from './routes/donationRoutes'
 import eventRoutes from './routes/eventRoutes'
 import familyRoutes from './routes/familyRoutes'
@@ -12,11 +12,9 @@ const PORT = 3000;
 const DB = 'mongodb://localhost:27017/test'
 const app: Application = express()
 
-// global.appRoot = path.resolve(__dirname);
-
 mongoose
   .connect(DB)
-  .then(() => {'DB connection successfull'})
+  .then(() => console.log('DB connection successfull'))
 
 app.use(cors()) //Per gestire i parametri passati nel corpo della richiesta http.
 app.use(express.json());
