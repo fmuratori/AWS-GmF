@@ -49,7 +49,7 @@ const packSchema = new mongoose.Schema({
     deliveryPeriod: {
         type: String,
         required: false,
-        enum: ["8-12", "14-18", "18-20"]
+        enum: ["morning", "afternoon", "evening"]
     }
 })
 

@@ -61,12 +61,26 @@ const donationSchema = new mongoose.Schema({
     },
     pickUpPeriod: {
         type: [{
-            weekDay: String,
-            startTime: String,
-            endTime: String
+            weekDay: {
+                type: String,
+                required: true,
+                enum: [
+                    "lun",
+                    "mar",
+                    "mer",
+                    "gio",
+                    "ven",
+                    "sab",
+                    "dom"
+                ]
+            },
+            period: {
+                type: String,
+                required: true,
+                enum: ["morning", "afternoon", "evening"]
+            }
         }],
-        required: [true, "missing required field pickUpPeriod"],
-        //TODO validare startTime e endTime
+        required: [true, "missing required field pickUpPeriod"]
     },
     status: {
         type: String,
