@@ -1,23 +1,39 @@
 <template lang="pug">
-  div
-    b-navbar(toggleable="lg" type="dark" variant="info")
-      b-navbar-brand(href="#") Bring me Food
-      b-navbar-toggle(target="nav-collapse")
-      b-collapse#nav-collapse(is-nav="")
-        // Right aligned nav items
-        b-navbar-nav.ml-auto
-          b-nav-item(href="#").my-auto Home
-          b-nav-item(href="#").my-auto Eventi
-          b-nav-item(href="#").my-auto Domande
-          b-nav-item(href="#").my-auto Disconnetti
-          b-nav-item(href="#").my-auto
-            b-button.my-2.my-sm-0(type="submit") Operazioni
-          b-nav-item(href="#").my-auto  
-            b-button.my-2.my-sm-0(type="submit" variant="danger")
-              span(class="mr-2") Messaggi
-              b-badge(variant="light") 4
-          b-nav-item(href="#")
-            b-icon-person-circle(font-scale="2.5")
+  b-navbar(toggleable="lg" type="dark" id="navbar" sticky)
+    b-navbar-brand(href="#")
+      h3 Bring me Food
+
+    b-navbar-nav(class="ml-auto mr-2" v-if="$store.getters.isMediumScreenWidth")
+      b-nav-item(href="#" class="my-auto text-center" )
+        b-button(type="submit" variant="danger" class="my-2 my-sm-0" id="navbar-messages-button")
+          b-icon(icon="envelope" class="mr-1")
+          b-badge(variant="light") 4
+    b-navbar-nav(class="mr-2" v-if="$store.getters.isMediumScreenWidth")
+      b-nav-item(href="#" class="my-auto text-center")
+        b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="toggleSidebar()")
+          font-awesome-icon(icon="cogs")
+    b-navbar-nav(v-if="$store.getters.isMediumScreenWidth")
+      b-nav-item(href="#" class="my-auto text-center")
+        b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="isOpen = !isOpen")
+          font-awesome-icon(v-if="isOpen" icon="times")
+          font-awesome-icon(v-else icon="bars")
+    
+    b-collapse#nav-collapse(is-nav="" v-model="isOpen")
+      b-navbar-nav(class="ml-auto")
+        b-nav-item(href="#" class="my-auto navbar-link text-center") Home
+        b-nav-item(href="#" class="my-auto navbar-link text-center") Eventi
+        b-nav-item(href="#" class="my-auto navbar-link text-center") Domande
+        b-nav-item(href="#" class="my-auto text-center" v-if="!$store.getters.isMediumScreenWidth")
+          b-button(type="submit" variant="danger" class="my-2 my-sm-0" id="navbar-messages-button")
+            span(class="mr-1") Messaggi
+            b-badge(variant="light") 4
+        b-nav-item(href="#" class="my-auto text-center")
+          b-button(type="submit" variant="light" class="my-2 my-sm-0")
+            span(class="mr-1") Area personale
+            font-awesome-icon(icon="cogs")
+        b-nav-item(href="#" class="my-auto navbar-link text-center") 
+          span(class="mr-1") Disconnetti
+          font-awesome-icon(icon="sign-out-alt")
         
 </template>
 
@@ -26,9 +42,32 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Navbar",
-  props: {},
+  data: function() {
+    return {
+      isOpen: false,
+    }
+  },
+  methods: {
+    toggleSidebar() {
+      this.$store.dispatch("toggleSidebar");
+    },
+  },
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="sass"></style>
+<style scope lang="scss">
+
+@import "@/assets/style.scss";
+
+#navbar {
+  background-color: $color1;
+}
+
+#navbar-messages-button {
+  background-color: $color3;
+}
+
+.navbar-link > * {
+  color: $greyscaleE !important;
+}
+</style>

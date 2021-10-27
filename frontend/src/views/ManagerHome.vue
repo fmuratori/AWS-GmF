@@ -1,12 +1,5 @@
 <template lang="pug">
-  div()
-    Navbar
-    b-container(fluid)
-      b-row()
-        b-col(class="bg-light" md="auto" align-self="stretch")
-          Sidebar
-        b-col(cols="9")
-          p spiegazione donazioni
+  p home page del manager
     
 </template>
 
@@ -16,7 +9,7 @@ import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 export default Vue.extend({
-  name: "ManagerDonations",
+  name: "ManagerHome",
   components: {
     Navbar,
     Sidebar,
@@ -24,4 +17,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="sass"></style>
+<style lang="scss"></style>

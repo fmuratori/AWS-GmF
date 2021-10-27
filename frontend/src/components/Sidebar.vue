@@ -1,66 +1,58 @@
 <template lang="pug">
-  div(class="my-sidebar")
-    b-row(class="my-4 justify-content-md-center") 
-      b-col(md="auto")
-        b-icon-person-circle(font-scale="3")
-      b-col(md="auto")
-        b-row Fabio Muratori
-        b-row ADMIN
-    b-row(class="my-4 text-center")
-      b-col()
-        b-button(variant="danger")
-          span(class="mr-2") Messaggi
-          b-badge(variant="light") 4
-    b-row()
-      // TODO: rendere "area utente" un componente 
-      b-col
-        b-row(class="text-center")
-          b-col
-            label() Area Utente
+  div(id="sidebar" class="p-3" v-if="isSidebarOpen()")
+    div(id="sidebar-user") 
+      b-row(no-gutters align-h="center" class="p-4") 
+        b-col(cols="auto" class="mr-1")
+          b-icon-person-circle(font-scale="3")
+        b-col(cols="auto" class="ml-1")
+          p Fabio Muratori
+          p VOLONTARIO
 
-        div 
-          b-row(@click="changePage('ManagerDonations')")
-            b-col(cols=1)
-              b-icon(icon="circle")
-            b-col(cols=8)
-              label Dona cibo
-            b-col(cols=1)
-              // "dash"
-              b-icon(icon="plus") 
-          b-row(@click="changePage('ManagerDonationsCreate')")
-            b-col(cols=1)
-            b-col(cols=8)
-              label Crea donazione
-            b-col(cols=1)
-              b-icon(icon="chevron-right")
-          b-row(@click="changePage('ManagerDonationsList')")
-            b-col(cols=1)
-            b-col(cols=8)
-              label Tue donazioni
-            b-col(cols=1)
-              b-icon(icon="chevron-right")
+      hr.sidebar-hr.my-3
 
-        div 
-          b-row(@click="changePage('ManagerFamilies')")
-            b-col(cols=1)
-              b-icon(icon="circle")
-            b-col(cols=8)
-              label Famiglie bisognose
-            b-col(cols=1)
-              // "dash"
-              b-icon(icon="plus") 
-          b-row(@click="changePage('ManagerFamiliesSubscribe')")
-            b-col(cols=1)
-            b-col(cols=8)
-              label Segnala famiglia
-            b-col(cols=1)
-              b-icon(icon="chevron-right")
-          b-row(@click="changePage('ManagerFamilies')")
-            b-col(cols=1)
-            b-col(cols=8)
-              label Tue segnalazioni
-            b-col(cols=1)
-              b-icon(icon="chevron-right")
+    div(id="sidebar-actions") 
+      div()
+        b-row(no-gutters align-v="center" class="pb-2")
+          b-col(cols="auto" class="mr-1")
+            font-awesome-icon(icon="utensils" size="lg")
+          b-col(class="ml-1")
+            h6() Dona cibo
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsCreate')")
+          b-col()
+            label(class="py-1") Crea una donazione
+          b-col(cols="auto")
+            b-icon(icon="chevron-right")
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsList')")
+          b-col()
+            label(class="py-1") Tue donazioni
+          b-col(cols="auto")
+            b-icon(icon="chevron-right")
+
+      hr.sidebar-hr.my-3
+
+      div()
+        b-row(no-gutters align-v="center" class="pb-2")
+          b-col(cols="auto" class="mr-1")
+            font-awesome-icon(icon="users" size="lg")
+          b-col(class="ml-1")
+            h6() Famiglie bisognose
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item sidebar-item-selected" @click="changePage('ManagerFamiliesSubscribe')")
+          b-col()
+            label(class="py-1") Segnala famiglia
+          b-col(cols="auto")
+            b-icon(icon="chevron-right")
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerFamilies')")
+          b-col()
+            label(class="py-1") Stato segnalazioni
+          b-col(cols="auto")
+            b-icon(icon="chevron-right")
+
+      hr.sidebar-hr.my-3
+
+    div(id="sidebar-footer" class="text-center")
+      b-button(variant="light" size="sm") 
+        b-icon(icon="gear-fill" class="mr-1")
+        span Account
 
 </template>
 
@@ -70,13 +62,60 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Sidebar",
   components: {},
+  data: function(){
+    return {}
+  },
   methods: {
     changePage(pageName: string) {
       this.$router.replace({ name: pageName })
     },
+    isSidebarOpen() {
+      return this.$store.state.navigation.isSidebarOpen;
+    }
   },
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped lang="scss">
+@import "@/assets/style.scss";
+
+#sidebar {
+  background-color: $greyscale2;
+  color: $greyscaleE;
+  
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  position: absolute;
+  z-index: 5;
+
+  @include lg {
+    width: auto;
+    position: relative;
+    z-index: 0;
+  }
+}
+
+#sidebar-actions {
+  flex-grow: 1;
+}
+
+.sidebar-hr {
+  background-color: $greyscale5;
+}
+
+.sidebar-item {
+  border-radius: 0.25em;
+}
+
+.sidebar-item:hover {
+  background-color: $greyscale1;
+}
+
+.sidebar-item-selected {
+  background-color: $color1;
+}
+
+
+</style>
