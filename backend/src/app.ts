@@ -16,6 +16,11 @@ app.use(express.json());
 
 //passaggio di validazione del token
 app.use((req: Request, res: Response, next: NextFunction) => {
+  if((process.env.USE_JWT || "true") === "false") {
+    next()
+    return
+  }
+
   const token = req.headers["x-access-token"]
   const userId = req.headers["x-user-id"]
 

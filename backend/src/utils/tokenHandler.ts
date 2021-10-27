@@ -4,7 +4,7 @@ const createToken = (userId: String) => {
     const token = jwt.sign(
         { userId: userId },
         process.env.JWT_SECRET_KEY || "missing secret token",
-        { expiresIn: "1h" }
+        { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
     )
     return token
 }
