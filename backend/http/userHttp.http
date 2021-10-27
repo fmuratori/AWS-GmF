@@ -6,11 +6,11 @@ content-type: application/json
 {
     "name": "pippo",
     "surname": "pluto",
-    "username": "nuovoUtente",
-    "password": "admin",
-    "email": "abc@fgh.it",
+    "username": "admin4",
+    "password": "Password2021!",
+    "email": "test4@test.it",
     "phoneNumber": "12345",
-    "type": "test",
+    "type": "user",
     "address": {
         "street": "vai abc",
         "civicNumber": "123/a",
@@ -28,8 +28,8 @@ accept: application/json
 content-type: application/json
 
 {
-    "username": "admin",
-    "password": "admin"
+    "username": "admin4",
+    "password": "Password2021!"
 }
 
 ### UPDATE USER

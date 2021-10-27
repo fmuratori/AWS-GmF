@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "./interfaces/user";
 
-export interface UserDocument extends Document, User{ }
+export interface UserDocument extends Document, User { }
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
         required: [true, "missing required field username"],
         unique: true
     },
-    password: {
+    hashPassword: {
         type: String,
-        required: [true, "missing required field password"],
+        required: [true, "missing required field hashPassword"],
         select: false
     },
     email: {
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "missing required field phoneNumber"]
     },
-    type: {        
+    type: {
         type: String,
         default: () => "user",
         enum: ["user", "volunteer", "trusted"]
