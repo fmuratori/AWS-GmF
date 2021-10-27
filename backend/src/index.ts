@@ -1,12 +1,13 @@
 import mongoose from 'mongoose'
 import socket from 'socket.io'
 import http from 'http'
+import dotenv from 'dotenv'
 import app from './app'
-
-const DB = 'mongodb://localhost:27017/test'
 
 const server: http.Server = new http.Server(app)
 const io = new socket.Server(server)
+
+dotenv.config({ path:  __dirname + '/../properties.env' });
 
 io.on('connection', (socket) => {
   console.log('user connected')
@@ -21,5 +22,5 @@ io.on('connection', (socket) => {
 })
 
 mongoose
-  .connect(DB)
+  .connect(process.env.DB || "missing db path")
   .then(() => console.log('DB connection successfull'))

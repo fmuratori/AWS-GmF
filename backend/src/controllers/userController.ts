@@ -3,7 +3,7 @@ import UserModel from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
 import bcrypt from 'bcrypt'
 import validator from 'validator'
-const ROUND_NUMBER = 5
+import { createToken } from '../utils/tokenHandler';
 
 export default class UserController {
 
@@ -11,24 +11,33 @@ export default class UserController {
 		const user = await UserModel.findOne({ username: req.body.username })
 
 		if (user) {
-			console.log("user already exist")
+			res.status(401).json({
+				status: "user-exist-error",
+				message: "User already exist"
+			})
 			return
 		}
 
-		if(!validator.isStrongPassword(req.body.password)){
-			console.log("user must insert a strong password")
+		if (!validator.isStrongPassword(req.body.password)) {
+			res.status(401).json({
+				status: "weak-password-error",
+				message: "User must insert a strong password"
+			})
 			return
 		}
 
-		const hashPassword = bcrypt.hashSync(req.body.password, ROUND_NUMBER)
+		const hashPassword = bcrypt.hashSync(req.body.password, process.env.SALT_ROUND_NUMBER || 10)
 		req.body.hashPassword = hashPassword
 
 		const newUser = await UserModel.create(req.body)
 		console.log("added user")
 
+		const token = createToken(newUser._id)
+		console.log("TOKEN: " + token)
+
 		res.status(200).json({
 			status: "success",
-			data: { newUser }
+			data: { newUser, token }
 		})
 	})
 
@@ -38,18 +47,27 @@ export default class UserController {
 		}).select("+hashPassword")
 
 		if (!user) {
-			console.log("login failed")
+			res.status(401).json({
+				status: "no-user-error",
+				message: "User not found"
+			})
 			return
 		}
 
-		if(!bcrypt.compareSync(req.body.password, ""+user.hashPassword)){
-			console.log("wrong password")
+		if (!bcrypt.compareSync(req.body.password, "" + user.hashPassword)) {
+			res.status(401).json({
+				status: "wrong-credntials-error",
+				message: "Wrong credential"
+			})
 			return
 		}
+
+		const token = createToken(user._id)
+		console.log("TOKEN: " + token)
 
 		res.status(200).json({
 			status: "success",
-			data: { user }
+			data: { user, token }
 		})
 	})
 
@@ -57,7 +75,10 @@ export default class UserController {
 		var user = await UserModel.findById(req.body._id)
 
 		if (!user) {
-			console.log("user not found")
+			res.status(401).json({
+				status: "user-not-found-error",
+				message: "user not found"
+			})
 			return
 		}
 
