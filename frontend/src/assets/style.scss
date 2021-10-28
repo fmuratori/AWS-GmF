@@ -1,0 +1,84 @@
+/* Main colo palette */
+
+$color1: #4056a1;
+$color2: #c5cbe3;
+$color3: #f13c20;
+$color4: #d79922;
+$color5: #efe2ba;
+
+// #d79922
+// #efe2ba
+// #f13c20
+// #4056a1
+// #c5cbe3
+
+// #8d8741
+// #659dbd
+// #daad86
+// #bc986a
+// #fbeec1
+
+/* Grayscale constants */
+
+$greyscale0: #000000;
+$greyscale1: #111111;
+$greyscale2: #222222;
+$greyscale3: #333333;
+$greyscale4: #444444;
+$greyscale5: #555555;
+$greyscale6: #666666;
+$greyscale7: #777777;
+$greyscale8: #888888;
+$greyscale9: #999999;
+$greyscaleA: #aaaaaa;
+$greyscaleB: #bbbbbb;
+$greyscaleC: #cccccc;
+$greyscaleD: #dddddd;
+$greyscaleE: #eeeeee;
+$greyscaleF: #ffffff;
+
+/* Breackpoints */
+
+// Small tablets and large smartphones (landscape view)
+$screen-sm-min: 576px;
+// Small tablets (portrait view)
+$screen-md-min: 768px;
+// Tablets and small desktops
+$screen-lg-min: 992px;
+// Large tablets and desktops
+$screen-xl-min: 1200px;
+
+@mixin sm {
+  @media (min-width: #{$screen-sm-min}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+
+* {
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+html, body {
+  height: 100%;
+}

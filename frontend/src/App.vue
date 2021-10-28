@@ -1,32 +1,75 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<template lang="pug">
+
+  div(id="app")
+    Navbar
+    div(id="body")
+      Sidebar(id="sidebar")
+      div(id="content")
+        router-view
 </template>
 
-<style>
+<script lang="ts">
+import Vue from "vue";
+import Navbar from "@/components/Navbar.vue";
+import Sidebar from "@/components/Sidebar.vue";
+
+export default Vue.extend({
+  name: "Home",
+  components: {
+    Navbar,
+    Sidebar,
+  },
+  data: function () {
+    return {}
+  },
+  created() {
+    this.$store.dispatch("updateScreenWidth", {value: window.innerWidth});
+    window.addEventListener("resize", this.resizeEventHandler);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resizeEventHandler);
+  },
+  methods: {
+    resizeEventHandler() {
+      this.$store.dispatch("updateScreenWidth", {value: window.innerWidth});
+    }
+  },
+});
+
+</script>
+
+<style scoped lang="scss">
+@import "@/assets/style.scss";
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  height: 100%;
+  width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  
+  overflow:hidden;
 }
 
-#nav {
-  padding: 30px;
+#body {
+  // relative to #app container
+  flex-grow: 1;
+  
+  display: flex;
+  flex-direction: row;
+  
+  overflow:hidden;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+#sidebar {
+  overflow:auto;
+  
+  @include lg {
+  }
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+#content {
+  flex-grow: 1;
+  overflow:auto;
 }
 </style>
