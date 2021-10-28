@@ -14,9 +14,14 @@ function initMap() {
         map: map,
     });
 
+    //aggiunge l'autocomplete all'input
+    const input = document.getElementById('searchTextField');
+    const ac = new google.maps.places.Autocomplete(input);
+
     geocoder = new google.maps.Geocoder();
 
     map.addListener("click", (mapMouseEvent) => {
+        //move marker
         marker.setPosition(mapMouseEvent.latLng)
 
         geocoder.geocode({
@@ -34,4 +39,5 @@ function initMap() {
         });
     
     })
+
 }
