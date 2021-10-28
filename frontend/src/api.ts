@@ -7,7 +7,7 @@ interface LoginPaylod {
   password: string
 }
 
-interface RegisterPayload {
+interface RegistrationPayload {
   name: string,
   surname: string,
   username: string,
@@ -38,7 +38,7 @@ export default {
     return axios.post(`http://localhost:3000/api/user/login`, payload);
   },
 
-  async registerRequest(payload: RegisterPayload ) {
+  async registrationRequest(payload: RegistrationPayload ) {
     return axios.post(`http://localhost:3000/api/user/register`, payload);
   },
 
