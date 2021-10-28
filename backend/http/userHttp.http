@@ -6,9 +6,9 @@ content-type: application/json
 {
     "name": "pippo",
     "surname": "pluto",
-    "username": "admin4",
+    "username": "admin6",
     "password": "Password2021!",
-    "email": "test4@test.it",
+    "email": "test6@test.it",
     "phoneNumber": "12345",
     "type": "user",
     "address": {
@@ -28,7 +28,7 @@ accept: application/json
 content-type: application/json
 
 {
-    "username": "admin4",
+    "username": "admin6",
     "password": "Password2021!"
 }
 

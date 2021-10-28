@@ -47,7 +47,10 @@ export default class ControllerFactory<T> {
             const elem = await model.findOne(filter, projection)
 
             if (!elem) {
-                console.log("no element found")
+                res.status(401).json({
+                    status: "no-elem-found-error",
+                    message: "No element found"
+                })
                 return
             }
 

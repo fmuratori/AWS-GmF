@@ -26,18 +26,19 @@ export default class UserController {
 			return
 		}
 
-		const hashPassword = bcrypt.hashSync(req.body.password, process.env.SALT_ROUND_NUMBER || 10)
+		const hashPassword = bcrypt.hashSync(req.body.password, parseInt(process.env.SALT_ROUND_NUMBER || "10"))
 		req.body.hashPassword = hashPassword
 
+		//add user to collection
 		const newUser = await UserModel.create(req.body)
-		console.log("added user")
 
 		const token = createToken(newUser._id)
-		console.log("TOKEN: " + token)
 
 		res.status(200).json({
 			status: "success",
-			data: { newUser, token }
+			data: { 
+				user: await UserModel.findById(newUser._id), 
+				token: token }
 		})
 	})
 
@@ -45,6 +46,7 @@ export default class UserController {
 		const user = await UserModel.findOne({
 			username: req.body.username
 		}).select("+hashPassword")
+
 
 		if (!user) {
 			res.status(401).json({
@@ -63,11 +65,12 @@ export default class UserController {
 		}
 
 		const token = createToken(user._id)
-		console.log("TOKEN: " + token)
 
 		res.status(200).json({
 			status: "success",
-			data: { user, token }
+			data: { 
+				user: await UserModel.findById(user._id),
+				token: token }
 		})
 	})
 
