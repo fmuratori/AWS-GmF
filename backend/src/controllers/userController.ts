@@ -8,12 +8,12 @@ import { createToken } from '../utils/tokenHandler';
 export default class UserController {
 
 	register = catchAsync(async (req: Request, res: Response) => {
-		const user = await UserModel.findOne({ username: req.body.username })
+		const user = await UserModel.findOne({ email: req.body.email })
 
 		if (user) {
 			res.status(401).json({
 				status: "user-exist-error",
-				message: "User already exist"
+				message: "User with same mail already exist"
 			})
 			return
 		}
@@ -44,7 +44,7 @@ export default class UserController {
 
 	login = catchAsync(async (req: Request, res: Response) => {
 		const user = await UserModel.findOne({
-			username: req.body.username
+			email: req.body.email
 		}).select("+hashPassword")
 
 
@@ -87,7 +87,6 @@ export default class UserController {
 
 		if (req.body.name) user.name = req.body.name
 		if (req.body.surname) user.surname = req.body.surname
-		if (req.body.username) user.username = req.body.username
 		if (req.body.email) user.email = req.body.email
 		if (req.body.phoneNumber) user.phoneNumber = req.body.phoneNumber
 		if (req.body.type) user.type = req.body.type

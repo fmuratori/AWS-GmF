@@ -12,11 +12,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "missing required field surname"]
     },
-    username: {
-        type: String,
-        required: [true, "missing required field username"],
-        unique: true
-    },
     hashPassword: {
         type: String,
         required: [true, "missing required field hashPassword"],
