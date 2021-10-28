@@ -5,12 +5,12 @@ const screenExtraLargeWidth = 1200;
 
 export default {
   state: () => ({
-    isSidebarOpen: Boolean,
+    isSidebarOpen: false,
     screenWidth: Number,
   }),
   getters: {
     isExtraSmallScreenWidth(state) {
-      return state.screenWidth < 576;
+      return state.screenWidth < screenSmallWidth;
     },
     isSmallScreenWidth(state) {
       return state.screenWidth < screenMediumWidth;
