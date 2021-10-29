@@ -120,6 +120,9 @@ export default Vue.extend({
       },
     }
   },
+  created() {
+    this.$store.dispatch("showSidebar");
+  },
   methods: {
     computeButtonVariant(times: string[], time: string) {
       return times.includes(time) ? "dark" : "outline-secondary";

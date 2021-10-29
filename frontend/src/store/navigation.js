@@ -29,14 +29,23 @@ export default {
     toggleSidebar(state) {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
+    setSidebarVisible(state, value) {
+      state.isSidebarOpen = value;
+    },
     updateScreenWidth(state, payload) {
       state.screenWidth = payload.value;
 
       if (state.screenWidth < screenExtraLargeWidth && !state.screenWidth < screenLargeWidth) 
-        state.isSidebarOpen = true; 
+        state.isSidebarOpen = false; 
     },
   },
   actions: {
+    showSidebar({ commit }) {
+      commit("setSidebarVisible", true);
+    },
+    hideSidebar({ commit }) {
+      commit("setSidebarVisible", false);
+    },
     toggleSidebar({ commit }) {
       commit("toggleSidebar");
     },

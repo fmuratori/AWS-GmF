@@ -1,5 +1,4 @@
 <template lang="pug">
-
   div(id="app")
     Navbar
     div(id="body")
@@ -10,6 +9,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+
 import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
