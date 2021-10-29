@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import navigationModule from "@/store/navigation.js";
-import sessionModule from "@/store/session.js";
+import navigationModule from "../store/navigation";
+import sessionModule from "../store/session";
 
 Vue.use(Vuex);
 

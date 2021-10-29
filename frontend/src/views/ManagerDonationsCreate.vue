@@ -27,16 +27,13 @@
           label() Luogo ritiro:
           b-card()
             b-row
-              b-col(cols=8)
+              b-col()
                 b-form-group(id="input-group-3" label="Città:" label-for="input-3")
                   b-form-input(id="input-3" type="text" v-model="form.location.city")
-              b-col(cols=4)
-                b-form-group(id="input-group-8" label="CAP:" label-for="input-8")
-                  b-form-input(id="input-8" type="text" v-model="form.location.cap")
             b-row
               b-col(cols=8)
                 b-form-group(id="input-group-4" label="Indirizzo:" label-for="input-4")
-                  b-form-input(id="input-4" type="text" v-model="form.location.address")
+                  b-form-input(id="input-4" type="text" v-model="form.location.street")
               b-col(cols=4)
                 b-form-group(id="input-group-5" label="Numero civico:" label-for="input-5")
                   b-form-input(id="input-5" type="text" v-model="form.location.civicNumber")
@@ -65,8 +62,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Navbar from "@/components/Navbar.vue";
-import Sidebar from "@/components/Sidebar.vue";
+import Navbar from "../components/Navbar.vue";
+import Sidebar from "../components/Sidebar.vue";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -89,31 +86,31 @@ export default Vue.extend({
         weekDays: [
           // TODO: mettere valori diin inglese
           {
-            name: "Lunedì",
+            name: "lun",
             times: [],
           },
           {
-            name: "Martedì",
+            name: "mar",
             times: [],
           },
           {
-            name: "Mercoledì",
+            name: "mer",
             times: [],
           },
           {
-            name: "Giovedì",
+            name: "gio",
             times: [],
           },
           {
-            name: "Venerdì",
+            name: "ven",
             times: [],
           },
           {
-            name: "Sabato",
+            name: "sab",
             times: [],
           },
           {
-            name: "Domenica",
+            name: "dom",
             times: [],
           },
         ],

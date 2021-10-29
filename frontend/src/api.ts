@@ -5,14 +5,11 @@ import axios from "axios";
 const backendUrl = "http://localhost:3000";
 
 export interface LoginRequest {
-  name: string;
+  email: string;
   password: string;
 }
 
-export interface LoginResponse {
-  name: string;
-  password: string;
-}
+export interface LoginResponse {}
 
 export interface RegistrationRequest {
   name: string;
@@ -36,6 +33,7 @@ export interface RegistrationRequest {
 export interface RegistrationResponse {
   a: number
 }
+
 
 export default {
   async loginRequest(payload: LoginRequest): Promise<LoginResponse> {

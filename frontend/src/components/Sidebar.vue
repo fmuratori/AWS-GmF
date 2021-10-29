@@ -17,12 +17,14 @@
             font-awesome-icon(icon="utensils" size="lg")
           b-col(class="ml-1")
             h6() Dona cibo
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsCreate')")
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsCreate')" 
+        :class="{'sidebar-item-selected': isRouteSelected('ManagerDonationsCreate')}")
           b-col()
             label(class="py-1") Crea una donazione
           b-col(cols="auto")
             b-icon(icon="chevron-right")
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsList')")
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsList')"
+        :class="{'sidebar-item-selected': isRouteSelected('ManagerDonationsList')}")
           b-col()
             label(class="py-1") Tue donazioni
           b-col(cols="auto")
@@ -36,12 +38,14 @@
             font-awesome-icon(icon="users" size="lg")
           b-col(class="ml-1")
             h6() Famiglie bisognose
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item sidebar-item-selected" @click="changePage('ManagerFamiliesSubscribe')")
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerFamiliesSubscribe')"
+        :class="{'sidebar-item-selected': isRouteSelected('ManagerFamiliesSubscribe')}")
           b-col()
             label(class="py-1") Segnala famiglia
           b-col(cols="auto")
             b-icon(icon="chevron-right")
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerFamilies')")
+        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerFamilies')"
+        :class="{'sidebar-item-selected': isRouteSelected('ManagerFamilies')}")
           b-col()
             label(class="py-1") Stato segnalazioni
           b-col(cols="auto")
@@ -70,7 +74,15 @@ export default Vue.extend({
   data: function(){
     return {}
   },
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
+    }
+  },
   methods: {
+    isRouteSelected(routeName: string) {
+      return this.currentRouteName == routeName;
+    },
     changePage(pageName: string) {
       this.$router.replace({ name: pageName })
     },
