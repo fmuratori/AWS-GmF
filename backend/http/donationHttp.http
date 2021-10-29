@@ -46,9 +46,9 @@ content-type: application/json
 
 {
     "donationId": "61752da118f0f36305767ec8",
-    "chatNode": {
-            "user_id": "6172e6a4df4d0325895749e2",
-            "text": "ciao",
-            "visualized": false
+    "chatNode": {   
+        "user_id": "6172e6a4df4d0325895749e2",
+        "text": "ciao",
+        "visualized": false
     }
 }
