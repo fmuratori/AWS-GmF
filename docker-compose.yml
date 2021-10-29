@@ -1,0 +1,30 @@
+services:
+  mongodb:
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile
+    image: mongodb
+    ports: 
+      - 27017:27017
+    networks:
+      - interna
+    container_name: mongodb
+  backend:
+      build:
+        context: ./backend
+        dockerfile: Dockerfile
+      image: backend
+      ports:
+        - 3000:3000
+      networks:
+        - interna
+      container_name: backend
+      depends_on:
+        - mongodb
+  #frontend:
+
+networks:
+  interna:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "brinterna"
