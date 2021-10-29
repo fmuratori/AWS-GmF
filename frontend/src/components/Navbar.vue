@@ -20,7 +20,7 @@
     
     b-collapse#nav-collapse(is-nav="" v-model="isOpen")
       b-navbar-nav(class="ml-auto")
-        b-nav-item(href="#" class="my-auto navbar-link text-center") Home
+        b-nav-item(href="#" class="my-auto navbar-link text-center" @click="$router.replace({name: 'Home'})") Home
         b-nav-item(href="#" class="my-auto navbar-link text-center") Eventi
         b-nav-item(href="#" class="my-auto navbar-link text-center") Domande
         b-nav-item(href="#" class="my-auto text-center" v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
@@ -28,10 +28,10 @@
             span(class="mr-1") Messaggi
             b-badge(variant="light") 4
         b-nav-item(href="#" class="my-auto text-center" v-if="$store.getters.isUserLogged")
-          b-button(type="submit" variant="light" class="my-2 my-sm-0")
+          b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="$router.replace({name: 'ManagerHome'})")
             span(class="mr-1") Area personale
             font-awesome-icon(icon="cogs")
-        b-nav-item(href="#" class="my-auto navbar-link text-center" v-if="$store.getters.isUserLogged") 
+        b-nav-item(href="#" class="my-auto navbar-link text-center" v-if="$store.getters.isUserLogged" @click="logout()") 
           span(class="mr-1") Disconnetti
           font-awesome-icon(icon="sign-out-alt")
         b-nav-item(href="#" class="my-auto navbar-link text-center" @click="$router.replace({name: 'Login'})" v-if="!$store.getters.isUserLogged") 
@@ -55,6 +55,10 @@ export default Vue.extend({
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar");
     },
+    logout() {
+      this.$store.dispatch("logout");
+      this.$router.replace({name: "Home"});
+    }
   },
 });
 </script>

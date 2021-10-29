@@ -50,9 +50,14 @@
       hr.sidebar-hr.my-3
 
     div(id="sidebar-footer" class="text-center")
-      b-button(variant="light" size="sm") 
-        b-icon(icon="gear-fill" class="mr-1")
-        span Account
+      //- b-button(variant="light" size="sm") 
+      //-   b-icon(icon="gear-fill" class="mr-1")
+      //-   span Account
+
+      b-dropdown(id="dropdown-dropup" class="m-2" dropup="" text="Account" menu-class="w-100" variant="light" block)
+        b-dropdown-item(href="#") Disconnetti
+        b-dropdown-item(href="#") Dati personali
+
 
 </template>
 

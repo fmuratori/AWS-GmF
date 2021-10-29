@@ -50,6 +50,10 @@ export default Vue.extend({
     Navbar,
     Sidebar,
   },
+  created() {
+    
+    this.$store.dispatch("showSidebar");
+  }
 });
 </script>
 

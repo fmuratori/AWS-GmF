@@ -1,6 +1,6 @@
 <template lang="pug">
-  b-row(class="justify-content-md-center" no-gutters)
-    b-col(:cols="isLoginSelected ? 'auto' : 4")
+  b-row(class="justify-content-center" no-gutters)
+    b-col(md="auto" xs=12)
       
       b-card(no-body id="login" class="shadow-lg mt-5 mb-5")
         div(id="login-header" class="px-5 py-4")
@@ -15,7 +15,8 @@
 
         div(id="login-body")
           div(v-if="isLoginSelected")
-            div(class="p-5")
+            div(class="px-5 pt-5 pb-5")
+              p(v-if="showLoginErrorMessage" class="text-danger") Email o password inserita errata.  
               h5(class="mt-4") Credenziali
               b-form-group(id="input-group-11" label="" label-for="input-11")
                 b-input-group()
@@ -32,12 +33,12 @@
               b-row(class="justify-content-md-center" class="mb-4")
                 a(href="#") Ti sei dimenticato la password?
           
-            b-button(block class="login-button" size="lg" @click="loginRequest")
+            b-button(block class="login-button" size="lg" @click="loginRequest" :disabled ="!activateLoginButton")
               span ACCEDI
               b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
 
           div(v-else)
-            div(class="p-3" )
+            div(class="p-3")
               h5 Informazioni personali
 
               b-form-group(id="input-group-1" label="Nome:" label-for="input-1")
@@ -73,18 +74,18 @@
                 b-form-input(id="input-8" type="password"  v-model="registration.password" placeholder="Inserisci password" required)
 
               b-form-group(id="input-group-9" label="Ripeti password:" label-for="input-9")
-                b-form-input(id="input-9" type="password" placeholder="Conferma password" required)
+                b-form-input(id="input-9" type="password" v-model="regRepeatPassword" placeholder="Conferma password" required  :state="registrationPasswordCheck()")
           
               hr
 
-              b-form-checkbox(id="checkbox-1" name="checkbox-1" class="mt-4")
+              b-form-checkbox(id="checkbox-1" name="checkbox-1" class="mt-4" v-model="registrationPrivacyChecked")
                 i accetto i termini di servizio e la 
                   a(href="#") privacy policy
 
               b-form-checkbox(id="checkbox-2" name="checkbox-2" class="mt-2")
                 i voglio ricevere email su eventi nella mia città
 
-            b-button(block class="login-button" size="lg" @click="registrationRequest")
+            b-button(block class="login-button" size="lg" @click="registrationRequest" :disabled ="!activateRegistrationButton")
               span REGISTRATI
               b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
 
@@ -93,20 +94,24 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosError } from "axios";
 
 // import bcrypt from "bcrypt"
 
-import api from "@/api.ts"
+import api from "@/api.ts";
 
 export default Vue.extend({
   name: "Login",
   data : function() {
     return {
       isLoginSelected: true,
+      showLoginErrorMessage: false,
+      registrationPrivacyChecked: false,
+      regRepeatPassword: "",
       login: {
         email: "a", 
         password: "Password1!",
-      },
+      } as api.LoginRequest,
       registration: {
         name: "Fabio",
         surname: "Muratori",
@@ -124,28 +129,59 @@ export default Vue.extend({
                 y: 0
             }
         } 
-      }
+      } as api.RegistrationRequest,
     }
   },
+  computed: {
+    activateLoginButton() {
+      return this.login.email != "" && this.login.password != ""  
+    },
+    activateRegistrationButton() {
+      return this.registration.name != "" && this.registration.surname != "" && this.registration.password != "" 
+        && this.registration.email != "" && this.registration.phone != "" && this.registration.address.street != ""
+        && this.registration.address.civicNumber != "" && this.registration.address.city != "" 
+        && this.registrationPrivacyChecked && this.registrationPasswordCheck()
+    },
+  },
   created() {
-    // console.log("ASD");
-    // console.log(bcrypt.hashSync("asd", "a"));
+    this.$store.dispatch("hideSidebar");
   },
   methods: {
     setLoginSelected(value: boolean) {
       this.isLoginSelected = value;
     },
+    registrationPasswordCheck() {
+      return this.registration.password == this.regRepeatPassword && this.registration.password != ''; 
+    },
     loginRequest() {
-      
-
       api.loginRequest(this.login).then(r => {
-        console.log(r);
-      }).catch(e=>console.log(e));
+        if (r.status == 200) {
+          this.$store.dispatch("login", r.data.data);
+          this.showLoginErrorMessage = false;
+          this.$router.replace({name: "ManagerHome"});
+        }
+      }).catch((err: AxiosError):void => {
+        console.log(err)
+        this.showLoginErrorMessage = true;
+      });
     },
     registrationRequest() {
-      api.registrationRequest(this.registration).then(r => {
-        console.log(r);
-      }).catch(e=>console.log(e));
+      api.registrationRequest(this.registration).then((r: any) => {
+        this.$bvToast.toast(`Operazione avvenuta con successo. Effettua il login per accedere.`, {
+          title: "Registrazione",
+          autoHideDelay: 5000,
+          variant: "success",
+          appendToast: false,
+        })
+      }).catch(e=> {
+        console.log(e);
+        this.$bvToast.toast(`Errore durante la fase di registrazione, riprova.`, {
+          title: "Registrazione",
+          autoHideDelay: 5000,
+          variant: "danger",
+          appendToast: false,
+        })
+      });
     },
   }
 });
