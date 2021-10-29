@@ -99,12 +99,4 @@ export default class UserController {
 			data: { updatedUser }
 		})
 	})
-
-	// private async saltPassword(password: String): Object {
-	// 	await bcrypt.genSalt(SALT_ROUND, async (err, salt) => {
-	// 		await bcrypt.hash(password, salt, (err, hash) => {
-	// 			return {hash: hash, seed: salt}
-	// 		})
-	// 	})
-	// }
 }
