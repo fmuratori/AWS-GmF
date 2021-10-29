@@ -1,5 +1,4 @@
-
-export default {
+const sessionModule = {
   state: () => ({
     isUserLogged: false,
     sessionToken: String,
@@ -19,12 +18,12 @@ export default {
     }
   }),
   getters: {
-    isUserLogged(state){
+    isUserLogged(state: any){
       return state.isUserLogged
     },
   },
   mutations: {
-    login(state, payload) {
+    login(state: any, payload: any) {
       state.isUserLogged = true;
       state.sessionToken = payload.token;
       state.name = payload.user.name;
@@ -36,7 +35,7 @@ export default {
       state.street = payload.user.street;
       state.cityNumber = payload.user.cityNumber;
     },
-    logout(state) {
+    logout(state: any) {
       state.isUserLogged = false;
       state.sessionToken = null;      
       state.name = null;
@@ -50,11 +49,13 @@ export default {
     },
   },
   actions: {
-    login({ commit }, payload) {      
+    login(commit: any, payload: any) {      
       commit("login", payload);
     },
-    logout({ commit }) {
+    logout(commit: any) {
       commit("logout");
     },
   }
 }
+
+export default sessionModule

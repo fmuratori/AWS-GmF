@@ -3,60 +3,62 @@ const screenMediumWidth = 768;
 const screenLargeWidth = 992;
 const screenExtraLargeWidth = 1200;
 
-export default {
+const navigationModule = {
   state: () => ({
     isSidebarOpen: false,
     screenWidth: Number,
   }),
   getters: {
-    isExtraSmallScreenWidth(state) {
+    isExtraSmallScreenWidth(state: any) {
       return state.screenWidth < screenSmallWidth;
     },
-    isSmallScreenWidth(state) {
+    isSmallScreenWidth(state: any) {
       return state.screenWidth < screenMediumWidth;
     },
-    isMediumScreenWidth(state) {
+    isMediumScreenWidth(state: any) {
       return state.screenWidth < screenLargeWidth;
     },
-    isLargeScreenWidth(state) {
+    isLargeScreenWidth(state: any) {
       return state.screenWidth < screenExtraLargeWidth;
     },
-    isExtraLargeScreenWidth(state) {
+    isExtraLargeScreenWidth(state: any) {
       return state.screenWidth >= screenExtraLargeWidth;
     }
   },
   mutations: {
-    toggleSidebar(state) {
+    toggleSidebar(state: any) {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    setSidebarVisible(state, value) {
+    setSidebarVisible(state: any, value: any) {
       state.isSidebarOpen = value;
     },
-    updateScreenWidth(state, payload) {
+    updateScreenWidth(state: any, payload: any) {
       state.screenWidth = payload.value;
 
-      if (state.screenWidth < screenExtraLargeWidth && !state.screenWidth < screenLargeWidth) 
+      if (state.screenWidth < screenExtraLargeWidth && !(state.screenWidth < screenLargeWidth)) 
         state.isSidebarOpen = false; 
     },
   },
   actions: {
-    showSidebar({ commit }) {
+    showSidebar(commit: any) {
       commit("setSidebarVisible", true);
     },
-    hideSidebar({ commit }) {
+    hideSidebar(commit: any) {
       commit("setSidebarVisible", false);
     },
-    toggleSidebar({ commit }) {
+    toggleSidebar(commit: any) {
       commit("toggleSidebar");
     },
-    setMangerMode({ commit }) {
+    setMangerMode(commit: any) {
       commit("setMangerMode");
     },
-    unsetMangerMode({ commit }) {
+    unsetMangerMode(commit: any) {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit }, value) {
+    updateScreenWidth(commit: any, value: any) {
       commit("updateScreenWidth", value);
     },
   }
 }
+
+export default navigationModule

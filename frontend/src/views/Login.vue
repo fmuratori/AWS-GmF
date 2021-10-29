@@ -98,7 +98,7 @@ import { AxiosError } from "axios";
 
 // import bcrypt from "bcrypt"
 
-import api from "@/api.ts";
+import api, { LoginRequest, RegistrationRequest } from "../api"
 
 export default Vue.extend({
   name: "Login",
@@ -111,7 +111,7 @@ export default Vue.extend({
       login: {
         email: "a", 
         password: "Password1!",
-      } as api.LoginRequest,
+      } as LoginRequest,
       registration: {
         name: "Fabio",
         surname: "Muratori",
@@ -129,16 +129,16 @@ export default Vue.extend({
                 y: 0
             }
         } 
-      } as api.RegistrationRequest,
+      } as RegistrationRequest,
     }
   },
   computed: {
-    activateLoginButton() {
+    activateLoginButton(): boolean{
       return this.login.email != "" && this.login.password != ""  
     },
-    activateRegistrationButton() {
+    activateRegistrationButton(): boolean {
       return this.registration.name != "" && this.registration.surname != "" && this.registration.password != "" 
-        && this.registration.email != "" && this.registration.phone != "" && this.registration.address.street != ""
+        && this.registration.email != "" && this.registration.phoneNumber != "" && this.registration.address.street != ""
         && this.registration.address.civicNumber != "" && this.registration.address.city != "" 
         && this.registrationPrivacyChecked && this.registrationPasswordCheck()
     },
@@ -154,9 +154,9 @@ export default Vue.extend({
       return this.registration.password == this.regRepeatPassword && this.registration.password != ''; 
     },
     loginRequest() {
-      api.loginRequest(this.login).then(r => {
+      api.loginRequest(this.login).then((r:any) => {
         if (r.status == 200) {
-          this.$store.dispatch("login", r.data.data);
+          this.$store.dispatch("login", r.body);
           this.showLoginErrorMessage = false;
           this.$router.replace({name: "ManagerHome"});
         }

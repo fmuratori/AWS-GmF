@@ -5,7 +5,7 @@ import axios from "axios";
 const backendUrl = "http://localhost:3000";
 
 export interface LoginRequest {
-  name: string;
+  email: string;
   password: string;
 }
 
@@ -17,7 +17,6 @@ export interface LoginResponse {
 export interface RegistrationRequest {
   name: string;
   surname: string;
-  username: string;
   password: string;
   email: string;
   phoneNumber: string;
