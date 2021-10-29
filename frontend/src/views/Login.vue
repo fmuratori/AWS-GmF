@@ -154,10 +154,9 @@ export default Vue.extend({
       return this.registration.password == this.regRepeatPassword && this.registration.password != ''; 
     },
     loginRequest() {
-      api.loginRequest(this.login).then(r => {
-        console.log(r);
+      api.loginRequest(this.login).then((r:any) => {
         if (r.status == 200) {
-          this.$store.dispatch("login", r.data.data);
+          this.$store.dispatch("login", r.body);
           this.showLoginErrorMessage = false;
           this.$router.replace({name: "ManagerHome"});
         }

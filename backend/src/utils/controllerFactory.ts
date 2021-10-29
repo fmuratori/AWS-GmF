@@ -26,6 +26,8 @@ export default class ControllerFactory<T> {
      * optional req.body.projection: {projectionObject:Y}
      * optional req.body.sortBy: {sortingParam:Z}
      * X=1 -> ascending order, x=-1 -> descending order
+     * optional req.body.pageSize: Int -> numero di documenti per pagina
+     * optional req.body.page: Int -> indice della pagina desiderata
      */
     findMany = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
