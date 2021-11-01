@@ -21,7 +21,18 @@ services:
       container_name: backend
       depends_on:
         - mongodb
-  #frontend:
+  frontend:
+      build:
+        context: ./frontend
+        dockerfile: Dockerfile
+      image: frontend
+      ports:
+        - 8080:8080
+      networks:
+        - interna
+      container_name: frontend
+      depends_on:
+        - backend
 
 networks:
   interna:
