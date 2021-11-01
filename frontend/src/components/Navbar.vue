@@ -58,6 +58,7 @@ export default Vue.extend({
     logout() {
       this.$store.dispatch("logout");
       this.$router.replace({name: "Home"});
+      this.$store.dispatch("hideSidebar");
     }
   },
 });

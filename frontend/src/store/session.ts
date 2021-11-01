@@ -49,10 +49,10 @@ const sessionModule = {
     },
   },
   actions: {
-    login(commit: any, payload: any) {      
+    login({ commit }, payload: any) {      
       commit("login", payload);
     },
-    logout(commit: any) {
+    logout({ commit }) {
       commit("logout");
     },
   }

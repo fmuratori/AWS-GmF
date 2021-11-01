@@ -9,7 +9,7 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Home",
   created() {
-    this.$store.dispatch("hideSidebar");
+    // this.$store.dispatch("hideSidebar");
   }
 });
 </script>

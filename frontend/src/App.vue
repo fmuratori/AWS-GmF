@@ -23,7 +23,7 @@ export default Vue.extend({
     return {}
   },
   created() {
-    this.$store.dispatch("updateScreenWidth", {value: window.innerWidth});
+    this.$store.dispatch("updateScreenWidth", window.innerWidth);
     window.addEventListener("resize", this.resizeEventHandler);
   },
   destroyed() {
@@ -31,7 +31,7 @@ export default Vue.extend({
   },
   methods: {
     resizeEventHandler() {
-      this.$store.dispatch("updateScreenWidth", {value: window.innerWidth});
+      this.$store.dispatch("updateScreenWidth", window.innerWidth);
     }
   },
 });

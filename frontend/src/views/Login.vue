@@ -156,7 +156,7 @@ export default Vue.extend({
     loginRequest() {
       api.loginRequest(this.login).then((r:any) => {
         if (r.status == 200) {
-          this.$store.dispatch("login", r.body);
+          this.$store.dispatch("login", r.data.data);
           this.showLoginErrorMessage = false;
           this.$router.replace({name: "ManagerHome"});
         }

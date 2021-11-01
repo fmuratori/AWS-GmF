@@ -9,53 +9,53 @@ const navigationModule = {
     screenWidth: Number,
   }),
   getters: {
-    isExtraSmallScreenWidth(state: any) {
+    isExtraSmallScreenWidth(state) {
       return state.screenWidth < screenSmallWidth;
     },
-    isSmallScreenWidth(state: any) {
+    isSmallScreenWidth(state) {
       return state.screenWidth < screenMediumWidth;
     },
-    isMediumScreenWidth(state: any) {
+    isMediumScreenWidth(state) {
       return state.screenWidth < screenLargeWidth;
     },
-    isLargeScreenWidth(state: any) {
+    isLargeScreenWidth(state) {
       return state.screenWidth < screenExtraLargeWidth;
     },
-    isExtraLargeScreenWidth(state: any) {
+    isExtraLargeScreenWidth(state) {
       return state.screenWidth >= screenExtraLargeWidth;
     }
   },
   mutations: {
-    toggleSidebar(state: any) {
+    toggleSidebar(state) {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    setSidebarVisible(state: any, value: any) {
+    setSidebarVisible(state, value:boolean) {
       state.isSidebarOpen = value;
     },
-    updateScreenWidth(state: any, payload: any) {
-      state.screenWidth = payload.value;
+    updateScreenWidth(state, value:number) {
+      state.screenWidth = value;
 
-      if (state.screenWidth < screenExtraLargeWidth && !(state.screenWidth < screenLargeWidth)) 
+      if (state.screenWidth < screenExtraLargeWidth && state.screenWidth >= screenLargeWidth) 
         state.isSidebarOpen = false; 
     },
   },
   actions: {
-    showSidebar(commit: any) {
+    showSidebar({ commit }) {
       commit("setSidebarVisible", true);
     },
-    hideSidebar(commit: any) {
+    hideSidebar({ commit }) {
       commit("setSidebarVisible", false);
     },
-    toggleSidebar(commit: any) {
+    toggleSidebar({ commit }) {
       commit("toggleSidebar");
     },
-    setMangerMode(commit: any) {
+    setMangerMode({ commit }) {
       commit("setMangerMode");
     },
-    unsetMangerMode(commit: any) {
+    unsetMangerMode({ commit }) {
       commit("unsetMangerMode");
     },
-    updateScreenWidth(commit: any, value: any) {
+    updateScreenWidth({ commit }, value:number) {
       commit("updateScreenWidth", value);
     },
   }
