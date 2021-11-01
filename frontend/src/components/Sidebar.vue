@@ -71,24 +71,24 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Sidebar",
   components: {},
-  data: function(){
-    return {}
+  data: function () {
+    return {};
   },
   computed: {
     currentRouteName() {
       return this.$route.name;
-    }
+    },
   },
   methods: {
     isRouteSelected(routeName: string) {
       return this.currentRouteName == routeName;
     },
     changePage(pageName: string) {
-      this.$router.replace({ name: pageName })
+      this.$router.replace({ name: pageName });
     },
     isSidebarOpen() {
       return this.$store.state.navigation.isSidebarOpen;
-    }
+    },
   },
 });
 </script>
@@ -99,7 +99,7 @@ export default Vue.extend({
 #sidebar {
   background-color: $greyscale2;
   color: $greyscaleE;
-  
+
   display: flex;
   flex-direction: column;
 
@@ -133,6 +133,4 @@ export default Vue.extend({
 .sidebar-item-selected {
   background-color: $color1;
 }
-
-
 </style>

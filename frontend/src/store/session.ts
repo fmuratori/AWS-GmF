@@ -5,21 +5,21 @@ const sessionModule = {
     name: String,
     surname: String,
     email: String,
-    phoneNumber: String, 
+    phoneNumber: String,
     type: String,
     address: {
       street: String,
       civicNumber: String,
       city: String,
       coordinates: {
-          x: Number,
-          y: Number
-      }
-    }
+        x: Number,
+        y: Number,
+      },
+    },
   }),
   getters: {
-    isUserLogged(state: any){
-      return state.isUserLogged
+    isUserLogged(state: any) {
+      return state.isUserLogged;
     },
   },
   mutations: {
@@ -37,7 +37,7 @@ const sessionModule = {
     },
     logout(state: any) {
       state.isUserLogged = false;
-      state.sessionToken = null;      
+      state.sessionToken = null;
       state.name = null;
       state.surname = null;
       state.email = null;
@@ -49,13 +49,13 @@ const sessionModule = {
     },
   },
   actions: {
-    login({ commit }, payload: any) {      
+    login({ commit }, payload: any) {
       commit("login", payload);
     },
     logout({ commit }) {
       commit("logout");
     },
-  }
-}
+  },
+};
 
-export default sessionModule
+export default sessionModule;

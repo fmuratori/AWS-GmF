@@ -16,7 +16,7 @@ export default Vue.extend({
   },
   created() {
     this.$store.dispatch("showSidebar");
-  }
+  },
 });
 </script>
 

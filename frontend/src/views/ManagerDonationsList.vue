@@ -51,9 +51,8 @@ export default Vue.extend({
     Sidebar,
   },
   created() {
-    
     this.$store.dispatch("showSidebar");
-  }
+  },
 });
 </script>
 

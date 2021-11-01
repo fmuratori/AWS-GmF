@@ -19,12 +19,14 @@ export default Vue.extend({
     Navbar,
     Sidebar,
   },
-  data: function () {
-    return {}
-  },
   created() {
     this.$store.dispatch("updateScreenWidth", window.innerWidth);
     window.addEventListener("resize", this.resizeEventHandler);
+
+    //socket initialization
+    
+    this.$socket.emit('message_to_server', 'dsa')
+
   },
   destroyed() {
     window.removeEventListener("resize", this.resizeEventHandler);
@@ -32,10 +34,9 @@ export default Vue.extend({
   methods: {
     resizeEventHandler() {
       this.$store.dispatch("updateScreenWidth", window.innerWidth);
-    }
+    },
   },
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -44,32 +45,32 @@ export default Vue.extend({
 #app {
   height: 100%;
   width: 100%;
-  
+
   display: flex;
   flex-direction: column;
-  
-  overflow:hidden;
+
+  overflow: hidden;
 }
 
 #body {
   // relative to #app container
   flex-grow: 1;
-  
+
   display: flex;
   flex-direction: row;
-  
-  overflow:hidden;
+
+  overflow: hidden;
 }
 
 #sidebar {
-  overflow:auto;
-  
+  overflow: auto;
+
   @include lg {
   }
 }
 
 #content {
   flex-grow: 1;
-  overflow:auto;
+  overflow: auto;
 }
 </style>

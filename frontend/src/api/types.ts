@@ -24,5 +24,5 @@ export interface RegistrationRequest {
 }
 
 export interface RegistrationResponse {
-  a: number
+  a: number;
 }

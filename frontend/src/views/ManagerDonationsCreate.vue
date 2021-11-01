@@ -115,7 +115,7 @@ export default Vue.extend({
           },
         ],
       },
-    }
+    };
   },
   created() {
     this.$store.dispatch("showSidebar");
@@ -136,7 +136,8 @@ export default Vue.extend({
     },
     weekDayButtonClick(name: string, time: string) {
       const idx: number = this.form.weekDays.findIndex(
-        (wd: { name: string; }) => wd.name == name);
+        (wd: { name: string }) => wd.name == name
+      );
       if (idx != -1) {
         const selectedTimes: string[] = this.form.weekDays[idx].times;
         const times: number = selectedTimes.indexOf(time);

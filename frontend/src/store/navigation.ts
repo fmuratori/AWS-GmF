@@ -23,20 +23,23 @@ const navigationModule = {
     },
     isExtraLargeScreenWidth(state) {
       return state.screenWidth >= screenExtraLargeWidth;
-    }
+    },
   },
   mutations: {
     toggleSidebar(state) {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    setSidebarVisible(state, value:boolean) {
+    setSidebarVisible(state, value: boolean) {
       state.isSidebarOpen = value;
     },
-    updateScreenWidth(state, value:number) {
+    updateScreenWidth(state, value: number) {
       state.screenWidth = value;
 
-      if (state.screenWidth < screenExtraLargeWidth && state.screenWidth >= screenLargeWidth) 
-        state.isSidebarOpen = false; 
+      if (
+        state.screenWidth < screenExtraLargeWidth &&
+        state.screenWidth >= screenLargeWidth
+      )
+        state.isSidebarOpen = false;
     },
   },
   actions: {
@@ -55,10 +58,10 @@ const navigationModule = {
     unsetMangerMode({ commit }) {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit }, value:number) {
+    updateScreenWidth({ commit }, value: number) {
       commit("updateScreenWidth", value);
     },
-  }
-}
+  },
+};
 
-export default navigationModule
+export default navigationModule;

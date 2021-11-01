@@ -46,10 +46,10 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Navbar",
-  data: function() {
+  data: function () {
     return {
       isOpen: false,
-    }
+    };
   },
   methods: {
     toggleSidebar() {
@@ -57,15 +57,14 @@ export default Vue.extend({
     },
     logout() {
       this.$store.dispatch("logout");
-      this.$router.replace({name: "Home"});
+      this.$router.replace({ name: "Home" });
       this.$store.dispatch("hideSidebar");
-    }
+    },
   },
 });
 </script>
 
 <style scope lang="scss">
-
 @import "@/assets/style.scss";
 
 #navbar {

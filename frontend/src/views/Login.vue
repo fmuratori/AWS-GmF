@@ -98,18 +98,19 @@ import { AxiosError } from "axios";
 
 // import bcrypt from "bcrypt"
 
-import api, { LoginRequest, RegistrationRequest } from "../api"
+import api from "../api/api";
+import { LoginRequest, RegistrationRequest } from "../api/types"
 
 export default Vue.extend({
   name: "Login",
-  data : function() {
+  data: function () {
     return {
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
       regRepeatPassword: "",
       login: {
-        email: "a", 
+        email: "a",
         password: "Password1!",
       } as LoginRequest,
       registration: {
@@ -121,26 +122,34 @@ export default Vue.extend({
         phoneNumber: "1234",
         type: "user",
         address: {
-            street: "via a caso",
-            civicNumber: "32",
-            city: "rimini",
-            coordinates: {
-                x: 0,
-                y: 0
-            }
-        } 
+          street: "via a caso",
+          civicNumber: "32",
+          city: "rimini",
+          coordinates: {
+            x: 0,
+            y: 0,
+          },
+        },
       } as RegistrationRequest,
-    }
+    };
   },
   computed: {
     activateLoginButton(): boolean {
-      return this.login.email != "" && this.login.password != ""  
+      return this.login.email != "" && this.login.password != "";
     },
     activateRegistrationButton(): boolean {
-      return this.registration.name != "" && this.registration.surname != "" && this.registration.password != "" 
-        && this.registration.email != "" && this.registration.phoneNumber != "" && this.registration.address.street != ""
-        && this.registration.address.civicNumber != "" && this.registration.address.city != "" 
-        && this.registrationPrivacyChecked && this.registrationPasswordCheck()
+      return (
+        this.registration.name != "" &&
+        this.registration.surname != "" &&
+        this.registration.password != "" &&
+        this.registration.email != "" &&
+        this.registration.phoneNumber != "" &&
+        this.registration.address.street != "" &&
+        this.registration.address.civicNumber != "" &&
+        this.registration.address.city != "" &&
+        this.registrationPrivacyChecked &&
+        this.registrationPasswordCheck()
+      );
     },
   },
   created() {
@@ -151,39 +160,54 @@ export default Vue.extend({
       this.isLoginSelected = value;
     },
     registrationPasswordCheck() {
-      return this.registration.password == this.regRepeatPassword && this.registration.password != ''; 
+      return (
+        this.registration.password == this.regRepeatPassword &&
+        this.registration.password != ""
+      );
     },
     loginRequest() {
-      api.loginRequest(this.login).then((r:any) => {
-        if (r.status == 200) {
-          this.$store.dispatch("login", r.data.data);
-          this.showLoginErrorMessage = false;
-          this.$router.replace({name: "ManagerHome"});
-        }
-      }).catch((err: AxiosError):void => {
-        console.log(err)
-        this.showLoginErrorMessage = true;
-      });
+      api
+        .loginRequest(this.login)
+        .then((r: any) => {
+          if (r.status == 200) {
+            this.$store.dispatch("login", r.data.data);
+            this.showLoginErrorMessage = false;
+            this.$router.replace({ name: "ManagerHome" });
+          }
+        })
+        .catch((err: AxiosError): void => {
+          console.log(err);
+          this.showLoginErrorMessage = true;
+        });
     },
     registrationRequest() {
-      api.registrationRequest(this.registration).then((r: any) => {
-        this.$bvToast.toast(`Operazione avvenuta con successo. Effettua il login per accedere.`, {
-          title: "Registrazione",
-          autoHideDelay: 5000,
-          variant: "success",
-          appendToast: false,
+      api
+        .registrationRequest(this.registration)
+        .then((r: any) => {
+          this.$bvToast.toast(
+            `Operazione avvenuta con successo. Effettua il login per accedere.`,
+            {
+              title: "Registrazione",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            }
+          );
         })
-      }).catch(e=> {
-        console.log(e);
-        this.$bvToast.toast(`Errore durante la fase di registrazione, riprova.`, {
-          title: "Registrazione",
-          autoHideDelay: 5000,
-          variant: "danger",
-          appendToast: false,
-        })
-      });
+        .catch((e) => {
+          console.log(e);
+          this.$bvToast.toast(
+            `Errore durante la fase di registrazione, riprova.`,
+            {
+              title: "Registrazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     },
-  }
+  },
 });
 </script>
 <style lang="scss">
@@ -195,7 +219,7 @@ export default Vue.extend({
 }
 
 #login-header {
-  color: $color1; 
+  color: $color1;
   background-color: $greyscaleE;
 
   border-top-left-radius: 4px;
@@ -203,7 +227,7 @@ export default Vue.extend({
 }
 
 .login-select-button {
-  border-radius:0;
+  border-radius: 0;
 }
 .login-select-button:focus {
   outline: none;

@@ -13,23 +13,31 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
-    component: () => import(/* webpackChunkName: "Login" */ "../views/Login.vue")
+    component: () =>
+      import(/* webpackChunkName: "Login" */ "../views/Login.vue"),
   },
   {
     path: "/manager",
     name: "ManagerHome",
-    component: () => import(/* webpackChunkName: "ManagerHome" */ "../views/ManagerHome.vue")
+    component: () =>
+      import(/* webpackChunkName: "ManagerHome" */ "../views/ManagerHome.vue"),
   },
   {
     path: "/manager/donations/create",
     name: "ManagerDonationsCreate",
-    component: () => import(/* webpackChunkName: "ManagerDonationsCreate" */ "../views/ManagerDonationsCreate.vue")
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerDonationsCreate" */ "../views/ManagerDonationsCreate.vue"
+      ),
   },
   {
     path: "/manager/donations/list",
     name: "ManagerDonationsList",
-    component: () => import(/* webpackChunkName: "ManagerDonationsList" */ "../views/ManagerDonationsList.vue")
-  }
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerDonationsList" */ "../views/ManagerDonationsList.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({

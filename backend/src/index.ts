@@ -1,25 +1,27 @@
 import mongoose from 'mongoose'
-import socket from 'socket.io'
 import http from 'http'
 import dotenv from 'dotenv'
 import app from './app'
 
-const server: http.Server = new http.Server(app)
-const io = new socket.Server(server)
+// express server
+const httpServer: http.Server = new http.Server(app)
+
+import { Server, Socket } from "socket.io";
+
+const io = new Server(httpServer, {});
+io.on("connection", (socket: Socket) => {
+  console.log("OK");
+
+  socket.emit("message_to_client", "asd");
+
+  socket.on("message_to_server", (message: String) => {
+    console.log(message)
+  })
+
+});
+httpServer.listen(3001);
 
 dotenv.config({ path:  __dirname + '/../properties.env' });
-
-io.on('connection', (socket) => {
-  console.log('user connected')
-  
-  socket.on('chat message', (msg) => {
-    io.emit('emit message', msg)
-  })
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
-  })
-})
 
 mongoose
   .connect(process.env.DB || "missing db path")
