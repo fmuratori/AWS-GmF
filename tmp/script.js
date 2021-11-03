@@ -1,10 +1,13 @@
+var map
+var places = new Array() 
+
 function initMap() {
     const coords = {
         lat: 44.2822749,
         lng: 11.8979152
     };
 
-    const map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
         zoom: 18,
         center: coords,
     });
@@ -21,6 +24,9 @@ function initMap() {
     geocoder = new google.maps.Geocoder();
 
     map.addListener("click", (mapMouseEvent) => {
+        //salvo il place per testare la setMarkers()
+        places.push(mapMouseEvent.latLng)
+
         //move marker
         marker.setPosition(mapMouseEvent.latLng)
 
@@ -37,7 +43,20 @@ function initMap() {
                 alert('Geocoder failed due to: ' + status);
             }
         });
-    
+
     })
 
+}
+
+//spawna un marker per ogni coppia di coordinate passate in input
+function setMarkers() {
+    markers = new Array()
+
+    places.forEach(elem => {
+        markers.push(new google.maps.Marker({
+            position: elem,
+            map: map,
+            icon: "http://maps.google.com/mapfiles/kml/pal2/icon10.png"
+        }))
+    });
 }
