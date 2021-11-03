@@ -10,20 +10,33 @@ export default class DonationController {
 	add = factory.add(DonationModel)
 	listAll = factory.findMany(DonationModel)
 
-	addMessage = catchAsync(async (req: Request, res: Response) => {
-		const donation = await DonationModel.findById(req.body.donationId)
-
-		if(!donation){
-			console.log("donation not found")
-			return
-		}
-
-		donation?.chat.push(req.body.chatNode)
-		const editedDonation = await DonationModel.findByIdAndUpdate(req.body.donationId, donation)
+	getChat = catchAsync(async (req: Request, res: Response) => {
+		const chat = await DonationModel.findById(req.body.donationId)
+			.select("chat")
 
 		res.status(200).json({
 			status: "success",
-			data: { editedDonation }
+			data: { chat }
 		})
 	})
+}
+
+export async function addMessageToChat(donationId: String, userId: String, message: String){
+	const donation = await DonationModel.findById(donationId)
+		.select("+chat")
+
+	if (!donation) {
+		console.log("donation not found")
+		return
+	}
+
+	const newNode: any = {
+		user_id: userId,
+		text: message,
+		visualized: false 
+	}
+	donation?.chat.push(newNode)
+	await DonationModel.findByIdAndUpdate(donationId, donation)
+
+	console.log("message added to chat")
 }

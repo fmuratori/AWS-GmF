@@ -6,6 +6,6 @@ const donationController = new DonationController()
 
 router.get('/list-all', donationController.listAll)
 router.post('/add', donationController.add)
-router.post('/add-message', donationController.addMessage)
+router.get('/get-chat', donationController.getChat)
 
 export default router

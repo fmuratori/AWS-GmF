@@ -21,6 +21,7 @@ const donationSchema = new mongoose.Schema({
             visualized: Boolean
         }],
         default: () => [],
+        select: false,
         ref: "User"
     },
     food_ids: {

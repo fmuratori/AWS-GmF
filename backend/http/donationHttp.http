@@ -10,13 +10,6 @@ content-type: application/json
 
 {
     "user_id": "6172e6a4df4d0325895749e2",
-    "chat":[
-        {
-            "user_id": "6172e6a4df4d0325895749e2",
-            "text": "ciao",
-            "visualized": true
-            }
-    ],
     "food_ids": [
         "617477acd81bbdee93050b51",
         "617477acd81bbdee93050b51"
@@ -39,7 +32,7 @@ content-type: application/json
     ]
 }
 
-### DONATION add message
+### DONATION add message [API RIMOSSA]
 POST http://localhost:3000/api/donation/add-message
 accept: application/json 
 content-type: application/json
@@ -51,4 +44,13 @@ content-type: application/json
         "text": "ciao",
         "visualized": false
     }
+}
+
+### DONATION get chat
+GET http://localhost:3000/api/donation/get-chat
+accept: application/json 
+content-type: application/json
+
+{
+    "donationId": "61752da118f0f36305767ec8"
 }
