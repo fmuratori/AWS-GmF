@@ -14,7 +14,7 @@ content-type: application/json
 
 {
     "phoneNumber": "1234567890",
-    "componentsNumber":123,
+    "components":123,
     "address": {
         "street": "vai abc",
         "civicNumber": "123/a",
