@@ -23,6 +23,13 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface SessionHeader {
+  content: {
+    "x-access-token": string;
+    "x-user-id": string;
+  }
+}
+
 export interface RegistrationPayload {
   name: string;
   surname: string;

@@ -109,10 +109,9 @@ export default Vue.extend({
     };
   },
   created() {
-    this.$store.dispatch("showSidebar");
-
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      this.$store.dispatch("showSidebar");
       this.form.user_id = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
     } else {
@@ -148,7 +147,7 @@ export default Vue.extend({
       }
     },
     addDonation() {
-      api.addDonation(this.form).then(r => {
+      api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
         console.log(r)
         this.$router.replace({name: "ManagerDonationsList"});
         this.$bvToast.toast(

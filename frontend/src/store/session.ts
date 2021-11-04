@@ -1,4 +1,5 @@
 import {
+  SessionHeader,
   UserData,
 } from "../types";
 
@@ -30,6 +31,14 @@ const sessionModule = {
     isUser(state: any) {
       return state.type === "user";
     },
+    getSessionHeader(state: any) {
+      return { 
+        content: {
+          "x-access-token": state.token,
+          "x-user-id": state.userData._id,
+        }
+      } as SessionHeader
+    }
     // isVolunteer(state: any) {
     //   return state.type != null;
     // },

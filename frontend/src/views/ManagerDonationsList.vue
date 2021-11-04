@@ -57,9 +57,14 @@ export default Vue.extend({
     }
   },
   created() {
-    this.$store.dispatch("showSidebar");
+    // check if user is logged in
+    if (this.$store.getters.isUserLogged) {
+      this.$store.dispatch("showSidebar");
+    } else {
+      this.$router.replace({name: "Login"});
+    }
 
-    // api.donationsList().then(r => console.log(r));
+    api.donationsList(this.$store.getters.getSessionHeader).then(r => console.log(r));
 
   },
   methods: {

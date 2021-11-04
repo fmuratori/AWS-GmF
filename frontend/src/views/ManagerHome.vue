@@ -15,7 +15,12 @@ export default Vue.extend({
     Sidebar,
   },
   created() {
-    this.$store.dispatch("showSidebar");
+    // check if user is logged in
+    if (this.$store.getters.isUserLogged) {
+      this.$store.dispatch("showSidebar");
+    } else {
+      this.$router.replace({name: "Login"});
+    }
   },
 });
 </script>
