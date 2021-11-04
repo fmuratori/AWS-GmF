@@ -3,7 +3,9 @@ import axios from "axios";
 import {
   LoginPayload,
   RegistrationPayload,
-  DonationPayload,
+  DonationCreationPayload,
+  SessionHeader,
+  FamilyPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -18,11 +20,20 @@ export default {
     return axios.post(`${backendUrl}/api/user/register`, payload);
   },
 
-  async addDonation(payload: DonationPayload) {
-    return axios.post(`${backendUrl}/api/donation/add`, payload);
+  async addDonation(payload: DonationCreationPayload, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/donation/add`, payload, { headers: headers.content });
   },
 
-  async donationsList(payload: DonationPayload) {
-    return axios.post(`${backendUrl}/api/donation/list-all`, payload);
+  async donationsList(headers: SessionHeader) {
+    return axios.get(`${backendUrl}/api/donation/list-all`, { headers: headers.content });
   },
+
+  async addFamily(payload: FamilyPayload) {
+    return axios.post(`${backendUrl}/api/family/add`, payload);
+  },
+
+  async familyList(payload: FamilyPayload) {
+    return axios.post(`${backendUrl}/api/family/list-all`, payload);
+  },
+
 };

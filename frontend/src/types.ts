@@ -23,6 +23,13 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface SessionHeader {
+  content: {
+    "x-access-token": string;
+    "x-user-id": string;
+  }
+}
+
 export interface RegistrationPayload {
   name: string;
   surname: string;
@@ -33,8 +40,8 @@ export interface RegistrationPayload {
   address: Address;
 }
 
-export interface DonationPayload {
-  user_id: string,
+export interface DonationCreationPayload {
+  userId: string,
   foods: [
     string
   ],
@@ -46,6 +53,22 @@ export interface DonationPayload {
       period: string,
     }
   ]
+  chat: [ 
+    {
+      fullName: string,
+      text: String,
+      visualized: boolean,
+    }, 
+  ],
+  creationDate: string, 
+  status: string
+}
+
+export interface FamilyPayload {
+  userId: string,
+  phoneNumber: string,
+  components: number,
+  address: Address
 }
 
 // export interface OfferResponse {

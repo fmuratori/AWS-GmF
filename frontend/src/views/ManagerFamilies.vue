@@ -2,12 +2,11 @@
   b-row(class="justify-content-md-center my-5" no-gutters)
     b-col(cols="6")
 
-      b-card(class="mb-2" bg-variant="light" text-variant="dark" v-for="(donation, idx) in donations"
-      :index="idx")
+      b-card(class="mb-2" bg-variant="light" text-variant="dark" )
         b-card-text
           b-row
             b-col
-              h5 Offerta effettuata il {{ donation }}
+              h5 Offerta effettuata il 12/12/2012
             b-col(md="auto")
               b-badge(class="ml-1") Prenotato per il ritiro 
               //- b-badge(class="ml-1") Valutazione
@@ -46,31 +45,21 @@ import Sidebar from "../components/Sidebar.vue";
 
 import api from "../api";
 
-import {
-  Donation
-} from "../types";
-
 export default Vue.extend({
-  name: "ManagerDonationsList",
+  name: "ManagerFamilies",
   components: {
     Navbar,
     Sidebar,
   },
   data: () => {
     return {
-      donations: new Array<Donation>(),
+
     }
   },
   created() {
-    // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
-    } else {
-      this.$router.replace({name: "Login"});
-    }
+    this.$store.dispatch("showSidebar");
 
-    // TODO: mostrare uno spinner mentre sono caricati i dati
-    this.donations = api.donationsList(this.$store.getters.getSessionHeader).then(r => console.log(r));
+    // api.donationsList().then(r => console.log(r));
 
   },
   methods: {

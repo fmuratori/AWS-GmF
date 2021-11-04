@@ -15,79 +15,80 @@
 
         div(id="login-body")
           div(v-if="isLoginSelected")
-            div(class="px-5 pt-5 pb-5")
-              p(v-if="showLoginErrorMessage" class="text-danger") Email o password inserita errata.  
-              h5(class="mt-4") Credenziali
-              b-form-group(id="input-group-11" label="" label-for="input-11")
-                b-input-group()
-                  b-input-group-prepend
-                    b-input-group-text
-                      b-icon(icon="at")
-                  b-form-input(id="input-11" type="email" placeholder="Inserisci email" required v-model="login.email")
-              b-form-group(id="input-group-22" label="" label-for="input-22")
-                b-input-group()
-                  b-input-group-prepend
-                    b-input-group-text
-                      b-icon(icon="key")
-                  b-form-input(id="input-22" type="password" placeholder="Inserisci password" required v-model="login.password")
-              b-row(class="justify-content-md-center" class="mb-4")
-                a(href="#") Ti sei dimenticato la password?
-          
-            b-button(block class="login-button" size="lg" @click="loginRequest" :disabled ="!activateLoginButton")
-              span ACCEDI
-              b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
+            b-form(@submit="loginRequest")
+              div(class="px-5 pt-5 pb-5")
+                p(v-if="showLoginErrorMessage" class="text-danger") Email o password inserita errata.  
+                h5(class="mt-4") Credenziali
+                b-form-group(id="input-group-11" label="" label-for="input-11")
+                  b-input-group()
+                    b-input-group-prepend
+                      b-input-group-text
+                        b-icon(icon="at")
+                    b-form-input(id="input-11" type="text" placeholder="Inserisci email" required v-model="login.email")
+                b-form-group(id="input-group-22" label="" label-for="input-22")
+                  b-input-group()
+                    b-input-group-prepend
+                      b-input-group-text
+                        b-icon(icon="key")
+                    b-form-input(id="input-22" type="password" placeholder="Inserisci password" required v-model="login.password")
+                b-row(class="justify-content-md-center" class="mb-4")
+                  a(href="#") Ti sei dimenticato la password?
+        
+              b-button(block class="login-button" size="lg" type="submit")
+                span ACCEDI
+                b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
 
           div(v-else)
-            div(class="p-3")
-              h5 Informazioni personali
+            b-form(@submit="registrationRequest")
+              div(class="p-3")
+                h5 Informazioni personali
+                b-form-group(id="input-group-1" label="Nome:" label-for="input-1")
+                  b-form-input(id="input-1" type="text" v-model="registration.name" placeholder="Inserisci nome" required)
 
-              b-form-group(id="input-group-1" label="Nome:" label-for="input-1")
-                b-form-input(id="input-1" type="text" v-model="registration.name" placeholder="Inserisci nome" required)
+                b-form-group(id="input-group-2" label="Cognome:" label-for="input-2")
+                  b-form-input(id="input-2" type="text" v-model="registration.surname" placeholder="Inserisci cognome" required)
 
-              b-form-group(id="input-group-2" label="Cognome:" label-for="input-2")
-                b-form-input(id="input-2" type="text" v-model="registration.surname" placeholder="Inserisci cognome" required)
+                b-form-group(id="input-group-3" label="Indirizzo email:" label-for="input-3" 
+                description="La tua email non sarà divulgata a terzi.")
+                  b-form-input(id="input-3" type="email" v-model="registration.email" placeholder="Inserisci email" required)
+                
+                b-form-group(id="input-group-4" label="Numero di cellulare:" label-for="input-4")
+                  b-form-input(id="input-4" type="text"  v-model="registration.phoneNumber" placeholder="Inserisci numero di cellulare" required)
 
-              b-form-group(id="input-group-3" label="Indirizzo email:" label-for="input-3" 
-              description="La tua email non sarà divulgata a terzi.")
-                b-form-input(id="input-3" type="email" v-model="registration.email" placeholder="Inserisci email" required)
-              
-              b-form-group(id="input-group-4" label="Numero di cellulare:" label-for="input-4")
-                b-form-input(id="input-4" type="text"  v-model="registration.phoneNumber" placeholder="Inserisci numero di cellulare" required)
+                hr
 
-              hr
+                h5 Luogo di residenza
+                
+                b-form-group(id="input-group-5" label="Città:" label-for="input-5")
+                  b-form-input(id="input-5" type="text" v-model="registration.address.city" placeholder="Inserisci città" required)
+                
+                b-form-group(id="input-group-6" label="Indirizzo:" label-for="input-6")
+                  b-form-input(id="input-6" type="text" v-model="registration.address.street" placeholder="Inserisci indirizzo" required)
+                
+                b-form-group(id="input-group-7" label="Numero civico:" label-for="input-1")
+                  b-form-input(id="input-7" type="text" v-model="registration.address.civicNumber" placeholder="Inserisci numero civico" required)
 
-              h5 Luogo di residenza
-              
-              b-form-group(id="input-group-5" label="Città:" label-for="input-5")
-                b-form-input(id="input-5" type="text" v-model="registration.address.city" placeholder="Inserisci città" required)
-              
-              b-form-group(id="input-group-6" label="Indirizzo:" label-for="input-6")
-                b-form-input(id="input-6" type="text" v-model="registration.address.street" placeholder="Inserisci indirizzo" required)
-              
-              b-form-group(id="input-group-7" label="Numero civico:" label-for="input-1")
-                b-form-input(id="input-7" type="text" v-model="registration.address.civicNumber" placeholder="Inserisci numero civico" required)
+                hr
+                
+                b-form-group(id="input-group-8" label="Password:" label-for="input-8" 
+                description="Scegli una password efficace, comporta da almeno 8 caratteri tra numeri e lettere maiuscole e minuscole.")
+                  b-form-input(id="input-8" type="password"  v-model="registration.password" placeholder="Inserisci password" required)
 
-              hr
-              
-              b-form-group(id="input-group-8" label="Password:" label-for="input-8" 
-              description="Scegli una password efficace, comporta da almeno 8 caratteri tra numeri e lettere maiuscole e minuscole.")
-                b-form-input(id="input-8" type="password"  v-model="registration.password" placeholder="Inserisci password" required)
+                b-form-group(id="input-group-9" label="Ripeti password:" label-for="input-9")
+                  b-form-input(id="input-9" type="password" v-model="regRepeatPassword" placeholder="Conferma password" required  :state="registrationPasswordCheck()")
+            
+                hr
 
-              b-form-group(id="input-group-9" label="Ripeti password:" label-for="input-9")
-                b-form-input(id="input-9" type="password" v-model="regRepeatPassword" placeholder="Conferma password" required  :state="registrationPasswordCheck()")
-          
-              hr
+                b-form-checkbox(id="checkbox-1" name="checkbox-1" class="mt-4" v-model="registrationPrivacyChecked")
+                  i accetto i termini di servizio e la 
+                    a(href="#") privacy policy
 
-              b-form-checkbox(id="checkbox-1" name="checkbox-1" class="mt-4" v-model="registrationPrivacyChecked")
-                i accetto i termini di servizio e la 
-                  a(href="#") privacy policy
+                b-form-checkbox(id="checkbox-2" name="checkbox-2" class="mt-2")
+                  i voglio ricevere email su eventi nella mia città
 
-              b-form-checkbox(id="checkbox-2" name="checkbox-2" class="mt-2")
-                i voglio ricevere email su eventi nella mia città
-
-            b-button(block class="login-button" size="lg" @click="registrationRequest" :disabled ="!activateRegistrationButton")
-              span REGISTRATI
-              b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
+              b-button(block class="login-button" type="submit" size="lg")
+                span REGISTRATI
+                b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
 
 
 </template>
@@ -111,7 +112,7 @@ export default Vue.extend({
       registrationPrivacyChecked: false,
       regRepeatPassword: "Password1!",
       login: {
-        email: "a",
+        email: "a@a.a",
         password: "Password1!",
       } as LoginPayload,
       registration: {
@@ -119,7 +120,7 @@ export default Vue.extend({
         surname: "Muratori",
         username: "",
         password: "Password1!",
-        email: "a",
+        email: "a@a.a",
         phoneNumber: "1234",
         type: "user",
         address: {
@@ -134,25 +135,6 @@ export default Vue.extend({
       } as RegistrationPayload,
     };
   },
-  computed: {
-    activateLoginButton(): boolean {
-      return this.login.email != "" && this.login.password != "";
-    },
-    activateRegistrationButton(): boolean {
-      return (
-        this.registration.name != "" &&
-        this.registration.surname != "" &&
-        this.registration.password != "" &&
-        this.registration.email != "" &&
-        this.registration.phoneNumber != "" &&
-        this.registration.address.street != "" &&
-        this.registration.address.civicNumber != "" &&
-        this.registration.address.city != "" &&
-        this.registrationPrivacyChecked &&
-        this.registrationPasswordCheck()
-      );
-    },
-  },
   created() {
     this.$store.dispatch("hideSidebar");
   },
@@ -166,7 +148,8 @@ export default Vue.extend({
         this.registration.password != ""
       );
     },
-    loginRequest() {
+    loginRequest(event) {
+      event.preventDefault();
       api
         .loginRequest(this.login)
         .then((r: any) => {
@@ -184,7 +167,8 @@ export default Vue.extend({
           this.showLoginErrorMessage = true;
         });
     },
-    registrationRequest() {
+    registrationRequest(event) {
+      event.preventDefault();
       api
         .registrationRequest(this.registration)
         .then((r: any) => {
