@@ -15,11 +15,11 @@
 
         b-form-group(id="input-group-2" label="Data scadenza donazione:" label-for="input-2")
           b-input-group
-            b-form-datepicker(id="input-2" required="" v-model="form.date" reset-button close-button 
+            b-form-datepicker(id="input-2" required="" v-model="form.expirationDate" reset-button close-button 
             class="my-no-right-border")
             b-input-group-append
-              b-button(variant="danger" class="my-no-left-border" @click="form.date = null"
-              :disabled="form.date == null") 
+              b-button(variant="danger" class="my-no-left-border" @click="form.expirationDate = null"
+              :disabled="form.expirationDate == null") 
                 span Cancella
                 b-icon(icon="x" aria-hidden="true")
 
@@ -29,41 +29,47 @@
             b-row
               b-col()
                 b-form-group(id="input-group-3" label="Città:" label-for="input-3")
-                  b-form-input(id="input-3" type="text" v-model="form.location.city")
+                  b-form-input(id="input-3" type="text" v-model="form.address.city")
             b-row
               b-col(cols=8)
                 b-form-group(id="input-group-4" label="Indirizzo:" label-for="input-4")
-                  b-form-input(id="input-4" type="text" v-model="form.location.street")
+                  b-form-input(id="input-4" type="text" v-model="form.address.street")
               b-col(cols=4)
                 b-form-group(id="input-group-5" label="Numero civico:" label-for="input-5")
-                  b-form-input(id="input-5" type="text" v-model="form.location.civicNumber")
+                  b-form-input(id="input-5" type="text" v-model="form.address.civicNumber")
             div(class="text-center")
               b-button(variant="outline-secondary") Cerca su maps
 
         b-form-group(id="input-group-6" label="Informazioni aggiuntive:" label-for="input-6")
-          b-form-textarea(id="input-6" rows="3" max-rows="6" v-model="form.info")
+          b-form-textarea(id="input-6" rows="3" max-rows="6" v-model="form.additionalInformation")
           
         b-form-group(id="input-group-7" label="Periodo di ritiro:" label-for="input-7")
-          b-row(v-for="(weekDay, idx) in form.weekDays" :index="idx" class="mb-1")
+          b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1")
             b-col(cols="2")
-              label {{ weekDay.name }}
+              label {{ weekDayName }}
             b-col(cols="10")
               b-button-group(class="d-flex")
-                b-button(@click="weekDayButtonClick(weekDay.name, 'morning')" :variant="computeButtonVariant(weekDay.times, 'morning')") Mattino
-                b-button(@click="weekDayButtonClick(weekDay.name, 'afternoon')" :variant="computeButtonVariant(weekDay.times, 'afternoon')") Pomeriggio
-                b-button(@click="weekDayButtonClick(weekDay.name, 'evening')" :variant="computeButtonVariant(weekDay.times, 'evening')") Sera
+                b-button(@click="weekDayButtonClick(weekDay, 'morning')" :variant="computeButtonVariant(weekDay, 'morning')") Mattino
+                b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
+                b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
 
         b-row
           b-col
-            b-button(block variant="outline-danger") Annulla
+            b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})") Annulla
           b-col
-            b-button(block variant="success") Procedi
+            b-button(block variant="success" @click="addDonation") Procedi
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
+
+import {
+  DonationPayload, Address
+} from "../types";
+
+import api from "../api";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -73,56 +79,52 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      form: {
-        foods: [""],
-        date: null,
-        location: {
-          city: "",
-          address: "",
-          civicNumber: "",
-          cap: "",
-        },
-        info: "",
-        weekDays: [
-          // TODO: mettere valori diin inglese
-          {
-            name: "lun",
-            times: [],
-          },
-          {
-            name: "mar",
-            times: [],
-          },
-          {
-            name: "mer",
-            times: [],
-          },
-          {
-            name: "gio",
-            times: [],
-          },
-          {
-            name: "ven",
-            times: [],
-          },
-          {
-            name: "sab",
-            times: [],
-          },
-          {
-            name: "dom",
-            times: [],
-          },
-        ],
+      weekDays: {
+        lun: "Lunedì",
+        mar: "Martedì",
+        mer: "Mercoledì",
+        gio: "Giovedì",
+        ven: "Venerdì",
+        sab: "Sabato",
+        dom: "Domenica",
       },
+      form: {
+        userId: "",
+        foods: [
+          ""
+        ],
+        expirationDate: "",
+        address: {
+          city: "",
+          street: "",
+          civicNumber: "",
+          coordinates: {
+            x: 0,
+            y: 0,
+          }
+        } as Address,
+        additionalInformation: "",
+        pickUpPeriod: new Array<{weekDay: string, period: string}>(),
+      } as DonationPayload,
     };
   },
   created() {
     this.$store.dispatch("showSidebar");
+
+    // check if user is logged in
+    if (this.$store.getters.isUserLogged) {
+      this.form.userId = this.$store.state.session.userData.user_id;
+      this.form.address = this.$store.state.session.userData.address;
+    } else {
+      this.$router.replace({name: "Login"});
+    }
   },
   methods: {
-    computeButtonVariant(times: string[], time: string) {
-      return times.includes(time) ? "dark" : "outline-secondary";
+    computeButtonVariant(weekDay: string, period: string) {
+      const idx: number = this.form.pickUpPeriod.findIndex(
+        (wd: { weekDay: string, period: string }) => wd.weekDay == weekDay && wd.period == period
+      );
+      return idx != -1 ? "dark" : "outline-secondary";
     },
     foodInputValueChange(inputIdx: number) {
       if (inputIdx == this.form.foods.length - 1) {
@@ -134,33 +136,44 @@ export default Vue.extend({
     foodDeleteClicked(inputIdx: number) {
       this.form.foods.splice(inputIdx, 1);
     },
-    weekDayButtonClick(name: string, time: string) {
-      const idx: number = this.form.weekDays.findIndex(
-        (wd: { name: string }) => wd.name == name
+    weekDayButtonClick(weekDay: string, period: string) {
+      const idx: number = this.form.pickUpPeriod.findIndex(
+        (wd: { weekDay: string, period: string }) => wd.weekDay == weekDay && wd.period == period
       );
+
       if (idx != -1) {
-        const selectedTimes: string[] = this.form.weekDays[idx].times;
-        const times: number = selectedTimes.indexOf(time);
-        if (times != -1) {
-          selectedTimes.splice(times, 1);
-        } else {
-          selectedTimes.push(time);
-        }
+        this.form.pickUpPeriod.splice(idx, 1);
+      } else {
+        this.form.pickUpPeriod.push({ weekDay, period });
       }
     },
+    addDonation() {
+      api.addDonation(this.form).then(r => {
+        console.log(r)
+        this.$router.replace({name: "ManagerDonationsList"});
+        this.$bvToast.toast(
+            `Donazione effettuata con successo.`,
+            {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            }
+          );
+      }).catch(e => {
+        this.$bvToast.toast(
+            `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
+            {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+      })
+    }
   },
 });
 </script>
 
-<style lang="scss">
-.my-no-left-border {
-  border-top-left-radius: 0px 0px;
-  border-bottom-left-radius: 0px 0px;
-  border-left: 0px;
-}
-.my-no-right-border {
-  border-top-right-radius: 0px 0px;
-  border-bottom-right-radius: 0px 0px;
-  border-right: 0px;
-}
-</style>
+<style scoped lang="scss"> </style>

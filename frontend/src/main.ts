@@ -7,11 +7,11 @@ import store from "./store";
 Vue.config.productionTip = false;
 
 /* font awesome i */
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { fas } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-library.add(fas)
-Vue.component("font-awesome-icon", FontAwesomeIcon)
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+library.add(fas);
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 /* bootstrap-vue imports */
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
@@ -21,11 +21,11 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
 /* socketio vuejs based implementation */
-import SocketIO from "./socket"
-Vue.use(SocketIO)
+import SocketIO from "./socket";
+Vue.use(SocketIO);
 
 /* local style sheet */
-import "./assets/style.scss"
+import "./assets/style.scss";
 
 new Vue({
   router,

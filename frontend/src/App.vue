@@ -24,14 +24,15 @@ export default Vue.extend({
     window.addEventListener("resize", this.resizeEventHandler);
 
     //socket initialization
-    
-    this.$socket.emit('message_to_server', {
+
+    this.$socket.emit("message_to_server", {
       donationId: "61752da118f0f36305767ec8",
       userId: "6172e6a4df4d0325895749e2",
-      message: "mess da client"
-    })
-    this.$socket.on('message_to_client', (message: string) => {console.log("message: " + message)})
-
+      message: "mess da client",
+    });
+    this.$socket.on("message_to_client", (message: string) => {
+      console.log("message: " + message);
+    });
   },
   destroyed() {
     window.removeEventListener("resize", this.resizeEventHandler);

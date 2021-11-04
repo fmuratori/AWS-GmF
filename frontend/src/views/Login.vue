@@ -98,21 +98,22 @@ import { AxiosError } from "axios";
 
 // import bcrypt from "bcrypt"
 
-import api from "../api/api";
-import { LoginRequest, RegistrationRequest } from "../api/types"
+import api from "../api";
+import { LoginPayload, RegistrationPayload, Address } from "../types";
 
 export default Vue.extend({
   name: "Login",
   data: function () {
     return {
+      // TODO: remove precompiled test-values
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
-      regRepeatPassword: "",
+      regRepeatPassword: "Password1!",
       login: {
         email: "a",
         password: "Password1!",
-      } as LoginRequest,
+      } as LoginPayload,
       registration: {
         name: "Fabio",
         surname: "Muratori",
@@ -129,8 +130,8 @@ export default Vue.extend({
             x: 0,
             y: 0,
           },
-        },
-      } as RegistrationRequest,
+        } as Address,
+      } as RegistrationPayload,
     };
   },
   computed: {
@@ -170,7 +171,10 @@ export default Vue.extend({
         .loginRequest(this.login)
         .then((r: any) => {
           if (r.status == 200) {
-            this.$store.dispatch("login", r.data.data);
+            this.$store.dispatch("login", {
+              token: r.data.data.token, 
+              userData: r.data.data.user
+            });
             this.showLoginErrorMessage = false;
             this.$router.replace({ name: "ManagerHome" });
           }
