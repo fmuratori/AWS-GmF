@@ -7,5 +7,6 @@ const userController = new UserController()
 router.post('/register', userController.register)
 router.post('/login', userController.login)
 router.post('/update', userController.update)
+router.get('/upgrade', userController.upgrade)
 
 export default router
