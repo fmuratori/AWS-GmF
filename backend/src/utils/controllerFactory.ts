@@ -11,6 +11,11 @@ export default class ControllerFactory<T> {
      */
     add = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
+            if(req.body._id){
+                //edit the document
+                const doc = await model.findByIdAndUpdate(req.body.id, req.body)
+            }
+            //create a new document
             const elem = await model.create(req.body)
 
             res.status(200).json({
