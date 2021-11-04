@@ -43,15 +43,28 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
+import api from "../api";
+
 export default Vue.extend({
   name: "ManagerDonationsList",
   components: {
     Navbar,
     Sidebar,
   },
+  data: () => {
+    return {
+
+    }
+  },
   created() {
     this.$store.dispatch("showSidebar");
+
+    // api.donationsList().then(r => console.log(r));
+
   },
+  methods: {
+
+  }
 });
 </script>
 

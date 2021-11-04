@@ -34,7 +34,7 @@ export interface RegistrationPayload {
 }
 
 export interface DonationPayload {
-  userId: string,
+  user_id: string,
   foods: [
     string
   ],

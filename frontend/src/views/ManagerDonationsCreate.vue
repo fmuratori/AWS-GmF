@@ -89,7 +89,7 @@ export default Vue.extend({
         dom: "Domenica",
       },
       form: {
-        userId: "",
+        user_id: "",
         foods: [
           ""
         ],
@@ -113,7 +113,7 @@ export default Vue.extend({
 
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.form.userId = this.$store.state.session.userData.user_id;
+      this.form.user_id = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
     } else {
       this.$router.replace({name: "Login"});

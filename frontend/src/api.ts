@@ -23,6 +23,6 @@ export default {
   },
 
   async donationsList(payload: DonationPayload) {
-    return axios.post(`${backendUrl}/api/donation/add`, payload);
+    return axios.post(`${backendUrl}/api/donation/list-all`, payload);
   },
 };
