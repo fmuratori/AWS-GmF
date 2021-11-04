@@ -11,14 +11,14 @@ export interface PackDocument extends Document, Pack {
  }
 
 const packSchema = new mongoose.Schema({
-    food_ids: {
+    foodIds: {
         type: [mongoose.Types.ObjectId],
-        required: [true, "missing required field food_ids"],
+        required: [true, "missing required field foodIds"],
         ref: "Food"
     },
-    deliveryVolunteer_id: {
+    deliveryVolunteerId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "missing required field deliveryVolunteer_id"],
+        required: [true, "missing required field deliveryVolunteerId"],
         ref: "User"
     },
     status: {
@@ -26,9 +26,9 @@ const packSchema = new mongoose.Schema({
         default: () => "ready",
         enum: ["ready", "planned delivery", "delivered"]
     },
-    family_id: {
+    familyId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "missing required field family_id"],
+        required: [true, "missing required field familyId"],
         ref: "Family"
     },
     qrCodeImage: {

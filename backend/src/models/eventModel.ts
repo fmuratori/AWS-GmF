@@ -42,9 +42,9 @@ const eventSchema = new mongoose.Schema({
         }
 
     },
-    ownerVolunteer_id: {
+    ownerVolunteerId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "missing required field ownerVolunteer_id"],
+        required: [true, "missing required field ownerVolunteerId"],
         ref: "User"
     }
 })

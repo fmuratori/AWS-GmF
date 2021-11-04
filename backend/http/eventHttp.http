@@ -15,7 +15,7 @@ content-type: application/json
         }
     },
     "date": "2021-10-29",
-    "ownerVolunteer_id": "6172e6a4df4d0325895749e2"
+    "ownerVolunteerId": "6172e6a4df4d0325895749e2"
 }
 
 ### EVENT: list all

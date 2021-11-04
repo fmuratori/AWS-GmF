@@ -7,19 +7,17 @@ interface ChatNode {
 }
 
 export default interface Donation {
-    user_id: String,
+    userId: String,
     chat: [ChatNode],
-    food_ids: [String],
+    foods: [String],
     expirationDate: Date,
     creationDate: Date,
     address: Address,
     additionalInformations: String,
-    pickUpPeriods: [{
+    pickUpPeriod: [{
         weekDay: String,
-        startTime: String,
-        endTime: String
+        period: String
     }],
-    pickUpDate: Date,
     status: String,
-    volunteer: String
+    volunteerId: String
 }
