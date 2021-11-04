@@ -8,6 +8,7 @@ const factory = new ControllerFactory<DonationDocument>()
 export default class DonationController {
 
 	add = factory.add(DonationModel)
+	edit = factory.edit(DonationModel)
 	listAll = factory.findMany(DonationModel)
 
 	getChat = catchAsync(async (req: Request, res: Response) => {

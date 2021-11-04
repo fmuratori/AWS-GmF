@@ -6,5 +6,6 @@ const packController = new PackController()
 
 router.get('/list-all', packController.listAll)
 router.post('/add', packController.add)
+router.post('/edit', packController.edit)
 
 export default router

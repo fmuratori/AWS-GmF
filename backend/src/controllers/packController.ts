@@ -1,11 +1,12 @@
-import FoodModel, { FoodDocument } from '../models/foodModel';
+import PackModel, { PackDocument } from '../models/packModel';
 import ControllerFactory from '../utils/controllerFactory';
 
-const factory = new ControllerFactory<FoodDocument>()
+const factory = new ControllerFactory<PackDocument>()
 
-export default class FoodController {
+export default class PackController {
 
-	add = factory.add(FoodModel)
-	listAll = factory.findMany(FoodModel)
+	add = factory.add(PackModel)
+	edit = factory.add(PackModel)
+	listAll = factory.findMany(PackModel)
 
 }
