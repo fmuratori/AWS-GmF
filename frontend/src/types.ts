@@ -53,21 +53,6 @@ export interface DonationCreationPayload {
       period: string,
     }
   ]
-}
-
-export interface Donation {
-  userId: string,
-  foods: [
-    string
-  ],
-  expirationDate: string,
-  address: Address,
-  additionalInformation: string,
-  pickUpPeriod: [{
-      weekDay: string,
-      period: string,
-    }
-  ]
   chat: [ 
     {
       fullName: string,
@@ -77,6 +62,13 @@ export interface Donation {
   ],
   creationDate: string, 
   status: string
+}
+
+export interface FamilyPayload {
+  userId: string,
+  phoneNumber: string,
+  components: number,
+  address: Address
 }
 
 // export interface OfferResponse {

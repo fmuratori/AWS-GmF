@@ -4,7 +4,8 @@ import {
   LoginPayload,
   RegistrationPayload,
   DonationCreationPayload,
-  SessionHeader
+  SessionHeader,
+  FamilyPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -26,4 +27,13 @@ export default {
   async donationsList(headers: SessionHeader) {
     return axios.get(`${backendUrl}/api/donation/list-all`, { headers: headers.content });
   },
+
+  async addFamily(payload: FamilyPayload) {
+    return axios.post(`${backendUrl}/api/family/add`, payload);
+  },
+
+  async familyList(payload: FamilyPayload) {
+    return axios.post(`${backendUrl}/api/family/list-all`, payload);
+  },
+
 };
