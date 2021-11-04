@@ -5,7 +5,12 @@ import app from './app'
 
 // express server
 const httpServer: http.Server = new http.Server(app)
-const activeSoket: any = new Array()
+
+//interfaccia definita per creare la lista di key-value userId-socketId
+interface userSocketId{
+  [userId: string]: string
+}
+let activeSoket: userSocketId = {}
 
 import { Server, Socket } from "socket.io";
 import { addMessageToChat } from './controllers/donationController'
@@ -13,9 +18,13 @@ import { addMessageToChat } from './controllers/donationController'
 const io = new Server(httpServer, {});
 io.on("connection", (socket: Socket) => {
 
-  socket.on("initialize", (userId: String) => {
-    console.log("id socket: " + socket.id)
-
+  /**
+   * da chiamare quando l'utente si logga
+   * serve per associare nel server l'id utente all'id della socket
+   */
+  socket.on("initialize", (userId: string) => {
+    console.log("associato il socket-id: " + socket.id + " all'utente " + userId)
+    activeSoket[userId] = socket.id
   })
 
   socket.emit("message_to_client", "asd")
