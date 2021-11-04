@@ -14,8 +14,7 @@ export default class ControllerFactory<T> {
             const elem = await model.create(req.body)
 
             res.status(200).json({
-                status: "success",
-                data: { elem }
+                status: "success"
             })
         })
 
