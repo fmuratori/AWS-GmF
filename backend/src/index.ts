@@ -5,13 +5,18 @@ import app from './app'
 
 // express server
 const httpServer: http.Server = new http.Server(app)
+const activeSoket: any = new Array()
 
 import { Server, Socket } from "socket.io";
 import { addMessageToChat } from './controllers/donationController'
 
 const io = new Server(httpServer, {});
 io.on("connection", (socket: Socket) => {
-  console.log("id socket: " + socket.id)
+
+  socket.on("initialize", (userId: String) => {
+    console.log("id socket: " + socket.id)
+
+  })
 
   socket.emit("message_to_client", "asd")
   socket.on("message_to_server", (obj: any) => {

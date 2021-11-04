@@ -1,4 +1,4 @@
-import express, {Router} from 'express'
+import express, { Router } from 'express'
 import DonationController from '../controllers/donationController'
 
 const router: Router = express.Router()

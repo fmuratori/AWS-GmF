@@ -35,10 +35,7 @@ export default class UserController {
 		const token = createToken(newUser._id)
 
 		res.status(200).json({
-			status: "success",
-			data: { 
-				user: await UserModel.findById(newUser._id), 
-				token: token }
+			status: "success"
 		})
 	})
 
@@ -68,9 +65,10 @@ export default class UserController {
 
 		res.status(200).json({
 			status: "success",
-			data: { 
+			data: {
 				user: await UserModel.findById(user._id),
-				token: token }
+				token: token
+			}
 		})
 	})
 

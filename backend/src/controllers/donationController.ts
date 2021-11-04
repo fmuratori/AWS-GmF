@@ -21,7 +21,7 @@ export default class DonationController {
 	})
 }
 
-export async function addMessageToChat(donationId: String, userId: String, message: String){
+export async function addMessageToChat(donationId: String, userId: String, message: String) {
 	const donation = await DonationModel.findById(donationId)
 		.select("+chat")
 
@@ -31,9 +31,9 @@ export async function addMessageToChat(donationId: String, userId: String, messa
 	}
 
 	const newNode: any = {
-		user_id: userId,
+		userId: userId,
 		text: message,
-		visualized: false 
+		visualized: false
 	}
 	donation?.chat.push(newNode)
 	await DonationModel.findByIdAndUpdate(donationId, donation)
