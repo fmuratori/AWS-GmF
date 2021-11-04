@@ -2,11 +2,12 @@
   b-row(class="justify-content-md-center my-5" no-gutters)
     b-col(cols="6")
 
-      b-card(class="mb-2" bg-variant="light" text-variant="dark" )
+      b-card(class="mb-2" bg-variant="light" text-variant="dark" v-for="(donation, idx) in donations"
+      :index="idx")
         b-card-text
           b-row
             b-col
-              h5 Offerta effettuata il 12/12/2012
+              h5 Offerta effettuata il {{ donation }}
             b-col(md="auto")
               b-badge(class="ml-1") Prenotato per il ritiro 
               //- b-badge(class="ml-1") Valutazione
@@ -45,6 +46,10 @@ import Sidebar from "../components/Sidebar.vue";
 
 import api from "../api";
 
+import {
+  Donation
+} from "../types";
+
 export default Vue.extend({
   name: "ManagerDonationsList",
   components: {
@@ -53,7 +58,7 @@ export default Vue.extend({
   },
   data: () => {
     return {
-
+      donations: new Array<Donation>(),
     }
   },
   created() {
@@ -64,7 +69,8 @@ export default Vue.extend({
       this.$router.replace({name: "Login"});
     }
 
-    api.donationsList(this.$store.getters.getSessionHeader).then(r => console.log(r));
+    // TODO: mostrare uno spinner mentre sono caricati i dati
+    this.donations = api.donationsList(this.$store.getters.getSessionHeader).then(r => console.log(r));
 
   },
   methods: {

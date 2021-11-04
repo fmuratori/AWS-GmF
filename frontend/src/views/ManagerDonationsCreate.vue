@@ -2,10 +2,10 @@
   b-row(class="justify-content-md-center my-5 no-gutters")
     b-col(cols="6")
       p CREA UNA DONAZIONE
-      b-form()
+      b-form(@submit="addDonation")
         b-form-group(id="input-group-1" label="Alimenti:" label-for="input-1") 
           b-input-group(v-for="(value, idx) in form.foods" :key="idx" class="mb-1")
-            b-form-input(id="input-1" type="text" placeholder="" class="my-no-right-border" 
+            b-form-input(id="input-1" type="text" placeholder="pacco di pasta da 250gg" class="my-no-right-border" 
             @input="foodInputValueChange(idx)" v-model="form.foods[idx]")
             b-input-group-append
               b-button(variant="danger" class="my-no-left-border" @click="foodDeleteClicked(idx)"
@@ -15,7 +15,7 @@
 
         b-form-group(id="input-group-2" label="Data scadenza donazione:" label-for="input-2")
           b-input-group
-            b-form-datepicker(id="input-2" required="" v-model="form.expirationDate" reset-button close-button 
+            b-form-datepicker(id="input-2" required v-model="form.expirationDate" reset-button close-button 
             class="my-no-right-border")
             b-input-group-append
               b-button(variant="danger" class="my-no-left-border" @click="form.expirationDate = null"
@@ -29,14 +29,14 @@
             b-row
               b-col()
                 b-form-group(id="input-group-3" label="Città:" label-for="input-3")
-                  b-form-input(id="input-3" type="text" v-model="form.address.city")
+                  b-form-input(id="input-3" type="text" v-model="form.address.city" required)
             b-row
               b-col(cols=8)
                 b-form-group(id="input-group-4" label="Indirizzo:" label-for="input-4")
-                  b-form-input(id="input-4" type="text" v-model="form.address.street")
+                  b-form-input(id="input-4" type="text" v-model="form.address.street" required)
               b-col(cols=4)
                 b-form-group(id="input-group-5" label="Numero civico:" label-for="input-5")
-                  b-form-input(id="input-5" type="text" v-model="form.address.civicNumber")
+                  b-form-input(id="input-5" type="text" v-model="form.address.civicNumber" required)
             div(class="text-center")
               b-button(variant="outline-secondary") Cerca su maps
 
@@ -52,12 +52,11 @@
                 b-button(@click="weekDayButtonClick(weekDay, 'morning')" :variant="computeButtonVariant(weekDay, 'morning')") Mattino
                 b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
                 b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
-
         b-row
           b-col
-            b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})") Annulla
+            b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
           b-col
-            b-button(block variant="success" @click="addDonation") Procedi
+            b-button(block variant="success" type="submit") Procedi
 </template>
 
 <script lang="ts">
@@ -66,7 +65,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
 import {
-  DonationPayload, Address
+  DonationCreationPayload, Address
 } from "../types";
 
 import api from "../api";
@@ -89,7 +88,7 @@ export default Vue.extend({
         dom: "Domenica",
       },
       form: {
-        user_id: "",
+        userId: "",
         foods: [
           ""
         ],
@@ -105,14 +104,14 @@ export default Vue.extend({
         } as Address,
         additionalInformation: "",
         pickUpPeriod: new Array<{weekDay: string, period: string}>(),
-      } as DonationPayload,
+      } as DonationCreationPayload,
     };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       this.$store.dispatch("showSidebar");
-      this.form.user_id = this.$store.state.session.userData._id;
+      this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
     } else {
       this.$router.replace({name: "Login"});
@@ -146,30 +145,56 @@ export default Vue.extend({
         this.form.pickUpPeriod.push({ weekDay, period });
       }
     },
-    addDonation() {
-      api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-        console.log(r)
-        this.$router.replace({name: "ManagerDonationsList"});
+    addDonation(event) {
+      event.preventDefault();
+
+      if (this.form.pickUpPeriod.length == 0) {
         this.$bvToast.toast(
-            `Donazione effettuata con successo.`,
+            `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
             {
               title: "Donazione",
               autoHideDelay: 5000,
-              variant: "success",
+              variant: "warning",
               appendToast: false,
             }
           );
-      }).catch(e => {
+
+      } else if (this.form.foods.length == 0) {
         this.$bvToast.toast(
-            `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
+            `Inserire almeno un alimento che vuoi donare.`,
             {
               title: "Donazione",
               autoHideDelay: 5000,
-              variant: "danger",
+              variant: "warning",
               appendToast: false,
             }
           );
-      })
+
+      } else {
+        api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
+          console.log(r)
+          this.$router.replace({name: "ManagerDonationsList"});
+          this.$bvToast.toast(
+              `Donazione effettuata con successo.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+        }).catch(e => {
+          this.$bvToast.toast(
+              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+        })
+      }
     }
   },
 });

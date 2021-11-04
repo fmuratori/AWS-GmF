@@ -40,8 +40,8 @@ export interface RegistrationPayload {
   address: Address;
 }
 
-export interface DonationPayload {
-  user_id: string,
+export interface DonationCreationPayload {
+  userId: string,
   foods: [
     string
   ],
@@ -53,6 +53,30 @@ export interface DonationPayload {
       period: string,
     }
   ]
+}
+
+export interface Donation {
+  userId: string,
+  foods: [
+    string
+  ],
+  expirationDate: string,
+  address: Address,
+  additionalInformation: string,
+  pickUpPeriod: [{
+      weekDay: string,
+      period: string,
+    }
+  ]
+  chat: [ 
+    {
+      fullName: string,
+      text: String,
+      visualized: boolean,
+    }, 
+  ],
+  creationDate: string, 
+  status: string
 }
 
 // export interface OfferResponse {
