@@ -1,7 +1,8 @@
 import Address from "./utilInterfaces/address";
 
 interface ChatNode {
-    user: String,
+    userId: String,
+    userFullname: String,
     text: String,
     visualized: Boolean
 }

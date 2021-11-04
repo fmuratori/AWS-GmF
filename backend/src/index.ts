@@ -30,7 +30,7 @@ io.on("connection", (socket: Socket) => {
   socket.emit("message_to_client", "asd")
   socket.on("message_to_server", (obj: any) => {
     console.log("message_to_server: " + obj.message)
-    addMessageToChat(obj.donationId, obj.userId, obj.message)
+    addMessageToChat(obj.donationId, obj.userId, obj.fullname, obj.message)
   })
 
 });

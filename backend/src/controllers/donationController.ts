@@ -21,7 +21,7 @@ export default class DonationController {
 	})
 }
 
-export async function addMessageToChat(donationId: String, userId: String, message: String) {
+export async function addMessageToChat(donationId: String, userId: String,fullname: String, message: String) {
 	const donation = await DonationModel.findById(donationId)
 		.select("+chat")
 
@@ -32,6 +32,7 @@ export async function addMessageToChat(donationId: String, userId: String, messa
 
 	const newNode: any = {
 		userId: userId,
+		userFullname: fullname,
 		text: message,
 		visualized: false
 	}

@@ -15,8 +15,12 @@ const donationSchema = new mongoose.Schema({
     chat: {
         type: [{
             userId: mongoose.Types.ObjectId,
+            userFullname: String,
             text: String,
-            visualized: Boolean
+            visualized: {
+                type: Boolean,
+                default: false
+            }
         }],
         default: () => [],
         select: false,
