@@ -1,16 +1,19 @@
 ### DONATION list all
-POST http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/find
 accept: application/json 
 content-type: application/json
 
 {
     "filter": {
-        "userId": "617ff2d461a8dc488e6e8bf3"
+        "_id": "6184f5ea36a18325abc945ba"
+    },
+    "projection": {
+        "volunteerId": 1
     }
 }
 
 ### DONATION add
-POST http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/add
 accept: application/json 
 content-type: application/json
 
@@ -40,7 +43,7 @@ content-type: application/json
 }
 
 ### DONATION delete
-DELETE http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/delete
 accept: application/json 
 content-type: application/json
 
@@ -67,7 +70,7 @@ content-type: application/json
 }
 
 ### DONATION get unread messages
-POST http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/find
 accept: application/json 
 content-type: application/json
 
