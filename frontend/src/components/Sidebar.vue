@@ -141,7 +141,7 @@ export default Vue.extend({
 #sidebar {
   background-color: $greyscale2;
   color: $greyscaleE;
-  overflow: hidden !important;
+  // overflow: hidden !important;
 
   display: flex;
   flex-direction: column;

@@ -1,38 +1,41 @@
 <template lang="pug">
   b-container
     div(class="justify-content-center my-5")
-      p FAMIGLIE SEGNALATE
+      p YOUR EVENTS
       b-row
-        b-col(sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
+        p {{this.$store.state.session.userData._id}}
+        div(v-if="events") No event found for this user
+        b-col(sm=12 md=6 v-for="(event, idx) in events" :index="idx")
           b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
-            b-card-text
-              div(class="px-4 pt-4")
-                h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
-                b-row()
-                  b-col(cols="auto")
-                    div(class="")
-                      p(class="mb-0") Alimenti donati:
-                      p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
-                    div(class="")
-                      p(class="mb-0") Scade tra:
-                      p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
-                    //- div 
-                    //-   p(class="mb-0") Orari disponibili per il ritiro:
-                    //-   p(class="font-weight-bold") 12/12/2012 
-                    //-     span(class="font-weight-normal") Scade tra 12 giorni
-                    div(class="")
-                      p(class="mb-0") Luogo ritiro:
-                      p(class="font-weight-bold") {{ donation.address.street + " " + donation.address.civicNumber + ", " + donation.address.city }}
-                  b-col(cols="auto")
-                    div(class="mb-2")
-                      p(class="mb-0") Stato donazione:
-                      h5
-                        b-badge(v-if="donation.status == 'waiting'" variant="secondary") In attesa
-                        b-badge(v-if="donation.status == 'selected'" variant="warning") Prenotato per il ritiro 
-                        b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
-                    div(class="mb-2")
-                      a(href="#") Hai # messaggi non letti
-              b-button(block @click="$router.replace({name: 'ManagerDonationsInspect', params: {'donation': donation}})" class="b-card-footer-button") Mostra
+            b prova
+            //- b-card-text
+            //-   div(class="px-4 pt-4")
+            //-     h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
+            //-     b-row()
+            //-       b-col(cols="auto")
+            //-         div(class="")
+            //-           p(class="mb-0") Alimenti donati:
+            //-           p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
+            //-         div(class="")
+            //-           p(class="mb-0") Scade tra:
+            //-           p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
+            //-         //- div 
+            //-         //-   p(class="mb-0") Orari disponibili per il ritiro:
+            //-         //-   p(class="font-weight-bold") 12/12/2012 
+            //-         //-     span(class="font-weight-normal") Scade tra 12 giorni
+            //-         div(class="")
+            //-           p(class="mb-0") Luogo ritiro:
+            //-           p(class="font-weight-bold") {{ donation.address.street + " " + donation.address.civicNumber + ", " + donation.address.city }}
+            //-       b-col(cols="auto")
+            //-         div(class="mb-2")
+            //-           p(class="mb-0") Stato donazione:
+            //-           h5
+            //-             b-badge(v-if="donation.status == 'waiting'" variant="secondary") In attesa
+            //-             b-badge(v-if="donation.status == 'selected'" variant="warning") Prenotato per il ritiro 
+            //-             b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
+            //-         div(class="mb-2")
+            //-           a(href="#") Hai # messaggi non letti
+              b-button(block @click="$router.replace({name: 'ManagerEventInspect', params: {'event': event}})" class="b-card-footer-button") Edit
 
 </template>
 
@@ -44,9 +47,7 @@ import Sidebar from "../components/Sidebar.vue";
 
 import api from "../api";
 
-import {
-  Donation, ChatMessage
-} from "../types";
+import { Event } from "../types";
 
 export default Vue.extend({
   name: "ManagerDonationsList",
@@ -56,7 +57,7 @@ export default Vue.extend({
   },
   data: () => {
     return {
-      donations: new Array<Donation>(),
+      events: new Array<Event>(),
     }
   },
   created() {
@@ -65,9 +66,9 @@ export default Vue.extend({
       this.$store.dispatch("showSidebar");
       
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.donationsList(this.$store.getters.getSessionHeader)
+      api.eventList({filter: {userId: this.$store.state.session.userData._id}})
       .then((r:any) => {
-        this.donations = r.data.data.list;
+        this.events = r.data.data.list;
       }).catch(e => console.log(e));
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
@@ -78,12 +79,12 @@ export default Vue.extend({
     }
   },
   methods: {
-    getExpirationDays(donation: Donation) {
-      return moment(donation.expirationDate).diff(moment.now(), "days");
-    },
-    formatDonation(donation: Donation) {
-      return moment(donation.creationDate).locale("it").format("LL");
-    }
+    // getExpirationDays(donation: Event) {
+    //   return moment(donation.expirationDate).diff(moment.now(), "days");
+    // },
+    // formatDonation(donation: Event) {
+    //   return moment(donation.creationDate).locale("it").format("LL");
+    // }
   }
 });
 </script>
