@@ -3,10 +3,12 @@ import axios from "axios";
 import {
   LoginPayload,
   RegistrationPayload,
-  DonationCreationPayload,
+  Donation,
+  UserDonationsPayload,
   SessionHeader,
   FamilyPayload,
-  ChatRequestPayload
+  ChatRequestPayload,
+  DonationDeletionPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -21,12 +23,16 @@ export default {
     return axios.post(`${backendUrl}/api/user/register`, payload);
   },
 
-  async addDonation(payload: DonationCreationPayload, headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/donation/add`, payload, { headers: headers.content });
+  async addDonation(payload: Donation, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/donation`, payload, { headers: headers.content });
   },
 
-  async donationsList(headers: SessionHeader) {
-    return axios.get(`${backendUrl}/api/donation/list-all`, { headers: headers.content });
+  async editDonation(payload: Donation, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/donation/edit`, payload, { headers: headers.content });
+  },
+
+  async donationsList(payload: UserDonationsPayload, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/donation`, payload, { headers: headers.content });
   },
 
   async donationsMessagesCounts(userId:string, headers: SessionHeader) {
@@ -44,13 +50,15 @@ export default {
         "donationId": 1
       }
     }
-    return axios.get(`${backendUrl}/api/donation/list-all`, { params: payload, headers: headers.content });
-
+    return axios.get(`${backendUrl}/api/donation`, { params: payload, headers: headers.content });
   },
 
   async getDonationChat(payload: ChatRequestPayload, headers: SessionHeader) {
-    
-    return axios.get(`${backendUrl}/api/donation/get-chat`, { params: payload, headers: headers.content });
+    return axios.post(`${backendUrl}/api/donation/get-chat`, payload, { headers: headers.content });
+  },
+
+  async deleteDonation(payload: DonationDeletionPayload, headers: SessionHeader) {
+    return axios.delete(`${backendUrl}/api/donation`, { params: payload, headers: headers.content });
   },
   
   async addFamily(payload: FamilyPayload) {

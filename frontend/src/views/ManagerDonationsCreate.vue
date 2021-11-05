@@ -66,7 +66,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
 import {
-  DonationCreationPayload, Address
+  Donation, Address
 } from "../types";
 
 import api from "../api";
@@ -105,7 +105,7 @@ export default Vue.extend({
         } as Address,
         additionalInformation: "",
         pickUpPeriod: new Array<{weekDay: string, period: string}>(),
-      } as DonationCreationPayload,
+      } as Donation,
     };
   },
   created() {

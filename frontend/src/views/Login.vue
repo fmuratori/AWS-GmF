@@ -162,7 +162,7 @@ export default Vue.extend({
             this.$router.replace({ name: "ManagerHome" });
 
             // initialize a socket session (let the server know that a new logged user is active)
-            this.$socketio.emit("initialize", this.$store.state.session.userId);
+            this.$socket.emit("initialize", this.$store.state.session.userData._id);
           }
         })
         .catch((err: AxiosError): void => {

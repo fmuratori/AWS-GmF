@@ -152,18 +152,26 @@ export default Vue.extend({
       const payload: ChatRequestPayload = {
         donationId: this.donation._id,
       } as ChatRequestPayload;
-
+      console.log(payload)
       api.getDonationChat(payload, this.$store.getters.getSessionHeader).then((r:any) => {
+        console.log(r)
         this.chat = r.data.data.chat;
       }).catch(e => console.log(e));
 
     },
     sendMessage(event) {
       event.preventDefault();
+      console.log({
+        donationId: this.donation._id,
+        userId: this.$store.state.session.userData._id,
+        message: this.chatMessage,
+        fullname: this.$store.getters.userFullName,
+      })
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
-        userId: this.$store.state.session.userId,
+        userId: this.$store.state.session.userData._id,
         message: this.chatMessage,
+        fullname: this.$store.getters.userFullName,
       });
     },
   },

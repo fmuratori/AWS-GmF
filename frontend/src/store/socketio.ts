@@ -1,5 +1,8 @@
 export default {
-  state: {},
+  state: {
+    unreadMessagesCount: 0,
+
+  },
   mutations: {},
   actions: {
     // SOCKET_connect() {},
@@ -9,5 +12,9 @@ export default {
     SOCKET_message_to_client({ commit }, payload) {
       console.log("ac message_to_client", payload);
     },
+
+    // SOCKET_unread_message({ commit }, payload) {
+
+    // }
   },
 };

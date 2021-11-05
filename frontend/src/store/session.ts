@@ -39,8 +39,8 @@ const sessionModule = {
         }
       } as SessionHeader
     },
-    userFullName(state: { name: string; surname: string; }) {
-      return state.name + " " + state.surname;
+    userFullName(state: any) {
+      return state.userData.name + " " + state.userData.surname;
     }
     // isVolunteer(state: any) {
     //   return state.type != null;
