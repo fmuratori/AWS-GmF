@@ -85,8 +85,8 @@ export interface FamilyPayload {
 }
 
 export interface EventPayload {
-  volunteerId: string,
-  name: string,
+  ownerVolunteerId: string,
+  eventTitle: string,
   description: string,
   address: Address,
   date: Date,
