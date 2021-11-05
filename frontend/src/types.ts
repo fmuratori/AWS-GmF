@@ -92,6 +92,7 @@ export interface FamilyPayload {
 }
 
 export interface EventPayload {
+  id: string | null, 
   ownerVolunteerId: string,
   eventTitle: string,
   description: string,

@@ -16,7 +16,7 @@
                         b {{ formatDate(event) }}
                   b-col(cols="auto")
                     p(class="mb-2") {{ event.description }}
-              b-button(block @click="$router.replace({name: 'ManagerEventInspect', params: {'event': event}})" class="b-card-footer-button") Edit
+              b-button(block @click="$router.replace({name: 'ManagerEventCreate', params: {'event': event}})" class="b-card-footer-button") Edit
 
 </template>
 
@@ -51,9 +51,6 @@ export default Vue.extend({
       .then((r:any) => {
         this.events = r.data.data.list;
       }).catch(e => console.log(e));
-
-      // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
-      // });
 
     } else {
       this.$router.replace({name: "Login"});

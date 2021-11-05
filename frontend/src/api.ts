@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BIconExclamationSquare } from "bootstrap-vue";
 
 import {
   LoginPayload,
@@ -84,8 +85,12 @@ export default {
     return axios.post(`${backendUrl}/api/event/add`, payload);
   },
 
+  async editEvent(payload: EventPayload, ) {
+    return axios.post(`${backendUrl}/api/event/edit`, payload);
+  },
+
   async eventList(payload: any) {
     return axios.post(`${backendUrl}/api/event/find`, payload);
-  },
+  }
 
 };
