@@ -1,53 +1,50 @@
 <template lang="pug">
-  b-row(class="justify-content-md-center my-5" no-gutters)
-    b-col(cols="6")
-
-      b-card(class="mb-2" bg-variant="light" text-variant="dark" v-for="(donation, idx) in donations"
-      :index="idx")
-        b-card-text
-          b-row
-            b-col
-              h5 Offerta effettuata il {{ donation }}
-            b-col(md="auto")
-              b-badge(class="ml-1") Prenotato per il ritiro 
-              //- b-badge(class="ml-1") Valutazione
-              //- b-badge(class="ml-1") Prenotato per il ritiro 
-              //- b-badge(class="ml-1") Ritirato
-              //- b-badge(class="ml-1") Scaduto
-          b-row
-            b-col
-              div()
-                p(class="mb-0") Alimenti donati:
-                p(class="font-weight-bold mb-2") Pane, Carne
-              div 
-                p(class="mb-0") Scade tra:
-                p(class="font-weight-bold mb-2") 12 giorni
-              //- div 
-              //-   p(class="mb-0") Orari disponibili per il ritiro:
-              //-   p(class="font-weight-bold") 12/12/2012 
-              //-     span(class="font-weight-normal") Scade tra 12 giorni
-              div 
-                p(class="mb-0") Luogo ritiro:
-                p(class="font-weight-bold mb-2") Via a caso, 32, Cesena
-              div                        
-                a(href="#") Hai (2) messaggi non letti
-
-              b-button(variant="secondary" @click="$router.replace({name: 'ManagerDonationsInspect'})") Espandi
-
-            b-col()
-              b-img(thumbnail="" fluid-grow src="https://picsum.photos/125/125/?image=58" alt="Image 1")
+  b-container
+    div(class="justify-content-center my-5")
+        p TUE DONAZIONI
+        b-card-group(deck)
+          b-card(bg-variant="light" text-variant="dark" no-body v-for="(donation, idx) in donations" :index="idx" class="mb-2")
+            b-card-text
+              div(class="px-4 pt-4")
+                h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
+                b-row()
+                  b-col(cols="auto" xs=12 sm=12 md="auto" lg="auto")
+                    div(class="")
+                      p(class="mb-0") Alimenti donati:
+                      p(class="font-weight-bold mb-2") {{ donation.foods.join(", ") }}
+                    div(class="")
+                      p(class="mb-0") Scade tra:
+                      p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
+                    //- div 
+                    //-   p(class="mb-0") Orari disponibili per il ritiro:
+                    //-   p(class="font-weight-bold") 12/12/2012 
+                    //-     span(class="font-weight-normal") Scade tra 12 giorni
+                    div(class="")
+                      p(class="mb-0") Luogo ritiro:
+                      p(class="font-weight-bold") {{ donation.address.street + " " + donation.address.civicNumber + ", " + donation.address.city }}
+                  b-col(cols="auto" xs=12 sm=12 md="auto" lg="auto")
+                    div(class="mb-2")
+                      p(class="mb-0") Stato donazione:
+                      h5
+                        b-badge(v-if="donation.status == 'waiting'" variant="secondary") In attesa
+                        b-badge(v-if="donation.status == 'selected'" variant="warning") Prenotato per il ritiro 
+                        b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
+                    div(class="mb-2")
+                      a(href="#") Hai # messaggi non letti
+              b-button(block @click="$router.replace({name: 'ManagerDonationsInspect', params: {'donation': donation}})" class="b-card-footer-button") Mostra
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import moment from 'moment';
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
 import api from "../api";
 
 import {
-  Donation
+  Donation, ChatMessage
 } from "../types";
 
 export default Vue.extend({
@@ -65,18 +62,43 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       this.$store.dispatch("showSidebar");
+      
+      // TODO: mostrare uno spinner mentre sono caricati i dati
+      api.donationsList(this.$store.getters.getSessionHeader)
+      .then((r:any) => {
+        this.donations = r.data.data.list;
+      }).catch(e => console.log(e));
+
+      api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
+        console.log("asd", r);
+      });
     } else {
       this.$router.replace({name: "Login"});
     }
 
-    // TODO: mostrare uno spinner mentre sono caricati i dati
-    this.donations = api.donationsList(this.$store.getters.getSessionHeader).then(r => console.log(r));
 
   },
   methods: {
-
+    getExpirationDays(donation: Donation) {
+      return moment(donation.expirationDate).diff(moment.now(), "days");
+    },
+    formatDonation(donation: Donation) {
+      return moment(donation.creationDate).lang("it").format("LL");
+    }
   }
 });
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@import "@/assets/style.scss";
+
+.b-card-footer-button {
+  background-color: $color3;
+
+  border: 0px;
+
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+</style>

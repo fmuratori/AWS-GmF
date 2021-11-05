@@ -56,6 +56,7 @@ export interface DonationCreationPayload {
 }
 
 export interface Donation {
+  _id: string,
   userId: string,
   foods: [
     string
@@ -68,15 +69,15 @@ export interface Donation {
       period: string,
     }
   ]
-  chat: [ 
-    {
-      fullName: string,
-      text: String,
-      visualized: boolean,
-    }, 
-  ],
+  chat: ChatMessage[],
   creationDate: string, 
   status: string
+}
+
+export interface ChatMessage {
+  fullName: string,
+  text: String,
+  visualized: boolean,
 }
 
 // export interface OfferResponse {

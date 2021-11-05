@@ -38,6 +38,14 @@ const routes: Array<RouteConfig> = [
         /* webpackChunkName: "ManagerDonationsList" */ "../views/ManagerDonationsList.vue"
       ),
   },
+  {
+    path: "/manager/donations/inspect",
+    name: "ManagerDonationsInspect",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerDonationsInspect" */ "../views/ManagerDonationsInspect.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({

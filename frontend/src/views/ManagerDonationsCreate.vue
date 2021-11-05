@@ -1,35 +1,39 @@
 <template lang="pug">
-  b-row(class="justify-content-md-center my-5 no-gutters")
-    b-col(cols="6")
+  b-row(class="justify-content-center my-5" no-gutters)
+    b-col(xl=5 lg=5 md=6 sm=8 cols=10)
       p CREA UNA DONAZIONE
-      b-form(@submit="addDonation")
-        b-form-group(id="input-group-1" label="Alimenti:" label-for="input-1") 
-          b-input-group(v-for="(value, idx) in form.foods" :key="idx" class="mb-1")
-            b-form-input(id="input-1" type="text" placeholder="pacco di pasta da 250gg" class="my-no-right-border" 
-            @input="foodInputValueChange(idx)" v-model="form.foods[idx]")
-            b-input-group-append
-              b-button(variant="danger" class="my-no-left-border" @click="foodDeleteClicked(idx)"
-              :disabled="form.foods[idx] == ''") 
-                span Cancella
-                b-icon(icon="x" aria-hidden="true")
+      b-card(bg-variant="light" class="mb-2")
+        b-form(@submit="addDonation")
+          div(class="mb-4")
+            b-form-group(id="input-group-1" label="Alimenti:" label-for="input-1") 
+              b-input-group(v-for="(value, idx) in form.foods" :key="idx" class="mb-1")
+                b-form-input(id="input-1" type="text" placeholder="pacco di pasta da 250gg" class="my-no-right-border" 
+                @input="foodInputValueChange(idx)" v-model="form.foods[idx]")
+                b-input-group-append
+                  b-button(variant="danger" class="my-no-left-border" @click="foodDeleteClicked(idx)"
+                  :disabled="form.foods[idx] == ''") 
+                    span Cancella
+                    b-icon(icon="x" aria-hidden="true")
 
-        b-form-group(id="input-group-2" label="Data scadenza donazione:" label-for="input-2")
-          b-input-group
-            b-form-datepicker(id="input-2" required v-model="form.expirationDate" reset-button close-button 
-            class="my-no-right-border")
-            b-input-group-append
-              b-button(variant="danger" class="my-no-left-border" @click="form.expirationDate = null"
-              :disabled="form.expirationDate == null") 
-                span Cancella
-                b-icon(icon="x" aria-hidden="true")
+          div(class="mb-4")
+            b-form-group(id="input-group-2" label="Data scadenza donazione:" label-for="input-2")
+              b-input-group
+                b-form-datepicker(id="input-2" required v-model="form.expirationDate" reset-button close-button 
+                class="my-no-right-border")
+                b-input-group-append
+                  b-button(variant="danger" class="my-no-left-border" @click="form.expirationDate = null"
+                  :disabled="form.expirationDate == null") 
+                    span Cancella
+                    b-icon(icon="x" aria-hidden="true")
+          
+          div(class="mb-4")
+            b-form-group(id="input-group-6" label="Informazioni aggiuntive:" label-for="input-6")
+              b-form-textarea(id="input-6" rows="3" max-rows="6" v-model="form.additionalInformation")
 
-        div(class="mb-3")
-          label() Luogo ritiro:
-          b-card()
-            b-row
-              b-col()
-                b-form-group(id="input-group-3" label="Città:" label-for="input-3")
-                  b-form-input(id="input-3" type="text" v-model="form.address.city" required)
+          div(class="mb-4")
+            p(class="font-weight-bold text-center") Luogo ritiro
+            b-form-group(id="input-group-3" label="Città:" label-for="input-3")
+              b-form-input(id="input-3" type="text" v-model="form.address.city" required)
             b-row
               b-col(cols=8)
                 b-form-group(id="input-group-4" label="Indirizzo:" label-for="input-4")
@@ -39,24 +43,22 @@
                   b-form-input(id="input-5" type="text" v-model="form.address.civicNumber" required)
             div(class="text-center")
               b-button(variant="outline-secondary") Cerca su maps
-
-        b-form-group(id="input-group-6" label="Informazioni aggiuntive:" label-for="input-6")
-          b-form-textarea(id="input-6" rows="3" max-rows="6" v-model="form.additionalInformation")
           
-        b-form-group(id="input-group-7" label="Periodo di ritiro:" label-for="input-7")
-          b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1")
-            b-col(cols="2")
-              label {{ weekDayName }}
-            b-col(cols="10")
-              b-button-group(class="d-flex")
-                b-button(@click="weekDayButtonClick(weekDay, 'morning')" :variant="computeButtonVariant(weekDay, 'morning')") Mattino
-                b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
-                b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
-        b-row
-          b-col
-            b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
-          b-col
-            b-button(block variant="success" type="submit") Procedi
+
+          div()
+            p(class="font-weight-bold text-center") Periodo ritiro
+            b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1")
+              b-col(cols="2")
+                label {{ weekDayName }}
+              b-col(cols="10")
+                b-button-group(class="d-flex")
+                  b-button(@click="weekDayButtonClick(weekDay, 'morning')" :variant="computeButtonVariant(weekDay, 'morning')") Mattino
+                  b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
+                  b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
+      
+      b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
+      
+      b-button(block variant="outline-success" type="submit") Procedi
 </template>
 
 <script lang="ts">
@@ -110,6 +112,7 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+
       this.$store.dispatch("showSidebar");
       this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
@@ -150,8 +153,7 @@ export default Vue.extend({
 
       if (this.form.pickUpPeriod.length == 0) {
         this.$bvToast.toast(
-            `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
-            {
+            `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`, {
               title: "Donazione",
               autoHideDelay: 5000,
               variant: "warning",
@@ -161,8 +163,7 @@ export default Vue.extend({
 
       } else if (this.form.foods.length == 0) {
         this.$bvToast.toast(
-            `Inserire almeno un alimento che vuoi donare.`,
-            {
+            `Inserire almeno un alimento che vuoi donare.`, {
               title: "Donazione",
               autoHideDelay: 5000,
               variant: "warning",
@@ -172,11 +173,13 @@ export default Vue.extend({
 
       } else {
         api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          console.log(r)
+          
+          // removes empty string element
+          this.form.foods.pop()
+
           this.$router.replace({name: "ManagerDonationsList"});
           this.$bvToast.toast(
-              `Donazione effettuata con successo.`,
-              {
+              `Donazione effettuata con successo.`, {
                 title: "Donazione",
                 autoHideDelay: 5000,
                 variant: "success",
@@ -185,8 +188,7 @@ export default Vue.extend({
             );
         }).catch(e => {
           this.$bvToast.toast(
-              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
-              {
+              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`, {
                 title: "Donazione",
                 autoHideDelay: 5000,
                 variant: "danger",

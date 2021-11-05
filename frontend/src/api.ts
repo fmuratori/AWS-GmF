@@ -26,4 +26,23 @@ export default {
   async donationsList(headers: SessionHeader) {
     return axios.get(`${backendUrl}/api/donation/list-all`, { headers: headers.content });
   },
+
+  async donationsMessagesCounts(userId:string, headers: SessionHeader) {
+    const payload = {
+      "filter": {
+        "userId": userId,
+        "chat": {
+          "$elemMatch": {
+            "visualized": false
+          }
+        }
+      },
+      "projection": {
+        "chat.$": 1,
+        "donationId": 1
+      }
+    }
+    return axios.get(`${backendUrl}/api/donation/list-all`, { params: payload , headers: headers.content });
+
+  }
 };
