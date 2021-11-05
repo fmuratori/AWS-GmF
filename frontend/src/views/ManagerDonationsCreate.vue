@@ -2,8 +2,8 @@
   b-row(class="justify-content-center my-5" no-gutters)
     b-col(xl=5 lg=5 md=6 sm=8 cols=10)
       p CREA UNA DONAZIONE
-      b-card(bg-variant="light" class="mb-2")
-        b-form(@submit="addDonation")
+      b-form(@submit="addDonation")
+        b-card(bg-variant="light" class="mb-2")
           div(class="mb-4")
             b-form-group(id="input-group-1" label="Alimenti:" label-for="input-1") 
               b-input-group(v-for="(value, idx) in form.foods" :key="idx" class="mb-1")
@@ -56,9 +56,8 @@
                   b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
                   b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
       
-      b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
-      
-      b-button(block variant="outline-success" type="submit") Procedi
+        b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
+        b-button(block variant="outline-success" type="submit") Procedi
 </template>
 
 <script lang="ts">
@@ -149,7 +148,6 @@ export default Vue.extend({
     },
     addDonation(event) {
       event.preventDefault();
-
       if (this.form.pickUpPeriod.length == 0) {
         this.$bvToast.toast(
             `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`, {
@@ -159,7 +157,6 @@ export default Vue.extend({
               appendToast: false,
             }
           );
-
       } else if (this.form.foods.length == 0) {
         this.$bvToast.toast(
             `Inserire almeno un alimento che vuoi donare.`, {
@@ -169,10 +166,9 @@ export default Vue.extend({
               appendToast: false,
             }
           );
-
       } else {
         api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          
+          console.log("ASD")
           // removes empty string element
           this.form.foods.pop()
 

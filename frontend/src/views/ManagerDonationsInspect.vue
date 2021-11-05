@@ -1,31 +1,24 @@
 <template lang="pug">
   b-container
     b-row(class="justify-content-center my-5")
-      //- b-col(cols="5")
-      //-   b-card
-      //-     p CHAT
       b-col(xl=5 lg=5 md=6 sm=8 cols=10 class="ml-2")
         p MESSAGGI
-        b-card(bg-variant="light" class="mb-2")
-          b-card-text
-            div(class="mb-2" style="background-color: red")
-              p(class="p-0 m-0")
-                label(class="font-weight-bolder") Carlo
-                label() : asd loll xd
+        b-card(bg-variant="light" class="mb-2" no-body)
+          b-card-text(class="m-2")
+            div(class="chat-message")
+              p(class="font-weight-bolder m-0 p-0") Carlo
+              p(class="m-0 p-0") asd loll xd
 
-              p(class="p-0 m-0 text-right")
-                label(class="font-weight-bolder") Marco
-                label() : asd loll xd
+            div(class="chat-message")
+              p(class="font-weight-bolder m-0 p-0 text-right") Tu
+              p(class="text-right m-0 p-0") asd loll xd
 
-              p(class="p-0 m-0")
-                label(class="font-italic") Marco stà scrivendo...
-                
-            div(class="mb-2" style="background-color: pink")
+            div(class="")
+              label(class="font-italic") Marco stà scrivendo...
+
+            div(class="")
               input(block type="text")
               button() invia
-
-
-
 
       b-col(xl=5 lg=5 md=6 sm=8 cols=10)
         p INFORMAZIONI DONAZIONE
@@ -226,4 +219,14 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss"> </style>
+<style scoped lang="scss">
+
+@import "@/assets/style.scss";
+
+.chat-message {
+  background-color: $greyscaleF;
+  border-radius: 5px;
+  margin: 1em;
+  padding: 1em;
+}
+</style>

@@ -1,17 +1,18 @@
 <template lang="pug">
   b-container
     div(class="justify-content-center my-5")
-        p TUE DONAZIONI
-        b-card-group(deck)
-          b-card(bg-variant="light" text-variant="dark" no-body v-for="(donation, idx) in donations" :index="idx" class="mb-2")
+      p TUE DONAZIONI
+      b-row
+        b-col(sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
+          b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
             b-card-text
               div(class="px-4 pt-4")
                 h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
                 b-row()
-                  b-col(cols="auto" xs=12 sm=12 md="auto" lg="auto")
+                  b-col(cols="auto")
                     div(class="")
                       p(class="mb-0") Alimenti donati:
-                      p(class="font-weight-bold mb-2") {{ donation.foods.join(", ") }}
+                      p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
                     div(class="")
                       p(class="mb-0") Scade tra:
                       p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
@@ -22,7 +23,7 @@
                     div(class="")
                       p(class="mb-0") Luogo ritiro:
                       p(class="font-weight-bold") {{ donation.address.street + " " + donation.address.civicNumber + ", " + donation.address.city }}
-                  b-col(cols="auto" xs=12 sm=12 md="auto" lg="auto")
+                  b-col(cols="auto")
                     div(class="mb-2")
                       p(class="mb-0") Stato donazione:
                       h5
@@ -69,27 +70,25 @@ export default Vue.extend({
         this.donations = r.data.data.list;
       }).catch(e => console.log(e));
 
-      api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
-        console.log("asd", r);
-      });
+      // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
+      // });
+
     } else {
       this.$router.replace({name: "Login"});
     }
-
-
   },
   methods: {
     getExpirationDays(donation: Donation) {
       return moment(donation.expirationDate).diff(moment.now(), "days");
     },
     formatDonation(donation: Donation) {
-      return moment(donation.creationDate).lang("it").format("LL");
+      return moment(donation.creationDate).locale("it").format("LL");
     }
   }
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "@/assets/style.scss";
 
 .b-card-footer-button {
