@@ -1,12 +1,12 @@
 ###
-GET http://localhost:3000/api/food/list-all
+GET http://localhost:3000/api/food
 accept: application/json 
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTc4NjY3YmZhYTcyMGEwNThmN2YyZTEiLCJpYXQiOjE2MzUzNjQwNzQsImV4cCI6MTYzNTM2NzY3NH0.9OYz7fPmtXA9kOKqejuHZzqLWQ9TjRVpyaDj1Z9FbR8
 x-user-id: 6178667bfaa720a058f7f2e1
 
 ###
-GET http://localhost:3000/api/food/list-all
+GET http://localhost:3000/api/food
 accept: application/json 
 content-type: application/json
 
@@ -19,7 +19,7 @@ content-type: application/json
 ### ADD FOOD
 ### if exists an elem with same name and expiration date, will update it
 #POST http://localhost:3000/api/food/add
-POST http://localhost:3000/api/food/add-or-update
+POST http://localhost:3000/api/food
 accept: application/json 
 content-type: application/json
 

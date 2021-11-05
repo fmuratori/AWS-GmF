@@ -5,8 +5,9 @@ const factory = new ControllerFactory<FamilyDocument>()
 
 export default class FamilyController {
 
+	get = factory.findMany(FamilyModel)
 	add = factory.add(FamilyModel)
 	edit = factory.edit(FamilyModel)
-	listAll = factory.findMany(FamilyModel)
+	delete = factory.delete(FamilyModel)
 
 }

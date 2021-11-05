@@ -4,6 +4,7 @@ interface ChatNode {
     userId: String,
     userFullname: String,
     text: String,
+    date: Date,
     visualized: Boolean
 }
 

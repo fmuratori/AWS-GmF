@@ -5,8 +5,9 @@ const factory = new ControllerFactory<PackDocument>()
 
 export default class PackController {
 
+	get = factory.findMany(PackModel)
 	add = factory.add(PackModel)
 	edit = factory.add(PackModel)
-	listAll = factory.findMany(PackModel)
+	delete = factory.delete(PackModel)
 
 }

@@ -45,6 +45,24 @@ export default class ControllerFactory<T> {
             })
         })
 
+    delete = (model: Model<T>) => 
+        catchAsync(async (req: Request, res: Response) => {
+            if (!req.body.id) {
+                res.status(400).json({
+                    status: "missing-id-error",
+                    message: "Missing id of document to edit"
+                })
+                return
+            }
+
+            const elem = await model.findByIdAndDelete(req.body.id)
+            console.log(elem)
+
+            res.status(200).json({
+                status: "success"
+            })
+        })
+
     /**
      * @param model mongoose model
      * @returns all document in the collection

@@ -5,8 +5,9 @@ const factory = new ControllerFactory<EventDocument>()
 
 export default class EventController {
 
+	get = factory.findMany(EventModel)
 	add = factory.add(EventModel)
 	edit = factory.edit(EventModel)
-	listAll = factory.findMany(EventModel)
+	delete = factory.delete(EventModel)
 
 }
