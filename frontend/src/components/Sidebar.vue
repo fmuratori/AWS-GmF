@@ -74,7 +74,7 @@
         b-col.mr-1(cols="auto")
           font-awesome-icon(icon="utensils", size="lg")
         b-col.ml-1
-          h6 Eventi
+          h6 Events
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -82,7 +82,7 @@
         :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEventCreate') }"
       )
         b-col
-          label.py-1 Crea una evento
+          label.py-1 Create event
         b-col(cols="auto")
           b-icon(icon="chevron-right")
       b-row.pl-3.pr-1.sidebar-item(
@@ -92,7 +92,7 @@
         :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEvents') }"
       )
         b-col
-          label.py-1 Tuoi eventi
+          label.py-1 Your events
         b-col(cols="auto")
           b-icon(icon="chevron-right")
 </template>
