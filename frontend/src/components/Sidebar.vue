@@ -7,6 +7,7 @@
       b-col.ml-1(cols="auto")
         p {{ this.$store.state.session.userData.name }} {{ this.$store.state.session.userData.surname }}
         p {{ this.$store.state.session.userData.type }}
+        p(@click="changePage('ManagerEditUser')" class="clickable") edit
 
     hr.sidebar-hr.my-3
 
@@ -124,7 +125,7 @@ export default Vue.extend({
     },
     isSidebarOpen() {
       return this.$store.state.navigation.isSidebarOpen;
-    },
+    }
   },
 });
 </script>
@@ -159,6 +160,10 @@ export default Vue.extend({
 
 #sidebar-actions {
   flex-grow: 1;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .sidebar-hr {

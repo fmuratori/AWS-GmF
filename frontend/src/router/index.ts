@@ -23,6 +23,13 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "ManagerHome" */ "../views/ManagerHome.vue"),
   },
   {
+    path: "/user/edit",
+    name: "ManagerEditUser",
+    component: () =>
+      import(/* webpackChunkName: "ManagerHome" */ "../views/ManagerEditUser.vue"),
+  },
+
+  {
     path: "/manager/donations/create",
     name: "ManagerDonationsCreate",
     component: () =>

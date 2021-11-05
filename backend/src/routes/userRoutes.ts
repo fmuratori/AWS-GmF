@@ -8,5 +8,6 @@ router.post('/register', userController.register)
 router.post('/login', userController.login)
 router.post('/update', userController.update)
 router.post('/upgrade', userController.upgrade)
+router.post('/change-password', userController.changePassword)
 
 export default router

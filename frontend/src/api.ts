@@ -1,5 +1,4 @@
 import axios from "axios";
-import { BIconExclamationSquare } from "bootstrap-vue";
 
 import {
   LoginPayload,
@@ -7,7 +6,9 @@ import {
   DonationCreationPayload,
   SessionHeader,
   FamilyPayload,
-  EventPayload
+  EventPayload,
+  editUserPayload,
+  changePasswordPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -20,6 +21,14 @@ export default {
 
   async registrationRequest(payload: RegistrationPayload) {
     return axios.post(`${backendUrl}/api/user/register`, payload);
+  },
+
+  async editUser(payload: editUserPayload) {
+    return axios.post(`${backendUrl}/api/user/update`, payload);
+  },
+
+  async changePassword(payload: changePasswordPayload) {
+    return axios.post(`${backendUrl}/api/user/change-password`, payload);
   },
 
   async addDonation(payload: DonationCreationPayload, headers: SessionHeader) {

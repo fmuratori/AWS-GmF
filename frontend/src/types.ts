@@ -36,8 +36,22 @@ export interface RegistrationPayload {
   password: string;
   email: string;
   phoneNumber: string;
-  type: string;
   address: Address;
+}
+
+export interface editUserPayload {
+  id: string,
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  address: Address;
+}
+
+export interface changePasswordPayload {
+  id: string,
+  oldPassword: string,
+  newPassword: string
 }
 
 export interface DonationCreationPayload {
