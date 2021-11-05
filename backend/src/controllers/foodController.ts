@@ -7,7 +7,7 @@ const factory = new ControllerFactory<FoodDocument>()
 
 export default class FoodController {
 
-	get = factory.findMany(FoodModel)
+	find = factory.findMany(FoodModel)
 	add = factory.add(FoodModel)
 	delete = factory.delete(FoodModel)
 

@@ -7,7 +7,7 @@ const factory = new ControllerFactory<DonationDocument>()
 
 export default class DonationController {
 
-	get = factory.findMany(DonationModel)
+	find = factory.findMany(DonationModel)
 	add = factory.add(DonationModel)
 	edit = factory.edit(DonationModel)
 	delete = factory.delete(DonationModel)

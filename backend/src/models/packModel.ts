@@ -23,7 +23,7 @@ const packSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: () => "ready",
+        default: "ready",
         enum: ["ready", "planned delivery", "delivered"]
     },
     familyId: {

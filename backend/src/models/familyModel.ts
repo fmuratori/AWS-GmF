@@ -24,6 +24,11 @@ const familySchema = new mongoose.Schema({
             }
         },
         required: [true, "missing required field address"]
+    },
+    status: {
+        type: String,
+        enum: ["pending", "verified"],
+        default: "pending"
     }
 })
 

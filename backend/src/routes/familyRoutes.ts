@@ -4,8 +4,8 @@ import FamilyController from '../controllers/familyController'
 const router: Router = express.Router()
 const familyController = new FamilyController()
 
-router.get('/', familyController.get)
-router.post('/', familyController.add)
+router.post('/', familyController.find)
+router.post('/edit', familyController.add)
 router.put('/', familyController.edit)
 router.delete('/', familyController.delete)
 
