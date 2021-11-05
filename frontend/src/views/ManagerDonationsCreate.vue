@@ -2,7 +2,7 @@
   b-row(class="justify-content-center my-5" no-gutters)
     b-col(xl=5 lg=5 md=6 sm=8 cols=10)
       p CREA UNA DONAZIONE
-      b-form(@submit="addDonation")
+      b-form(@submit="submit")
         b-card(bg-variant="light" class="mb-2")
           div(class="mb-4")
             b-form-group(id="input-group-1" label="Alimenti:" label-for="input-1") 
@@ -56,8 +56,8 @@
                   b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
                   b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
       
-        b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
         b-button(block variant="outline-success" type="submit") Procedi
+        b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
 </template>
 
 <script lang="ts">
@@ -106,6 +106,7 @@ export default Vue.extend({
         additionalInformation: "",
         pickUpPeriod: new Array<{weekDay: string, period: string}>(),
       } as Donation,
+      mode: "",
     };
   },
   created() {
@@ -116,6 +117,14 @@ export default Vue.extend({
       }
       this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
+
+      console.log(this.$route.params)
+      if ("donation" in this.$route.params) { 
+        this.form = this.$route.params.donation;
+        this.mode = "edit";
+      } else {
+        this.mode = "create";
+      }
     } else {
       this.$router.replace({name: "Login"});
     }
@@ -148,52 +157,85 @@ export default Vue.extend({
         this.form.pickUpPeriod.push({ weekDay, period });
       }
     },
-    addDonation(event) {
+    submit(event) {
+      this.mode=='edit' ? this.editDonation(event) : this.addDonation(event)
+    },
+    editDonation(event) {
       event.preventDefault();
-      if (this.form.pickUpPeriod.length == 0) {
-        this.$bvToast.toast(
-            `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "warning",
-              appendToast: false,
-            }
-          );
-      } else if (this.form.foods.length == 0) {
-        this.$bvToast.toast(
-            `Inserire almeno un alimento che vuoi donare.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "warning",
-              appendToast: false,
-            }
-          );
-      } else {
-        api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          console.log(r)
-          // removes empty string element
-          this.form.foods.pop()
-
+      if (this.formChecks()) { 
+        api.editDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
           this.$router.replace({name: "ManagerDonationsList"});
           this.$bvToast.toast(
-              `Donazione effettuata con successo.`, {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
+            `Modifica della donazione effettuata con successo.`, {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            }
+          );
         }).catch(e => {
           this.$bvToast.toast(
-              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`, {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
+            `Impossibile modificare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`, {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
         })
       }
+    },
+    addDonation(event) {
+      event.preventDefault();
+      if (this.formChecks()) {
+        // removes empty string element
+        this.form.foods.pop()
+
+        api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
+          this.$router.replace({name: "ManagerDonationsList"});
+          this.$bvToast.toast(
+            `Donazione effettuata con successo.`, {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            }
+          );
+        }).catch(e => {
+          this.$bvToast.toast(
+            `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`, {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        })
+      }
+    },
+    formChecks() {
+      if (this.form.pickUpPeriod.length == 0) {
+        this.$bvToast.toast(
+          `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`, {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "warning",
+            appendToast: false,
+          }
+        );
+        return false;
+      } else if (this.form.foods.length == 0) {
+        this.$bvToast.toast(
+          `Inserire almeno un alimento che vuoi donare.`, {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "warning",
+            appendToast: false,
+          }
+        );
+        return false;
+      }
+      return true;
     }
   },
 });

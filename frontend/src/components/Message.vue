@@ -1,6 +1,6 @@
 <template lang="pug">
   p(class="message m-1 p-2" :class="{'my-message': isOwner}")
-    label(class="font-weight-bolder m-0 p-0") {{ username }} - {{ role }}
+    label(class="font-weight-bolder m-0 p-0") {{ username }}
     span(v-for="(msg, idx) in messages" :index="idx")
       br
       label(class="m-0 p-0") {{ msg }}
@@ -17,7 +17,6 @@ export default Vue.extend({
   props:{
     isOwner: Boolean,
     username: String,
-    role: String,
     messages: Array, 
     date: String, 
     isVisualized: Boolean,

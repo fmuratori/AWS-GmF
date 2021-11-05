@@ -67,11 +67,7 @@ export default Vue.extend({
       }
       
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      const user = {
-        userId: this.$store.state.session.userData._id,
-      } as UserDonationsPayload
-
-      api.userDonationsList(user, this.$store.getters.getSessionHeader).then((r:any) => {
+      api.userDonationsList(this.$store.state.session.userData._id, this.$store.getters.getSessionHeader).then((r:any) => {
         this.donations = r.data.data.list;
       }).catch(e => console.log(e));
 

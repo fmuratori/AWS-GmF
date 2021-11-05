@@ -60,7 +60,9 @@ export interface Donation {
 }
 
 export interface ChatMessage {
-  fullName: string,
+  userId: string,
+  userFullName: string,
+  date: string, 
   text: string,
   visualized: boolean,
 }
@@ -71,10 +73,6 @@ export interface ChatRequestPayload {
 
 export interface DonationDeletionPayload {
   id: string,
-}
-
-export interface UserDonationsPayload {
-  userId: string,
 }
 
 export interface FamilyPayload {

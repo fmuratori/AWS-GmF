@@ -4,11 +4,8 @@ import {
   LoginPayload,
   RegistrationPayload,
   Donation,
-  UserDonationsPayload,
   SessionHeader,
   FamilyPayload,
-  ChatRequestPayload,
-  DonationDeletionPayload,
   EventPayload
 } from "./types";
 
@@ -32,8 +29,10 @@ export default {
     return axios.post(`${backendUrl}/api/donation/edit`, payload, { headers: headers.content });
   },
 
-  async userDonationsList(payload: UserDonationsPayload, headers: SessionHeader) {
-    console.log(payload, { "filter": payload })
+  async userDonationsList(userId: string, headers: SessionHeader) {
+    const payload = {
+      userId: userId,
+    }
     return axios.post(`${backendUrl}/api/donation`, { "filter": payload }, { headers: headers.content });
   },
 
@@ -55,14 +54,20 @@ export default {
     return axios.get(`${backendUrl}/api/donation`, { params: payload, headers: headers.content });
   },
 
-  async getDonationChat(payload: ChatRequestPayload, headers: SessionHeader) {
+  async getDonationChat(donationId: string, headers: SessionHeader) {
+    const payload = {
+      donationId: donationId,
+    }
     return axios.post(`${backendUrl}/api/donation/get-chat`, payload, { headers: headers.content });
   },
 
-  async deleteDonation(payload: DonationDeletionPayload, headers: SessionHeader) {
-    return axios.delete(`${backendUrl}/api/donation`, { params: payload, headers: headers.content });
+  async deleteDonation(donationId: string, headers: SessionHeader) {
+    const payload = {
+      id: donationId,
+    }
+    return axios.delete(`${backendUrl}/api/donation`, { data: payload, headers: headers.content });
   },
-  
+
   async addFamily(payload: FamilyPayload) {
     return axios.post(`${backendUrl}/api/family`, payload);
   },

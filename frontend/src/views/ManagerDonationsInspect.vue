@@ -7,11 +7,10 @@
           b-card-text(class="m-2")
             div(id="messages-area")
 
-              Message(:messages="['asd loll xd', 'asd loll']" date="10:45pm" username="Carlo" role="volunteer" :isOwner="false")
+              Message(v-for="(message, idx) in chat" :index="idx" :username="message.userFullname" 
+              :isOwner="message.userId == $store.state.session.userData._id" :date="message.date" :isVisualized="message.visualized"
+              :messages="[message.text]")
               
-              Message(:messages="['a', 'asd loll xd asjd hkahqwehqkweh qkwjehqkw jehqwkjehqkwjeh kqwjehkq whqewk']" 
-              date="10:45pm" username="Fabio (tu)" role="volunteer" :isOwner="true" :isVisualized="true")                
-
             //- div(class="")
             //-   label(class="font-italic") Marco stà scrivendo...
             b-form(@submit="sendMessage")
@@ -62,8 +61,8 @@
                 label(class="font-weight-bold") {{ " " + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
                 
         b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerHome'})" type="reset") Indietro
-        b-button(block variant="danger" type="submit") Modifica
-        b-button(block variant="danger" type="submit") Cancella
+        b-button(block variant="danger" type="submit" @click="modifyDonation") Modifica
+        b-button(block variant="danger" type="submit" @click="deleteDonation") Cancella
 </template>
 
 <script lang="ts">
@@ -73,7 +72,7 @@ import Sidebar from "../components/Sidebar.vue";
 import Message from "../components/Message.vue";
 
 import {
-  Donation, Address, ChatMessage, ChatRequestPayload
+  Donation, Address, ChatMessage
 } from "../types";
 
 import api from "../api";
@@ -112,7 +111,6 @@ export default Vue.extend({
         } as Address,
         additionalInformation: "",
         pickUpPeriod: new Array<{weekDay: string, period: string}>(),
-        chat: new Array<ChatMessage>(),
         creationDate: "",
       } as Donation,
       chat: new Array<ChatMessage>(),
@@ -148,25 +146,13 @@ export default Vue.extend({
       return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
     },
     getChat() {
-
-      const payload: ChatRequestPayload = {
-        donationId: this.donation._id,
-      } as ChatRequestPayload;
-      console.log(payload)
-      api.getDonationChat(payload, this.$store.getters.getSessionHeader).then((r:any) => {
-        console.log(r)
-        this.chat = r.data.data.chat;
+      api.getDonationChat(this.donation._id, this.$store.getters.getSessionHeader).then((r:any) => {
+        this.chat = r.data.data.chat.chat;
       }).catch(e => console.log(e));
 
     },
     sendMessage(event) {
       event.preventDefault();
-      console.log({
-        donationId: this.donation._id,
-        userId: this.$store.state.session.userData._id,
-        message: this.chatMessage,
-        fullname: this.$store.getters.userFullName,
-      })
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
         userId: this.$store.state.session.userData._id,
@@ -174,6 +160,33 @@ export default Vue.extend({
         fullname: this.$store.getters.userFullName,
       });
     },
+    deleteDonation() {
+      api.deleteDonation(this.donation._id, this.$store.getters.getSessionHeader).then((r:any) => {
+        this.$router.replace({name: "ManagerDonationsList"})
+        this.$bvToast.toast(
+          `Donazione eliminata con successo.`, {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          }
+        );
+      }).catch(e => {
+        this.$bvToast.toast(
+          `Impossibile eliminare la donazione. Riprova tra qualche minuto.`, {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "danger",
+            appendToast: false,
+          }
+        );
+        console.log(e);
+      });
+
+    },
+    modifyDonation() {
+      this.$router.replace({name: "ManagerDonationsCreate", params: {'donation': this.donation}})
+    }
   },
 });
 </script>
