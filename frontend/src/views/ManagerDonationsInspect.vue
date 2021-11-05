@@ -14,11 +14,11 @@
 
             //- div(class="")
             //-   label(class="font-italic") Marco stà scrivendo...
-
-            b-input-group(class="")
-              b-form-input(type="text" placeholder="Scrivi qui il tuo messaggio." required)
-              b-input-group-append
-                b-button(variant='success') Invia
+            b-form(@submit="sendMessage")
+              b-input-group(class="")
+                b-form-input(type="text" placeholder="Scrivi qui il tuo messaggio." v-model="chatMessage" required)
+                b-input-group-append
+                  b-button(variant="success" type="submit") Invia
 
 
       b-col(xl=5 lg=5 md=6 sm=8 cols=10)
@@ -116,6 +116,7 @@ export default Vue.extend({
         creationDate: "",
       } as Donation,
       chat: new Array<ChatMessage>(),
+      chatMessage: "",
     };
   },
   created() {
@@ -147,6 +148,7 @@ export default Vue.extend({
       return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
     },
     getChat() {
+
       const payload: ChatRequestPayload = {
         donationId: this.donation._id,
       } as ChatRequestPayload;
@@ -156,9 +158,14 @@ export default Vue.extend({
       }).catch(e => console.log(e));
 
     },
-    // addMessage() {
-
-    // },
+    sendMessage(event) {
+      event.preventDefault();
+      this.$socket.emit("message_to_server", {
+        donationId: this.donation._id,
+        userId: this.$store.state.session.userId,
+        message: this.chatMessage,
+      });
+    },
   },
 });
 </script>
