@@ -86,7 +86,7 @@ export default {
   },
 
   async eventList(payload: any) {
-    return axios.post(`${backendUrl}/api/event/list`, payload);
+    return axios.post(`${backendUrl}/api/event/find`, payload);
   },
 
 };
