@@ -19,12 +19,12 @@ content-type: application/json
 }
 
 ### EVENT: list all
-GET http://localhost:3000/api/event
+POST http://localhost:3000/api/event
 accept: application/json 
 content-type: application/json
 
 ### EVENT: find many
-GET http://localhost:3000/api/event
+POST http://localhost:3000/api/event
 accept: application/json 
 content-type: application/json
 
@@ -35,7 +35,7 @@ content-type: application/json
 }
 
 ### EVENT: list all ordered
-GET http://localhost:3000/api/event
+POST http://localhost:3000/api/event
 accept: application/json 
 content-type: application/json
 

@@ -4,8 +4,8 @@ import EventController from '../controllers/eventController'
 const router: Router = express.Router()
 const eventController = new EventController()
 
-router.get('/', eventController.get)
-router.post('/', eventController.add)
+router.post('/', eventController.find)
+router.post('/edit', eventController.add)
 router.put('/', eventController.edit)
 router.delete('/', eventController.delete)
 
