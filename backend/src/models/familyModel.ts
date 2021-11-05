@@ -8,9 +8,9 @@ const familySchema = new mongoose.Schema({
         type: String,
         required: [true, "missing required field phoneNumber"]
     },
-    componentsNumber: {
+    components: {
         type: Number,
-        required: [true, "missing required field componentsNumber"],
+        required: [true, "missing required field components number"],
         min: 1
     },
     address: {

@@ -7,8 +7,10 @@ const factory = new ControllerFactory<DonationDocument>()
 
 export default class DonationController {
 
+	get = factory.findMany(DonationModel)
 	add = factory.add(DonationModel)
-	listAll = factory.findMany(DonationModel)
+	edit = factory.edit(DonationModel)
+	delete = factory.delete(DonationModel)
 
 	getChat = catchAsync(async (req: Request, res: Response) => {
 		const chat = await DonationModel.findById(req.body.donationId)

@@ -4,9 +4,9 @@ import FoodController from '../controllers/foodController'
 const router: Router = express.Router()
 const foodController = new FoodController()
 
-router.get('/list-all', foodController.listAll)
-router.post('/add', foodController.add)
-
-router.post('/add-or-update', foodController.addOrUpdate)
+router.get('/', foodController.get)
+// router.post('/', foodController.add)
+router.post('/', foodController.addOrUpdate)
+router.delete('/', foodController.delete)
 
 export default router

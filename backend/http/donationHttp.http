@@ -1,10 +1,10 @@
 ### DONATION list all
-GET http://localhost:3000/api/donation/list-all
+GET http://localhost:3000/api/donation
 accept: application/json 
 content-type: application/json
 
 ### DONATION add
-POST http://localhost:3000/api/donation/add
+POST http://localhost:3000/api/donation
 accept: application/json 
 content-type: application/json
 
@@ -33,17 +33,13 @@ content-type: application/json
     ]
 }
 
-### DONATION add message [API RIMOSSA]
-POST http://localhost:3000/api/donation/add-message
+### DONATION delete
+DELETE http://localhost:3000/api/donation
 accept: application/json 
 content-type: application/json
 
 {
-    "donationId": "6183b0228c3b83dbc6c74bd4",
-    "chatNode": {   
-        "userId": "6183af3dabd629ea28db1cd9",
-        "text": "ciao"
-    }
+    "id": "6183b0048c3b83dbc6c74bcc"
 }
 
 ### DONATION get chat
@@ -56,7 +52,7 @@ content-type: application/json
 }
 
 ### DONATION get unread messages
-GET http://localhost:3000/api/donation/list-all
+GET http://localhost:3000/api/donation
 accept: application/json 
 content-type: application/json
 
@@ -77,4 +73,3 @@ content-type: application/json
         "donationId": 1
     }
 }
-

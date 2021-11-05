@@ -17,6 +17,10 @@ const donationSchema = new mongoose.Schema({
             userId: mongoose.Types.ObjectId,
             userFullname: String,
             text: String,
+            date: {
+                type: Date,
+                default: () => new Date()
+            },
             visualized: {
                 type: Boolean,
                 default: false

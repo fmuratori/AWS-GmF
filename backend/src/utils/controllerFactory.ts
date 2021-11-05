@@ -11,7 +11,52 @@ export default class ControllerFactory<T> {
      */
     add = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
-            const elem = await model.create(req.body)
+            //create a new document
+            await model.create(req.body)
+
+            res.status(200).json({
+                status: "success"
+            })
+        })
+
+    /**
+     * edit an existing document in the collection
+     * document is passad via id in the body of the request
+     * the rest of the body should contain all the document field,
+     * even those that don't need to be modified 
+     * @param model mongoose model
+     * @returns 
+     */
+    edit = (model: Model<T>) =>
+        catchAsync(async (req: Request, res: Response) => {
+            if (!req.body.id) {
+                res.status(400).json({
+                    status: "missing-id-error",
+                    message: "Missing id of document to edit"
+                })
+                return
+            }
+
+            const elem = await model.findByIdAndUpdate(req.body.id, req.body, {new: true})
+            console.log(elem)
+
+            res.status(200).json({
+                status: "success"
+            })
+        })
+
+    delete = (model: Model<T>) => 
+        catchAsync(async (req: Request, res: Response) => {
+            if (!req.body.id) {
+                res.status(400).json({
+                    status: "missing-id-error",
+                    message: "Missing id of document to edit"
+                })
+                return
+            }
+
+            const elem = await model.findByIdAndDelete(req.body.id)
+            console.log(elem)
 
             res.status(200).json({
                 status: "success"
