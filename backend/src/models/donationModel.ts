@@ -96,7 +96,8 @@ const donationSchema = new mongoose.Schema({
     volunteerId: {
         type: mongoose.Types.ObjectId,
         required: false,
-        ref: "User"
+        ref: "User",
+        default: null
     }
 })
 
