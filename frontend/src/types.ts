@@ -102,7 +102,7 @@ export interface EventPayload {
 
 export interface Event {
   _id: string,
-  name: String,
+  eventTitle: String,
   description: String,
   address: Address,
   image: String,

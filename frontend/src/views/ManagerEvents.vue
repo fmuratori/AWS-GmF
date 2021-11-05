@@ -3,38 +3,19 @@
     div(class="justify-content-center my-5")
       p YOUR EVENTS
       b-row
-        p {{this.$store.state.session.userData._id}}
-        div(v-if="events") No event found for this user
+        div(v-if="events.length==0") No event found for this user
         b-col(sm=12 md=6 v-for="(event, idx) in events" :index="idx")
           b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
-            b prova
-            //- b-card-text
-            //-   div(class="px-4 pt-4")
-            //-     h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
-            //-     b-row()
-            //-       b-col(cols="auto")
-            //-         div(class="")
-            //-           p(class="mb-0") Alimenti donati:
-            //-           p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
-            //-         div(class="")
-            //-           p(class="mb-0") Scade tra:
-            //-           p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
-            //-         //- div 
-            //-         //-   p(class="mb-0") Orari disponibili per il ritiro:
-            //-         //-   p(class="font-weight-bold") 12/12/2012 
-            //-         //-     span(class="font-weight-normal") Scade tra 12 giorni
-            //-         div(class="")
-            //-           p(class="mb-0") Luogo ritiro:
-            //-           p(class="font-weight-bold") {{ donation.address.street + " " + donation.address.civicNumber + ", " + donation.address.city }}
-            //-       b-col(cols="auto")
-            //-         div(class="mb-2")
-            //-           p(class="mb-0") Stato donazione:
-            //-           h5
-            //-             b-badge(v-if="donation.status == 'waiting'" variant="secondary") In attesa
-            //-             b-badge(v-if="donation.status == 'selected'" variant="warning") Prenotato per il ritiro 
-            //-             b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
-            //-         div(class="mb-2")
-            //-           a(href="#") Hai # messaggi non letti
+            b-card-text
+              div(class="px-4 pt-4")
+                h5 {{ event.eventTitle }}
+                b-row()
+                  b-col(cols="auto")
+                    div(class="mb-2")
+                      p(class="mb-0") Date: 
+                        b {{ formatDate(event) }}
+                  b-col(cols="auto")
+                    p(class="mb-2") {{ event.description }}
               b-button(block @click="$router.replace({name: 'ManagerEventInspect', params: {'event': event}})" class="b-card-footer-button") Edit
 
 </template>
@@ -66,7 +47,7 @@ export default Vue.extend({
       this.$store.dispatch("showSidebar");
       
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.eventList({filter: {userId: this.$store.state.session.userData._id}})
+      api.eventList({filter: {ownerVolunteerId: this.$store.state.session.userData._id}})
       .then((r:any) => {
         this.events = r.data.data.list;
       }).catch(e => console.log(e));
@@ -82,9 +63,9 @@ export default Vue.extend({
     // getExpirationDays(donation: Event) {
     //   return moment(donation.expirationDate).diff(moment.now(), "days");
     // },
-    // formatDonation(donation: Event) {
-    //   return moment(donation.creationDate).locale("it").format("LL");
-    // }
+    formatDate(event: Event) {
+      return moment(event.date).locale("en").format("LL");
+    }
   }
 });
 </script>

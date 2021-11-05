@@ -4,7 +4,7 @@ accept: application/json
 content-type: application/json
 
 {
-    "name": "evento 2",
+    "eventTitle": "evento 2",
     "address": {
         "street": "via nuova",
         "civicNumber": 13,
@@ -14,8 +14,8 @@ content-type: application/json
             "y": 2.385032
         }
     },
-    "date": "2021-10-29",
-    "ownerVolunteerId": "6172e6a4df4d0325895749e2"
+    "date": "2021-11-29",
+    "ownerVolunteerId": "6183af3dabd629ea28db1cd9"
 }
 
 ### EVENT: list all
@@ -30,7 +30,7 @@ content-type: application/json
 
 {
     "filter": {
-        "name": "evento abc"
+        "ownerVolunteerId": "6183af3dabd629ea28db1cd9"
     }
 }
 
