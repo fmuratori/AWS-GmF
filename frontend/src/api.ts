@@ -6,7 +6,8 @@ import {
   Donation,
   SessionHeader,
   FamilyPayload,
-  EventPayload
+  EventPayload,
+  EventListPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -69,19 +70,19 @@ export default {
   },
 
   async addFamily(payload: FamilyPayload) {
-    return axios.post(`${backendUrl}/api/family`, payload);
+    return axios.post(`${backendUrl}/api/family/add`, payload);
   },
 
-  async familyList(payload: FamilyPayload) {
-    return axios.get(`${backendUrl}/api/family`, { params: payload });
+  async familyList(payload: any) {
+    return axios.post(`${backendUrl}/api/family/find`, payload);
   },
 
   async createEvent(payload: EventPayload) {
-    return axios.post(`${backendUrl}/api/event`, payload);
+    return axios.post(`${backendUrl}/api/event/add`, payload);
   },
 
-  async eventList(payload: EventPayload) {
-    return axios.get(`${backendUrl}/api/event`, { params: payload });
+  async eventList(payload: any) {
+    return axios.post(`${backendUrl}/api/event/find`, payload);
   },
 
 };

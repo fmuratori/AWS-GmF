@@ -91,6 +91,16 @@ export interface EventPayload {
   image: string
 }
 
+export interface Event {
+  _id: string,
+  name: String,
+  description: String,
+  address: Address,
+  image: String,
+  date: Date,
+  ownerVolunteerId: String
+}
+
 // export interface OfferResponse {
 
 // }

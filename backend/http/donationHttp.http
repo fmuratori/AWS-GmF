@@ -88,3 +88,17 @@ content-type: application/json
         "donationId": 1
     }
 }
+
+### DONATION find not assigned donations
+POST http://localhost:3000/api/donation
+accept: application/json 
+content-type: application/json
+
+{
+    "filter": {
+        "volunteerId": {
+            "$in" : [null],
+            "$exists" : true
+            }    
+        }
+}
