@@ -9,6 +9,6 @@ router.post('/edit', donationController.add)
 router.put('/', donationController.edit)
 router.delete('/', donationController.delete)
 
-router.get('/get-chat', donationController.getChat)
+router.post('/get-chat', donationController.getChat)
 
 export default router
