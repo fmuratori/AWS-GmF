@@ -58,8 +58,9 @@ const navigationModule = {
     unsetMangerMode({ commit }) {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit }, value: number) {
+    updateScreenWidth({ commit, state }, value: number) {
       commit("updateScreenWidth", value);
+      
     },
   },
 };

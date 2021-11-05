@@ -85,6 +85,10 @@ export default Vue.extend({
     },
     changePage(pageName: string) {
       this.$router.replace({ name: pageName });
+
+      if (this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("hideSidebar");
+      }
     },
     isSidebarOpen() {
       return this.$store.state.navigation.isSidebarOpen;
@@ -95,6 +99,12 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 @import "@/assets/style.scss";
+
+* {
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
 
 #sidebar {
   background-color: $greyscale2;

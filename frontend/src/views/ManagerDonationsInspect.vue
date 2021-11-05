@@ -5,20 +5,21 @@
         p MESSAGGI
         b-card(bg-variant="light" class="mb-2" no-body)
           b-card-text(class="m-2")
-            div(class="chat-message")
-              p(class="font-weight-bolder m-0 p-0") Carlo
-              p(class="m-0 p-0") asd loll xd
+            div(id="messages-area")
 
-            div(class="chat-message")
-              p(class="font-weight-bolder m-0 p-0 text-right") Tu
-              p(class="text-right m-0 p-0") asd loll xd
+              Message(:messages="['asd loll xd', 'asd loll']" date="10:45pm" username="Carlo" role="volunteer" :isOwner="false")
+              
+              Message(:messages="['a', 'asd loll xd asjd hkahqwehqkweh qkwjehqkw jehqwkjehqkwjeh kqwjehkq whqewk']" 
+              date="10:45pm" username="Fabio (tu)" role="volunteer" :isOwner="true" :isVisualized="true")                
 
-            div(class="")
-              label(class="font-italic") Marco stà scrivendo...
+            //- div(class="")
+            //-   label(class="font-italic") Marco stà scrivendo...
 
-            div(class="")
-              input(block type="text")
-              button() invia
+            b-input-group(class="")
+              b-form-input(type="text" placeholder="Scrivi qui il tuo messaggio." required)
+              b-input-group-append
+                b-button(variant='success') Invia
+
 
       b-col(xl=5 lg=5 md=6 sm=8 cols=10)
         p INFORMAZIONI DONAZIONE
@@ -69,9 +70,10 @@
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
+import Message from "../components/Message.vue";
 
 import {
-  Donation, Address, ChatMessage
+  Donation, Address, ChatMessage, ChatRequestPayload
 } from "../types";
 
 import api from "../api";
@@ -81,6 +83,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    Message,
   },
   data: function () {
     return {
@@ -112,20 +115,26 @@ export default Vue.extend({
         chat: new Array<ChatMessage>(),
         creationDate: "",
       } as Donation,
+      chat: new Array<ChatMessage>(),
     };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
 
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) { 
-        console.log()
         this.donation = this.$route.params.donation
       } else {
         this.$router.replace({name: "ManagerDonationsList"});
       }
+
+      // load donation messages
+      this.getChat();
+
     } else {
       this.$router.replace({name: "Login"});
     }
@@ -137,84 +146,19 @@ export default Vue.extend({
     translatePeriod(period: string): string {
       return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
     },
-    computeButtonVariant(weekDay: string, period: string) {
-      const idx: number = this.donation.pickUpPeriod.findIndex(
-        (wd: { weekDay: string, period: string }) => wd.weekDay == weekDay && wd.period == period
-      );
-      return idx != -1 ? "dark" : "outline-secondary";
-    },
-    foodInputValueChange(inputIdx: number) {
-      if (inputIdx == this.donation.foods.length - 1) {
-        this.donation.foods.push("");
-      } else if (this.donation.foods[inputIdx] == "") {
-        this.foodDeleteClicked(inputIdx);
-      }
-    },
-    foodDeleteClicked(inputIdx: number) {
-      this.donation.foods.splice(inputIdx, 1);
-    },
-    weekDayButtonClick(weekDay: string, period: string) {
-      const idx: number = this.donation.pickUpPeriod.findIndex(
-        (wd: { weekDay: string, period: string }) => wd.weekDay == weekDay && wd.period == period
-      );
+    getChat() {
+      const payload: ChatRequestPayload = {
+        donationId: this.donation._id,
+      } as ChatRequestPayload;
 
-      if (idx != -1) {
-        this.donation.pickUpPeriod.splice(idx, 1);
-      } else {
-        this.donation.pickUpPeriod.push({ weekDay, period });
-      }
+      api.getDonationChat(payload, this.$store.getters.getSessionHeader).then((r:any) => {
+        this.chat = r.data.data.chat;
+      }).catch(e => console.log(e));
+
     },
-    addDonation(event) {
-      event.preventDefault();
+    // addMessage() {
 
-      if (this.donation.pickUpPeriod.length == 0) {
-        this.$bvToast.toast(
-            `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
-            {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "warning",
-              appendToast: false,
-            }
-          );
-
-      } else if (this.donation.foods.length == 0) {
-        this.$bvToast.toast(
-            `Inserire almeno un alimento che vuoi donare.`,
-            {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "warning",
-              appendToast: false,
-            }
-          );
-
-      } else {
-        api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          console.log(r)
-          this.$router.replace({name: "ManagerDonationsList"});
-          this.$bvToast.toast(
-              `Donazione effettuata con successo.`,
-              {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
-        }).catch(e => {
-          this.$bvToast.toast(
-              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
-              {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
-        })
-      }
-    }
+    // },
   },
 });
 </script>
@@ -223,10 +167,21 @@ export default Vue.extend({
 
 @import "@/assets/style.scss";
 
-.chat-message {
+#messages-area {
+  display: flex;
+  flex-direction: column;
+  height: 450px;
+  overflow: auto;
+  flex: 1;
+}
+
+
+.message {
+  display:block;
   background-color: $greyscaleF;
   border-radius: 5px;
-  margin: 1em;
-  padding: 1em;
+}
+.my-message {
+  background-color: $color2;
 }
 </style>

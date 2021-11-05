@@ -62,7 +62,9 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
       
       // TODO: mostrare uno spinner mentre sono caricati i dati
       api.donationsList(this.$store.getters.getSessionHeader)

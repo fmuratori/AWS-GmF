@@ -76,8 +76,12 @@ export interface Donation {
 
 export interface ChatMessage {
   fullName: string,
-  text: String,
+  text: string,
   visualized: boolean,
+}
+
+export interface ChatRequestPayload {
+  donationId: string,
 }
 
 export interface FamilyPayload {

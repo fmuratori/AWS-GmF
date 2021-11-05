@@ -5,7 +5,8 @@ import {
   RegistrationPayload,
   DonationCreationPayload,
   SessionHeader,
-  FamilyPayload
+  FamilyPayload,
+  ChatRequestPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -43,8 +44,13 @@ export default {
         "donationId": 1
       }
     }
-    return axios.get(`${backendUrl}/api/donation/list-all`, { params: payload , headers: headers.content });
+    return axios.get(`${backendUrl}/api/donation/list-all`, { params: payload, headers: headers.content });
 
+  },
+
+  async getDonationChat(payload: ChatRequestPayload, headers: SessionHeader) {
+    
+    return axios.get(`${backendUrl}/api/donation/get-chat`, { params: payload, headers: headers.content });
   },
   
   async addFamily(payload: FamilyPayload) {

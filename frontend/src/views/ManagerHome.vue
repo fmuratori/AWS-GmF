@@ -17,7 +17,9 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
     } else {
       this.$router.replace({name: "Login"});
     }

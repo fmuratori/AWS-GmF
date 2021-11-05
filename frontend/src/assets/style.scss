@@ -6,6 +6,9 @@ $color3: #f13c20;
 $color4: #d79922;
 $color5: #efe2ba;
 
+$myMessageColor: #eeeeee;
+$othersMessageColor: #c5cbe3;
+
 // #d79922
 // #efe2ba
 // #f13c20
@@ -71,12 +74,6 @@ $screen-xl-min: 1200px;
     @content;
   }
 }
-
-// * {
-//   margin: 0; 
-//   padding: 0; 
-//   box-sizing: border-box; 
-// }
 
 html, body {
   height: 100%;
