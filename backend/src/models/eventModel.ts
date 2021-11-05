@@ -7,7 +7,7 @@ export interface EventDocument extends Document, Event{
  }
 
 const eventSchema = new mongoose.Schema({
-    name: {
+    eventTitle: {
         type: String,
         required: [true, "missing required field name"]
     },
