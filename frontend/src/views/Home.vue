@@ -1,5 +1,5 @@
 <template lang="pug">
-  div()
+  div homeee
       
 </template>
 

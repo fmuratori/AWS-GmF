@@ -61,7 +61,24 @@ const routes: Array<RouteConfig> = [
       import(
         /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerFamilies.vue"
       ),
+  },
+  {
+    path: "/manager/event/create",
+    name: "ManagerEventCreate",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerEventCreate.vue"
+      ),
+  },
+  {
+    path: "/manager/event/list",
+    name: "ManagerEvents",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerEvents.vue"
+      ),
   }
+
 ];
 
 const router = new VueRouter({

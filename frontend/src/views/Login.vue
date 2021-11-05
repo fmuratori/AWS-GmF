@@ -112,15 +112,14 @@ export default Vue.extend({
       registrationPrivacyChecked: false,
       regRepeatPassword: "Password1!",
       login: {
-        email: "a@a.a",
-        password: "Password1!",
+        email: "admin@admin.com",
+        password: "Password2021!",
       } as LoginPayload,
       registration: {
         name: "Fabio",
         surname: "Muratori",
-        username: "",
-        password: "Password1!",
-        email: "a@a.a",
+        password: "Password2021!",
+        email: "admin@admin.com",
         phoneNumber: "1234",
         type: "user",
         address: {

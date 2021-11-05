@@ -1,68 +1,100 @@
 <template lang="pug">
-  div(id="sidebar" class="p-3" v-if="isSidebarOpen()")
-    div(id="sidebar-user") 
-      b-row(no-gutters align-h="center" class="p-4") 
-        b-col(cols="auto" class="mr-1")
-          b-icon-person-circle(font-scale="3")
-        b-col(cols="auto" class="ml-1")
-          p Fabio Muratori
-          p VOLONTARIO
+#sidebar.p-3(v-if="isSidebarOpen()")
+  #sidebar-user 
+    b-row.p-4(no-gutters, align-h="center") 
+      b-col.mr-1(cols="auto")
+        b-icon-person-circle(font-scale="3")
+      b-col.ml-1(cols="auto")
+        p {{ this.$store.state.session.userData.name }} {{ this.$store.state.session.userData.surname }}
+        p {{ this.$store.state.session.userData.type }}
 
-      hr.sidebar-hr.my-3
+    hr.sidebar-hr.my-3
 
-    div(id="sidebar-actions") 
-      div()
-        b-row(no-gutters align-v="center" class="pb-2")
-          b-col(cols="auto" class="mr-1")
-            font-awesome-icon(icon="utensils" size="lg")
-          b-col(class="ml-1")
-            h6() Dona cibo
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsCreate')" 
-        :class="{'sidebar-item-selected': isRouteSelected('ManagerDonationsCreate')}")
-          b-col()
-            label(class="py-1") Crea una donazione
-          b-col(cols="auto")
-            b-icon(icon="chevron-right")
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerDonationsList')"
-        :class="{'sidebar-item-selected': isRouteSelected('ManagerDonationsList')}")
-          b-col()
-            label(class="py-1") Tue donazioni
-          b-col(cols="auto")
-            b-icon(icon="chevron-right")
+  #sidebar-actions 
+    div
+      b-row.pb-2(no-gutters, align-v="center")
+        b-col.mr-1(cols="auto")
+          font-awesome-icon(icon="utensils", size="lg")
+        b-col.ml-1
+          h6 Dona cibo
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerDonationsCreate')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsCreate') }"
+      )
+        b-col
+          label.py-1 Crea una donazione
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerDonationsList')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsList') }"
+      )
+        b-col
+          label.py-1 Tue donazioni
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
 
-      hr.sidebar-hr.my-3
+    hr.sidebar-hr.my-3
 
-      div()
-        b-row(no-gutters align-v="center" class="pb-2")
-          b-col(cols="auto" class="mr-1")
-            font-awesome-icon(icon="users" size="lg")
-          b-col(class="ml-1")
-            h6() Famiglie bisognose
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerFamiliesSubscribe')"
-        :class="{'sidebar-item-selected': isRouteSelected('ManagerFamiliesSubscribe')}")
-          b-col()
-            label(class="py-1") Segnala famiglia
-          b-col(cols="auto")
-            b-icon(icon="chevron-right")
-        b-row(no-gutters align-v="center" class="pl-3 pr-1 sidebar-item" @click="changePage('ManagerFamilies')"
-        :class="{'sidebar-item-selected': isRouteSelected('ManagerFamilies')}")
-          b-col()
-            label(class="py-1") Stato segnalazioni
-          b-col(cols="auto")
-            b-icon(icon="chevron-right")
+    div
+      b-row.pb-2(no-gutters, align-v="center")
+        b-col.mr-1(cols="auto")
+          font-awesome-icon(icon="users", size="lg")
+        b-col.ml-1
+          h6 Famiglie bisognose
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerFamiliesSubscribe')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamiliesSubscribe') }"
+      )
+        b-col
+          label.py-1 Segnala famiglia
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerFamilies')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamilies') }"
+      )
+        b-col
+          label.py-1 Stato segnalazioni
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
 
-      hr.sidebar-hr.my-3
+    hr.sidebar-hr.my-3
 
-    div(id="sidebar-footer" class="text-center")
-      //- b-button(variant="light" size="sm") 
-      //-   b-icon(icon="gear-fill" class="mr-1")
-      //-   span Account
-
-      b-dropdown(id="dropdown-dropup" class="m-2" dropup="" text="Account" menu-class="w-100" variant="light" block)
-        b-dropdown-item(href="#") Disconnetti
-        b-dropdown-item(href="#") Dati personali
-
-
+    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+      b-row.pb-2(no-gutters, align-v="center")
+        b-col.mr-1(cols="auto")
+          font-awesome-icon(icon="utensils", size="lg")
+        b-col.ml-1
+          h6 Eventi
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerEventCreate')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEventCreate') }"
+      )
+        b-col
+          label.py-1 Crea una evento
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerEvents')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEvents') }"
+      )
+        b-col
+          label.py-1 Tuoi eventi
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
 </template>
 
 <script lang="ts">

@@ -91,6 +91,15 @@ export interface FamilyPayload {
   address: Address
 }
 
+export interface EventPayload {
+  volunteerId: string,
+  name: string,
+  description: string,
+  address: Address,
+  date: Date,
+  image: string
+}
+
 // export interface OfferResponse {
 
 // }
