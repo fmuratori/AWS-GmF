@@ -30,9 +30,7 @@ export default class UserController {
 		req.body.hashPassword = hashPassword
 
 		//add user to collection
-		const newUser = await UserModel.create(req.body)
-
-		const token = createToken(newUser._id)
+		await UserModel.create(req.body)
 
 		res.status(200).json({
 			status: "success"
@@ -73,7 +71,7 @@ export default class UserController {
 	})
 
 	update = catchAsync(async (req: Request, res: Response) => {
-		var user = await UserModel.findById(req.body._id)
+		var user = await UserModel.findById(req.body.userId)
 
 		if (!user) {
 			res.status(401).json({
@@ -90,11 +88,44 @@ export default class UserController {
 		if (req.body.type) user.type = req.body.type
 		if (req.body.address) user.address = req.body.address
 
-		const updatedUser = await UserModel.findByIdAndUpdate(user._id, user)
+		const updatedUser = await UserModel.findByIdAndUpdate(user._id, user, { new: true })
+		console.log(updatedUser)
 
 		res.status(200).json({
 			status: "success",
-			data: { updatedUser }
+			message: "User updated"
 		})
+	})
+
+	//upgrade user to volunteer type
+	upgrade = catchAsync(async (req: Request, res: Response) => {
+		var user = await UserModel.findById(req.query.userId)
+
+		if (!user) {
+			res.status(401).json({
+				status: "user-not-found-error",
+				message: "User not found"
+			})
+			return
+		}
+
+		if (user.type != "user") {
+			res.status(401).json({
+				status: "user-type-error",
+				message: "Cannot upgrade " + user.type + " user"
+			})
+			return
+		}
+
+		user.type = "volunteer"
+
+		const upgradedUser = await UserModel.findByIdAndUpdate(user._id, user, { new: true })
+		console.log(upgradedUser)
+
+		res.status(200).json({
+			status: "success",
+			message: "User upgraded"
+		})
+
 	})
 }

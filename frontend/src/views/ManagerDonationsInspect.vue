@@ -66,6 +66,7 @@
               p(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
                 label(class="font-weight-bold") {{ weekDayName + ": "}}  
                 label(class="font-weight-bold") {{ " " + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
+                
         b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerHome'})" type="reset") Indietro
         b-button(block variant="danger" type="submit") Modifica
         b-button(block variant="danger" type="submit") Cancella

@@ -80,6 +80,13 @@ export interface ChatMessage {
   visualized: boolean,
 }
 
+export interface FamilyPayload {
+  userId: string,
+  phoneNumber: string,
+  components: number,
+  address: Address
+}
+
 // export interface OfferResponse {
 
 // }

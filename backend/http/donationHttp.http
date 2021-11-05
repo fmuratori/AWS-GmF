@@ -62,7 +62,7 @@ content-type: application/json
 
 {
     "filter": {
-        //"userId": "6183af3dabd629ea28db1cd9",
+        "userId": "6183af3dabd629ea28db1cd9",
         "chat": {
             //seleziona gli array dove almeno un elemento matcha la condizione
             "$elemMatch": {

@@ -9,7 +9,6 @@ content-type: application/json
     "password": "Password2021!",
     "email": "admin@admin.com",
     "phoneNumber": "12345",
-    "type": "user",
     "address": {
         "street": "vai abc",
         "civicNumber": "123/a",
@@ -37,11 +36,9 @@ accept: application/json
 content-type: application/json
 
 {
-    "_id": "6172e6a4df4d0325895749e2",
-    "name": "pippo-updated",
-    "surname": "pluto",
-    "username": "pippo3",
-    "password": "admin",
+    "userId": "6172e6a4df4d0325895749e2",
+    "name": "pippo-upd",
+    "surname": "pluto-upd",
     "email": "abc@fgh.it",
     "phoneNumber": "12345",
     "type": "test",
@@ -56,3 +53,22 @@ content-type: application/json
         "fake": "not to add"
     }
 }
+
+### UPDATE USER
+POST http://localhost:3000/api/user/update
+accept: application/json
+content-type: application/json
+
+{
+    "userId": "6183af3dabd629ea28db1cd9",
+    "name": "pippo-upd2",
+    "surname": "pluto-upd2"
+}
+
+### UPGRADE USER
+# passo l'id dell'utente da promuovere com epath parameter
+# solo gli utenti trusted possono eleggere utenti user a volunteer
+# la promozione a trusted può essere fatta solo manualmente
+GET http://localhost:3000/api/user/upgrade?userId=6183af3dabd629ea28db1cd9
+accept: application/json
+content-type: application/json

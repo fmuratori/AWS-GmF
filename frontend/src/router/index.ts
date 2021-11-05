@@ -46,6 +46,22 @@ const routes: Array<RouteConfig> = [
         /* webpackChunkName: "ManagerDonationsInspect" */ "../views/ManagerDonationsInspect.vue"
       ),
   },
+  {
+    path: "/manager/families/subscribe",
+    name: "ManagerFamiliesSubscribe",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerFamiliesSubscribe.vue"
+      ),
+  },
+  {
+    path: "/manager/families/list",
+    name: "ManagerFamilies",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerFamilies.vue"
+      ),
+  }
 ];
 
 const router = new VueRouter({
