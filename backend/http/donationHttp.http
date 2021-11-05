@@ -1,7 +1,13 @@
 ### DONATION list all
-GET http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation
 accept: application/json 
 content-type: application/json
+
+{
+    "filter": {
+        "userId": "617ff2d461a8dc488e6e8bf3"
+    }
+}
 
 ### DONATION add
 POST http://localhost:3000/api/donation
@@ -42,17 +48,26 @@ content-type: application/json
     "id": "6183b0048c3b83dbc6c74bcc"
 }
 
-### DONATION get chat
-GET http://localhost:3000/api/donation/get-chat
+### DONATION edit
+POST http://localhost:3000/api/donation/edit
 accept: application/json 
 content-type: application/json
 
 {
-    "donationId": "61752da118f0f36305767ec8"
+    "donationId": ""
+}
+
+### DONATION get chat
+POST http://localhost:3000/api/donation/get-chat
+accept: application/json 
+content-type: application/json
+
+{
+    "donationId": "6183b0228c3b83dbc6c74bd4"
 }
 
 ### DONATION get unread messages
-GET http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation
 accept: application/json 
 content-type: application/json
 

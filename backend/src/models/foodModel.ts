@@ -11,7 +11,7 @@ const foodSchema = new mongoose.Schema({
     number: {
         type: Number,
         required: false,
-        default: () => 1,
+        default: 1,
         min: 0
     },
     expirationDate: {

@@ -26,7 +26,7 @@ const donationSchema = new mongoose.Schema({
                 default: false
             }
         }],
-        default: () => [],
+        default: [],
         select: false,
         ref: "User"
     },
@@ -47,7 +47,7 @@ const donationSchema = new mongoose.Schema({
     },
     creationDate: {
         type: Date,
-        default: () => new Date()
+        default: new Date()
     },
     address: {
         type: {
@@ -90,7 +90,7 @@ const donationSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: () => "waiting",
+        default: "waiting",
         enum: ["waiting", "selected", "withdrawn"]
     },
     volunteerId: {
