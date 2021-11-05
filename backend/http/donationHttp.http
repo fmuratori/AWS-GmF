@@ -5,7 +5,10 @@ content-type: application/json
 
 {
     "filter": {
-        "userId": "617ff2d461a8dc488e6e8bf3"
+        "_id": "6184f5ea36a18325abc945ba"
+    },
+    "projection": {
+        "volunteerId": 1
     }
 }
 
