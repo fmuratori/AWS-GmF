@@ -1,88 +1,84 @@
 <template lang="pug">
-b-row.justify-content-md-center.my-5.no-gutters
-  b-col(cols="6")
-    p CREA UN EVENTO
-    b-form(@submit="createEvent")
-      b-form-group#input-group-1(label="Name:", label-for="input-1")
-        b-form-input#input-1(
-          required,
-          type="text",
-          placeholder="Insert name here",
-          v-model="form.name"
-        )
-
-      .mb-4
-        b-form-group#input-group-2(label="Description:" label-for="input-2")
-          b-form-textarea#input-2(
-            rows="3"
-            max-rows="6"
-            v-model="form.description"
-            placeholder="Insert description here"
-          )
-
-      .mb-4
-      b-form-group#input-group-3(label="Date:", label-for="input-3", required)
-        b-input-group
-          b-form-datepicker#input-3.my-no-right-border(
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(cols="6")
+      p CREATE AN EVENT
+      b-form(@submit="createEvent")
+        b-form-group#input-group-1(label="Title:", label-for="input-1")
+          b-form-input#input-1(
             required,
-            v-model="form.date",
-            reset-button,
-            close-button
+            type="text",
+            placeholder="Insert title here",
+            v-model="form.eventTitle"
           )
-          b-input-group-append
-            b-button.my-no-left-border(
-              variant="danger",
-              @click="form.date = null",
-              :disabled="form.date == null"
-            ) 
-              span Cancel
-              b-icon(icon="x", aria-hidden="true")
 
-      .mb-3
-        label Location:
-        b-card
-          b-row
-            b-col
-              b-form-group#input-group-3(label="City:", label-for="input-4")
-                b-form-input#input-4(
-                  required
-                  type="text"
-                  v-model="form.address.city"
-                )
-          b-row
-            b-col(cols=8)
-              b-form-group#input-group-5(label="Address:", label-for="input-5")
-                b-form-input#input-5(
-                  required
-                  type="text"
-                  v-model="form.address.street"
-                )
-            b-col(cols=4)
-              b-form-group#input-group-6(
-                label="Civic number:"
-                label-for="input-6"
-              )
-                b-form-input#input-6(
-                  required,
-                  type="text",
-                  v-model="form.address.civicNumber"
-                )
-          .text-center
-            b-button(variant="outline-secondary") Find on maps
+        .mb-4
+          b-form-group#input-group-2(label="Description:", label-for="input-2")
+            b-form-textarea#input-2(
+              rows="3",
+              max-rows="6",
+              v-model="form.description",
+              placeholder="Insert description here"
+            )
 
-      b-row
-        b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerHome' })"
-          ) Cancel
-        b-col
-          b-button(
-            block,
-            variant="success",
-            type="submit",
-          ) Create
+        .mb-4
+        b-form-group#input-group-3(label="Date:", label-for="input-3", required)
+          b-input-group
+            b-form-datepicker#input-3.my-no-right-border(
+              required,
+              v-model="form.date",
+              reset-button,
+              close-button
+            )
+            b-input-group-append
+              b-button.my-no-left-border(
+                variant="danger",
+                @click="form.date = null",
+                :disabled="form.date == null"
+              ) 
+                span Cancel
+                b-icon(icon="x", aria-hidden="true")
+
+        .mb-3
+          label Location:
+          b-card
+            b-row
+              b-col
+                b-form-group#input-group-3(label="City:", label-for="input-4")
+                  b-form-input#input-4(
+                    required,
+                    type="text",
+                    v-model="form.address.city"
+                  )
+            b-row
+              b-col(cols=8)
+                b-form-group#input-group-5(label="Address:", label-for="input-5")
+                  b-form-input#input-5(
+                    required,
+                    type="text",
+                    v-model="form.address.street"
+                  )
+              b-col(cols=4)
+                b-form-group#input-group-6(
+                  label="Civic number:",
+                  label-for="input-6"
+                )
+                  b-form-input#input-6(
+                    required,
+                    type="text",
+                    v-model="form.address.civicNumber"
+                  )
+            .text-center
+              b-button(variant="outline-secondary") Find on maps
+
+        b-row
+          b-col
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.replace({ name: 'ManagerHome' })"
+            ) Cancel
+          b-col
+            b-button(block, variant="success", type="submit") Create
 </template>
 
 <script lang="ts">
@@ -103,10 +99,11 @@ export default Vue.extend({
   data: function () {
     return {
       form: {
-        volunteerId: this.$store.state.session.userData._id,
-        name: "",
+        ownerVolunteerId: "",
+        eventTitle: "",
         description: "",
-        date: null,
+        date: new Date,
+        image: "",
         address: {
           city: "",
           street: "",
@@ -121,13 +118,10 @@ export default Vue.extend({
   },
   created() {
     this.$store.dispatch("showSidebar");
+    this.form.ownerVolunteerId = this.$store.state.session.userData._id;
 
     // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      this.form.userId = this.$store.state.session.userData._id;
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    if (!this.$store.getters.isUserLogged) this.$router.replace({ name: "Login" });
   },
   methods: {
     createEvent(event) {
@@ -136,7 +130,7 @@ export default Vue.extend({
         .createEvent(this.form)
         .then((r) => {
           console.log(r);
-          this.$router.replace({ name: "ManagerFamilies" });
+          this.$router.replace({ name: "ManagerEvents" });
           this.$bvToast.toast(`Event successfully created.`, {
             title: "Event",
             autoHideDelay: 5000,

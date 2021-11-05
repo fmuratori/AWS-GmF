@@ -1,96 +1,178 @@
 <template lang="pug">
-  b-row(class="justify-content-center" no-gutters)
-    b-col(md="auto" xs=12)
-      
-      b-card(no-body id="login" class="shadow-lg mt-5 mb-5")
-        div(id="login-header" class="px-5 py-4")
-          b-row(align-h="center")
-            b-icon-person-circle(font-scale="3")
-          b-row(align-h="center")
-            h2() Bring me Food
+b-row.justify-content-center(no-gutters)
+  b-col(md="auto", xs=12)
+    b-card#login.shadow-lg.mt-5.mb-5(no-body)
+      #login-header.px-5.py-4
+        b-row(align-h="center")
+          b-icon-person-circle(font-scale="3")
+        b-row(align-h="center")
+          h2 Bring me Food
 
-        b-button-group(block)
-          b-button(variant="light" @click="setLoginSelected(true)" class="login-select-button" :class="{'login-selected-button': isLoginSelected}") Accedi
-          b-button(variant="light" @click="setLoginSelected(false)" class="login-select-button" :class="{'login-selected-button': !isLoginSelected}") Registrati
+      b-button-group(block)
+        b-button.login-select-button(
+          variant="light",
+          @click="setLoginSelected(true)",
+          :class="{ 'login-selected-button': isLoginSelected }"
+        ) Accedi
+        b-button.login-select-button(
+          variant="light",
+          @click="setLoginSelected(false)",
+          :class="{ 'login-selected-button': !isLoginSelected }"
+        ) Registrati
 
-        div(id="login-body")
-          div(v-if="isLoginSelected")
-            b-form(@submit="loginRequest")
-              div(class="px-5 pt-5 pb-5")
-                p(v-if="showLoginErrorMessage" class="text-danger") Email o password inserita errata.  
-                h5(class="mt-4") Credenziali
-                b-form-group(id="input-group-11" label="" label-for="input-11")
-                  b-input-group()
-                    b-input-group-prepend
-                      b-input-group-text
-                        b-icon(icon="at")
-                    b-form-input(id="input-11" type="text" placeholder="Inserisci email" required v-model="login.email")
-                b-form-group(id="input-group-22" label="" label-for="input-22")
-                  b-input-group()
-                    b-input-group-prepend
-                      b-input-group-text
-                        b-icon(icon="key")
-                    b-form-input(id="input-22" type="password" placeholder="Inserisci password" required v-model="login.password")
-                b-row(class="justify-content-md-center" class="mb-4")
-                  a(href="#") Ti sei dimenticato la password?
-        
-              b-button(block class="login-button" size="lg" type="submit")
-                span ACCEDI
-                b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
+      #login-body
+        div(v-if="isLoginSelected")
+          b-form(@submit="loginRequest")
+            .px-5.pt-5.pb-5
+              p.text-danger(v-if="showLoginErrorMessage") Email o password inserita errata.
+              h5.mt-4 Credenziali
+              b-form-group#input-group-11(label="", label-for="input-11")
+                b-input-group
+                  b-input-group-prepend
+                    b-input-group-text
+                      b-icon(icon="at")
+                  b-form-input#input-11(
+                    type="text",
+                    placeholder="Inserisci email",
+                    required,
+                    v-model="login.email"
+                  )
+              b-form-group#input-group-22(label="", label-for="input-22")
+                b-input-group
+                  b-input-group-prepend
+                    b-input-group-text
+                      b-icon(icon="key")
+                  b-form-input#input-22(
+                    type="password",
+                    placeholder="Inserisci password",
+                    required,
+                    v-model="login.password"
+                  )
+              b-row.justify-content-md-center.mb-4
+                a(href="#") Ti sei dimenticato la password?
 
-          div(v-else)
-            b-form(@submit="registrationRequest")
-              div(class="p-3")
-                h5 Informazioni personali
-                b-form-group(id="input-group-1" label="Nome:" label-for="input-1")
-                  b-form-input(id="input-1" type="text" v-model="registration.name" placeholder="Inserisci nome" required)
+            b-button.login-button(block, size="lg", type="submit")
+              span ACCEDI
+              b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
 
-                b-form-group(id="input-group-2" label="Cognome:" label-for="input-2")
-                  b-form-input(id="input-2" type="text" v-model="registration.surname" placeholder="Inserisci cognome" required)
+        div(v-else)
+          b-form(@submit="registrationRequest")
+            .p-3
+              h5 Informazioni personali
+              b-form-group#input-group-1(label="Nome:", label-for="input-1")
+                b-form-input#input-1(
+                  type="text",
+                  v-model="registration.name",
+                  placeholder="Inserisci nome",
+                  required
+                )
 
-                b-form-group(id="input-group-3" label="Indirizzo email:" label-for="input-3" 
-                description="La tua email non sarà divulgata a terzi.")
-                  b-form-input(id="input-3" type="email" v-model="registration.email" placeholder="Inserisci email" required)
-                
-                b-form-group(id="input-group-4" label="Numero di cellulare:" label-for="input-4")
-                  b-form-input(id="input-4" type="text"  v-model="registration.phoneNumber" placeholder="Inserisci numero di cellulare" required)
+              b-form-group#input-group-2(label="Cognome:", label-for="input-2")
+                b-form-input#input-2(
+                  type="text",
+                  v-model="registration.surname",
+                  placeholder="Inserisci cognome",
+                  required
+                )
 
-                hr
+              b-form-group#input-group-3(
+                label="Indirizzo email:",
+                label-for="input-3",
+                description="La tua email non sarà divulgata a terzi."
+              )
+                b-form-input#input-3(
+                  type="email",
+                  v-model="registration.email",
+                  placeholder="Inserisci email",
+                  required
+                )
 
-                h5 Luogo di residenza
-                
-                b-form-group(id="input-group-5" label="Città:" label-for="input-5")
-                  b-form-input(id="input-5" type="text" v-model="registration.address.city" placeholder="Inserisci città" required)
-                
-                b-form-group(id="input-group-6" label="Indirizzo:" label-for="input-6")
-                  b-form-input(id="input-6" type="text" v-model="registration.address.street" placeholder="Inserisci indirizzo" required)
-                
-                b-form-group(id="input-group-7" label="Numero civico:" label-for="input-1")
-                  b-form-input(id="input-7" type="text" v-model="registration.address.civicNumber" placeholder="Inserisci numero civico" required)
+              b-form-group#input-group-4(
+                label="Numero di cellulare:",
+                label-for="input-4"
+              )
+                b-form-input#input-4(
+                  type="text",
+                  v-model="registration.phoneNumber",
+                  placeholder="Inserisci numero di cellulare",
+                  required
+                )
 
-                hr
-                
-                b-form-group(id="input-group-8" label="Password:" label-for="input-8" 
-                description="Scegli una password efficace, comporta da almeno 8 caratteri tra numeri e lettere maiuscole e minuscole.")
-                  b-form-input(id="input-8" type="password"  v-model="registration.password" placeholder="Inserisci password" required)
+              hr
 
-                b-form-group(id="input-group-9" label="Ripeti password:" label-for="input-9")
-                  b-form-input(id="input-9" type="password" v-model="regRepeatPassword" placeholder="Conferma password" required  :state="registrationPasswordCheck()")
-            
-                hr
+              h5 Luogo di residenza
 
-                b-form-checkbox(id="checkbox-1" name="checkbox-1" class="mt-4" v-model="registrationPrivacyChecked")
-                  i accetto i termini di servizio e la 
-                    a(href="#") privacy policy
+              b-form-group#input-group-5(label="Città:", label-for="input-5")
+                b-form-input#input-5(
+                  type="text",
+                  v-model="registration.address.city",
+                  placeholder="Inserisci città",
+                  required
+                )
 
-                b-form-checkbox(id="checkbox-2" name="checkbox-2" class="mt-2")
-                  i voglio ricevere email su eventi nella mia città
+              b-form-group#input-group-6(
+                label="Indirizzo:",
+                label-for="input-6"
+              )
+                b-form-input#input-6(
+                  type="text",
+                  v-model="registration.address.street",
+                  placeholder="Inserisci indirizzo",
+                  required
+                )
 
-              b-button(block class="login-button" type="submit" size="lg")
-                span REGISTRATI
-                b-icon(icon="chevron-right" aria-hidden="true" font-scale="1")
+              b-form-group#input-group-7(
+                label="Numero civico:",
+                label-for="input-1"
+              )
+                b-form-input#input-7(
+                  type="text",
+                  v-model="registration.address.civicNumber",
+                  placeholder="Inserisci numero civico",
+                  required
+                )
 
+              hr
 
+              b-form-group#input-group-8(
+                label="Password:",
+                label-for="input-8",
+                description="Scegli una password efficace, comporta da almeno 8 caratteri tra numeri e lettere maiuscole e minuscole."
+              )
+                b-form-input#input-8(
+                  type="password",
+                  v-model="registration.password",
+                  placeholder="Inserisci password",
+                  required
+                )
+
+              b-form-group#input-group-9(
+                label="Ripeti password:",
+                label-for="input-9"
+              )
+                b-form-input#input-9(
+                  type="password",
+                  v-model="regRepeatPassword",
+                  placeholder="Conferma password",
+                  required,
+                  :state="registrationPasswordCheck()"
+                )
+
+              hr
+
+              b-form-checkbox#checkbox-1.mt-4(
+                name="checkbox-1",
+                v-model="registrationPrivacyChecked"
+              )
+                i accetto i termini di servizio e la
+                  a(href="#") privacy policy
+
+              b-form-checkbox#checkbox-2.mt-2(name="checkbox-2")
+                i voglio ricevere email su eventi nella mia città
+
+            b-button.login-button(block, type="submit", size="lg")
+              span REGISTRATI
+              b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
 </template>
 
 <script lang="ts">
@@ -154,8 +236,8 @@ export default Vue.extend({
         .then((r: any) => {
           if (r.status == 200) {
             this.$store.dispatch("login", {
-              token: r.data.data.token, 
-              userData: r.data.data.user
+              token: r.data.data.token,
+              userData: r.data.data.user,
             });
             this.showLoginErrorMessage = false;
             this.$router.replace({ name: "ManagerHome" });
