@@ -4,9 +4,9 @@ import EventController from '../controllers/eventController'
 const router: Router = express.Router()
 const eventController = new EventController()
 
-router.post('/', eventController.find)
-router.post('/edit', eventController.add)
-router.put('/', eventController.edit)
-router.delete('/', eventController.delete)
+router.post('/find', eventController.find)
+router.post('/add', eventController.add)
+router.post('/edit', eventController.edit)
+router.post('/delete', eventController.delete)
 
 export default router

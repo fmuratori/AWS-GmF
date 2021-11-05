@@ -4,10 +4,10 @@ import DonationController from '../controllers/donationController'
 const router: Router = express.Router()
 const donationController = new DonationController()
 
-router.post('/', donationController.find)
-router.post('/edit', donationController.add)
-router.put('/', donationController.edit)
-router.delete('/', donationController.delete)
+router.post('/find', donationController.find)
+router.post('/add', donationController.add)
+router.post('/edit', donationController.edit)
+router.post('/delete', donationController.delete)
 
 router.post('/get-chat', donationController.getChat)
 

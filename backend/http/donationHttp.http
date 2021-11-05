@@ -1,5 +1,5 @@
 ### DONATION list all
-POST http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/find
 accept: application/json 
 content-type: application/json
 
@@ -10,7 +10,7 @@ content-type: application/json
 }
 
 ### DONATION add
-POST http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/add
 accept: application/json 
 content-type: application/json
 
@@ -40,7 +40,7 @@ content-type: application/json
 }
 
 ### DONATION delete
-DELETE http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/delete
 accept: application/json 
 content-type: application/json
 
@@ -67,7 +67,7 @@ content-type: application/json
 }
 
 ### DONATION get unread messages
-POST http://localhost:3000/api/donation
+POST http://localhost:3000/api/donation/find
 accept: application/json 
 content-type: application/json
 
