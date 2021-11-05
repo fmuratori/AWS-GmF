@@ -40,21 +40,6 @@ export interface RegistrationPayload {
   address: Address;
 }
 
-// export interface DonationCreationPayload {
-//   userId: string,
-//   foods: [
-//     string
-//   ],
-//   expirationDate: string,
-//   address: Address,
-//   additionalInformation: string,
-//   pickUpPeriod: [{
-//       weekDay: string,
-//       period: string,
-//     }
-//   ]
-// }
-
 export interface Donation {
   _id: string,
   userId: string,
@@ -89,7 +74,7 @@ export interface DonationDeletionPayload {
 }
 
 export interface UserDonationsPayload {
-  id: string,
+  userId: string,
 }
 
 export interface FamilyPayload {
@@ -97,6 +82,15 @@ export interface FamilyPayload {
   phoneNumber: string,
   components: number,
   address: Address
+}
+
+export interface EventPayload {
+  volunteerId: string,
+  name: string,
+  description: string,
+  address: Address,
+  date: Date,
+  image: string
 }
 
 // export interface OfferResponse {

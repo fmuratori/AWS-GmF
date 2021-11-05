@@ -45,7 +45,7 @@ import Sidebar from "../components/Sidebar.vue";
 import api from "../api";
 
 import {
-  Donation, ChatMessage
+  Donation, UserDonationsPayload
 } from "../types";
 
 export default Vue.extend({
@@ -67,8 +67,11 @@ export default Vue.extend({
       }
       
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.donationsList(this.$store.getters.getSessionHeader)
-      .then((r:any) => {
+      const user = {
+        userId: this.$store.state.session.userData._id,
+      } as UserDonationsPayload
+
+      api.userDonationsList(user, this.$store.getters.getSessionHeader).then((r:any) => {
         this.donations = r.data.data.list;
       }).catch(e => console.log(e));
 

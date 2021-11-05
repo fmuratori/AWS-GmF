@@ -8,7 +8,8 @@ import {
   SessionHeader,
   FamilyPayload,
   ChatRequestPayload,
-  DonationDeletionPayload
+  DonationDeletionPayload,
+  EventPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -31,8 +32,9 @@ export default {
     return axios.post(`${backendUrl}/api/donation/edit`, payload, { headers: headers.content });
   },
 
-  async donationsList(payload: UserDonationsPayload, headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/donation`, payload, { headers: headers.content });
+  async userDonationsList(payload: UserDonationsPayload, headers: SessionHeader) {
+    console.log(payload, { "filter": payload })
+    return axios.post(`${backendUrl}/api/donation`, { "filter": payload }, { headers: headers.content });
   },
 
   async donationsMessagesCounts(userId:string, headers: SessionHeader) {
@@ -62,11 +64,19 @@ export default {
   },
   
   async addFamily(payload: FamilyPayload) {
-    return axios.post(`${backendUrl}/api/family/add`, payload);
+    return axios.post(`${backendUrl}/api/family`, payload);
   },
 
   async familyList(payload: FamilyPayload) {
-    return axios.post(`${backendUrl}/api/family/list-all`, payload);
+    return axios.get(`${backendUrl}/api/family`, { params: payload });
+  },
+
+  async createEvent(payload: EventPayload) {
+    return axios.post(`${backendUrl}/api/event`, payload);
+  },
+
+  async eventList(payload: EventPayload) {
+    return axios.get(`${backendUrl}/api/event`, { params: payload });
   },
 
 };

@@ -170,7 +170,7 @@ export default Vue.extend({
           );
       } else {
         api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          console.log("ASD")
+          console.log(r)
           // removes empty string element
           this.form.foods.pop()
 

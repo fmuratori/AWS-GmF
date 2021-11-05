@@ -1,16 +1,16 @@
 <template lang="pug">
 b-row.justify-content-md-center.my-5.no-gutters
   b-col(cols="6")
-    p SEGNALA UNA FAMIGLIA
-    b-form
+    p REPORT A FAMILY
+    b-form(@submit="addFamily")
       b-form-group#input-group-1(
-        label="Numero di telefono:",
+        label="Phone number:",
         label-for="input-4"
       )
-        b-form-input#input-1(required, type="text", v-model="form.phoneNumber")
+        b-form-input#input-1(required, type="text", placeholder="Insert phone number here", v-model="form.phoneNumber")
 
       b-form-group#input-group-2(
-        label="Numero di componenti:",
+        label="Components number:",
         label-for="input-4"
       )
         b-form-input#input-2(
@@ -20,11 +20,11 @@ b-row.justify-content-md-center.my-5.no-gutters
         )
 
       .mb-3
-        label Indirizzo:
+        label Location:
         b-card
           b-row
             b-col
-              b-form-group#input-group-3(label="Città:", label-for="input-3")
+              b-form-group#input-group-3(label="City:", label-for="input-3")
                 b-form-input#input-3(
                   required,
                   type="text",
@@ -33,7 +33,7 @@ b-row.justify-content-md-center.my-5.no-gutters
           b-row
             b-col(cols=8)
               b-form-group#input-group-4(
-                label="Indirizzo:",
+                label="Address:",
                 label-for="input-4"
               )
                 b-form-input#input-4(
@@ -43,7 +43,7 @@ b-row.justify-content-md-center.my-5.no-gutters
                 )
             b-col(cols=4)
               b-form-group#input-group-5(
-                label="Numero civico:",
+                label="Civic number:",
                 label-for="input-5"
               )
                 b-form-input#input-5(
@@ -62,7 +62,7 @@ b-row.justify-content-md-center.my-5.no-gutters
             @click="$router.replace({ name: 'ManagerHome' })"
           ) Annulla
         b-col
-          b-button(block, variant="success", type="submit", @click="addFamily") Procedi
+          b-button(block, variant="success", type="submit") Procedi
 </template>
 
 <script lang="ts">
@@ -111,12 +111,12 @@ export default Vue.extend({
   },
   methods: {
     addFamily(event) {
-      event.preventDefault()
+      event.preventDefault();
       api
         .addFamily(this.form)
         .then((r) => {
           console.log(r);
-          this.$router.replace({ name: "ManagerFamilyList" });
+          this.$router.replace({ name: "ManagerFamilies" });
           this.$bvToast.toast(`Familgia segnalata con successo.`, {
             title: "Famiglia",
             autoHideDelay: 5000,
