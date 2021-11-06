@@ -1,5 +1,5 @@
 ### EVENT: add
-POST http://localhost:3000/api/event
+POST http://localhost:3000/api/event/add
 accept: application/json 
 content-type: application/json
 
@@ -19,12 +19,12 @@ content-type: application/json
 }
 
 ### EVENT: list all
-POST http://localhost:3000/api/event
+POST http://localhost:3000/api/event/find
 accept: application/json 
 content-type: application/json
 
 ### EVENT: find many
-POST http://localhost:3000/api/event
+POST http://localhost:3000/api/event/find
 accept: application/json 
 content-type: application/json
 
@@ -35,7 +35,7 @@ content-type: application/json
 }
 
 ### EVENT: list all ordered
-POST http://localhost:3000/api/event
+POST http://localhost:3000/api/event/find
 accept: application/json 
 content-type: application/json
 

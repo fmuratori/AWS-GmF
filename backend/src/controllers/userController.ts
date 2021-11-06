@@ -99,7 +99,7 @@ export default class UserController {
 
 	//upgrade user to volunteer type
 	upgrade = catchAsync(async (req: Request, res: Response) => {
-		var user = await UserModel.findById(req.query.userId)
+		var user = await UserModel.findById(req.body.userId)
 
 		if (!user) {
 			res.status(401).json({
