@@ -3,50 +3,61 @@ b-row.justify-content-md-center.my-5.no-gutters
   b-col(cols="6")
     p REPORT A FAMILY
     b-form(@submit="addFamily")
-      b-form-group#input-group-1(
-        label="Phone number:",
-        label-for="input-4"
-      )
-        b-form-input#input-1(required, type="text", placeholder="Insert phone number here", v-model="form.phoneNumber")
-
-      b-form-group#input-group-2(
-        label="Components number:",
-        label-for="input-4"
-      )
-        b-form-input#input-2(
-          required,
-          type="number",
-          v-model="form.components"
+      b-row
+        b-col
+          b-form-group#input-group-1(
+          label="Family name:",
+          label-for="input-4"
         )
+          b-form-input#input-1(required, type="text", placeholder="Insert family name here", v-model="form.name")
+
+      b-row
+        b-col(cols=8)
+          b-form-group#input-group-2(
+          label="Phone number:",
+          label-for="input-4"
+        )
+          b-form-input#input-1(required, type="text", placeholder="Insert phone number here", v-model="form.phoneNumber")
+
+        b-col(cols=4)
+          b-form-group#input-group-3(
+            label="Components number:",
+            label-for="input-4"
+          )
+            b-form-input#input-3(
+              required,
+              type="number",
+              v-model="form.components"
+            )
 
       .mb-3
         label Location:
         b-card
           b-row
             b-col
-              b-form-group#input-group-3(label="City:", label-for="input-3")
-                b-form-input#input-3(
+              b-form-group#input-group-4(label="City:", label-for="input-3")
+                b-form-input#input-4(
                   required,
                   type="text",
                   v-model="form.address.city"
                 )
           b-row
             b-col(cols=8)
-              b-form-group#input-group-4(
+              b-form-group#input-group-5(
                 label="Address:",
-                label-for="input-4"
+                label-for="input-5"
               )
-                b-form-input#input-4(
+                b-form-input#input-5(
                   required,
                   type="text",
                   v-model="form.address.street"
                 )
             b-col(cols=4)
-              b-form-group#input-group-5(
+              b-form-group#input-group-6(
                 label="Civic number:",
                 label-for="input-5"
               )
-                b-form-input#input-5(
+                b-form-input#input-6(
                   required,
                   type="text",
                   v-model="form.address.civicNumber"
@@ -83,7 +94,8 @@ export default Vue.extend({
   data: function () {
     return {
       form: {
-        userId: "",
+        reporterId: "",
+        name: "",
         phoneNumber: "",
         components: 0,
         address: {
@@ -103,7 +115,7 @@ export default Vue.extend({
 
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.form.userId = this.$store.state.session.userData._id;
+      this.form.reporterId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
     } else {
       this.$router.replace({ name: "Login" });

@@ -99,9 +99,20 @@ export interface ChatRequestPayload {
 }
 
 export interface FamilyPayload {
-  userId: string,
+  reporterId: string,
+  name: string,
   phoneNumber: string,
   components: number,
+  address: Address
+}
+
+export interface Family {
+  _id: string,
+  reporterId: string,
+  name: string,
+  phoneNumber: string,
+  components: number,
+  status: string,
   address: Address
 }
 

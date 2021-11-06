@@ -12,12 +12,14 @@
     hr.sidebar-hr.my-3
 
   #sidebar-actions 
+  
     div
       b-row.pb-2(no-gutters, align-v="center")
         b-col.mr-1(cols="auto")
           font-awesome-icon(icon="utensils", size="lg")
         b-col.ml-1
           h6 Dona cibo
+
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -28,6 +30,7 @@
           label.py-1 Crea una donazione
         b-col(cols="auto")
           b-icon(icon="chevron-right")
+
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -47,6 +50,7 @@
           font-awesome-icon(icon="users", size="lg")
         b-col.ml-1
           h6 Famiglie bisognose
+
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -57,6 +61,7 @@
           label.py-1 Segnala famiglia
         b-col(cols="auto")
           b-icon(icon="chevron-right")
+
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -76,6 +81,7 @@
           font-awesome-icon(icon="utensils", size="lg")
         b-col.ml-1
           h6 Events
+
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -86,6 +92,7 @@
           label.py-1 Create event
         b-col(cols="auto")
           b-icon(icon="chevron-right")
+
       b-row.pl-3.pr-1.sidebar-item(
         no-gutters,
         align-v="center",
@@ -96,6 +103,7 @@
           label.py-1 Your events
         b-col(cols="auto")
           b-icon(icon="chevron-right")
+
 </template>
 
 <script lang="ts">
