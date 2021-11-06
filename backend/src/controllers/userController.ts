@@ -71,7 +71,7 @@ export default class UserController {
 	})
 
 	update = catchAsync(async (req: Request, res: Response) => {
-		var user = await UserModel.findById(req.body.userId)
+		var user = await UserModel.findById(req.body.id)
 
 		if (!user) {
 			res.status(401).json({
@@ -88,11 +88,11 @@ export default class UserController {
 		if (req.body.address) user.address = req.body.address
 
 		const updatedUser = await UserModel.findByIdAndUpdate(user._id, user, { new: true })
-		console.log(updatedUser)
 
 		res.status(200).json({
 			status: "success",
-			message: "User updated"
+			message: "User updated",
+			data: {user: updatedUser}
 		})
 	})
 

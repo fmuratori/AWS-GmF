@@ -36,7 +36,7 @@ accept: application/json
 content-type: application/json
 
 {
-    "userId": "6172e6a4df4d0325895749e2",
+    "id": "6172e6a4df4d0325895749e2",
     "name": "pippo-upd",
     "surname": "pluto-upd",
     "email": "abc@fgh.it",

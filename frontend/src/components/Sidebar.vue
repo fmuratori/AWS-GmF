@@ -7,7 +7,7 @@
       b-col.ml-1(cols="auto")
         p {{ this.$store.state.session.userData.name }} {{ this.$store.state.session.userData.surname }}
         p {{ this.$store.state.session.userData.type }}
-        p(@click="changePage('ManagerEditUser')" class="clickable") edit
+        p(@click="changePage('ManagerEditUserInfo')" class="clickable") edit
 
     hr.sidebar-hr.my-3
 
@@ -70,7 +70,7 @@
 
     hr.sidebar-hr.my-3
 
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+    div(v-if="this.$store.state.session.userData.type != 'user'")
       b-row.pb-2(no-gutters, align-v="center")
         b-col.mr-1(cols="auto")
           font-awesome-icon(icon="utensils", size="lg")

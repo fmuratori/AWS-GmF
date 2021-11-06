@@ -50,7 +50,7 @@ b-row.justify-content-md-center.my-5.no-gutters
         b-card
           b-row
             b-col
-              b-form-group#input-group-4(label="Nome:", label-for="input-1")
+              b-form-group#input-group-4(label="Name:", label-for="input-1")
                 b-form-input#input-4(
                   type="text",
                   v-model="editUserForm.name",
@@ -58,7 +58,7 @@ b-row.justify-content-md-center.my-5.no-gutters
                   required
                 )
             b-col
-              b-form-group#input-group-5(label="Cognome:", label-for="input-2")
+              b-form-group#input-group-5(label="Surname:", label-for="input-2")
                 b-form-input#input-5(
                   type="text",
                   v-model="editUserForm.surname",
@@ -125,14 +125,13 @@ b-row.justify-content-md-center.my-5.no-gutters
 
       b-row
         b-col
-          b-button(block, variant="outline-danger", @click="cancel") Cancel
+          b-button(block, variant="outline-danger", @click="$router.replace({name: 'ManagerHome'})") Cancel
         b-col
           b-button(block, variant="success", type="submit") Edit
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosError } from "axios";
 
 // import bcrypt from "bcrypt"
 
@@ -140,10 +139,10 @@ import api from "../api";
 import { Address, editUserPayload, changePasswordPayload } from "../types";
 
 export default Vue.extend({
-  name: "ManagerEditUser",
+  name: "ManagerEditUserInfo",
   data: function () {
     return {
-      regRepeatPassword: "Password2021!!",
+      regRepeatPassword: "",
       editUserForm: {
         id: "",
         name: "",
@@ -162,8 +161,8 @@ export default Vue.extend({
       } as editUserPayload,
       changePasswordForm: {
         id: "",
-        oldPassword: "Password2021!",
-        newPassword: "Password2021!!",
+        oldPassword: "",
+        newPassword: "",
       } as changePasswordPayload,
     };
   },
@@ -174,8 +173,15 @@ export default Vue.extend({
         this.$store.dispatch("showSidebar");
       }
 
-      this.editUserForm = this.$store.state.session.userData;
+      // this.editUserForm = this.$store.state.session.userData;
+      this.editUserForm.name = this.$store.state.session.userData.name;
+      this.editUserForm.surname = this.$store.state.session.userData.surname;
+      this.editUserForm.email = this.$store.state.session.userData.email;
+      this.editUserForm.phoneNumber =
+        this.$store.state.session.userData.phoneNumber;
+      this.editUserForm.address = this.$store.state.session.userData.address;
       this.editUserForm.id = this.$store.state.session.userData._id;
+
       this.changePasswordForm.id = this.$store.state.session.userData._id;
     }
   },
@@ -190,14 +196,18 @@ export default Vue.extend({
       event.preventDefault();
       api
         .editUser(this.editUserForm)
-        .then((r) => {
-          this.$router.replace({ name: "Home" });
-          this.$bvToast.toast(`Account information successfully edited.`, {
-            title: "User info",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+        .then((r: any) => {
+          if (r.status == 200) {
+            this.$store.state.session.userData = r.data.data.user,
+
+            this.$router.replace({ name: "Home" });
+            this.$bvToast.toast(`Account information successfully edited.`, {
+              title: "User info",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            });
+          }
         })
         .catch((e) => {
           this.$bvToast.toast(
@@ -235,7 +245,7 @@ export default Vue.extend({
             }
           );
         });
-    },
+    }
   },
 });
 </script>
