@@ -7,7 +7,6 @@ import {
   SessionHeader,
   FamilyPayload,
   EventPayload,
-  EventListPayload
 } from "./types";
 
 // axios.defaults.withCredentials = true

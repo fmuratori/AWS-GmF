@@ -126,7 +126,7 @@ export default Vue.extend({
 
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) { 
-        this.donation = this.$route.params.donation
+        this.donation = JSON.parse(this.$route.params.donation);
       } else {
         this.$router.replace({name: "ManagerDonationsList"});
       }
@@ -139,7 +139,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    weekDayDonations(weekDay: string): [{ weekDay:string, period:string }] {
+    weekDayDonations(weekDay: string): { weekDay:string, period:string }[] {
       return this.donation.pickUpPeriod.filter((p: { weekDay:string, period:string }) => p.weekDay == weekDay)
     },
     translatePeriod(period: string): string {
@@ -185,7 +185,7 @@ export default Vue.extend({
 
     },
     modifyDonation() {
-      this.$router.replace({name: "ManagerDonationsCreate", params: {'donation': this.donation}})
+      this.$router.replace({name: "ManagerDonationsCreate", params: { "donation": JSON.stringify(this.donation) }})
     }
   },
 });

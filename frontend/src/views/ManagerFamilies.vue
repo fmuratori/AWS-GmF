@@ -65,10 +65,10 @@ export default Vue.extend({
       this.$store.dispatch("showSidebar");
       
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.donationsList(this.$store.getters.getSessionHeader)
-      .then((r:any) => {
-        this.donations = r.data.data.list;
-      }).catch(e => console.log(e));
+      // api.donationsList(this.$store.getters.getSessionHeader)
+      // .then((r:any) => {
+      //   this.donations = r.data.data.list;
+      // }).catch(e => console.log(e));
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });

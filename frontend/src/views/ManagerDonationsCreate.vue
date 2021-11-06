@@ -118,9 +118,8 @@ export default Vue.extend({
       this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
 
-      console.log(this.$route.params)
       if ("donation" in this.$route.params) { 
-        this.form = this.$route.params.donation;
+        this.form = JSON.parse(this.$route.params.donation);
         this.mode = "edit";
       } else {
         this.mode = "create";
@@ -214,7 +213,7 @@ export default Vue.extend({
       }
     },
     formChecks() {
-      if (this.form.pickUpPeriod.length == 0) {
+      if (!this.form.pickUpPeriod.length) {
         this.$bvToast.toast(
           `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`, {
             title: "Donazione",
@@ -224,7 +223,8 @@ export default Vue.extend({
           }
         );
         return false;
-      } else if (this.form.foods.length == 0) {
+      }
+      if (!(this.form.foods.length - 1)) {
         this.$bvToast.toast(
           `Inserire almeno un alimento che vuoi donare.`, {
             title: "Donazione",

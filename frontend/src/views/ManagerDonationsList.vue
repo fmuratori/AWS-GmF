@@ -32,7 +32,7 @@
                         b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
                     div(class="mb-2")
                       a(href="#") Hai # messaggi non letti
-              b-button(block @click="$router.replace({name: 'ManagerDonationsInspect', params: {'donation': donation}})" class="b-card-footer-button") Mostra
+              b-button(block @click="inspectDonation(donation)" class="b-card-footer-button") Mostra
 
 </template>
 
@@ -45,7 +45,7 @@ import Sidebar from "../components/Sidebar.vue";
 import api from "../api";
 
 import {
-  Donation, UserDonationsPayload
+  Donation
 } from "../types";
 
 export default Vue.extend({
@@ -84,6 +84,9 @@ export default Vue.extend({
     },
     formatDonation(donation: Donation) {
       return moment(donation.creationDate).locale("it").format("LL");
+    },
+    inspectDonation(donation: Donation) {
+      this.$router.replace({name: "ManagerDonationsInspect", params: {"donation": JSON.stringify(donation)}})
     }
   }
 });

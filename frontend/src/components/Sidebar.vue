@@ -5,8 +5,8 @@
       b-col.mr-1(cols="auto")
         b-icon-person-circle(font-scale="3")
       b-col.ml-1(cols="auto")
-        p {{ this.$store.state.session.userData.name }} {{ this.$store.state.session.userData.surname }}
-        p {{ this.$store.state.session.userData.type }}
+        p {{ userFullname }}
+        p {{ userType }}
 
     hr.sidebar-hr.my-3
 
@@ -110,6 +110,21 @@ export default Vue.extend({
     currentRouteName() {
       return this.$route.name;
     },
+    userFullname() {
+      const fullname = this.$store.state.session.userData.name + " " + this.$store.state.session.userData.surname
+      if (fullname.length > 10) {
+        return fullname.substring(0,10) + "...";
+      }
+      return fullname;
+    },
+    userType() {
+      switch(this.$store.state.session.userData.type) {
+        case "user": return "Utente"
+        case "volunteer": return "Volontario"
+        case "trusted": return "Collaboratore"
+        default: return "UNKNOWN"
+      }
+    }
   },
   methods: {
     isRouteSelected(routeName: string) {
