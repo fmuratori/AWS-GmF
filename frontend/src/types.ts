@@ -136,6 +136,37 @@ export interface Event {
   ownerVolunteerId: String
 }
 
+export interface PackPayload {
+  foodIdList: [string],
+  familyId: string,
+  deliveryDate: Date,
+  deliveryPeriod: string
+}
+
+export interface Pack {
+  foodIdList: [string],
+  deliveryVolunteerId: string,
+  status: string,
+  familyId: string,
+  deliveryDate: Date,
+  deliveryPeriod: string
+}
+
+export interface FoodPayload {
+  name: string,
+  number: number,
+  expirationDate: Date,
+  labels: [string]
+}
+
+export interface Food {
+  _id: string,
+  name: string,
+  number: number,
+  expirationDate: Date,
+  labels: [string]
+}
+
 // export interface OfferResponse {
 
 // }

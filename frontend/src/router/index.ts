@@ -84,6 +84,30 @@ const routes: Array<RouteConfig> = [
       import(
         /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerEvents.vue"
       ),
+  },
+  {
+    path: "/manager/food/add",
+    name: "ManagerFood",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerFood.vue"
+      ),
+  },
+  {
+    path: "/manager/pack/create",
+    name: "ManagerPackCreate",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerPackCreate.vue"
+      ),
+  },
+  {
+    path: "/manager/pack/list",
+    name: "ManagerPacks",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerPacks.vue"
+      ),
   }
 
 ];

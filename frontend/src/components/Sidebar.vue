@@ -104,6 +104,21 @@
         b-col(cols="auto")
           b-icon(icon="chevron-right")
 
+    hr.sidebar-hr.my-3
+
+    div(v-if="this.$store.state.session.userData.type != 'user'")
+      b-row.pl-3.pr-1.sidebar-item(
+        no-gutters,
+        align-v="center",
+        @click="changePage('ManagerFood')",
+        :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFood') }"
+      )
+        b-col
+          label.py-1 Food manager
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+
+
 </template>
 
 <script lang="ts">
