@@ -92,6 +92,10 @@ export default {
     return axios.post(`${backendUrl}/api/family/find`, payload);
   },
 
+  async verifyFamily(payload: any) {
+    return axios.post(`${backendUrl}/api/family/verify`, payload);
+  },
+
   async createEvent(payload: EventPayload) {
     return axios.post(`${backendUrl}/api/event/add`, payload);
   },

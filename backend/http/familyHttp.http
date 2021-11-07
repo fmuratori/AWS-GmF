@@ -45,3 +45,12 @@ content-type: application/json
         }
     }
 }
+
+### VERIFY FAMILY
+POST http://localhost:3000/api/family/verify
+accept: application/json 
+content-type: application/json
+
+{
+    "id": "618404cc4f7a45b4435d859a"
+}

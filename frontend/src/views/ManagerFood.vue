@@ -69,7 +69,7 @@ b-container
                         span Cancella
                         b-icon(icon="x", aria-hidden="true")
 
-              b-button.b-card-footer-button(block, type="submit") Add
+              b-button.b-card-footer-button(block, type="submit", variant="success") Add
 
       b-col(sm=12, md=6)
         b-card.mb-2(bg-variant="light", text-variant="dark", no-body)

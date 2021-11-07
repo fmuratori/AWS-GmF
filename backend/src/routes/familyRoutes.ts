@@ -9,4 +9,6 @@ router.post('/add', familyController.add)
 router.post('/edit', familyController.edit)
 router.post('/delete', familyController.delete)
 
+router.post('/verify', familyController.verify)
+
 export default router

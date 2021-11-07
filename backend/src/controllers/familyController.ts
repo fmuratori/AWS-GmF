@@ -31,8 +31,16 @@ export default class FamilyController {
 			return
 		}
 
+		if (family.status == "verified") {
+			res.status(401).json({
+				status: "family-already-verified-error",
+				message: "Family was already verified"
+			})
+			return
+		}
+
 		family.status = "verified"
-		FamilyModel.findByIdAndUpdate(req.body.id, family)
+		await FamilyModel.findByIdAndUpdate(req.body.id, family)
 
 		res.status(200).json({
 			status: "success",
