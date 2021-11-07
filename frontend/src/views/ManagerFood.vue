@@ -75,7 +75,7 @@ b-container
         b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
           b-card-text
             b-card-header Food list
-            .px-4.pt-4(v-for="food in foodList")
+            .px-4.pt-4.food-item(v-for="food in foodList")
               div
                 b Name:
                 span {{ food.name }}
@@ -179,4 +179,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+.food-item:hover {
+  background-color: yellow;
+}
 </style>

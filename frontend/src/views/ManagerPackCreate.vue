@@ -1,48 +1,74 @@
 <template lang="pug">
-b-row.justify-content-md-center.my-5.no-gutters
-  b-col(cols="6")
+b-container
+  .justify-content-md-center.my-5.no-gutters
     h3 
       b CREATE A PACK
-    b-card.mb-2(bg-variant="light") 
-      h4 About the family
-      b-row
-        b-col
-          span
-            b Name:
-          span {{ family.name }}
-        b-col
-          span 
-            b Components:
-          span {{ family.components }}
+    b-row
+      b-col(sm=12, md=6)
+        h4 About the family
+        b-row
+          b-col
+            span
+              b Name:
+            span {{ family.name }}
+          b-col
+            span 
+              b Components:
+            span {{ family.components }}
 
-      b-row
-        b-col
-          span
-            b Phone number:
-          span {{ family.phoneNumber }}
-        b-col
-          span
-            b Address:
-          span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
+        b-row
+          b-col
+            span
+              b Phone number:
+            span {{ family.phoneNumber }}
+          b-col
+            span
+              b Address:
+            span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
     b-form(@submit="createPack")
       b-row
         b-col
-          h4 Available food
-
-          .mb-1(v-for="food in foodList")
-            b-card
-              div 
-                b Name:
-                span {{ food.name }}
-              div
-                b Expiration date:
-                span {{ formatDate(food.expirationDate) }}
-                div(v-for="label in food.labels")
-                  b-label {{ label }}
+          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+            b-card-text
+              b-card-header Available food
+              .px-4.pt-4.food-item(
+                v-for="(food, index) in foodList",
+                :keY="index"
+              )
+                div
+                  b Name:
+                  span {{ food.name }}
+                  b-button.food-button(@click="select(index)") Add
+                div
+                  b Units:
+                  span {{ food.number }}
+                div
+                  b Expiration date:
+                  span {{ formatDate(food.expirationDate) }}
+                  h6 
+                    b-badge(v-for="label in food.labels", variant="success") {{ label }}
 
         b-col
-          h4 Selected food
+          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+            b-card-text
+              b-card-header Selected food
+              .px-4.pt-4.food-item(
+                v-for="(food, index) in selectedFood",
+                :key="index"
+              )
+                div
+                  b Name:
+                  span {{ food.name }}
+                  b-button.food-button(@click="unselect(index)") Remove
+                div
+                  b Units:
+                  span {{ food.number }}
+                div
+                  b Expiration date:
+                  span {{ formatDate(food.expirationDate) }}
+                  h6 
+                    b-badge(v-for="label in food.labels", variant="success") {{ label }}
 
       b-row
         b-col
@@ -73,11 +99,11 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      foodList: [null] as [Food],
-      selectedFood: [null] as [Food],
+      foodList: new Array<Food>(),
+      selectedFood: new Array<Food>(),
       family: {} as Family,
       form: {
-        foodIdList: [""],
+        foodIdList: new Array<string>(),
         familyId: "",
         deliveryDate: new Date(),
         deliveryPeriod: "",
@@ -130,9 +156,20 @@ export default Vue.extend({
     formatDate(date: Date) {
       return moment(date).locale("en").format("LL");
     },
+    select(index) {
+      this.selectedFood.push(this.foodList[index]);
+      this.foodList.splice(index, 1);
+    },
+    unselect(index) {
+      this.foodList.push(this.selectedFood[index]);
+      this.selectedFood.splice(index, 1);
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
+.food-item:hover {
+  background-color: yellow;
+}
 </style>
