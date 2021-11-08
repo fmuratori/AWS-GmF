@@ -1,70 +1,49 @@
 <template lang="pug">
-b-container
-  .justify-content-center.my-5
-    h3 
-      b REPORTED FAMILIES
+  b-container(class="justify-content-center my-5")
+    p TUE SEGNALAZIONI
 
-    b-row
+    b-row(no-gutters class="mb-2")
+      b-col(cols="auto")
+        p Stato segnalazioni:
       b-col
-        b-button-group(v-if="this.$store.state.session.userData.type != 'user'")
-          b-button(@click="changeView('my', status)") Only my
-          b-button(@click="changeView('all', status)") All
-
-        b-button-group
-          b-button(@click="changeView(view, 'verified')") Verified
-          b-button(@click="changeView(view, 'pending')") Pending
-          b-button(@click="changeView(view, 'all')") All
-
+        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('verified')" :class="{'my-button-selected': filterByMode == 'verified'}") Segnalazioni accettate
+        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('pending')" :class="{'my-button-selected': filterByMode == 'pending'}") In attesa di accettazione
+        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('all')" :class="{'my-button-selected': filterByMode == 'all'}") Tutte le segnalazioni
+    
+    b-row(no-gutters class="mb-2")
+      b-col(cols="auto")
+      p Ordina per:
+      b-col
+        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('creation_date')" :class="{'my-button-selected': orderByMode == 'creation_date'}") Data creazione
+      
     b-row
-      div(v-if="familyList.length == 0") No family segnalation found for this user
-      b-col(sm=12, md=6, v-for="(family, idx) in familyList", :index="idx")
-        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+      b-col(v-if="familyList.length == 0" sm=12 md=6)
+        p() Non hai mai effettuato segnalazioni. Premi #[a( href="#" @click="$router.replace({name: 'ManagerFamiliesSubscribe'})") qui] per segnalare una famiglia bisognosa.
+
+      b-col(v-else sm=12 md=6 v-for="(family, idx) in familyList" :index="idx")
+        b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
-            .px-4.pt-4
-              h4 
-                b {{ family.name }}
+            div(class="px-4 pt-4")
+              h5 {{ family.name }}
               b-row
                 b-col(cols="auto")
-                  p.mb-0 Phone number:
-                    b {{ family.phoneNumber }}
-              b-row
+                  div(class="")
+                    p(class="mb-0") Numero di cellulare:
+                    p(class="font-weight-bold mb-2") {{ family.phoneNumber }}
+
+                  div(class="")
+                    p(class="mb-0") Numero elementi della famiglia:
+                    p(class="font-weight-bold mb-2") {{ family.components }}
+
+                  div(class="")
+                    p(class="mb-0") Indirizzo:
+                    p(class="font-weight-bold") {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
                 b-col(cols="auto")
-                  p.mb-0 Components:
-                    b {{ family.components }}
-              b-row
-                b-col(cols="auto")
-                  p.mb-0 Address:
-                    b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
-
-            h5 status:
-              b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-              b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
-
-            b-button.b-card-footer-button(
-              block,
-              v-if="userRole == 'trusted' && family.status == 'pending'",
-              variant="success",
-              @click="verifyFamily(family._id)"
-            ) VERIFY
-            b-button.b-card-footer-button(
-              block,
-              v-else,
-              variant="success",
-              disabled
-            ) VERIFY
-
-            b-button.b-card-footer-button(
-              block,
-              v-if="userRole != 'user' && family.status == 'verified'",
-              variant="primary",
-              @click="$router.replace({ name: 'ManagerPackCreate', params: { family: family } })"
-            ) PACK
-            b-button.b-card-footer-button(
-              block,
-              v-else,
-              variant="primary",
-              disabled
-            ) PACK
+                  div(class="mb-2")
+                    p(class="mb-0") Stato segnalazione:
+                    h5
+                      b-badge(v-if="family.status == 'pending'" variant="warning") In attesa di verifica
+                      b-badge(v-if="family.status == 'verified'" variant="success") Verifica effettuata
 </template>
 
 <script lang="ts">
@@ -85,8 +64,8 @@ export default Vue.extend({
   data: () => {
     return {
       userRole: "",
-      view: "all",
-      status: "all",
+      filterByMode: "all",
+      orderByMode: "creation_date",
       familyList: new Array<Family>(),
     };
   },
@@ -111,26 +90,22 @@ export default Vue.extend({
     }
   },
   methods: {
-    changeView(view: "my" | "all", status: "verified" | "pending" | "all") {
-      console.log("view: " + view)
-      console.log("status: " + status)
+    creationDateComparer(a, b) {
+      return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
+    },
 
+    filterBy(filterByMode: "verified" | "pending" | "all") {
       var payload = {filter: {}}
 
-      if (view == "my") {
-        payload.filter['reporterId'] = this.$store.state.session.userData._id 
-      }
-
-      switch(status){
+      switch(filterByMode){
         case "verified":
         case "pending":
-          payload.filter['status'] = status
+          payload.filter['filterByMode'] = filterByMode
           break;
         default:
       }
 
-      this.view = view;
-      this.status = status;
+      this.filterByMode = filterByMode;
 
       api
         .familyList(payload)
@@ -139,30 +114,17 @@ export default Vue.extend({
         })
         .catch((e) => console.log(e));
     },
-    verifyFamily(familyId: string) {
-      api
-        .verifyFamily({ id: familyId })
-        .then((r) => {
-          this.changeView(this.view);
-          this.$bvToast.toast(`Family verified with success.`, {
-            title: "Verify",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
-        })
-        .catch((e) => {
-          this.$bvToast.toast(
-            `Unable to verify the family. Retry later or contact us.`,
-            {
-              title: "Verify",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        });
-    },
+
+    orderBy(mode: string) {
+      this.orderByMode = mode;
+      switch (mode) {
+        case "creation_date":
+          this.familyList.sort(this.creationDateComparer)
+          break
+        default:
+          null
+      }
+    }
   },
 });
 </script>
@@ -170,16 +132,9 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import "@/assets/style.scss";
 
-.b-card-footer-button {
-  background-color: $color3;
-
-  border: 0px;
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+.my-button-selected {
+  background-color: $color1;
+  border-color: $color1;
 }
 
-.status {
-  float: right;
-}
 </style>

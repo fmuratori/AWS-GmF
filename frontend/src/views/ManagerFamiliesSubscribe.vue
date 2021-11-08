@@ -1,79 +1,37 @@
 <template lang="pug">
-b-row.justify-content-md-center.my-5.no-gutters
-  b-col(cols="6")
-    p REPORT A FAMILY
-    b-form(@submit="addFamily")
-      b-row
-        b-col
-          b-form-group#input-group-1(
-          label="Family name:",
-          label-for="input-4"
-        )
-          b-form-input#input-1(required, type="text", placeholder="Insert family name here", v-model="form.name")
-
-      b-row
-        b-col(cols=8)
-          b-form-group#input-group-2(
-          label="Phone number:",
-          label-for="input-4"
-        )
-          b-form-input#input-1(required, type="text", placeholder="Insert phone number here", v-model="form.phoneNumber")
-
-        b-col(cols=4)
-          b-form-group#input-group-3(
-            label="Components number:",
-            label-for="input-4"
-          )
-            b-form-input#input-3(
-              required,
-              type="number",
-              v-model="form.components"
-            )
-
-      .mb-3
-        label Location:
-        b-card
+  b-row(class="justify-content-center my-5" no-gutters)
+    b-col(md=6 sm=8 cols=10)
+      p SEGNALA UNA FAMIGLIA BISOGNOSA
+      b-form(@submit="addFamily")
+        b-card(bg-variant="light" class="mb-2")
           b-row
             b-col
-              b-form-group#input-group-4(label="City:", label-for="input-3")
-                b-form-input#input-4(
-                  required,
-                  type="text",
-                  v-model="form.address.city"
-                )
-          b-row
-            b-col(cols=8)
-              b-form-group#input-group-5(
-                label="Address:",
-                label-for="input-5"
-              )
-                b-form-input#input-5(
-                  required,
-                  type="text",
-                  v-model="form.address.street"
-                )
-            b-col(cols=4)
-              b-form-group#input-group-6(
-                label="Civic number:",
-                label-for="input-5"
-              )
-                b-form-input#input-6(
-                  required,
-                  type="text",
-                  v-model="form.address.civicNumber"
-                )
-          .text-center
-            b-button(variant="outline-secondary") Cerca su maps
+              b-form-group(id="input-group-1" label="Nome famiglia:", label-for="input-1")
+                b-form-input#input-1(required type="text" v-model="form.name")
 
-      b-row
-        b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerHome' })"
-          ) Annulla
-        b-col
-          b-button(block, variant="success", type="submit") Procedi
+              b-form-group(id="input-group-2" label="Numero di cellulare:", label-for="input-2")
+                b-form-input#input-2(required type="text" v-model="form.phoneNumber")
+
+              b-form-group(id="input-group-3" label="Numero elementi della famiglia:" label-for="input-3")
+                b-form-input#input-3(required type="number" v-model="form.components")
+
+          div(class="mb-4")
+            p(class="font-weight-bold text-center") Luogo di abitazione
+            b-form-group(id="input-group-4" label="Città:" label-for="input-4")
+              b-form-input(id="input-4" type="text" v-model="form.address.city" required)
+            b-row
+              b-col(cols=8)
+                b-form-group(id="input-group-5" label="Indirizzo:" label-for="input-5")
+                  b-form-input(id="input-5" type="text" v-model="form.address.street" required)
+              b-col(cols=4)
+                b-form-group(id="input-group-6" label="Numero civico:" label-for="input-6")
+                  b-form-input(id="input-6" type="text" v-model="form.address.civicNumber" required)
+            div(class="text-center")
+              b-button(variant="outline-secondary") Cerca su maps
+
+        b-button(block variant="outline-success" type="submit") Procedi
+        b-button(block variant="outline-danger" @click="$router.replace({ name: 'ManagerFamilies' })") Annulla
+
 </template>
 
 <script lang="ts">
@@ -95,13 +53,13 @@ export default Vue.extend({
     return {
       form: {
         reporterId: "",
-        name: "",
-        phoneNumber: "",
-        components: 0,
+        name: "Famiglia a caso",
+        phoneNumber: "123456789",
+        components: 3,
         address: {
-          city: "",
-          street: "",
-          civicNumber: "",
+          city: "Rimini",
+          street: "via a caso",
+          civicNumber: "34",
           coordinates: {
             x: 0,
             y: 0,
@@ -115,8 +73,10 @@ export default Vue.extend({
 
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
       this.form.reporterId = this.$store.state.session.userData._id;
-      this.form.address = this.$store.state.session.userData.address;
     } else {
       this.$router.replace({ name: "Login" });
     }
@@ -125,7 +85,7 @@ export default Vue.extend({
     addFamily(event) {
       event.preventDefault();
       api
-        .addFamily(this.form)
+        .addFamily(this.form, this.$store.getters.getSessionHeader)
         .then((r) => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilies" });
@@ -137,6 +97,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
+          console.log(e)
           this.$bvToast.toast(
             `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,
             {
@@ -152,5 +113,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

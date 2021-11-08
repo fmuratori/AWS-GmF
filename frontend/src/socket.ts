@@ -11,12 +11,17 @@ import VueSocketIO from "vue-socket.io";
 
 import store from "./store";
 
-export default new VueSocketIO({
+const socket = io("http://localhost:3001", { transports: ["websocket"] });
+
+const vueSocket = new VueSocketIO({
   debug: false, //true
-  connection: io("http://localhost:3001", { transports: ["websocket"] }),
+  connection: socket,
   vuex: {
     store,
     actionPrefix: "SOCKET_",
     mutationPrefix: "SOCKET_",
   },
 });
+
+export default vueSocket;
+export { socket };

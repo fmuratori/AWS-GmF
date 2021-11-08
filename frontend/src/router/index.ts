@@ -109,7 +109,6 @@ const routes: Array<RouteConfig> = [
         /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerPacks.vue"
       ),
   }
-
 ];
 
 const router = new VueRouter({

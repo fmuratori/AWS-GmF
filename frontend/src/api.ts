@@ -3,7 +3,7 @@ import axios from "axios";
 import {
   LoginPayload,
   RegistrationPayload,
-  DonationCreationPayload,
+  Donation,
   SessionHeader,
   FamilyPayload,
   EventPayload,
@@ -33,59 +33,65 @@ export default {
     return axios.post(`${backendUrl}/api/user/change-password`, payload);
   },
 
-  async addDonation(payload: DonationCreationPayload, headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/donation`, payload, { headers: headers.content });
+  async addDonation(payload: Donation, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/donation/add`, payload, {
+      headers: headers.content,
+    });
   },
 
-  async donationsList(headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/donation/find`, { headers: headers.content });
+  async editDonation(payload: Donation, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/donation/edit`, payload, {
+      headers: headers.content,
+    });
   },
 
-  async donationsMessagesCounts(userId: string, headers: SessionHeader) {
+  async deleteDonation(donationId: string, headers: SessionHeader) {
     const payload = {
-      "filter": {
-        "userId": userId,
-        "chat": {
-          "$elemMatch": {
-            "visualized": false
-          }
-        }
-      },
-      "projection": {
-        "chat.$": 1,
-        "donationId": 1
-      }
-    }
-    return axios.post(`${backendUrl}/api/donation`, { params: payload, headers: headers.content });
-
+      id: donationId,
+    };
+    return axios.post(`${backendUrl}/api/donation/delete`, payload, {
+      headers: headers.content,
+    });
   },
 
-  async donationsMessagesCounts(userId:string, headers: SessionHeader) {
+  async userDonationsList(userId: string, headers: SessionHeader) {
     const payload = {
-      "filter": {
-        "userId": userId,
-        "chat": {
-          "$elemMatch": {
-            "visualized": false
-          }
-        }
-      },
-      "projection": {
-        "chat.$": 1,
-        "donationId": 1
-      }
-    }
-    return axios.post(`${backendUrl}/api/donation/find`,  {data: payload, headers: headers.content} );
-
+      userId: userId,
+    };
+    return axios.post(
+      `${backendUrl}/api/donation/find`,
+      { filter: payload },
+      { headers: headers.content }
+    );
   },
 
-  async getDonationChat(payload: ChatRequestPayload, headers: SessionHeader) {
-    
-    return axios.get(`${backendUrl}/api/donation/get-chat`, { params: payload, headers: headers.content });
+  async unreadMessages(userId: string, headers: SessionHeader) {
+    const payload = {
+      userId: userId,
+    };
+    return axios.post(`${backendUrl}/api/donation/unread-messages`, payload, {
+      headers: headers.content,
+    });
   },
-  
-  async addFamily(payload: FamilyPayload) {
-    return axios.post(`${backendUrl}/api/family/add`, payload);
+
+  async getDonationChat(
+    donationId: string,
+    userId: string,
+    headers: SessionHeader
+  ) {
+    const payload = {
+      donationId: donationId,
+      userId: userId,
+    };
+    return axios.post(`${backendUrl}/api/donation/get-chat`, payload, {
+      headers: headers.content,
+    });
+  },
+
+  async addFamily(payload: FamilyPayload, headers: SessionHeader) {
+    return axios.post(`${backendUrl}/api/family/add`, payload, { 
+      headers: headers.content,
+    });
   },
 
   async familyList(payload: any) {
