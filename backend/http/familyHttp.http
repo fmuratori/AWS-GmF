@@ -11,6 +11,8 @@ accept: application/json
 content-type: application/json
 
 {
+    "reporterId": "618559389e6b6e57c6950e06",
+    "name": "nome famiglia",
     "phoneNumber": "666",
     "components":777,
     "address": {
@@ -42,4 +44,13 @@ content-type: application/json
             "y": 456
         }
     }
+}
+
+### VERIFY FAMILY
+POST http://localhost:3000/api/family/verify
+accept: application/json 
+content-type: application/json
+
+{
+    "id": "618404cc4f7a45b4435d859a"
 }

@@ -1,9 +1,21 @@
-import mongoose from "mongoose";
+import mongoose, { PopulatedDoc } from "mongoose";
 import Family from "./interfaces/family";
+import User from "./interfaces/user";
 
-export interface FamilyDocument extends Document, Family{ }
+export interface FamilyDocument extends Document, Family{ 
+    user?: PopulatedDoc<User & Document>
+}
 
 const familySchema = new mongoose.Schema({
+    reporterId: {
+        type: mongoose.Types.ObjectId,
+        required: [true, "missing required field reporterId"],
+        ref: "User"
+    },
+    name: {
+        type: String,
+        required: [true, "missing family name"]
+    },
     phoneNumber: {
         type: String,
         required: [true, "missing required field phoneNumber"]
@@ -29,7 +41,11 @@ const familySchema = new mongoose.Schema({
         type: String,
         enum: ["pending", "verified"],
         default: "pending"
-    }
+    },
+    creationDate: {
+        type: Date,
+        default: new Date()
+    },
 })
 
 export default mongoose.model<FamilyDocument>('Family', familySchema)

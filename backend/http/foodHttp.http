@@ -20,13 +20,11 @@ content-type: application/json
 
 {
     //required fields
-    "name": "acqua",
-    "number": 9,
-    "expirationDate": "2021-01-23" 
+    "name": "champagne",
+    "number": 1,
+    "expirationDate": "2022-01-23" 
 
     //optional fields
-    //"weight": 10,
-    //"description": "bla bla bla",
     //"label": ["label1", "label2", "label3"]
 
 }

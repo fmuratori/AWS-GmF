@@ -198,9 +198,8 @@ export default Vue.extend({
         .editUser(this.editUserForm)
         .then((r: any) => {
           if (r.status == 200) {
-            this.$store.state.session.userData = r.data.data.user,
-
-            this.$router.replace({ name: "Home" });
+            (this.$store.state.session.userData = r.data.data.user),
+              this.$router.replace({ name: "Home" });
             this.$bvToast.toast(`Account information successfully edited.`, {
               title: "User info",
               autoHideDelay: 5000,
@@ -245,7 +244,7 @@ export default Vue.extend({
             }
           );
         });
-    }
+    },
   },
 });
 </script>

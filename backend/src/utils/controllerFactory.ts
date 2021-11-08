@@ -38,6 +38,7 @@ export default class ControllerFactory<T> {
                 return
             }
             
+            // TODO: verificare se _id rompe qualcosa
             // const elem = await model.findByIdAndUpdate(req.body.id, req.body, {new: true})
             const elem = await model.findByIdAndUpdate(req.body._id, req.body, {new: true})
             console.log(elem)

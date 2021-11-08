@@ -47,11 +47,14 @@ export default Vue.extend({
       this.$store.dispatch("showSidebar");
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.eventList({filter: {ownerVolunteerId: this.$store.state.session.userData._id}})
-      .then((r:any) => {
-        this.events = r.data.data.list;
-      }).catch(e => console.log(e));
-
+      api
+        .eventList({
+          filter: { ownerVolunteerId: this.$store.state.session.userData._id },
+        })
+        .then((r: any) => {
+          this.events = r.data.data.list;
+        })
+        .catch((e) => console.log(e));
     } else {
       this.$router.replace({ name: "Login" });
     }
@@ -62,8 +65,8 @@ export default Vue.extend({
     // },
     formatDate(event: Event) {
       return moment(event.date).locale("en").format("LL");
-    }
-  }
+    },
+  },
 });
 </script>
 
