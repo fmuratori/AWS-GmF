@@ -115,12 +115,12 @@ export default Vue.extend({
     };
   },
   computed: {
-    chat() {
+    chat(): any {
       return this.$store.state.socketio.chat
     },
     
     processedChat() {
-      const newChat = [];
+      const newChat = [] as any;
 
       for (const message of this.chat) {
         message.messages = [message.text]
@@ -141,7 +141,7 @@ export default Vue.extend({
       return newChat
     },
 
-    expirationDays() {
+    expirationDays(): number {
       return moment(this.donation.expirationDate).diff(moment.now(), "days");
     },
 
