@@ -53,30 +53,19 @@ export default {
     );
   },
 
-  async donationsMessagesCounts(userId: string, headers: SessionHeader) {
+  async unreadMessages(userId: string, headers: SessionHeader) {
     const payload = {
-      filter: {
-        userId: userId,
-        chat: {
-          $elemMatch: {
-            visualized: false,
-          },
-        },
-      },
-      projection: {
-        "chat.$": 1,
-        donationId: 1,
-      },
+      userId: userId
     };
-    return axios.get(`${backendUrl}/api/donation/find`, {
-      params: payload,
+    return axios.post(`${backendUrl}/api/donation/unread-messages`, payload, {
       headers: headers.content,
     });
   },
 
-  async getDonationChat(donationId: string, headers: SessionHeader) {
+  async getDonationChat(donationId: string, userId: string, headers: SessionHeader) {
     const payload = {
       donationId: donationId,
+      userId: userId,
     };
     return axios.post(`${backendUrl}/api/donation/get-chat`, payload, {
       headers: headers.content,

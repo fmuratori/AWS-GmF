@@ -247,6 +247,11 @@ export default Vue.extend({
               "login",
               this.$store.state.session.userData._id
             );
+
+            api.unreadMessages(this.$store.state.session.userData._id, this.$store.getters.getSessionHeader)
+            .then((r: any) => {
+              this.$store.dispatch("updateUnreadMessages", r.data.data.counts)
+            }).catch(e => console.log(e));
           }
         })
         .catch((err: AxiosError): void => {

@@ -26,7 +26,7 @@
         b-nav-item(href="#" class="my-auto text-center" v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
           b-button(type="submit" variant="danger" class="my-2 my-sm-0" id="navbar-messages-button")
             span(class="mr-1") Messaggi
-            b-badge(variant="light") 4
+            b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
         b-nav-item(href="#" class="my-auto text-center" v-if="$store.getters.isUserLogged")
           b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="$router.replace({name: 'ManagerHome'})")
             span(class="mr-1") Area personale

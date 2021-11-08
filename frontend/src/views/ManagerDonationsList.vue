@@ -31,7 +31,7 @@
                         b-badge(v-if="donation.status == 'selected'" variant="warning") Prenotato per il ritiro 
                         b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
                     div(class="mb-2")
-                      a(href="#") Hai # messaggi non letti
+                      a(href="#") Hai {{ unreadMessagesCount(donation._id) }} messaggi non letti
               b-button(block @click="inspectDonation(donation)" class="b-card-footer-button") Mostra
 
 </template>
@@ -94,6 +94,9 @@ export default Vue.extend({
         params: { donation: JSON.stringify(donation) },
       });
     },
+    unreadMessagesCount(donationId: string): number {
+      return this.$store.state.socketio.unreadMessagesCounts.find(e => e._id == donationId).count;
+    }
   },
 });
 </script>

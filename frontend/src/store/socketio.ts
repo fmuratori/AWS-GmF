@@ -4,9 +4,14 @@ import { ChatMessage } from "../types"
 
 export default {
   state: {
-    unreadMessagesCount: 0,
+    unreadMessagesCounts: [],
     chat: new Array<ChatMessage>(),
     donationId: "",
+  },
+  getters: {
+    unreadMessagesTotalCount(state) {
+      return state.unreadMessagesCounts.map(e => e.count).reduce((a, b) => a + b, 0)
+    }
   },
   mutations: {
     addUnreadMessage(state) {
@@ -22,6 +27,11 @@ export default {
     resetChat(state) {
       state.chat = new Array<ChatMessage>();
       state.donationId = "";
+    },
+
+    updateUnreadMessages(state, counts) {
+      console.log(counts)
+      state.unreadMessagesCounts = counts;
     }
   },
   actions: {
@@ -34,29 +44,30 @@ export default {
       console.log("Disconnected from server socket.io");
     },
 
-    SOCKET_chat_message({ commit, state }, stringMessage: string) {
-      console.log(stringMessage);
+    SOCKET_chat_message({ commit, state, rootState }, stringMessage: string) {
       const message = JSON.parse(stringMessage);
       if (state.donationId == message.donationId) {
         commit("addMessage", message.message);
 
         // set message as visualized
-        (new Vue()).$socket.emit("visualize_message", stringMessage);
-        
+        if (message.message.userId != rootState.session.userData._id)
+          (new Vue()).$socket.emit("visualize_message", stringMessage);
+
       } else {
         // update messages count
         commit("addUnreadMessage");
       }
     },
 
-    getChat({ commit, getters }, donationId:string) {
+    getChat({ commit, getters, rootState }, donationId:string) {
       api
         .getDonationChat(
           donationId,
+          rootState.session.userData._id,
           getters.getSessionHeader
         )
         .then((r: any) => {
-          commit("getChat", { "chat": r.data.data.chat.chat, "donationId": donationId });
+          commit("getChat", { "chat": r.data.data.chat, "donationId": donationId });
         })
         .catch((e) => console.log(e));
     },
@@ -64,6 +75,10 @@ export default {
     resetChat({ commit }) {
       commit("resetChat");
     },
+
+    updateUnreadMessages({ commit }, counts) {
+      commit("updateUnreadMessages", counts)
+    }
 
   },
 };

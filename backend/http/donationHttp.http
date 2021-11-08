@@ -76,19 +76,20 @@ content-type: application/json
 
 {
     "filter": {
-        "userId": "6183af3dabd629ea28db1cd9",
+        "userId": "61854d752b246626dc5ff76e",
         "chat": {
-            //seleziona gli array dove almeno un elemento matcha la condizione
             "$elemMatch": {
-                "visualized": false
+                "visualized": false,
+                "userId": { 
+                    "$ne": "61854d752b246626dc5ff76e" 
+                }
             }
         }
     },
 
     "projection": {
-        //proiezione sui soli nodi della chat che matchano il filtro
-        "chat.$": 1,
-        "donationId": 1
+        "donationId": 1,
+        "count": { "$size":"$chat" }
     }
 }
 

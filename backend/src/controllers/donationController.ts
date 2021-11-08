@@ -13,12 +13,53 @@ export default class DonationController {
 	delete = factory.delete(DonationModel)
 
 	getChat = catchAsync(async (req: Request, res: Response) => {
-		const chat = await DonationModel.findById(req.body.donationId)
-			.select("chat")
+		// retrieve donation by id and linked chat
+		const donation = await DonationModel.findById(req.body.donationId, {"chat": 1})
+		if (!donation) {
+			console.log("donation not found")
+			return
+		}
 
+		// upadte visualized messages (messages writted my another user)
+		donation.chat.forEach(elem => {
+			if (elem.userId != req.body.userId)
+				elem.visualized = true;
+		})
+		await DonationModel.findByIdAndUpdate(req.body.donationId, donation)
+
+		const chat = donation.chat
 		res.status(200).json({
 			status: "success",
 			data: { chat }
+		})
+	})
+
+	countUserNonVisualizedMessages = catchAsync(async (req: Request, res: Response) => {
+		const userId:string = req.body.userId;
+		const counts = await DonationModel.find({
+				"userId": userId,
+				"chat": {
+					"$elemMatch": {
+						"visualized": false,
+						// "userId": { 
+						// 	"$ne": userId
+						// }
+					}
+				}
+			}, {
+				"chat": 1,
+				"donationId": 1,
+				"count": { "$size":"$chat" }
+			})
+
+		if (!counts) {
+			console.log("user donations not found")
+			return
+		}
+
+		res.status(200).json({
+			status: "success",
+			data: { counts }
 		})
 	})
 }
