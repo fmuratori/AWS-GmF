@@ -111,20 +111,27 @@ export default Vue.extend({
       return this.$route.name;
     },
     userFullname() {
-      const fullname = this.$store.state.session.userData.name + " " + this.$store.state.session.userData.surname
+      const fullname =
+        this.$store.state.session.userData.name +
+        " " +
+        this.$store.state.session.userData.surname;
       if (fullname.length > 10) {
-        return fullname.substring(0,10) + "...";
+        return fullname.substring(0, 10) + "...";
       }
       return fullname;
     },
     userType() {
-      switch(this.$store.state.session.userData.type) {
-        case "user": return "Utente"
-        case "volunteer": return "Volontario"
-        case "trusted": return "Collaboratore"
-        default: return "UNKNOWN"
+      switch (this.$store.state.session.userData.type) {
+        case "user":
+          return "Utente";
+        case "volunteer":
+          return "Volontario";
+        case "trusted":
+          return "Collaboratore";
+        default:
+          return "UNKNOWN";
       }
-    }
+    },
   },
   methods: {
     isRouteSelected(routeName: string) {
@@ -148,9 +155,9 @@ export default Vue.extend({
 @import "@/assets/style.scss";
 
 * {
-  margin: 0; 
-  padding: 0; 
-  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 #sidebar {

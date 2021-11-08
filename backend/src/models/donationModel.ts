@@ -14,6 +14,7 @@ const donationSchema = new mongoose.Schema({
     },
     chat: {
         type: [{
+            index: Number,
             userId: mongoose.Types.ObjectId,
             userFullname: String,
             text: String,

@@ -5,7 +5,7 @@
         p MESSAGGI
         b-card(bg-variant="light" class="mb-2" no-body)
           b-card-text(class="m-2")
-            div(id="messages-area")
+            div(id="messages-area" ref="messagesArea")
 
               Message(v-for="(message, idx) in chat" :index="idx" :username="message.userFullname" 
               :isOwner="message.userId == $store.state.session.userData._id" :date="message.date" :isVisualized="message.visualized"
@@ -71,9 +71,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Message from "../components/Message.vue";
 
-import {
-  Donation, Address, ChatMessage
-} from "../types";
+import { Donation, Address, ChatMessage } from "../types";
 
 import api from "../api";
 
@@ -107,15 +105,19 @@ export default Vue.extend({
           coordinates: {
             x: 0,
             y: 0,
-          }
+          },
         } as Address,
         additionalInformation: "",
-        pickUpPeriod: new Array<{weekDay: string, period: string}>(),
+        pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
         creationDate: "",
       } as Donation,
-      chat: new Array<ChatMessage>(),
       chatMessage: "",
     };
+  },
+  computed: {
+    chat() {
+      return this.$store.state.socketio.chat
+    }
   },
   created() {
     // check if user is logged in
@@ -125,34 +127,35 @@ export default Vue.extend({
       }
 
       // retrieve the donation data from vue-route
-      if ("donation" in this.$route.params) { 
+      if ("donation" in this.$route.params) {
         this.donation = JSON.parse(this.$route.params.donation);
       } else {
-        this.$router.replace({name: "ManagerDonationsList"});
+        this.$router.replace({ name: "ManagerDonationsList" });
       }
 
       // load donation messages
-      this.getChat();
-
+      this.$store.dispatch("getChat", this.donation._id);
+      
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
   methods: {
-    weekDayDonations(weekDay: string): { weekDay:string, period:string }[] {
-      return this.donation.pickUpPeriod.filter((p: { weekDay:string, period:string }) => p.weekDay == weekDay)
+    weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
+      return this.donation.pickUpPeriod.filter(
+        (p: { weekDay: string; period: string }) => p.weekDay == weekDay
+      );
     },
     translatePeriod(period: string): string {
-      return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
-    },
-    getChat() {
-      api.getDonationChat(this.donation._id, this.$store.getters.getSessionHeader).then((r:any) => {
-        this.chat = r.data.data.chat.chat;
-      }).catch(e => console.log(e));
-
+      return period == "morning"
+        ? "mattino"
+        : period == "afternoon"
+        ? "pomeriggio"
+        : "sera";
     },
     sendMessage(event) {
       event.preventDefault();
+
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
         userId: this.$store.state.session.userData._id,
@@ -161,38 +164,41 @@ export default Vue.extend({
       });
     },
     deleteDonation() {
-      api.deleteDonation(this.donation._id, this.$store.getters.getSessionHeader).then((r:any) => {
-        this.$router.replace({name: "ManagerDonationsList"})
-        this.$bvToast.toast(
-          `Donazione eliminata con successo.`, {
+      api
+        .deleteDonation(this.donation._id, this.$store.getters.getSessionHeader)
+        .then((r: any) => {
+          this.$router.replace({ name: "ManagerDonationsList" });
+          this.$bvToast.toast(`Donazione eliminata con successo.`, {
             title: "Donazione",
             autoHideDelay: 5000,
             variant: "success",
             appendToast: false,
-          }
-        );
-      }).catch(e => {
-        this.$bvToast.toast(
-          `Impossibile eliminare la donazione. Riprova tra qualche minuto.`, {
-            title: "Donazione",
-            autoHideDelay: 5000,
-            variant: "danger",
-            appendToast: false,
-          }
-        );
-        console.log(e);
-      });
-
+          });
+        })
+        .catch((e) => {
+          this.$bvToast.toast(
+            `Impossibile eliminare la donazione. Riprova tra qualche minuto.`,
+            {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+          console.log(e);
+        });
     },
     modifyDonation() {
-      this.$router.replace({name: "ManagerDonationsCreate", params: { "donation": JSON.stringify(this.donation) }})
-    }
+      this.$router.replace({
+        name: "ManagerDonationsCreate",
+        params: { donation: JSON.stringify(this.donation) },
+      });
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
-
 @import "@/assets/style.scss";
 
 #messages-area {
@@ -203,9 +209,8 @@ export default Vue.extend({
   flex: 1;
 }
 
-
 .message {
-  display:block;
+  display: block;
   background-color: $greyscaleF;
   border-radius: 5px;
 }

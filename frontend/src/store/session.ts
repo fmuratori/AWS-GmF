@@ -1,7 +1,4 @@
-import {
-  SessionHeader,
-  UserData,
-} from "../types";
+import { SessionHeader, UserData } from "../types";
 
 const sessionModule = {
   state: () => ({
@@ -21,7 +18,7 @@ const sessionModule = {
           x: 0,
           y: 0,
         },
-      }
+      },
     } as UserData,
   }),
   getters: {
@@ -32,16 +29,16 @@ const sessionModule = {
       return state.type === "user";
     },
     getSessionHeader(state: any) {
-      return { 
+      return {
         content: {
           "x-access-token": state.token,
           "x-user-id": state.userData._id,
-        }
-      } as SessionHeader
+        },
+      } as SessionHeader;
     },
     userFullName(state: any) {
       return state.userData.name + " " + state.userData.surname;
-    }
+    },
     // isVolunteer(state: any) {
     //   return state.type != null;
     // },
@@ -50,13 +47,13 @@ const sessionModule = {
     // },
   },
   mutations: {
-    login(state: any, payload: { token: string; userData: UserData; }) {
+    login(state: any, payload: { token: string; userData: UserData }) {
       state.token = payload.token;
       state.userData = payload.userData;
     },
     logout(state: any) {
-      state.token = ""
-      state.userData = null
+      state.token = "";
+      state.userData = null;
     },
   },
   actions: {

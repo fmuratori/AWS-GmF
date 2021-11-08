@@ -21,7 +21,7 @@ export default Vue.extend({
         this.$store.dispatch("showSidebar");
       }
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
 });

@@ -56,6 +56,9 @@ export default Vue.extend({
       this.$store.dispatch("toggleSidebar");
     },
     logout() {
+      this.$socket.emit(
+        "logout", 
+        this.$store.state.session.userData._id)
       this.$store.dispatch("logout");
       this.$router.replace({ name: "Home" });
       this.$store.dispatch("hideSidebar");

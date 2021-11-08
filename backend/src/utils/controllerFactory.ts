@@ -29,15 +29,17 @@ export default class ControllerFactory<T> {
      */
     edit = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
-            if (!req.body.id) {
+            // if (!req.body.id) {
+            if (!req.body._id) {
                 res.status(400).json({
                     status: "missing-id-error",
                     message: "Missing id of document to edit"
                 })
                 return
             }
-
-            const elem = await model.findByIdAndUpdate(req.body.id, req.body, {new: true})
+            
+            // const elem = await model.findByIdAndUpdate(req.body.id, req.body, {new: true})
+            const elem = await model.findByIdAndUpdate(req.body._id, req.body, {new: true})
             console.log(elem)
 
             res.status(200).json({

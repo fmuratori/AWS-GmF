@@ -22,50 +22,65 @@ export default {
   },
 
   async addDonation(payload: Donation, headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/donation`, payload, { headers: headers.content });
+    return axios.post(`${backendUrl}/api/donation/add`, payload, {
+      headers: headers.content,
+    });
   },
 
   async editDonation(payload: Donation, headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/donation/edit`, payload, { headers: headers.content });
-  },
-
-  async userDonationsList(userId: string, headers: SessionHeader) {
-    const payload = {
-      userId: userId,
-    }
-    return axios.post(`${backendUrl}/api/donation`, { "filter": payload }, { headers: headers.content });
-  },
-
-  async donationsMessagesCounts(userId:string, headers: SessionHeader) {
-    const payload = {
-      "filter": {
-        "userId": userId,
-        "chat": {
-          "$elemMatch": {
-            "visualized": false
-          }
-        }
-      },
-      "projection": {
-        "chat.$": 1,
-        "donationId": 1
-      }
-    }
-    return axios.get(`${backendUrl}/api/donation`, { params: payload, headers: headers.content });
-  },
-
-  async getDonationChat(donationId: string, headers: SessionHeader) {
-    const payload = {
-      donationId: donationId,
-    }
-    return axios.post(`${backendUrl}/api/donation/get-chat`, payload, { headers: headers.content });
+    return axios.post(`${backendUrl}/api/donation/edit`, payload, {
+      headers: headers.content,
+    });
   },
 
   async deleteDonation(donationId: string, headers: SessionHeader) {
     const payload = {
       id: donationId,
-    }
-    return axios.delete(`${backendUrl}/api/donation`, { data: payload, headers: headers.content });
+    };
+    return axios.post(`${backendUrl}/api/donation/delete`, payload, {
+      headers: headers.content,
+    });
+  },
+
+  async userDonationsList(userId: string, headers: SessionHeader) {
+    const payload = {
+      userId: userId,
+    };
+    return axios.post(
+      `${backendUrl}/api/donation/find`,
+      { filter: payload },
+      { headers: headers.content }
+    );
+  },
+
+  async donationsMessagesCounts(userId: string, headers: SessionHeader) {
+    const payload = {
+      filter: {
+        userId: userId,
+        chat: {
+          $elemMatch: {
+            visualized: false,
+          },
+        },
+      },
+      projection: {
+        "chat.$": 1,
+        donationId: 1,
+      },
+    };
+    return axios.get(`${backendUrl}/api/donation/find`, {
+      params: payload,
+      headers: headers.content,
+    });
+  },
+
+  async getDonationChat(donationId: string, headers: SessionHeader) {
+    const payload = {
+      donationId: donationId,
+    };
+    return axios.post(`${backendUrl}/api/donation/get-chat`, payload, {
+      headers: headers.content,
+    });
   },
 
   async addFamily(payload: FamilyPayload) {
@@ -83,5 +98,4 @@ export default {
   async eventList(payload: any) {
     return axios.post(`${backendUrl}/api/event/find`, payload);
   },
-
 };

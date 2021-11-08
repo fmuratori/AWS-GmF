@@ -102,7 +102,7 @@ export default Vue.extend({
         ownerVolunteerId: "",
         eventTitle: "",
         description: "",
-        date: new Date,
+        date: new Date(),
         image: "",
         address: {
           city: "",
@@ -121,7 +121,8 @@ export default Vue.extend({
     this.form.ownerVolunteerId = this.$store.state.session.userData._id;
 
     // check if user is logged in
-    if (!this.$store.getters.isUserLogged) this.$router.replace({ name: "Login" });
+    if (!this.$store.getters.isUserLogged)
+      this.$router.replace({ name: "Login" });
   },
   methods: {
     createEvent(event) {
@@ -154,5 +155,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

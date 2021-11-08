@@ -1,21 +1,21 @@
 export interface Address {
-  street: string,
-  civicNumber: string,
-  city: string,
+  street: string;
+  civicNumber: string;
+  city: string;
   coordinates: {
-    x: number,
-    y: number,
-  },
+    x: number;
+    y: number;
+  };
 }
 
 export interface UserData {
-  _id: string,
-  name: string,
-  surname: string,
-  email: string,
-  phoneNumber: string,
-  type: string,
-  address: Address,
+  _id: string;
+  name: string;
+  surname: string;
+  email: string;
+  phoneNumber: string;
+  type: string;
+  address: Address;
 }
 
 export interface LoginPayload {
@@ -27,7 +27,7 @@ export interface SessionHeader {
   content: {
     "x-access-token": string;
     "x-user-id": string;
-  }
+  };
 }
 
 export interface RegistrationPayload {
@@ -41,64 +41,63 @@ export interface RegistrationPayload {
 }
 
 export interface Donation {
-  _id: string,
-  userId: string,
-  foods: [
-    string
-  ],
-  expirationDate: string,
-  address: Address,
-  additionalInformation: string,
-  pickUpPeriod: [{
-      weekDay: string,
-      period: string,
+  _id: string;
+  userId: string;
+  foods: [string];
+  expirationDate: string;
+  address: Address;
+  additionalInformation: string;
+  pickUpPeriod: [
+    {
+      weekDay: string;
+      period: string;
     }
-  ]
-  chat: ChatMessage[],
-  creationDate: string, 
-  status: string
+  ];
+  chat: ChatMessage[];
+  creationDate: string;
+  status: string;
 }
 
 export interface ChatMessage {
-  userId: string,
-  userFullName: string,
-  date: string, 
-  text: string,
-  visualized: boolean,
+  userId: string;
+  userFullName: string;
+  date: string;
+  text: string;
+  visualized: boolean;
 }
 
 export interface ChatRequestPayload {
-  donationId: string,
+  donationId: string;
 }
 
 export interface DonationDeletionPayload {
-  id: string,
+  id: string;
 }
 
 export interface FamilyPayload {
-  userId: string,
-  phoneNumber: string,
-  components: number,
-  address: Address
+  userId: string;
+  phoneNumber: string;
+  components: number;
+  address: Address;
 }
 
 export interface EventPayload {
-  ownerVolunteerId: string,
-  eventTitle: string,
-  description: string,
-  address: Address,
-  date: Date,
-  image: string
+  ownerVolunteerId: string;
+  eventTitle: string;
+  description: string;
+  address: Address;
+  date: Date;
+  image: string;
 }
 
 export interface Event {
-  _id: string,
-  name: String,
-  description: String,
-  address: Address,
-  image: String,
-  date: Date,
-  ownerVolunteerId: String
+  _id: string;
+  name: string;
+  description: string;
+  address: Address;
+  image: string;
+  date: Date;
+  ownerVolunteerId: string;
 }
 
 // export interface OfferResponse {

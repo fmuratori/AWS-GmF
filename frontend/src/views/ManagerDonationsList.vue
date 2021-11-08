@@ -38,15 +38,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import moment from 'moment';
+import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
 import api from "../api";
 
-import {
-  Donation
-} from "../types";
+import { Donation } from "../types";
 
 export default Vue.extend({
   name: "ManagerDonationsList",
@@ -57,7 +55,7 @@ export default Vue.extend({
   data: () => {
     return {
       donations: new Array<Donation>(),
-    }
+    };
   },
   created() {
     // check if user is logged in
@@ -65,17 +63,22 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
-      
+
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.userDonationsList(this.$store.state.session.userData._id, this.$store.getters.getSessionHeader).then((r:any) => {
-        this.donations = r.data.data.list;
-      }).catch(e => console.log(e));
+      api
+        .userDonationsList(
+          this.$store.state.session.userData._id,
+          this.$store.getters.getSessionHeader
+        )
+        .then((r: any) => {
+          this.donations = r.data.data.list;
+        })
+        .catch((e) => console.log(e));
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });
-
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
   methods: {
@@ -86,9 +89,12 @@ export default Vue.extend({
       return moment(donation.creationDate).locale("it").format("LL");
     },
     inspectDonation(donation: Donation) {
-      this.$router.replace({name: "ManagerDonationsInspect", params: {"donation": JSON.stringify(donation)}})
-    }
-  }
+      this.$router.replace({
+        name: "ManagerDonationsInspect",
+        params: { donation: JSON.stringify(donation) },
+      });
+    },
+  },
 });
 </script>
 
@@ -103,5 +109,4 @@ export default Vue.extend({
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
-
 </style>

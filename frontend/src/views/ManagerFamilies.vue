@@ -38,15 +38,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import moment from 'moment';
+import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
 import api from "../api";
 
-import {
-  Donation, ChatMessage
-} from "../types";
+import { Donation, ChatMessage } from "../types";
 
 export default Vue.extend({
   name: "ManagerDonationsList",
@@ -57,13 +55,13 @@ export default Vue.extend({
   data: () => {
     return {
       donations: new Array<Donation>(),
-    }
+    };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       this.$store.dispatch("showSidebar");
-      
+
       // TODO: mostrare uno spinner mentre sono caricati i dati
       // api.donationsList(this.$store.getters.getSessionHeader)
       // .then((r:any) => {
@@ -72,9 +70,8 @@ export default Vue.extend({
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });
-
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
   methods: {
@@ -83,8 +80,8 @@ export default Vue.extend({
     },
     formatDonation(donation: Donation) {
       return moment(donation.creationDate).locale("it").format("LL");
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -99,5 +96,4 @@ export default Vue.extend({
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
-
 </style>

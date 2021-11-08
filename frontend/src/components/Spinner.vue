@@ -8,7 +8,7 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Message",
-  props:{
+  props: {
     isActive: Boolean,
   },
   data: function () {
@@ -20,5 +20,4 @@ export default Vue.extend({
 
 <style scope lang="scss">
 // @import "@/assets/style.scss";
-
 </style>

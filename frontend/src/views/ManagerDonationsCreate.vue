@@ -65,9 +65,7 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import {
-  Donation, Address
-} from "../types";
+import { Donation, Address } from "../types";
 
 import api from "../api";
 
@@ -90,9 +88,7 @@ export default Vue.extend({
       },
       form: {
         userId: "",
-        foods: [
-          ""
-        ],
+        foods: [""],
         expirationDate: "",
         address: {
           city: "",
@@ -101,10 +97,10 @@ export default Vue.extend({
           coordinates: {
             x: 0,
             y: 0,
-          }
+          },
         } as Address,
         additionalInformation: "",
-        pickUpPeriod: new Array<{weekDay: string, period: string}>(),
+        pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
       } as Donation,
       mode: "",
     };
@@ -118,20 +114,22 @@ export default Vue.extend({
       this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
 
-      if ("donation" in this.$route.params) { 
+      if ("donation" in this.$route.params) {
         this.form = JSON.parse(this.$route.params.donation);
+        this.form.foods.push("");
         this.mode = "edit";
       } else {
         this.mode = "create";
       }
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
   methods: {
     computeButtonVariant(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(
-        (wd: { weekDay: string, period: string }) => wd.weekDay == weekDay && wd.period == period
+        (wd: { weekDay: string; period: string }) =>
+          wd.weekDay == weekDay && wd.period == period
       );
       return idx != -1 ? "dark" : "outline-secondary";
     },
@@ -147,7 +145,8 @@ export default Vue.extend({
     },
     weekDayButtonClick(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(
-        (wd: { weekDay: string, period: string }) => wd.weekDay == weekDay && wd.period == period
+        (wd: { weekDay: string; period: string }) =>
+          wd.weekDay == weekDay && wd.period == period
       );
 
       if (idx != -1) {
@@ -157,65 +156,74 @@ export default Vue.extend({
       }
     },
     submit(event) {
-      this.mode=='edit' ? this.editDonation(event) : this.addDonation(event)
+      this.mode == "edit" ? this.editDonation(event) : this.addDonation(event);
     },
     editDonation(event) {
       event.preventDefault();
-      if (this.formChecks()) { 
-        api.editDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          this.$router.replace({name: "ManagerDonationsList"});
-          this.$bvToast.toast(
-            `Modifica della donazione effettuata con successo.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            }
-          );
-        }).catch(e => {
-          this.$bvToast.toast(
-            `Impossibile modificare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        })
+      if (this.formChecks()) {
+        this.form.foods.pop();
+        api
+          .editDonation(this.form, this.$store.getters.getSessionHeader)
+          .then((r) => {
+            this.$router.replace({ name: "ManagerDonationsList" });
+            this.$bvToast.toast(
+              `Modifica della donazione effettuata con successo.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+          })
+          .catch((e) => {
+            this.$bvToast.toast(
+              `Impossibile modificare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+          });
       }
     },
     addDonation(event) {
       event.preventDefault();
       if (this.formChecks()) {
         // removes empty string element
-        this.form.foods.pop()
+        this.form.foods.pop();
 
-        api.addDonation(this.form, this.$store.getters.getSessionHeader).then(r => {
-          this.$router.replace({name: "ManagerDonationsList"});
-          this.$bvToast.toast(
-            `Donazione effettuata con successo.`, {
+        api
+          .addDonation(this.form, this.$store.getters.getSessionHeader)
+          .then((r) => {
+            this.$router.replace({ name: "ManagerDonationsList" });
+            this.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,
               variant: "success",
               appendToast: false,
-            }
-          );
-        }).catch(e => {
-          this.$bvToast.toast(
-            `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        })
+            });
+          })
+          .catch((e) => {
+            this.$bvToast.toast(
+              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+          });
       }
     },
     formChecks() {
       if (!this.form.pickUpPeriod.length) {
         this.$bvToast.toast(
-          `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`, {
+          `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
+          {
             title: "Donazione",
             autoHideDelay: 5000,
             variant: "warning",
@@ -225,20 +233,18 @@ export default Vue.extend({
         return false;
       }
       if (!(this.form.foods.length - 1)) {
-        this.$bvToast.toast(
-          `Inserire almeno un alimento che vuoi donare.`, {
-            title: "Donazione",
-            autoHideDelay: 5000,
-            variant: "warning",
-            appendToast: false,
-          }
-        );
+        this.$bvToast.toast(`Inserire almeno un alimento che vuoi donare.`, {
+          title: "Donazione",
+          autoHideDelay: 5000,
+          variant: "warning",
+          appendToast: false,
+        });
         return false;
       }
       return true;
-    }
+    },
   },
 });
 </script>
 
-<style scoped lang="scss"> </style>
+<style scoped lang="scss"></style>

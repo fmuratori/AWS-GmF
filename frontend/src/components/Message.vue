@@ -14,19 +14,17 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Message",
-  props:{
+  props: {
     isOwner: Boolean,
     username: String,
-    messages: Array, 
-    date: String, 
+    messages: Array,
+    date: String,
     isVisualized: Boolean,
   },
   data: function () {
-    return {
-    };
+    return {};
   },
-  methods: {
-  },
+  methods: {},
 });
 </script>
 
@@ -34,7 +32,7 @@ export default Vue.extend({
 @import "@/assets/style.scss";
 
 .message {
-  display:block;
+  display: block;
   background-color: $othersMessageColor;
   border-radius: 5px;
 }
@@ -43,5 +41,4 @@ export default Vue.extend({
   background-color: $myMessageColor;
   text-align: right;
 }
-
 </style>
