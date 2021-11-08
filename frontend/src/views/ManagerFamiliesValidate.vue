@@ -122,17 +122,16 @@ export default Vue.extend({
   },
   methods: {
     changeView(view: "my" | "all", status: "verified" | "pending" | "all") {
-
-      var payload = {filter: {}}
+      var payload = { filter: {} };
 
       if (view == "my") {
-        payload.filter['reporterId'] = this.$store.state.session.userData._id 
+        payload.filter["reporterId"] = this.$store.state.session.userData._id;
       }
 
-      switch(status){
+      switch (status) {
         case "verified":
         case "pending":
-          payload.filter['status'] = status
+          payload.filter["status"] = status;
           break;
         default:
       }

@@ -142,7 +142,7 @@ export default Vue.extend({
     },
     isSidebarOpen() {
       return this.$store.state.navigation.isSidebarOpen;
-    }
+    },
   },
 });
 </script>

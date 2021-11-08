@@ -138,10 +138,14 @@ export default Vue.extend({
       this.filterByMode = mode;
       switch (mode) {
         case "waiting":
-          this.donations = this.donationsBackup.filter(d => d.status == "waiting");
+          this.donations = this.donationsBackup.filter(
+            (d) => d.status == "waiting"
+          );
           break;
         case "selected":
-          this.donations = this.donationsBackup.filter(d => d.status == "selected");
+          this.donations = this.donationsBackup.filter(
+            (d) => d.status == "selected"
+          );
           break;
         case "all":
           this.donations = this.donationsBackup;

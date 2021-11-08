@@ -10,7 +10,7 @@ import {
   editUserPayload,
   changePasswordPayload,
   PackPayload,
-  FoodPayload
+  FoodPayload,
 } from "./types";
 
 // axios.defaults.withCredentials = true
@@ -89,7 +89,7 @@ export default {
   },
 
   async addFamily(payload: FamilyPayload, headers: SessionHeader) {
-    return axios.post(`${backendUrl}/api/family/add`, payload, { 
+    return axios.post(`${backendUrl}/api/family/add`, payload, {
       headers: headers.content,
     });
   },
@@ -106,7 +106,7 @@ export default {
     return axios.post(`${backendUrl}/api/event/add`, payload);
   },
 
-  async editEvent(payload: EventPayload, ) {
+  async editEvent(payload: EventPayload) {
     return axios.post(`${backendUrl}/api/event/edit`, payload);
   },
 
@@ -128,6 +128,5 @@ export default {
 
   async foodList(payload: any) {
     return axios.post(`${backendUrl}/api/food/find`, payload);
-  }
-
+  },
 };

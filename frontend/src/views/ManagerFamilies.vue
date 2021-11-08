@@ -95,12 +95,12 @@ export default Vue.extend({
     },
 
     filterBy(filterByMode: "verified" | "pending" | "all") {
-      var payload = {filter: {}}
+      var payload = { filter: {} };
 
-      switch(filterByMode){
+      switch (filterByMode) {
         case "verified":
         case "pending":
-          payload.filter['filterByMode'] = filterByMode
+          payload.filter["filterByMode"] = filterByMode;
           break;
         default:
       }
@@ -119,12 +119,12 @@ export default Vue.extend({
       this.orderByMode = mode;
       switch (mode) {
         case "creation_date":
-          this.familyList.sort(this.creationDateComparer)
-          break
+          this.familyList.sort(this.creationDateComparer);
+          break;
         default:
-          null
+          null;
       }
-    }
+    },
   },
 });
 </script>
@@ -136,5 +136,4 @@ export default Vue.extend({
   background-color: $color1;
   border-color: $color1;
 }
-
 </style>

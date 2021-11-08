@@ -97,7 +97,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
-          console.log(e)
+          console.log(e);
           this.$bvToast.toast(
             `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,
             {
