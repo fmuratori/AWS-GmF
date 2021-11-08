@@ -192,7 +192,7 @@ export default Vue.extend({
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
-      regRepeatPassword: "Password1!",
+      regRepeatPassword: "Password2021!",
       login: {
         email: "admin@admin.com",
         password: "Password2021!",
@@ -243,7 +243,15 @@ export default Vue.extend({
             this.$router.replace({ name: "ManagerHome" });
 
             // initialize a socket session (let the server know that a new logged user is active)
-            this.$socketio.emit("initialize", this.$store.state.session.userId);
+            this.$socket.emit(
+              "login",
+              this.$store.state.session.userData._id
+            );
+
+            api.unreadMessages(this.$store.state.session.userData._id, this.$store.getters.getSessionHeader)
+            .then((r: any) => {
+              this.$store.dispatch("updateUnreadMessages", r.data.data.counts)
+            }).catch(e => console.log(e));
           }
         })
         .catch((err: AxiosError): void => {

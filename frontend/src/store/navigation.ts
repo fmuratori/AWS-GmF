@@ -60,7 +60,6 @@ const navigationModule = {
     },
     updateScreenWidth({ commit, state }, value: number) {
       commit("updateScreenWidth", value);
-      
     },
   },
 };

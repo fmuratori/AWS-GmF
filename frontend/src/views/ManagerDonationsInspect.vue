@@ -1,17 +1,16 @@
 <template lang="pug">
   b-container
     b-row(class="justify-content-center my-5")
-      b-col(xl=5 lg=5 md=6 sm=8 cols=10 class="ml-2")
+      b-col(lg=4 md=8 cols=11 class="ml-2")
         p MESSAGGI
         b-card(bg-variant="light" class="mb-2" no-body)
           b-card-text(class="m-2")
-            div(id="messages-area")
+            div(id="messages-area" class="mb-1" ref="messagesArea")
 
-              Message(:messages="['asd loll xd', 'asd loll']" date="10:45pm" username="Carlo" role="volunteer" :isOwner="false")
+              Message(v-for="(message, idx) in processedChat" :index="idx" :username="message.userFullname" 
+              :isOwner="message.userId == $store.state.session.userData._id" :date="formatDate(message.date)" :isVisualized="message.visualized"
+              :messages="message.messages" :ref="'scrollTo' + idx")
               
-              Message(:messages="['a', 'asd loll xd asjd hkahqwehqkweh qkwjehqkw jehqwkjehqkwjeh kqwjehkq whqewk']" 
-              date="10:45pm" username="Fabio (tu)" role="volunteer" :isOwner="true" :isVisualized="true")                
-
             //- div(class="")
             //-   label(class="font-italic") Marco stà scrivendo...
             b-form(@submit="sendMessage")
@@ -20,32 +19,31 @@
                 b-input-group-append
                   b-button(variant="success" type="submit") Invia
 
-
-      b-col(xl=5 lg=5 md=6 sm=8 cols=10)
+      b-col(lg=6 md=8 cols=11)
         p INFORMAZIONI DONAZIONE
         
         b-card(bg-variant="light" class="mb-2")
           b-card-text
             div(class="mb-2")
               label(class="mb-0") Alimenti: 
-              p(v-for="(value, idx) in donation.foods" :key="idx" v-if="value != ''")
+              p(v-for="(value, idx) in donation.foods" :key="idx" class="mb-0")
                 label(class="font-weight-bold") {{ value }}
             
             div(class="mb-2")
               label(class="mb-0") Stato donazione:
-              p(class="font-weight-bold") {{ donation.status }}
+              p(class="font-weight-bold") {{ status }}
 
             div(class="mb-2")
               label(class="mb-0") La donazione scade tra:
-              p(class="font-weight-bold") ## giorni
+              p(class="font-weight-bold") {{ expirationDays }} giorni
 
             div(class="mb-2")
               label(class="mb-0") Data creazione donazione:
-              p(class="font-weight-bold") {{ donation.creationDate }} 
+              p(class="font-weight-bold") {{ formatDate(donation.creationDate) }} 
             
             div(class="mb-2")
               label(class="mb-0") Data scadenza donazione:
-              p(class="font-weight-bold") {{ donation.expirationDate }} 
+              p(class="font-weight-bold") {{ formatDate(donation.expirationDate) }} 
 
             div(class="mb-2")
               label(class="mb-0") Luogo ritiro:
@@ -58,12 +56,12 @@
             div(class="")
               label(class="mb-0") Periodi di ritiro:
               p(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
-                label(class="font-weight-bold") {{ weekDayName + ": "}}  
-                label(class="font-weight-bold") {{ " " + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
+                label(class="font-weight-bold") {{ weekDayName + ":&nbsp;" + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
                 
-        b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerHome'})" type="reset") Indietro
-        b-button(block variant="danger" type="submit") Modifica
-        b-button(block variant="danger" type="submit") Cancella
+        b-button(block variant="outline-danger" type="submit" @click="modifyDonation") Modifica
+        b-button(block variant="outline-danger" type="submit" @click="deleteDonation") Cancella
+        b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsList'})" type="reset") Indietro
+        
 </template>
 
 <script lang="ts">
@@ -71,10 +69,9 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Message from "../components/Message.vue";
+import moment from "moment";
 
-import {
-  Donation, Address, ChatMessage, ChatRequestPayload
-} from "../types";
+import { Donation, Address } from "../types";
 
 import api from "../api";
 
@@ -108,16 +105,58 @@ export default Vue.extend({
           coordinates: {
             x: 0,
             y: 0,
-          }
+          },
         } as Address,
         additionalInformation: "",
-        pickUpPeriod: new Array<{weekDay: string, period: string}>(),
-        chat: new Array<ChatMessage>(),
+        pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
         creationDate: "",
       } as Donation,
-      chat: new Array<ChatMessage>(),
       chatMessage: "",
     };
+  },
+  computed: {
+    chat() {
+      return this.$store.state.socketio.chat
+    },
+    
+    processedChat() {
+      const newChat = [];
+
+      for (const message of this.chat) {
+        message.messages = [message.text]
+        if (newChat.length == 0) {
+          newChat.push(message)
+        } else if (newChat[newChat.length - 1].userId == message.userId) {
+          const firstMessageTime = moment(newChat[newChat.length - 1].date)
+          const secondMessageTime = moment(message.date)
+          if (secondMessageTime.diff(firstMessageTime, "minutes") < 10) {
+            newChat[newChat.length - 1].messages.push(message.text)
+            newChat[newChat.length - 1].date = message.date
+          } else 
+            newChat.push(message)
+        } else {
+          newChat.push(message)
+        }
+      }
+      return newChat
+    },
+
+    expirationDays() {
+      return moment(this.donation.expirationDate).diff(moment.now(), "days");
+    },
+
+    status() {
+      switch(this.donation.status) {
+        case "waiting":
+          return "In attesa"
+        case "selected":
+          return "Ritiro prenotato"
+        case "withdrawn":
+          return "Ritirato";
+        default:
+          return "";
+      }
+    }
   },
   created() {
     // check if user is logged in
@@ -127,43 +166,70 @@ export default Vue.extend({
       }
 
       // retrieve the donation data from vue-route
-      if ("donation" in this.$route.params) { 
-        this.donation = this.$route.params.donation
+      if ("donation" in this.$route.params) {
+        this.donation = JSON.parse(this.$route.params.donation);
       } else {
-        this.$router.replace({name: "ManagerDonationsList"});
+        this.$router.replace({ name: "ManagerDonationsList" });
       }
 
       // load donation messages
-      this.getChat();
-
+      this.$store.dispatch("getChat", this.donation._id);
+      
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
   methods: {
-    weekDayDonations(weekDay: string): [{ weekDay:string, period:string }] {
-      return this.donation.pickUpPeriod.filter((p: { weekDay:string, period:string }) => p.weekDay == weekDay)
+    formatDate(date) {
+      return moment(new Date(date)).locale("it").calendar()
+    },
+    weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
+      return this.donation.pickUpPeriod.filter(
+        (p: { weekDay: string; period: string }) => p.weekDay == weekDay
+      );
     },
     translatePeriod(period: string): string {
       return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
     },
-    getChat() {
-
-      const payload: ChatRequestPayload = {
-        donationId: this.donation._id,
-      } as ChatRequestPayload;
-
-      api.getDonationChat(payload, this.$store.getters.getSessionHeader).then((r:any) => {
-        this.chat = r.data.data.chat;
-      }).catch(e => console.log(e));
-
-    },
     sendMessage(event) {
       event.preventDefault();
+
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
-        userId: this.$store.state.session.userId,
+        userId: this.$store.state.session.userData._id,
         message: this.chatMessage,
+        fullname: this.$store.getters.userFullName,
+      });
+    },
+    deleteDonation() {
+      api
+        .deleteDonation(this.donation._id, this.$store.getters.getSessionHeader)
+        .then((r: any) => {
+          this.$router.replace({ name: "ManagerDonationsList" });
+          this.$bvToast.toast(`Donazione eliminata con successo.`, {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((e) => {
+          this.$bvToast.toast(
+            `Impossibile eliminare la donazione. Riprova tra qualche minuto.`,
+            {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+          console.log(e);
+        });
+    },
+    modifyDonation() {
+      this.$router.replace({
+        name: "ManagerDonationsCreate",
+        params: { donation: JSON.stringify(this.donation) },
       });
     },
   },
@@ -171,7 +237,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-
 @import "@/assets/style.scss";
 
 #messages-area {
@@ -182,13 +247,18 @@ export default Vue.extend({
   flex: 1;
 }
 
-
 .message {
-  display:block;
+  display: block;
   background-color: $greyscaleF;
   border-radius: 5px;
 }
 .my-message {
   background-color: $color2;
 }
+
+.button-color {
+  background-color: $color3;
+  border-color: $color3;
+}
+
 </style>

@@ -130,7 +130,6 @@ export default Vue.extend({
     // check if user is logged in
     if (!this.$store.getters.isUserLogged)
       this.$router.replace({ name: "Login" });
-
     if ("event" in this.$route.params) {
       this.form = this.$route.params.event;
       this.form.id = this.$route.params.event._id
@@ -177,5 +176,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

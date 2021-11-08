@@ -84,8 +84,7 @@ const routes: Array<RouteConfig> = [
       import(
         /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerEvents.vue"
       ),
-  }
-
+  },
 ];
 
 const router = new VueRouter({

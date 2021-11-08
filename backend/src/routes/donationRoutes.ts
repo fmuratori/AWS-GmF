@@ -11,4 +11,6 @@ router.post('/delete', donationController.delete)
 
 router.post('/get-chat', donationController.getChat)
 
+router.post('/unread-messages', donationController.countUserNonVisualizedMessages)
+
 export default router
