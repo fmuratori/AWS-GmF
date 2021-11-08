@@ -30,7 +30,6 @@ export default {
     },
 
     updateUnreadMessages(state, counts) {
-      console.log(counts)
       state.unreadMessagesCounts = counts;
     }
   },

@@ -1,15 +1,15 @@
 <template lang="pug">
   b-container
     b-row(class="justify-content-center my-5")
-      b-col(xl=5 lg=5 md=6 sm=8 cols=10 class="ml-2")
+      b-col(lg=4 md=8 cols=11 class="ml-2")
         p MESSAGGI
         b-card(bg-variant="light" class="mb-2" no-body)
           b-card-text(class="m-2")
-            div(id="messages-area" ref="messagesArea")
+            div(id="messages-area" class="mb-1" ref="messagesArea")
 
-              Message(v-for="(message, idx) in chat" :index="idx" :username="message.userFullname" 
-              :isOwner="message.userId == $store.state.session.userData._id" :date="message.date" :isVisualized="message.visualized"
-              :messages="[message.text]")
+              Message(v-for="(message, idx) in processedChat" :index="idx" :username="message.userFullname" 
+              :isOwner="message.userId == $store.state.session.userData._id" :date="formatDate(message.date)" :isVisualized="message.visualized"
+              :messages="message.messages" :ref="'scrollTo' + idx")
               
             //- div(class="")
             //-   label(class="font-italic") Marco stà scrivendo...
@@ -19,32 +19,31 @@
                 b-input-group-append
                   b-button(variant="success" type="submit") Invia
 
-
-      b-col(xl=5 lg=5 md=6 sm=8 cols=10)
+      b-col(lg=6 md=8 cols=11)
         p INFORMAZIONI DONAZIONE
         
         b-card(bg-variant="light" class="mb-2")
           b-card-text
             div(class="mb-2")
               label(class="mb-0") Alimenti: 
-              p(v-for="(value, idx) in donation.foods" :key="idx" v-if="value != ''")
+              p(v-for="(value, idx) in donation.foods" :key="idx" class="mb-0")
                 label(class="font-weight-bold") {{ value }}
             
             div(class="mb-2")
               label(class="mb-0") Stato donazione:
-              p(class="font-weight-bold") {{ donation.status }}
+              p(class="font-weight-bold") {{ status }}
 
             div(class="mb-2")
               label(class="mb-0") La donazione scade tra:
-              p(class="font-weight-bold") ## giorni
+              p(class="font-weight-bold") {{ expirationDays }} giorni
 
             div(class="mb-2")
               label(class="mb-0") Data creazione donazione:
-              p(class="font-weight-bold") {{ donation.creationDate }} 
+              p(class="font-weight-bold") {{ formatDate(donation.creationDate) }} 
             
             div(class="mb-2")
               label(class="mb-0") Data scadenza donazione:
-              p(class="font-weight-bold") {{ donation.expirationDate }} 
+              p(class="font-weight-bold") {{ formatDate(donation.expirationDate) }} 
 
             div(class="mb-2")
               label(class="mb-0") Luogo ritiro:
@@ -57,12 +56,12 @@
             div(class="")
               label(class="mb-0") Periodi di ritiro:
               p(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
-                label(class="font-weight-bold") {{ weekDayName + ": "}}  
-                label(class="font-weight-bold") {{ " " + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
+                label(class="font-weight-bold") {{ weekDayName + ":&nbsp;" + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
                 
-        b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerHome'})" type="reset") Indietro
-        b-button(block variant="danger" type="submit" @click="modifyDonation") Modifica
-        b-button(block variant="danger" type="submit" @click="deleteDonation") Cancella
+        b-button(block variant="outline-danger" type="submit" @click="modifyDonation") Modifica
+        b-button(block variant="outline-danger" type="submit" @click="deleteDonation") Cancella
+        b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsList'})" type="reset") Indietro
+        
 </template>
 
 <script lang="ts">
@@ -70,8 +69,9 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Message from "../components/Message.vue";
+import moment from "moment";
 
-import { Donation, Address, ChatMessage } from "../types";
+import { Donation, Address } from "../types";
 
 import api from "../api";
 
@@ -117,6 +117,45 @@ export default Vue.extend({
   computed: {
     chat() {
       return this.$store.state.socketio.chat
+    },
+    
+    processedChat() {
+      const newChat = [];
+
+      for (const message of this.chat) {
+        message.messages = [message.text]
+        if (newChat.length == 0) {
+          newChat.push(message)
+        } else if (newChat[newChat.length - 1].userId == message.userId) {
+          const firstMessageTime = moment(newChat[newChat.length - 1].date)
+          const secondMessageTime = moment(message.date)
+          if (secondMessageTime.diff(firstMessageTime, "minutes") < 10) {
+            newChat[newChat.length - 1].messages.push(message.text)
+            newChat[newChat.length - 1].date = message.date
+          } else 
+            newChat.push(message)
+        } else {
+          newChat.push(message)
+        }
+      }
+      return newChat
+    },
+
+    expirationDays() {
+      return moment(this.donation.expirationDate).diff(moment.now(), "days");
+    },
+
+    status() {
+      switch(this.donation.status) {
+        case "waiting":
+          return "In attesa"
+        case "selected":
+          return "Ritiro prenotato"
+        case "withdrawn":
+          return "Ritirato";
+        default:
+          return "";
+      }
     }
   },
   created() {
@@ -141,17 +180,16 @@ export default Vue.extend({
     }
   },
   methods: {
+    formatDate(date) {
+      return moment(new Date(date)).locale("it").calendar()
+    },
     weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
       return this.donation.pickUpPeriod.filter(
         (p: { weekDay: string; period: string }) => p.weekDay == weekDay
       );
     },
     translatePeriod(period: string): string {
-      return period == "morning"
-        ? "mattino"
-        : period == "afternoon"
-        ? "pomeriggio"
-        : "sera";
+      return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
     },
     sendMessage(event) {
       event.preventDefault();
@@ -217,4 +255,10 @@ export default Vue.extend({
 .my-message {
   background-color: $color2;
 }
+
+.button-color {
+  background-color: $color3;
+  border-color: $color3;
+}
+
 </style>

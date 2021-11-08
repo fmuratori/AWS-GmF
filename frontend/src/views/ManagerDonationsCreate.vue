@@ -1,6 +1,6 @@
 <template lang="pug">
   b-row(class="justify-content-center my-5" no-gutters)
-    b-col(xl=5 lg=5 md=6 sm=8 cols=10)
+    b-col(md=6 sm=8 cols=10)
       p CREA UNA DONAZIONE
       b-form(@submit="submit")
         b-card(bg-variant="light" class="mb-2")

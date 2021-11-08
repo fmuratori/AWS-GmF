@@ -2,6 +2,15 @@
   b-container
     div(class="justify-content-center my-5")
       p TUE DONAZIONI
+
+      b-row(no-gutters class="mb-2")
+        b-col(cols="auto")
+        p Filtra per:
+        b-col
+          b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('creation_date')" :class="{'my-button-selected': orderByMode == 'creation_date'}") Data creazione
+          b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('unread_messages')" :class="{'my-button-selected': orderByMode == 'unread_messages'}") Messaggi non letti
+          b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('expiration_date')" :class="{'my-button-selected': orderByMode == 'expiration_date'}") Data scadenza
+      
       b-row
         b-col(sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
           b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
@@ -30,7 +39,7 @@
                         b-badge(v-if="donation.status == 'waiting'" variant="secondary") In attesa
                         b-badge(v-if="donation.status == 'selected'" variant="warning") Prenotato per il ritiro 
                         b-badge(v-if="donation.status == 'withdrawn'" variant="green") Ritirato
-                    div(class="mb-2")
+                    div(class="mb-2" v-if="hasUnreadMessages(donation._id)")
                       a(href="#") Hai {{ unreadMessagesCount(donation._id) }} messaggi non letti
               b-button(block @click="inspectDonation(donation)" class="b-card-footer-button") Mostra
 
@@ -55,6 +64,7 @@ export default Vue.extend({
   data: () => {
     return {
       donations: new Array<Donation>(),
+      orderByMode: "creation_date",
     };
   },
   created() {
@@ -72,6 +82,7 @@ export default Vue.extend({
         )
         .then((r: any) => {
           this.donations = r.data.data.list;
+          this.orderBy("unread_messages");
         })
         .catch((e) => console.log(e));
 
@@ -82,6 +93,31 @@ export default Vue.extend({
     }
   },
   methods: {
+    creationDateComparer(a, b) {
+      return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1
+    },
+    unreadMessagesComparer(a, b) {
+      return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id) ? -1 : 1 
+    },
+    expirationDateComparer(a, b) {
+      return new Date(a.expirationDate) < new Date(b.expirationDate) ? -1 : 1
+    },
+    orderBy(mode:string) {
+      this.orderByMode = mode;
+      switch(mode) {
+        case "creation_date":
+          this.donations = this.donations.sort(this.creationDateComparer);
+          break;
+        case "unread_messages":
+          this.donations = this.donations.sort(this.unreadMessagesComparer);
+          break;
+        case "expiration_date":
+          this.donations = this.donations.sort(this.expirationDateComparer);
+          break;
+        default:
+          null
+      }
+    },
     getExpirationDays(donation: Donation) {
       return moment(donation.expirationDate).diff(moment.now(), "days");
     },
@@ -94,8 +130,14 @@ export default Vue.extend({
         params: { donation: JSON.stringify(donation) },
       });
     },
+    hasUnreadMessages(donationId: string): boolean {
+      return this.$store.state.socketio.unreadMessagesCounts.length > 0 && 
+        this.$store.state.socketio.unreadMessagesCounts.indexOf(e => e._id == donationId) != -1;
+    },
     unreadMessagesCount(donationId: string): number {
-      return this.$store.state.socketio.unreadMessagesCounts.find(e => e._id == donationId).count;
+      if (this.hasUnreadMessages(donationId))
+        return this.$store.state.socketio.unreadMessagesCounts.find(e => e._id == donationId).count;
+      return 0;
     }
   },
 });
@@ -112,4 +154,10 @@ export default Vue.extend({
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
+
+.my-button-selected {
+  background-color: $color1;
+  border-color: $color1;
+}
+
 </style>

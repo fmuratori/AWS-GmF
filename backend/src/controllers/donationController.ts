@@ -41,9 +41,9 @@ export default class DonationController {
 				"chat": {
 					"$elemMatch": {
 						"visualized": false,
-						// "userId": { 
-						// 	"$ne": userId
-						// }
+						"userId": { 
+							"$ne": userId
+						}
 					}
 				}
 			}, {
