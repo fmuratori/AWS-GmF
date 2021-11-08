@@ -243,19 +243,24 @@ export default Vue.extend({
             this.$router.replace({ name: "ManagerHome" });
 
             // initialize a socket session (let the server know that a new logged user is active)
-            this.$socket.emit(
-              "login",
-              this.$store.state.session.userData._id
-            );
+            this.$socket.emit("login", this.$store.state.session.userData._id);
 
-            api.unreadMessages(this.$store.state.session.userData._id, this.$store.getters.getSessionHeader)
-            .then((r: any) => {
-              this.$store.dispatch("updateUnreadMessages", r.data.data.counts)
-            }).catch(e => console.log(e));
+            api
+              .unreadMessages(
+                this.$store.state.session.userData._id,
+                this.$store.getters.getSessionHeader
+              )
+              .then((r: any) => {
+                this.$store.dispatch(
+                  "updateUnreadMessages",
+                  r.data.data.counts
+                );
+              })
+              .catch((e) => console.log(e));
           }
         })
-        .catch((err: AxiosError): void => {
-          console.log(err);
+        .catch((e: AxiosError): void => {
+          console.log(e);
           this.showLoginErrorMessage = true;
         });
     },
@@ -263,7 +268,7 @@ export default Vue.extend({
       event.preventDefault();
       api
         .registrationRequest(this.registration)
-        .then((r: any) => {
+        .then(() => {
           this.$bvToast.toast(
             `Operazione avvenuta con successo. Effettua il login per accedere.`,
             {

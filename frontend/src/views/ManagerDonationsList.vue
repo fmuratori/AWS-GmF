@@ -94,17 +94,19 @@ export default Vue.extend({
   },
   methods: {
     creationDateComparer(a, b) {
-      return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1
+      return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
     },
     unreadMessagesComparer(a, b) {
-      return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id) ? -1 : 1 
+      return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id)
+        ? -1
+        : 1;
     },
     expirationDateComparer(a, b) {
-      return new Date(a.expirationDate) < new Date(b.expirationDate) ? -1 : 1
+      return new Date(a.expirationDate) < new Date(b.expirationDate) ? -1 : 1;
     },
-    orderBy(mode:string) {
+    orderBy(mode: string) {
       this.orderByMode = mode;
-      switch(mode) {
+      switch (mode) {
         case "creation_date":
           this.donations = this.donations.sort(this.creationDateComparer);
           break;
@@ -115,7 +117,7 @@ export default Vue.extend({
           this.donations = this.donations.sort(this.expirationDateComparer);
           break;
         default:
-          null
+          null;
       }
     },
     getExpirationDays(donation: Donation) {
@@ -131,14 +133,20 @@ export default Vue.extend({
       });
     },
     hasUnreadMessages(donationId: string): boolean {
-      return this.$store.state.socketio.unreadMessagesCounts.length > 0 && 
-        this.$store.state.socketio.unreadMessagesCounts.indexOf(e => e._id == donationId) != -1;
+      return (
+        this.$store.state.socketio.unreadMessagesCounts.length > 0 &&
+        this.$store.state.socketio.unreadMessagesCounts.indexOf(
+          (e) => e._id == donationId
+        ) != -1
+      );
     },
     unreadMessagesCount(donationId: string): number {
       if (this.hasUnreadMessages(donationId))
-        return this.$store.state.socketio.unreadMessagesCounts.find(e => e._id == donationId).count;
+        return this.$store.state.socketio.unreadMessagesCounts.find(
+          (e) => e._id == donationId
+        ).count;
       return 0;
-    }
+    },
   },
 });
 </script>
@@ -159,5 +167,4 @@ export default Vue.extend({
   background-color: $color1;
   border-color: $color1;
 }
-
 </style>

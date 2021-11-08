@@ -1,6 +1,6 @@
-import api from "../api"
-import Vue from "vue"
-import { ChatMessage } from "../types"
+import api from "../api";
+import Vue from "vue";
+import { ChatMessage } from "../types";
 
 export default {
   state: {
@@ -9,9 +9,11 @@ export default {
     donationId: "",
   },
   getters: {
-    unreadMessagesTotalCount(state) {
-      return state.unreadMessagesCounts.map(e => e.count).reduce((a, b) => a + b, 0)
-    }
+    unreadMessagesTotalCount(state): number {
+      return state.unreadMessagesCounts
+        .map((e) => e.count)
+        .reduce((a, b) => a + b, 0);
+    },
   },
   mutations: {
     addUnreadMessage(state) {
@@ -31,7 +33,7 @@ export default {
 
     updateUnreadMessages(state, counts) {
       state.unreadMessagesCounts = counts;
-    }
+    },
   },
   actions: {
     SOCKET_connect() {
@@ -50,15 +52,14 @@ export default {
 
         // set message as visualized
         if (message.message.userId != rootState.session.userData._id)
-          (new Vue()).$socket.emit("visualize_message", stringMessage);
-
+          new Vue().$socket.emit("visualize_message", stringMessage);
       } else {
         // update messages count
         commit("addUnreadMessage");
       }
     },
 
-    getChat({ commit, getters, rootState }, donationId:string) {
+    getChat({ commit, getters, rootState }, donationId: string) {
       api
         .getDonationChat(
           donationId,
@@ -66,7 +67,7 @@ export default {
           getters.getSessionHeader
         )
         .then((r: any) => {
-          commit("getChat", { "chat": r.data.data.chat, "donationId": donationId });
+          commit("getChat", { chat: r.data.data.chat, donationId: donationId });
         })
         .catch((e) => console.log(e));
     },
@@ -76,8 +77,7 @@ export default {
     },
 
     updateUnreadMessages({ commit }, counts) {
-      commit("updateUnreadMessages", counts)
-    }
-
+      commit("updateUnreadMessages", counts);
+    },
   },
 };
