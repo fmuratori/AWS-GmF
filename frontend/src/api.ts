@@ -65,14 +65,18 @@ export default {
 
   async unreadMessages(userId: string, headers: SessionHeader) {
     const payload = {
-      userId: userId
+      userId: userId,
     };
     return axios.post(`${backendUrl}/api/donation/unread-messages`, payload, {
       headers: headers.content,
     });
   },
 
-  async getDonationChat(donationId: string, userId: string, headers: SessionHeader) {
+  async getDonationChat(
+    donationId: string,
+    userId: string,
+    headers: SessionHeader
+  ) {
     const payload = {
       donationId: donationId,
       userId: userId,

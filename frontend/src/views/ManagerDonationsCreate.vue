@@ -164,7 +164,7 @@ export default Vue.extend({
         this.form.foods.pop();
         api
           .editDonation(this.form, this.$store.getters.getSessionHeader)
-          .then((r) => {
+          .then(() => {
             this.$router.replace({ name: "ManagerDonationsList" });
             this.$bvToast.toast(
               `Modifica della donazione effettuata con successo.`,
@@ -176,7 +176,7 @@ export default Vue.extend({
               }
             );
           })
-          .catch((e) => {
+          .catch(() => {
             this.$bvToast.toast(
               `Impossibile modificare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
               {
@@ -197,7 +197,7 @@ export default Vue.extend({
 
         api
           .addDonation(this.form, this.$store.getters.getSessionHeader)
-          .then((r) => {
+          .then(() => {
             this.$router.replace({ name: "ManagerDonationsList" });
             this.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
@@ -206,7 +206,7 @@ export default Vue.extend({
               appendToast: false,
             });
           })
-          .catch((e) => {
+          .catch(() => {
             this.$bvToast.toast(
               `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
               {

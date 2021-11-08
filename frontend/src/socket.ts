@@ -11,7 +11,7 @@ import VueSocketIO from "vue-socket.io";
 
 import store from "./store";
 
-const socket = io("http://localhost:3001", { transports: ["websocket"] })
+const socket = io("http://localhost:3001", { transports: ["websocket"] });
 
 const vueSocket = new VueSocketIO({
   debug: false, //true
@@ -23,5 +23,5 @@ const vueSocket = new VueSocketIO({
   },
 });
 
-export default vueSocket
-export { socket } 
+export default vueSocket;
+export { socket };

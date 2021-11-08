@@ -93,6 +93,7 @@ export interface ChatMessage {
   date: string;
   text: string;
   visualized: boolean;
+  messages: string[]; // needed to display the chat in a different way
 }
 
 export interface ChatRequestPayload {

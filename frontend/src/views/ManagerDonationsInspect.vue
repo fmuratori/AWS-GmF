@@ -71,7 +71,7 @@ import Sidebar from "../components/Sidebar.vue";
 import Message from "../components/Message.vue";
 import moment from "moment";
 
-import { Donation, Address } from "../types";
+import { Donation, Address, ChatMessage } from "../types";
 
 import api from "../api";
 
@@ -115,48 +115,47 @@ export default Vue.extend({
     };
   },
   computed: {
-    chat() {
-      return this.$store.state.socketio.chat
+    chat(): ChatMessage[] {
+      return this.$store.state.socketio.chat;
     },
-    
+
     processedChat() {
-      const newChat = [];
+      const newChat = new Array<ChatMessage>();
 
       for (const message of this.chat) {
-        message.messages = [message.text]
+        message.messages = [message.text];
         if (newChat.length == 0) {
-          newChat.push(message)
+          newChat.push(message);
         } else if (newChat[newChat.length - 1].userId == message.userId) {
-          const firstMessageTime = moment(newChat[newChat.length - 1].date)
-          const secondMessageTime = moment(message.date)
+          const firstMessageTime = moment(newChat[newChat.length - 1].date);
+          const secondMessageTime = moment(message.date);
           if (secondMessageTime.diff(firstMessageTime, "minutes") < 10) {
-            newChat[newChat.length - 1].messages.push(message.text)
-            newChat[newChat.length - 1].date = message.date
-          } else 
-            newChat.push(message)
+            newChat[newChat.length - 1].messages.push(message.text);
+            newChat[newChat.length - 1].date = message.date;
+          } else newChat.push(message);
         } else {
-          newChat.push(message)
+          newChat.push(message);
         }
       }
-      return newChat
+      return newChat;
     },
 
-    expirationDays() {
+    expirationDays(): number {
       return moment(this.donation.expirationDate).diff(moment.now(), "days");
     },
 
     status() {
-      switch(this.donation.status) {
+      switch (this.donation.status) {
         case "waiting":
-          return "In attesa"
+          return "In attesa";
         case "selected":
-          return "Ritiro prenotato"
+          return "Ritiro prenotato";
         case "withdrawn":
           return "Ritirato";
         default:
           return "";
       }
-    }
+    },
   },
   created() {
     // check if user is logged in
@@ -174,14 +173,13 @@ export default Vue.extend({
 
       // load donation messages
       this.$store.dispatch("getChat", this.donation._id);
-      
     } else {
       this.$router.replace({ name: "Login" });
     }
   },
   methods: {
     formatDate(date) {
-      return moment(new Date(date)).locale("it").calendar()
+      return moment(new Date(date)).locale("it").calendar();
     },
     weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
       return this.donation.pickUpPeriod.filter(
@@ -189,7 +187,11 @@ export default Vue.extend({
       );
     },
     translatePeriod(period: string): string {
-      return period == "morning" ? "mattino" : period == "afternoon" ? "pomeriggio" : "sera";
+      return period == "morning"
+        ? "mattino"
+        : period == "afternoon"
+        ? "pomeriggio"
+        : "sera";
     },
     sendMessage(event) {
       event.preventDefault();
@@ -204,7 +206,7 @@ export default Vue.extend({
     deleteDonation() {
       api
         .deleteDonation(this.donation._id, this.$store.getters.getSessionHeader)
-        .then((r: any) => {
+        .then(() => {
           this.$router.replace({ name: "ManagerDonationsList" });
           this.$bvToast.toast(`Donazione eliminata con successo.`, {
             title: "Donazione",
@@ -260,5 +262,4 @@ export default Vue.extend({
   background-color: $color3;
   border-color: $color3;
 }
-
 </style>
