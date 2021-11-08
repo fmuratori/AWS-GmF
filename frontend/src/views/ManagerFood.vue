@@ -4,7 +4,7 @@ b-container
     h3
       b ADD FOOD
     b-row
-      b-col(sm=12, md=6)
+      b-col(sm=12, md=4)
         b-form(@submit="addFood")
           b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
             b-card-text
@@ -47,7 +47,7 @@ b-container
                         b-icon(icon="x", aria-hidden="true")
 
                 b-form-group#input-group-4(
-                  label="Alimenti:",
+                  label="Labels:",
                   label-for="input-4"
                 ) 
                   b-input-group.mb-1(
@@ -66,27 +66,21 @@ b-container
                         @click="labelDeleteClicked(idx)",
                         :disabled="form.labels[idx] == ''"
                       ) 
-                        span Cancella
+                        span Cancel
                         b-icon(icon="x", aria-hidden="true")
 
               b-button.b-card-footer-button(block, type="submit", variant="success") Add
 
-      b-col(sm=12, md=6)
-        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-          b-card-text
-            b-card-header Food list
-            .px-4.pt-4.food-item(v-for="food in foodList")
-              div
-                b Name:
-                span {{ food.name }}
-              div
-                b Units:
-                span {{ food.number }}
-              div
-                b Expiration date:
-                span {{ formatDate(food.expirationDate) }}
-                h6 
-                  b-badge(v-for="label in food.labels", variant="success") {{ label }}
+      b-col(sm=12, md=8)
+        b-table(striped hover :fields="tableFields" :items="foodList")
+          template(#cell(name)="data") {{data.value}}
+
+          template(#cell(number)="data") {{data.value}}
+
+          template(#cell(expirationDate)="data") {{formatDate(data.value)}}
+
+          template(#cell(labels)="data")
+            b-badge(v-for="label in data.value", variant="success") {{label}}
 </template>
 
 <script lang="ts">
@@ -113,7 +107,8 @@ export default Vue.extend({
         expirationDate: null,
         labels: [""],
       } as FoodPayload,
-      foodList: [null] as [Food],
+      foodList: new Array<Food>(),
+      tableFields: ["name", "number", "expirationDate", "labels"]
     };
   },
   created() {
@@ -122,6 +117,7 @@ export default Vue.extend({
     //populate the food list
     api.foodList(null).then((r: any) => {
       this.foodList = r.data.data.list;
+      console.log(this.foodList)
     });
 
     // check if user is logged in

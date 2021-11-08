@@ -29,46 +29,32 @@ b-container
     b-form(@submit="createPack")
       b-row
         b-col
-          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-            b-card-text
-              b-card-header Available food
-              .px-4.pt-4.food-item(
-                v-for="(food, index) in foodList",
-                :keY="index"
-              )
-                div
-                  b Name:
-                  span {{ food.name }}
-                  b-button.food-button(@click="select(index)") Add
-                div
-                  b Units:
-                  span {{ food.number }}
-                div
-                  b Expiration date:
-                  span {{ formatDate(food.expirationDate) }}
-                  h6 
-                    b-badge(v-for="label in food.labels", variant="success") {{ label }}
+          b-table(striped, hover, :fields="tableFields", :items="foodList")
+            template(#cell(name)="data") {{ data.value }}
+
+            template(#cell(number)="data") {{ data.value }}
+
+            template(#cell(expirationDate)="data") {{ formatDate(data.value) }}
+
+            template(#cell(labels)="data")
+              b-badge(v-for="label in data.value", variant="success") {{ label }}
+
+            template(#cell(_id)="data")
+              b-button(@click="select(data.value)") Add
 
         b-col
-          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-            b-card-text
-              b-card-header Selected food
-              .px-4.pt-4.food-item(
-                v-for="(food, index) in selectedFood",
-                :key="index"
-              )
-                div
-                  b Name:
-                  span {{ food.name }}
-                  b-button.food-button(@click="unselect(index)") Remove
-                div
-                  b Units:
-                  span {{ food.number }}
-                div
-                  b Expiration date:
-                  span {{ formatDate(food.expirationDate) }}
-                  h6 
-                    b-badge(v-for="label in food.labels", variant="success") {{ label }}
+          b-table(striped, hover, :fields="tableFields", :items="selectedFood")
+            template(#cell(name)="data") {{ data.value }}
+
+            template(#cell(number)="data") {{ data.value }}
+
+            template(#cell(expirationDate)="data") {{ formatDate(data.value) }}
+
+            template(#cell(labels)="data")
+              b-badge(v-for="label in data.value", variant="success") {{ label }}
+
+            template(#cell(_id)="data")
+              b-button(@click="unselect(data.value)") Remove
 
       b-row
         b-col
@@ -101,6 +87,7 @@ export default Vue.extend({
     return {
       foodList: new Array<Food>(),
       selectedFood: new Array<Food>(),
+      tableFields: ["name", "number", "expirationDate", "labels", "_id"],
       family: {} as Family,
       form: {
         foodIdList: new Array<string>(),
@@ -156,13 +143,63 @@ export default Vue.extend({
     formatDate(date: Date) {
       return moment(date).locale("en").format("LL");
     },
-    select(index) {
-      this.selectedFood.push(this.foodList[index]);
-      this.foodList.splice(index, 1);
+    select(_id) {
+      var srcIndex;
+      this.foodList.forEach((elem, index) => {
+        if (elem._id == _id) srcIndex = index;
+      });
+
+      var destIndex = -1;
+      this.selectedFood.forEach((elem, index) => {
+        if (elem._id == _id) destIndex = index;
+      });
+
+      //verifico se nell'array destinazione c'è già un nodo con quell'id
+      if (destIndex != -1) this.selectedFood[destIndex].number += 1;
+      else {
+        const newFood = {
+          _id: this.foodList[srcIndex]._id,
+          name: this.foodList[srcIndex].name,
+          number: 1,
+          expirationDate: this.foodList[srcIndex].expirationDate,
+          labels: this.foodList[srcIndex].labels
+        }
+        this.selectedFood.push(newFood);
+      }
+
+      //modifico il nodo nell'array sorgente
+      if (this.foodList[srcIndex].number > 1) {
+        this.foodList[srcIndex].number -= 1;
+      } else this.foodList.splice(srcIndex, 1);
     },
-    unselect(index) {
-      this.foodList.push(this.selectedFood[index]);
-      this.selectedFood.splice(index, 1);
+    unselect(_id) {
+      var srcIndex;
+      this.selectedFood.forEach((elem, index) => {
+        if (elem._id == _id) srcIndex = index;
+      });
+
+      var destIndex = -1;
+      this.foodList.forEach((elem, index) => {
+        if (elem._id == _id) destIndex = index;
+      });
+
+      //verifico se nell'array destinazione c'è già un nodo con quell'id
+      if (destIndex != -1) this.foodList[destIndex].number += 1;
+      else {
+        const newFood = {
+          _id: this.selectedFood[srcIndex]._id,
+          name: this.selectedFood[srcIndex].name,
+          number: 1,
+          expirationDate: this.selectedFood[srcIndex].expirationDate,
+          labels: this.selectedFood[srcIndex].labels
+        }
+        this.foodList.push(newFood);
+      }
+
+      //modifico il nodo nell'array sorgente
+      if (this.selectedFood[srcIndex].number > 1)
+        this.selectedFood[srcIndex].number -= 1;
+      else this.selectedFood.splice(srcIndex, 1);
     },
   },
 });
