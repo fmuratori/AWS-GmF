@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import moment from 'moment';
+import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
@@ -39,21 +39,24 @@ export default Vue.extend({
   data: () => {
     return {
       events: new Array<Event>(),
-    }
+    };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       this.$store.dispatch("showSidebar");
-      
-      // TODO: mostrare uno spinner mentre sono caricati i dati
-      api.eventList({filter: {ownerVolunteerId: this.$store.state.session.userData._id}})
-      .then((r:any) => {
-        this.events = r.data.data.list;
-      }).catch(e => console.log(e));
 
+      // TODO: mostrare uno spinner mentre sono caricati i dati
+      api
+        .eventList({
+          filter: { ownerVolunteerId: this.$store.state.session.userData._id },
+        })
+        .then((r: any) => {
+          this.events = r.data.data.list;
+        })
+        .catch((e) => console.log(e));
     } else {
-      this.$router.replace({name: "Login"});
+      this.$router.replace({ name: "Login" });
     }
   },
   methods: {
@@ -62,8 +65,8 @@ export default Vue.extend({
     // },
     formatDate(event: Event) {
       return moment(event.date).locale("en").format("LL");
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -78,5 +81,4 @@ export default Vue.extend({
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
-
 </style>

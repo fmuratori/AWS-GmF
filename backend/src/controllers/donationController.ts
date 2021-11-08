@@ -13,12 +13,53 @@ export default class DonationController {
 	delete = factory.delete(DonationModel)
 
 	getChat = catchAsync(async (req: Request, res: Response) => {
-		const chat = await DonationModel.findById(req.body.donationId)
-			.select("chat")
+		// retrieve donation by id and linked chat
+		const donation = await DonationModel.findById(req.body.donationId, {"chat": 1})
+		if (!donation) {
+			console.log("donation not found")
+			return
+		}
 
+		// upadte visualized messages (messages writted my another user)
+		donation.chat.forEach(elem => {
+			if (elem.userId != req.body.userId)
+				elem.visualized = true;
+		})
+		await DonationModel.findByIdAndUpdate(req.body.donationId, donation)
+
+		const chat = donation.chat
 		res.status(200).json({
 			status: "success",
 			data: { chat }
+		})
+	})
+
+	countUserNonVisualizedMessages = catchAsync(async (req: Request, res: Response) => {
+		const userId:string = req.body.userId;
+		const counts = await DonationModel.find({
+				"userId": userId,
+				"chat": {
+					"$elemMatch": {
+						"visualized": false,
+						"userId": { 
+							"$ne": userId
+						}
+					}
+				}
+			}, {
+				"chat": 1,
+				"donationId": 1,
+				"count": { "$size":"$chat" }
+			})
+
+		if (!counts) {
+			console.log("user donations not found")
+			return
+		}
+
+		res.status(200).json({
+			status: "success",
+			data: { counts }
 		})
 	})
 }
@@ -32,14 +73,52 @@ export async function addMessageToChat(donationId: String, userId: String,fullna
 		return
 	}
 
-	const newNode: any = {
+	donation?.chat.push({
+		index: donation?.chat.length,
 		userId: userId,
 		userFullname: fullname,
 		text: message,
-		visualized: false
-	}
-	donation?.chat.push(newNode)
+		visualized: false,
+		date: new Date()
+	})
+	
 	await DonationModel.findByIdAndUpdate(donationId, donation)
 
-	console.log("message added to chat")
+	const newMessage = donation.chat[donation?.chat.length-1]
+	return {message: newMessage, donationId: donationId}
+}
+
+export async function getDonationUsers(donationId: String) {
+
+	// l'utente ha inviato un messaggio => devo avvisare il volontario incaricato
+	const donation = await DonationModel.findById(donationId)
+		.select("+volunteerId")
+
+	// è stato inviato un messaggio per una donazione inesistente (non dovrebbe accadere mai)
+	if (!donation) {
+		console.log("donation not found")
+		return
+	} else {
+		return {
+			"volunteerId": donation.volunteerId, 
+			"userId": donation.userId
+		}
+	}
+}
+
+export async function setMessageAsVisualized(donationId: String, messageIndex: Number) {
+
+	const donation = await DonationModel.findById(donationId)
+		.select("+chat")
+
+	if (!donation) {
+		console.log("donation not found")
+		return
+	} 
+
+	donation.chat.find(msg => msg.index == messageIndex)!.visualized = true;
+	
+	console.log("message visualized", donation.chat.find(msg => msg.index == messageIndex))
+
+	await DonationModel.findByIdAndUpdate(donationId, donation)
 }

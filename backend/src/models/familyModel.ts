@@ -41,7 +41,11 @@ const familySchema = new mongoose.Schema({
         type: String,
         enum: ["pending", "verified"],
         default: "pending"
-    }
+    },
+    creationDate: {
+        type: Date,
+        default: new Date()
+    },
 })
 
 export default mongoose.model<FamilyDocument>('Family', familySchema)

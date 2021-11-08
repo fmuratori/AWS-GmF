@@ -21,8 +21,8 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
 /* socketio vuejs based implementation */
-import SocketIO from "./socket";
-Vue.use(SocketIO);
+import vueSocket from "./socket";
+Vue.use(vueSocket);
 
 /* local style sheet */
 import "./assets/style.scss";

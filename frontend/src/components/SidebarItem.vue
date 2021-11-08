@@ -18,11 +18,10 @@ export default Vue.extend({
   name: "SidebarItem",
   data: function () {
     return {
-        title: ""
+      title: "",
     };
-  }
+  },
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

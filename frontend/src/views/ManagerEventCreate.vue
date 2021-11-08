@@ -120,7 +120,7 @@ export default Vue.extend({
         } as Address,
       } as EventPayload,
       cancelRoute: "ManagerHome",
-      submitLabel: "Create"
+      submitLabel: "Create",
     };
   },
   created() {
@@ -130,12 +130,11 @@ export default Vue.extend({
     // check if user is logged in
     if (!this.$store.getters.isUserLogged)
       this.$router.replace({ name: "Login" });
-
     if ("event" in this.$route.params) {
       this.form = this.$route.params.event;
-      this.form.id = this.$route.params.event._id
-      this.cancelRoute = "ManagerEvents"
-      this.submitLabel = "Edit"
+      this.form.id = this.$route.params.event._id;
+      this.cancelRoute = "ManagerEvents";
+      this.submitLabel = "Edit";
       //TODO carico i dati
     }
   },
@@ -143,9 +142,9 @@ export default Vue.extend({
     createEvent(event) {
       event.preventDefault();
 
-      var fun
-      if ("event" in this.$route.params) fun = api.editEvent 
-      else fun = api.createEvent
+      var fun;
+      if ("event" in this.$route.params) fun = api.editEvent;
+      else fun = api.createEvent;
 
       fun(this.form)
         .then((r) => {
@@ -170,12 +169,11 @@ export default Vue.extend({
           );
         });
     },
-    cancel(){
-      this.$router.replace({ name: this.cancelRoute })
-    }
+    cancel() {
+      this.$router.replace({ name: this.cancelRoute });
+    },
   },
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

@@ -26,7 +26,9 @@ const routes: Array<RouteConfig> = [
     path: "/user/edit",
     name: "ManagerEditUserInfo",
     component: () =>
-      import(/* webpackChunkName: "ManagerHome" */ "../views/ManagerEditUserInfo.vue"),
+      import(
+        /* webpackChunkName: "ManagerHome" */ "../views/ManagerEditUserInfo.vue"
+      ),
   },
 
   {
@@ -108,8 +110,7 @@ const routes: Array<RouteConfig> = [
       import(
         /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerPacks.vue"
       ),
-  }
-
+  },
 ];
 
 const router = new VueRouter({
