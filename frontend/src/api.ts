@@ -94,6 +94,11 @@ export default {
     });
   },
 
+  async editFamily(payload: FamilyPayload) {
+    return axios.post(`${backendUrl}/api/family/edit`, payload);
+  },
+
+
   async familyList(payload: any) {
     return axios.post(`${backendUrl}/api/family/find`, payload);
   },
