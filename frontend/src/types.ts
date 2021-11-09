@@ -142,10 +142,8 @@ export interface Event {
 }
 
 export interface PackPayload {
-  foodIdList: [string];
+  foodList: [Food];
   familyId: string;
-  deliveryDate: Date;
-  deliveryPeriod: string;
 }
 
 export interface Pack {

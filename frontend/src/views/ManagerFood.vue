@@ -117,7 +117,6 @@ export default Vue.extend({
     //populate the food list
     api.foodList(null).then((r: any) => {
       this.foodList = r.data.data.list;
-      console.log(this.foodList)
     });
 
     // check if user is logged in
@@ -131,7 +130,6 @@ export default Vue.extend({
       api
         .addFood(this.form)
         .then((r) => {
-          console.log(r);
           this.$bvToast.toast(`Food successfully created.`, {
             title: "Food",
             autoHideDelay: 5000,

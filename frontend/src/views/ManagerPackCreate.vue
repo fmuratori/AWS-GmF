@@ -90,11 +90,10 @@ export default Vue.extend({
       tableFields: ["name", "number", "expirationDate", "labels", "_id"],
       family: {} as Family,
       form: {
-        foodIdList: new Array<string>(),
+        foodList: new Array<Food>(),
         familyId: "",
-        deliveryDate: new Date(),
-        deliveryPeriod: "",
       } as PackPayload,
+      days: ["lun", "mar", "mer", "gio", "ven", "sab", "dom"],
     };
   },
   created() {
@@ -110,10 +109,18 @@ export default Vue.extend({
 
     if ("family" in this.$route.params) {
       this.family = this.$route.params.family;
+      this.form.familyId = this.family._id;
     }
+
+    this.form.deliveryVolunteerId = this.$store.state.session.userData._id;
   },
   methods: {
     createPack(event) {
+      this.selectedFood.forEach((elem) => {
+        for (var index = 0; index < elem.number; index++)
+          this.form.foodIdList.push(elem._id);
+      });
+
       event.preventDefault();
 
       api
@@ -162,8 +169,8 @@ export default Vue.extend({
           name: this.foodList[srcIndex].name,
           number: 1,
           expirationDate: this.foodList[srcIndex].expirationDate,
-          labels: this.foodList[srcIndex].labels
-        }
+          labels: this.foodList[srcIndex].labels,
+        };
         this.selectedFood.push(newFood);
       }
 
@@ -191,8 +198,8 @@ export default Vue.extend({
           name: this.selectedFood[srcIndex].name,
           number: 1,
           expirationDate: this.selectedFood[srcIndex].expirationDate,
-          labels: this.selectedFood[srcIndex].labels
-        }
+          labels: this.selectedFood[srcIndex].labels,
+        };
         this.foodList.push(newFood);
       }
 
