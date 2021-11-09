@@ -39,11 +39,27 @@
                     p(class="mb-0") Indirizzo:
                     p(class="font-weight-bold") {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
                 b-col(cols="auto")
-                  div(class="mb-2")
-                    p(class="mb-0") Stato segnalazione:
-                    h5
-                      b-badge(v-if="family.status == 'pending'" variant="warning") In attesa di verifica
-                      b-badge(v-if="family.status == 'verified'" variant="success") Verifica effettuata
+                  p.mb-0 Address:
+                    b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
+
+            h5 status:
+              b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
+              b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
+
+            b-button.b-card-footer-button(
+              block,
+              v-if="userRole == 'trusted'",
+              :disabled="family.status == 'verified'"
+              variant="success",
+              @click="verifyFamily(family._id)"
+            ) VERIFY
+
+            b-button.b-card-footer-button(
+              block,
+              v-if="userRole != 'user'",
+              variant="primary",
+              :disabled="family.status != 'verified'"
+            ) PACK
 </template>
 
 <script lang="ts">
@@ -95,6 +111,8 @@ export default Vue.extend({
     },
 
     filterBy(filterByMode: "verified" | "pending" | "all") {
+      if(this.filterByMode == filterByMode) return
+
       var payload = { filter: {} };
 
       switch (filterByMode) {
