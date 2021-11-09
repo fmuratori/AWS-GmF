@@ -36,7 +36,7 @@
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
       SidebarItem(text= 'Food manager', route='ManagerFood')
-
+      SidebarItem(text= 'Pack manager', route='ManagerPacks')
 
 </template>
 

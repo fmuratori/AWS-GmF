@@ -17,9 +17,6 @@ export default Vue.extend({
     text: String,
     icon: String,
   },
-  created() {
-    console.log(this.icon)
-  }
 });
 </script>
 
