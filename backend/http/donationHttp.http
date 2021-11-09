@@ -8,7 +8,7 @@ content-type: application/json
         "_id": "6184f5ea36a18325abc945ba"
     },
     "projection": {
-        "volunteerId": 1
+        "__v": 0
     }
 }
 

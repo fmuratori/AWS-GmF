@@ -1,15 +1,8 @@
 <template lang="pug">
-<<<<<<< HEAD
 #sidebar.p-3(v-if="isSidebarOpen()")
   #sidebar-user 
     b-row.p-4(no-gutters align-h="center") 
       b-col(class="mr-1" cols="auto")
-=======
-div(id="sidebar" class="p-3" v-if="isSidebarOpen()")
-  div(id="sidebar-user") 
-    b-row.p-4(no-gutters, align-h="center") 
-      b-col.mr-1(cols="auto")
->>>>>>> feature/maps
         b-icon-person-circle(font-scale="3")
       b-col.ml-1(cols="auto")
         p {{ userFullname }}
@@ -20,11 +13,7 @@ div(id="sidebar" class="p-3" v-if="isSidebarOpen()")
 
   div(id="sidebar-actions") 
   
-<<<<<<< HEAD
-    div
-=======
     div(v-if="$store.state.session.userData.type == 'user'")
->>>>>>> feature/maps
       b-row(class="pb-2" no-gutters align-v="center")
         b-col(class="mr-1" cols="auto")
           font-awesome-icon(icon="utensils" size="lg")

@@ -92,7 +92,7 @@ export default class UserController {
 		res.status(200).json({
 			status: "success",
 			message: "User updated",
-			data: {user: updatedUser}
+			data: { user: updatedUser }
 		})
 	})
 
@@ -125,7 +125,6 @@ export default class UserController {
 			status: "success",
 			message: "User upgraded"
 		})
-
 	})
 
 	changePassword = catchAsync(async (req: Request, res: Response) => {
@@ -161,5 +160,9 @@ export default class UserController {
 
 		await UserModel.findByIdAndUpdate(user._id, user)
 
+		res.status(200).json({
+			status: "success",
+			message: "Password changed"
+		})
 	})
 }
