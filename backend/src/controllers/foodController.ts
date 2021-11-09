@@ -21,7 +21,6 @@ export default class FoodController {
 			console.log("creo un nuovo nodo")
 			//creo un nuovo nodo
 			elem = await FoodModel.create(req.body)
-			return
 		} else {
 			console.log("aggiorno il nodo esistente")
 			//aggiorno il nodo già esistente
@@ -32,7 +31,7 @@ export default class FoodController {
 				console.log("aggiungo 1")
 				elem.number = elem.number.valueOf() + 1
 			}
-			elem = await FoodModel.findByIdAndUpdate(elem._id, elem)
+			elem = await FoodModel.findByIdAndUpdate(elem._id, elem, {new: true})
 		}
 
 		res.status(200).json({

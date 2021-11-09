@@ -11,7 +11,7 @@ export interface PackDocument extends Document, Pack {
  }
 
 const packSchema = new mongoose.Schema({
-    foodIds: {
+    foodIdList: {
         type: [mongoose.Types.ObjectId],
         required: [true, "missing required field foodIds"],
         ref: "Food"
@@ -31,10 +31,6 @@ const packSchema = new mongoose.Schema({
         required: [true, "missing required field familyId"],
         ref: "Family"
     },
-    qrCodeImage: {
-        type: String,
-        required: false
-    }, // la stringa in base64 potrebbe essere troppo lunga
     deliveryDate: {
         type: Date,
         required: false,

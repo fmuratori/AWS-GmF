@@ -23,14 +23,6 @@ const foodSchema = new mongoose.Schema({
             message: "Cannot store expired food"
         }
     },
-    weight: {
-        type: Number,
-        required: false,
-    },
-    description: {
-        type: String,
-        required: false
-    },
     labels: {
         type: [String],
         required: false

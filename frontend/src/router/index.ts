@@ -26,7 +26,9 @@ const routes: Array<RouteConfig> = [
     path: "/user/edit",
     name: "ManagerEditUserInfo",
     component: () =>
-      import(/* webpackChunkName: "ManagerHome" */ "../views/ManagerEditUserInfo.vue"),
+      import(
+        /* webpackChunkName: "ManagerHome" */ "../views/ManagerEditUserInfo.vue"
+      ),
   },
 
   {
@@ -83,6 +85,30 @@ const routes: Array<RouteConfig> = [
     component: () =>
       import(
         /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerEvents.vue"
+      ),
+  },
+  {
+    path: "/manager/food/add",
+    name: "ManagerFood",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerFood.vue"
+      ),
+  },
+  {
+    path: "/manager/pack/create",
+    name: "ManagerPackCreate",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerPackCreate.vue"
+      ),
+  },
+  {
+    path: "/manager/pack/list",
+    name: "ManagerPacks",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerPacks.vue"
       ),
   },
 ];
