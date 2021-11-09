@@ -59,6 +59,7 @@
               v-if="userRole != 'user'",
               variant="primary",
               :disabled="family.status != 'verified'"
+              @click="$router.replace({ name: 'ManagerPackCreate', params: {family: family} })"
             ) PACK
 </template>
 
