@@ -56,6 +56,14 @@ const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/manager/donations/retrieve",
+    name: "ManagerDonationsRetrieve",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerDonationsRetrieve" */ "../views/ManagerDonationsRetrieve.vue"
+      ),
+  },
+  {
     path: "/manager/families/subscribe",
     name: "ManagerFamiliesSubscribe",
     component: () =>
