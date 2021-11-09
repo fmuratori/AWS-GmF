@@ -9,103 +9,52 @@
         p {{ userType }}
         p(@click="changePage('ManagerEditUserInfo')" class="clickable") edit
 
-    hr(class="sidebar-hr my-3")
+    hr.sidebar-hr.my-3
 
-  div(id="sidebar-actions") 
+  div#sidebar-actions 
   
     div
-      b-row(class="pb-2" no-gutters align-v="center")
-        b-col(class="mr-1" cols="auto")
-          font-awesome-icon(icon="utensils" size="lg")
-        b-col(class="ml-1")
-          h6 Dona cibo
+      SidebarCategory(text='Donate food', icon='drumstick-bite')
+      SidebarItem(text= 'Create a donation', route='ManagerDonationsCreate')
+      SidebarItem(text= 'Your donations', route='ManagerDonationsList')
 
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsCreate')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsCreate') }")
-        b-col
-          label(class="py-1") Crea una donazione
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
-
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsList')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsList') }")
-        b-col
-          label(class="py-1") Tue donazioni
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
-
-    hr(class="sidebar-hr my-3")
+    hr.sidebar-hr.my-3
 
     div
-      b-row(class="pb-2" no-gutters align-v="center")
-        b-col(class="mr-1" cols="auto")
-          font-awesome-icon(icon="users" size="lg")
-        b-col(class="ml-1")
-          h6 Famiglie bisognose
-
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFamiliesSubscribe')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamiliesSubscribe') }")
-        b-col
-          label(class="py-1") Segnala famiglia
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
-
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFamilies')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamilies') }")
-        b-col
-          label(class="py-1") Tue segnalazioni
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
+      SidebarCategory(text='Families', icon='users')
+      SidebarItem(text= 'Report a family', route='ManagerFamiliesSubscribe')
+      SidebarItem(text= 'Your reports', route='ManagerFamilies')
 
     hr(class="sidebar-hr my-3")
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
-      b-row(class="pb-2" no-gutters align-v="center")
-        b-col(class="mr-1" cols="auto")
-          font-awesome-icon(icon="utensils" size="lg")
-        b-col(class="ml-1")
-          h6 Events
+      SidebarCategory(text='Events', icon='calendar')
+      SidebarItem(text= 'Create an event', route='ManagerEventCreate')
+      SidebarItem(text= 'Your events', route='ManagerEvents')
 
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerEventCreate')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEventCreate') }")
-        b-col
-          label(class="py-1") Create event
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
-
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerEvents')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEvents') }")
-        b-col
-          label(class="py-1") Your events
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
-
-    hr(class="sidebar-hr my-3")
+    hr.sidebar-hr.my-3
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFood')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFood') }")
-        b-col
-          label(class="py-1") Food manager
-        b-col(cols="auto")
-          b-icon(icon="chevron-right")
+      SidebarItem(text= 'Food manager', route='ManagerFood')
 
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import SidebarItem from "./SidebarItem.vue";
+import SidebarCategory from "./SidebarCategory.vue"
 
 export default Vue.extend({
   name: "Sidebar",
-  components: {},
+  components: {
+    SidebarItem,
+    SidebarCategory
+  },
   data: function () {
     return {};
   },
   computed: {
-    currentRouteName() {
-      return this.$route.name;
-    },
     userFullname() {
       const fullname =
         this.$store.state.session.userData.name +
@@ -115,24 +64,9 @@ export default Vue.extend({
         return fullname.substring(0, 10) + "...";
       }
       return fullname;
-    },
-    userType() {
-      switch (this.$store.state.session.userData.type) {
-        case "user":
-          return "Utente";
-        case "volunteer":
-          return "Volontario";
-        case "trusted":
-          return "Collaboratore";
-        default:
-          return "UNKNOWN";
-      }
-    },
+    }
   },
   methods: {
-    isRouteSelected(routeName: string) {
-      return this.currentRouteName == routeName;
-    },
     changePage(pageName: string) {
       this.$router.replace({ name: pageName });
 
@@ -187,15 +121,4 @@ export default Vue.extend({
   background-color: $greyscale5;
 }
 
-.sidebar-item {
-  border-radius: 0.25em;
-}
-
-.sidebar-item:hover {
-  background-color: $greyscale1;
-}
-
-.sidebar-item-selected {
-  background-color: $color1;
-}
 </style>
