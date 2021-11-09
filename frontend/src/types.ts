@@ -170,7 +170,6 @@ export interface Food {
   number: number;
   expirationDate: Date;
   labels: [string];
->>>>>>> feature/family
 }
 
 // export interface OfferResponse {
