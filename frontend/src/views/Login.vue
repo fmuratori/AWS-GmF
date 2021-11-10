@@ -148,7 +148,6 @@ export default Vue.extend({
         password: "",
         email: "",
         phoneNumber: "",
-        type: "",
         address: {
           street: "",
           civicNumber: "",
