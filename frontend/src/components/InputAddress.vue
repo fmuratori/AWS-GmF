@@ -1,36 +1,34 @@
 <template lang="pug">
-b-card.mb-2(bg-variant="light", text-variant="dark")
-  b-card-text
-    b-card-header {{ title }}
-    .px-4.pt-4
-      b-row
-        b-col
-          b-form-group(label="City:")
-            b-form-input(
-              required,
-              type="text",
-              :value="city",
-              @input="$emit('city', $event)"
-            )
-      b-row
-        b-col(cols=8)
-          b-form-group(label="Address:")
-            b-form-input(
-              required,
-              type="text",
-              :value="street",
-              @input="$emit('street', $event)"
-            )
-        b-col(cols=4)
-          b-form-group(label="Civic number:")
-            b-form-input(
-              required,
-              type="text",
-              :value="civic"
-              @input="$emit('civic', $event)"
-            )
-      .text-center
-        b-button(variant="outline-secondary") Find on maps
+b-form-group(:label="title")
+  b-form-group(label="City", label-cols-sm="3", label-align-sm="right")
+    b-form-input(
+      placeholder="Insert city here"
+      required,
+      type="text",
+      :value="city",
+      @input="$emit('city', $event)"
+    )
+
+  b-form-group(label="Street", label-cols-sm="3", label-align-sm="right")
+    b-form-input(
+      placeholder="Insert street here"
+      required,
+      type="text",
+      :value="street",
+      @input="$emit('street', $event)"
+    )
+
+  b-form-group(label="Civic", label-cols-sm="3", label-align-sm="right")
+    b-form-input(
+      placeholder="Insert civic number here"
+      required,
+      type="text",
+      :value="civic",
+      @input="$emit('civic', $event)"
+    )
+
+  .text-center
+    b-button(variant="outline-secondary") Find on maps
 </template>
 
 <script lang="ts">
