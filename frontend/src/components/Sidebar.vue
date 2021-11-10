@@ -4,8 +4,8 @@
     b-row.p-4(no-gutters align-h="center") 
       b-col(class="mr-1" cols="auto")
         b-icon-person-circle(font-scale="3")
-      b-col(class="ml-1" cols="auto")
-        p {{ this.$store.state.session.userData.name }} {{ this.$store.state.session.userData.surname }}
+      b-col.ml-1(cols="auto")
+        p {{ userFullname }}
         p {{ this.$store.state.session.userData.type }}
         p(@click="changePage('ManagerEditUserInfo')" class="clickable") edit
 

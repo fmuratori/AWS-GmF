@@ -5,40 +5,21 @@ b-row.justify-content-md-center.my-5.no-gutters
     b-form(@submit="changePassword")
       .mb-3
         b-card
-          b-form-group#input-group-1(
-            label="Old password:",
-            label-for="input-8"
+          InputText(
+            placeholder="Old password",
+            type="password",
+            required,
+            :text="changePasswordForm.oldPassword",
+            v-on:data="(e) => { changePasswordForm.oldPassword = e; }"
           )
-            b-form-input#input-1(
-              type="password",
-              v-model="changePasswordForm.oldPassword",
-              placeholder="Type you're old password here",
-              required
-            )
 
-          b-form-group#input-group-2(
-            label="New password:",
-            label-for="input-8",
-            description="Scegli una password efficace, comporta da almeno 8 caratteri tra numeri e lettere maiuscole e minuscole."
+          InputPasswordSelect(
+            title1="New password: ",
+            title2="Confirm password: ",
+            placeholder1="Insert your password here",
+            placeholder2="Repeat your password here",
+            v-on:data="(e) => { changePasswordForm.newPassword = e; }"
           )
-            b-form-input#input-2(
-              type="password",
-              v-model="changePasswordForm.newPassword",
-              placeholder="Insert you're new password here",
-              required
-            )
-
-          b-form-group#input-group-3(
-            label="Repeat password:",
-            label-for="input-9"
-          )
-            b-form-input#input-3(
-              type="password",
-              v-model="regRepeatPassword",
-              placeholder="Confirm password",
-              required,
-              :state="registrationPasswordCheck()"
-            )
 
           b-row
             b-col
@@ -50,88 +31,72 @@ b-row.justify-content-md-center.my-5.no-gutters
         b-card
           b-row
             b-col
-              b-form-group#input-group-4(label="Name:", label-for="input-1")
-                b-form-input#input-4(
-                  type="text",
-                  v-model="editUserForm.name",
-                  placeholder="Type you're name here",
-                  required
-                )
-            b-col
-              b-form-group#input-group-5(label="Surname:", label-for="input-2")
-                b-form-input#input-5(
-                  type="text",
-                  v-model="editUserForm.surname",
-                  placeholder="Type you're surname here",
-                  required
-                )
-
-          b-row
-            b-col
-              b-form-group#input-group-6(label="E-Mail", label-for="input-11")
-                b-input-group
-                  b-input-group-prepend
-                    b-input-group-text
-                      b-icon(icon="at")
-                  b-form-input#input-6(
-                    type="text",
-                    placeholder="Type you're email here",
-                    required,
-                    v-model="editUserForm.email"
-                  )
-
-          b-row
-            b-col
-              b-form-group#input-group-7(
-                label="Phone number:",
-                label-for="input-4"
+              InputText(
+                title="Name: ",
+                placeholder="Insert name here",
+                required,
+                :text="editUserForm.name",
+                v-on:data="(e) => { editUserForm.name = e; }"
               )
-                b-form-input#input-7(
-                  type="text",
-                  v-model="editUserForm.phoneNumber",
-                  required
-                )
+
+            b-col
+              InputText(
+                title="Surname: ",
+                placeholder="Insert surname here",
+                required,
+                :text="editUserForm.surname",
+                v-on:data="(e) => { editUserForm.surname = e; }"
+              )
+
+          b-row
+            b-col
+              InputText(
+                title="Email: ",
+                placeholder="Insert your email here",
+                type="email",
+                required,
+                :text="editUserForm.email",
+                v-on:data="(e) => { editUserForm.email = e; }"
+              )
+
+          b-row
+            b-col
+              InputText(
+                title="Phone number: ",
+                placeholder="Insert your phone number here",
+                required,
+                :text="editUserForm.phoneNumber",
+                v-on:data="(e) => { editUserForm.phoneNumber = e; }"
+              )
 
           hr
 
-          b-row
-            b-col
-              b-form-group#input-group-8(label="City:", label-for="input-4")
-                b-form-input#input-8(
-                  required,
-                  type="text",
-                  v-model="editUserForm.address.city"
-                )
-          b-row
-            b-col(cols=8)
-              b-form-group#input-group-9(label="Address:", label-for="input-5")
-                b-form-input#input-9(
-                  required,
-                  type="text",
-                  v-model="editUserForm.address.street"
-                )
-            b-col(cols=4)
-              b-form-group#input-group-10(
-                label="Civic number:",
-                label-for="input-10"
-              )
-                b-form-input#input-10(
-                  required,
-                  type="text",
-                  v-model="editUserForm.address.civicNumber"
-                )
-          .text-center
-            b-button(variant="outline-secondary") Find on maps
+          InputAddress(
+            title="Location",
+            :city="editUserForm.address.city",
+            :street="editUserForm.address.street",
+            :civic="editUserForm.address.civicNumber",
+            v-on:city="(e) => { editUserForm.address.city = e; }",
+            v-on:street="(e) => { editUserForm.address.street = e; }",
+            v-on:civic="(e) => { editUserForm.address.civicNumber = e; }"
+          )
 
       b-row
         b-col
-          b-button(block, variant="outline-danger", @click="$router.replace({name: 'ManagerHome'})") Cancel
+          b-button(
+            block,
+            variant="outline-danger",
+            @click="$router.replace({ name: 'ManagerHome' })"
+          ) Cancel
         b-col
           b-button(block, variant="success", type="submit") Edit
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import InputText from "../components/InputText.vue";
+import InputAddress from "../components/InputAddress.vue";
+import InputPasswordSelect from "../components/InputPasswordSelect.vue";
 
 // import bcrypt from "bcrypt"
 
@@ -140,6 +105,11 @@ import { Address, editUserPayload, changePasswordPayload } from "../types";
 
 export default Vue.extend({
   name: "ManagerEditUserInfo",
+  components: {
+    InputText,
+    InputPasswordSelect,
+    InputAddress,
+  },
   data: function () {
     return {
       regRepeatPassword: "",
