@@ -16,9 +16,6 @@ export default Vue.extend({
   props: {
     text: String,
     icon: String,
-  },
-  created() {
-    console.log(this.icon)
   }
 });
 </script>

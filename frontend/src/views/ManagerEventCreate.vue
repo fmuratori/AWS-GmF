@@ -3,92 +3,59 @@ b-row.justify-content-md-center.my-5.no-gutters
   b-col(cols="6")
     p CREATE AN EVENT
     b-form(@submit="createEvent")
-      b-form-group#input-group-1(label="Title:", label-for="input-1")
-        b-form-input#input-1(
-          required,
-          type="text",
+      .mb4
+        InputText(
+          title="Title: ",
           placeholder="Insert title here",
-          v-model="form.eventTitle"
+          :text="form.eventTitle",
+          required,
+          v-on:data="(e) => { form.eventTitle = e; }"
         )
 
       .mb-4
-        b-form-group#input-group-2(label="Description:", label-for="input-2")
-          b-form-textarea#input-2(
-            rows="3",
-            max-rows="6",
-            v-model="form.description",
-            placeholder="Insert description here"
-          )
+        InputTextarea(
+          title="Description: ",
+          placeholder="Insert description here",
+          :text="form.description",
+          required,
+          v-on:data="(e) => { form.description = e; }"
+        )
 
       .mb-4
-      b-form-group#input-group-3(label="Date:", label-for="input-3", required)
-        b-input-group
-          b-form-datepicker#input-3.my-no-right-border(
-            required,
-            v-model="form.date",
-            reset-button,
-            close-button
-          )
-          b-input-group-append
-            b-button.my-no-left-border(
-              variant="danger",
-              @click="form.date = null",
-              :disabled="form.date == null"
-            ) 
-              span Cancel
-              b-icon(icon="x", aria-hidden="true")
+        InputDate(
+          title="Date:",
+          placeholder="Select a date",
+          :date="form.date",
+          required,
+          v-on:data="(e) => { form.date = e; }"
+        )
 
       .mb-3
-        label Location:
-        b-card
-          b-row
-            b-col
-              b-form-group#input-group-3(label="City:", label-for="input-4")
-                b-form-input#input-4(
-                  required,
-                  type="text",
-                  v-model="form.address.city"
-                )
-          b-row
-            b-col(cols=8)
-              b-form-group#input-group-5(label="Address:", label-for="input-5")
-                b-form-input#input-5(
-                  required,
-                  type="text",
-                  v-model="form.address.street"
-                )
-            b-col(cols=4)
-              b-form-group#input-group-6(
-                label="Civic number:",
-                label-for="input-6"
-              )
-                b-form-input#input-6(
-                  required,
-                  type="text",
-                  v-model="form.address.civicNumber"
-                )
-          .text-center
-            b-button(variant="outline-secondary") Find on maps
+        InputAddress(
+          title="Location",
+          :city="form.address.city",
+          :street="form.address.street",
+          :civic="form.address.civicNumber",
+          v-on:city="(e) => { form.address.city = e; }",
+          v-on:street="(e) => { form.address.street = e; }",
+          v-on:civic="(e) => { form.address.civicNumber = e; }"
+        )
 
       b-row
         b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="cancel"
-          ) Cancel
+          b-button(block, variant="outline-danger", @click="cancel") Cancel
         b-col
-          b-button(
-            block,
-            variant="success",
-            type="submit"
-          ) {{this.submitLabel}}
+          b-button(block, variant="success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
+import InputText from "../components/InputText.vue";
+import InputTextarea from "../components/InputTextarea.vue";
+import InputAddress from "../components/InputAddress.vue";
+import InputDate from "../components/InputDate.vue";
 
 import { Address, EventPayload } from "../types";
 
@@ -99,6 +66,10 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    InputText,
+    InputTextarea,
+    InputAddress,
+    InputDate,
   },
   data: function () {
     return {
@@ -107,7 +78,7 @@ export default Vue.extend({
         ownerVolunteerId: "",
         eventTitle: "",
         description: "",
-        date: new Date(),
+        date: null,
         image: "",
         address: {
           city: "",
@@ -171,6 +142,11 @@ export default Vue.extend({
     },
     cancel() {
       this.$router.replace({ name: this.cancelRoute });
+    },
+    tmp(e) {
+      console.log(e);
+      this.date = e;
+      console.log("date: " + this.date);
     },
   },
 });
