@@ -16,11 +16,7 @@ export default Vue.extend({
   props: {
     text: String,
     icon: String,
-<<<<<<< HEAD
-  },
-=======
   }
->>>>>>> develop
 });
 </script>
 
