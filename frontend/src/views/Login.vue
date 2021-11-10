@@ -11,173 +11,113 @@ b-row.justify-content-center(no-gutters)
       b-button-group(block)
         b-button.login-select-button(
           variant="light",
-          @click="setLoginSelected(true)",
+          @click="isLoginSelected = true",
           :class="{ 'login-selected-button': isLoginSelected }"
         ) Accedi
         b-button.login-select-button(
           variant="light",
-          @click="setLoginSelected(false)",
+          @click="isLoginSelected = false",
           :class="{ 'login-selected-button': !isLoginSelected }"
         ) Registrati
 
-      #login-body
-        div(v-if="isLoginSelected")
-          b-form(@submit="loginRequest")
-            .px-5.pt-5.pb-5
-              p.text-danger(v-if="showLoginErrorMessage") Email o password inserita errata.
-              h5.mt-4 Credenziali
-              b-form-group#input-group-11(label="", label-for="input-11")
-                b-input-group
-                  b-input-group-prepend
-                    b-input-group-text
-                      b-icon(icon="at")
-                  b-form-input#input-11(
-                    type="text",
-                    placeholder="Inserisci email",
-                    required,
-                    v-model="login.email"
-                  )
-              b-form-group#input-group-22(label="", label-for="input-22")
-                b-input-group
-                  b-input-group-prepend
-                    b-input-group-text
-                      b-icon(icon="key")
-                  b-form-input#input-22(
-                    type="password",
-                    placeholder="Inserisci password",
-                    required,
-                    v-model="login.password"
-                  )
-              b-row.justify-content-md-center.mb-4
-                a(href="#") Ti sei dimenticato la password?
+      b-form(@submit="submitForm")
+        .p-3(v-if="isLoginSelected")
+          p.text-danger(v-if="showLoginErrorMessage") Email o password inserita errata.
+          h5.mt-4 Credenziali
 
-            b-button.login-button(block, size="lg", type="submit")
-              span ACCEDI
-              b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
+          InputText(
+            placeholder="Insert your email",
+            type="email",
+            icon="at",
+            required,
+            :text="login.email",
+            v-on:data="(e) => { login.email = e; }"
+          )
 
-        div(v-else)
-          b-form(@submit="registrationRequest")
-            .p-3
-              h5 Informazioni personali
-              b-form-group#input-group-1(label="Nome:", label-for="input-1")
-                b-form-input#input-1(
-                  type="text",
-                  v-model="registration.name",
-                  placeholder="Inserisci nome",
-                  required
-                )
+          InputText(
+            placeholder="Insert your password",
+            type="password",
+            icon="key",
+            required,
+            :text="login.password",
+            v-on:data="(e) => { login.password = e; }"
+          )
 
-              b-form-group#input-group-2(label="Cognome:", label-for="input-2")
-                b-form-input#input-2(
-                  type="text",
-                  v-model="registration.surname",
-                  placeholder="Inserisci cognome",
-                  required
-                )
+          b-row.justify-content-md-center.mb-4
+            a(href="#") Ti sei dimenticato la password?
 
-              b-form-group#input-group-3(
-                label="Indirizzo email:",
-                label-for="input-3",
-                description="La tua email non sarà divulgata a terzi."
-              )
-                b-form-input#input-3(
-                  type="email",
-                  v-model="registration.email",
-                  placeholder="Inserisci email",
-                  required
-                )
+        .p-3(v-else)
+          h5.mt-4 Informazioni personali
 
-              b-form-group#input-group-4(
-                label="Numero di cellulare:",
-                label-for="input-4"
-              )
-                b-form-input#input-4(
-                  type="text",
-                  v-model="registration.phoneNumber",
-                  placeholder="Inserisci numero di cellulare",
-                  required
-                )
+          InputText(
+            title="Name: ",
+            placeholder="Insert name here",
+            required,
+            v-on:data="(e) => { registration.name = e; }"
+          )
 
-              hr
+          InputText(
+            title="Surname: ",
+            placeholder="Insert surname here",
+            required,
+            v-on:data="(e) => { registration.surname = e; }"
+          )
 
-              h5 Luogo di residenza
+          InputText(
+            title="Email: ",
+            placeholder="Insert your email here",
+            type="email",
+            required,
+            v-on:data="(e) => { registration.email = e; }"
+          )
 
-              b-form-group#input-group-5(label="Città:", label-for="input-5")
-                b-form-input#input-5(
-                  type="text",
-                  v-model="registration.address.city",
-                  placeholder="Inserisci città",
-                  required
-                )
+          InputText(
+            title="Phone number: ",
+            placeholder="Insert your phone number here",
+            required,
+            v-on:data="(e) => { registration.phoneNumber = e; }"
+          )
 
-              b-form-group#input-group-6(
-                label="Indirizzo:",
-                label-for="input-6"
-              )
-                b-form-input#input-6(
-                  type="text",
-                  v-model="registration.address.street",
-                  placeholder="Inserisci indirizzo",
-                  required
-                )
+          InputAddress(
+            title="Location",
+            v-on:city="(e) => { registration.address.city = e; }",
+            v-on:street="(e) => { registration.address.street = e; }",
+            v-on:civic="(e) => { registration.address.civicNumber = e; }"
+          )
 
-              b-form-group#input-group-7(
-                label="Numero civico:",
-                label-for="input-1"
-              )
-                b-form-input#input-7(
-                  type="text",
-                  v-model="registration.address.civicNumber",
-                  placeholder="Inserisci numero civico",
-                  required
-                )
+          InputPasswordSelect(
+            title1="Password: ",
+            title2="Repeat your password: ",
+            placeholder1="Insert your password here",
+            placeholder2="Repeat your password here",
+            v-on:data="(e) => { registration.password = e; }"
+          )
 
-              hr
+          hr
 
-              b-form-group#input-group-8(
-                label="Password:",
-                label-for="input-8",
-                description="Scegli una password efficace, comporta da almeno 8 caratteri tra numeri e lettere maiuscole e minuscole."
-              )
-                b-form-input#input-8(
-                  type="password",
-                  v-model="registration.password",
-                  placeholder="Inserisci password",
-                  required
-                )
+          b-form-checkbox#checkbox-1.mt-4(
+            name="checkbox-1",
+            v-model="registrationPrivacyChecked"
+          )
+            i accetto i termini di servizio e la
+              a(href="#") privacy policy
 
-              b-form-group#input-group-9(
-                label="Ripeti password:",
-                label-for="input-9"
-              )
-                b-form-input#input-9(
-                  type="password",
-                  v-model="regRepeatPassword",
-                  placeholder="Conferma password",
-                  required,
-                  :state="registrationPasswordCheck()"
-                )
+          b-form-checkbox#checkbox-2.mt-2(name="checkbox-2")
+            i voglio ricevere email su eventi nella mia città
 
-              hr
-
-              b-form-checkbox#checkbox-1.mt-4(
-                name="checkbox-1",
-                v-model="registrationPrivacyChecked"
-              )
-                i accetto i termini di servizio e la
-                  a(href="#") privacy policy
-
-              b-form-checkbox#checkbox-2.mt-2(name="checkbox-2")
-                i voglio ricevere email su eventi nella mia città
-
-            b-button.login-button(block, type="submit", size="lg")
-              span REGISTRATI
-              b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
+        b-button.login-button(block, size="lg", type="submit")
+          span(v-if="isLoginSelected") ACCEDI
+          span(v-else) REGISTRATI
+          b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { AxiosError } from "axios";
+import InputText from "../components/InputText.vue";
+import InputTextarea from "../components/InputTextarea.vue";
+import InputAddress from "../components/InputAddress.vue";
+import InputPasswordSelect from "../components/InputPasswordSelect.vue";
 
 // import bcrypt from "bcrypt"
 
@@ -186,28 +126,33 @@ import { LoginPayload, RegistrationPayload, Address } from "../types";
 
 export default Vue.extend({
   name: "Login",
+  components: {
+    InputText,
+    InputTextarea,
+    InputAddress,
+    InputPasswordSelect,
+  },
   data: function () {
     return {
       // TODO: remove precompiled test-values
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
-      regRepeatPassword: "Password2021!",
       login: {
-        email: "admin@admin.com",
+        email: "user@gmail.com",
         password: "Password2021!",
       } as LoginPayload,
       registration: {
-        name: "Fabio",
-        surname: "Muratori",
-        password: "Password2021!",
-        email: "admin@admin.com",
-        phoneNumber: "1234",
-        type: "user",
+        name: "",
+        surname: "",
+        password: "",
+        email: "",
+        phoneNumber: "",
+        type: "",
         address: {
-          street: "via a caso",
-          civicNumber: "32",
-          city: "rimini",
+          street: "",
+          civicNumber: "",
+          city: "",
           coordinates: {
             x: 0,
             y: 0,
@@ -220,88 +165,82 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    setLoginSelected(value: boolean) {
-      this.isLoginSelected = value;
-    },
-    registrationPasswordCheck() {
-      return (
-        this.registration.password == this.regRepeatPassword &&
-        this.registration.password != ""
-      );
-    },
-    loginRequest(event) {
+    submitForm(event) {
       event.preventDefault();
-      api
-        .loginRequest(this.login)
-        .then((r: any) => {
-          if (r.status == 200) {
-            this.$store.dispatch("login", {
-              token: r.data.data.token,
-              userData: r.data.data.user,
-            });
-            this.showLoginErrorMessage = false;
-            this.$router.replace({ name: "ManagerHome" });
 
-            // initialize a socket session (let the server know that a new logged user is active)
-            this.$socket.emit("login", this.$store.state.session.userData._id);
+      if (this.isLoginSelected) {
+        //LOGIN
+        api
+          .loginRequest(this.login)
+          .then((r: any) => {
+            if (r.status == 200) {
+              this.$store.dispatch("login", {
+                token: r.data.data.token,
+                userData: r.data.data.user,
+              });
+              this.showLoginErrorMessage = false;
+              this.$router.replace({ name: "ManagerHome" });
 
-            api
-              .unreadMessages(
-                this.$store.state.session.userData._id,
-                this.$store.getters.getSessionHeader
-              )
-              .then((r: any) => {
-                this.$store.dispatch(
-                  "updateUnreadMessages",
-                  r.data.data.counts
-                );
-              })
-              .catch((e) => console.log(e));
-          }
-        })
-        .catch((e: AxiosError): void => {
-          console.log(e);
-          this.showLoginErrorMessage = true;
-        });
-    },
-    registrationRequest(event) {
-      event.preventDefault();
-      api
-        .registrationRequest(this.registration)
-        .then(() => {
-          this.$bvToast.toast(
-            `Operazione avvenuta con successo. Effettua il login per accedere.`,
-            {
-              title: "Registrazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
+              // initialize a socket session (let the server know that a new logged user is active)
+              this.$socket.emit(
+                "login",
+                this.$store.state.session.userData._id
+              );
+
+              api
+                .unreadMessages(
+                  this.$store.state.session.userData._id,
+                  this.$store.getters.getSessionHeader
+                )
+                .then((r: any) => {
+                  this.$store.dispatch(
+                    "updateUnreadMessages",
+                    r.data.data.counts
+                  );
+                })
+                .catch((e) => console.log(e));
             }
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$bvToast.toast(
-            `Errore durante la fase di registrazione, riprova.`,
-            {
-              title: "Registrazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        });
+          })
+          .catch((e: AxiosError): void => {
+            console.log(e);
+            this.showLoginErrorMessage = true;
+          });
+      } else {
+        //REGISTRATION
+        api
+          .registrationRequest(this.registration)
+          .then(() => {
+            this.isLoginSelected = true;
+            this.$bvToast.toast(
+              `Operazione avvenuta con successo. Effettua il login per accedere.`,
+              {
+                title: "Registrazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+            this.$bvToast.toast(
+              `Errore durante la fase di registrazione, riprova.`,
+              {
+                title: "Registrazione",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+          });
+      }
     },
   },
 });
 </script>
+
 <style lang="scss">
 @import "@/assets/style.scss";
-
-#login {
-  border: 0px;
-  padding: 0px;
-}
 
 #login-header {
   color: $color1;
@@ -311,9 +250,6 @@ export default Vue.extend({
   border-top-right-radius: 4px;
 }
 
-.login-select-button {
-  border-radius: 0;
-}
 .login-select-button:focus {
   outline: none;
   box-shadow: none;

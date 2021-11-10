@@ -5,7 +5,7 @@ b-row.justify-content-md-center.my-5.no-gutters
     b-form(@submit="createEvent")
       .mb4
         InputText(
-          title="Title: ",
+          title="Title:",
           placeholder="Insert title here",
           :text="form.eventTitle",
           required,
@@ -14,10 +14,9 @@ b-row.justify-content-md-center.my-5.no-gutters
 
       .mb-4
         InputTextarea(
-          title="Description: ",
+          title="Description:",
           placeholder="Insert description here",
           :text="form.description",
-          required,
           v-on:data="(e) => { form.description = e; }"
         )
 

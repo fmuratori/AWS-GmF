@@ -1,12 +1,16 @@
 <template lang="pug">
 b-form-group(:label="title")
-  b-form-input(
-    :required="required",
-    type="text",
-    :value="text"
-    :placeholder="placeholder",
-    @input="$emit('data', $event)"
-  )
+  b-input-group
+    b-input-group-prepend(v-if="icon")
+      b-input-group-text
+        b-icon(:icon="icon")
+    b-form-input(
+      :required="required",
+      :type="type",
+      :value="text",
+      :placeholder="placeholder",
+      @input="$emit('data', $event)"
+    )
 </template>
 
 <script lang="ts">
@@ -18,7 +22,16 @@ export default Vue.extend({
     title: String,
     placeholder: String,
     text: String,
-    required: Boolean
+    icon: String,
+    type: {
+      type: String,
+      validator: (val) => ["text", "email", "password"].includes(val),
+      default: "text",
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 </script>

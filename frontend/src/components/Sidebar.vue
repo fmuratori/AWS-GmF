@@ -6,7 +6,7 @@
         b-icon-person-circle(font-scale="3")
       b-col.ml-1(cols="auto")
         p {{ userFullname }}
-        p {{ userType }}
+        p {{ this.$store.state.session.userData.type }}
         p(@click="changePage('ManagerEditUserInfo')" class="clickable") edit
 
     hr.sidebar-hr.my-3

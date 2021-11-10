@@ -36,6 +36,9 @@ export default Vue.extend({
       selectedDate: null,
     };
   },
+  created() {
+    this.selectedDate = this.date
+  },
   methods: {
     onCancel() {
       this.selectedDate = null;
