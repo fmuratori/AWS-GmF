@@ -30,7 +30,7 @@ import * as VueGoogleMaps from "gmap-vue"
  
 Vue.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyAa30oqoeorf38Qsx5Nmv4g8GFhJFuP-wM",
+    key: process.env.VUE_APP_MAPS_API_KEY,
     libraries: "places", 
   },
   installComponents: true

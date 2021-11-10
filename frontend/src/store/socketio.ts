@@ -1,4 +1,4 @@
-import api from "../api";
+import chatApi from "../api/chat";
 import Vue from "vue";
 import { ChatMessage } from "../types";
 
@@ -60,7 +60,7 @@ export default {
     },
 
     getChat({ commit, getters, rootState }, donationId: string) {
-      api
+      chatApi
         .getDonationChat(
           donationId,
           rootState.session.userData._id,

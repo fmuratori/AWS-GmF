@@ -106,3 +106,35 @@ content-type: application/json
             }    
         }
 }
+
+### DONATION find with filters
+POST http://localhost:3000/api/donation/find
+accept: application/json 
+content-type: application/json
+
+{
+    "filter": {
+        "expirationDate": {
+            "$lte" : "2021-11-30"
+        },
+        "pickUpPeriod.period": {
+            "$in": ["morning"]
+        },
+        "pickUpPeriod.weekDay": {
+            "$in": ["lun"]
+        }
+    }
+}
+
+### DONATION set/unset volunteer
+POST http://localhost:3000/api/donation/update
+accept: application/json 
+content-type: application/json
+
+{
+    "filter": {
+        "volunteerId": {
+
+        }
+    }
+}

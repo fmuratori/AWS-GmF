@@ -61,7 +61,7 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import api from "../api";
+import donationApi from "../api/donation";
 
 import { Donation } from "../types";
 
@@ -87,10 +87,9 @@ export default Vue.extend({
       }
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      donationApi
         .userDonationsList(
           this.$store.state.session.userData._id,
-          this.$store.getters.getSessionHeader
         )
         .then((r: any) => {
           this.donations = r.data.data.list;

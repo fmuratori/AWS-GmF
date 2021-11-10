@@ -181,7 +181,8 @@ import { AxiosError } from "axios";
 
 // import bcrypt from "bcrypt"
 
-import api from "../api";
+import userApi from "../api/user";
+import chatApi from "../api/chat";
 import { LoginPayload, RegistrationPayload, Address } from "../types";
 
 export default Vue.extend({
@@ -194,7 +195,7 @@ export default Vue.extend({
       registrationPrivacyChecked: false,
       regRepeatPassword: "Password2021!",
       login: {
-        email: "admin@admin.com",
+        email: "a@a.a", //admin@admin.com
         password: "Password2021!",
       } as LoginPayload,
       registration: {
@@ -231,7 +232,7 @@ export default Vue.extend({
     },
     loginRequest(event) {
       event.preventDefault();
-      api
+      userApi
         .loginRequest(this.login)
         .then((r: any) => {
           if (r.status == 200) {
@@ -245,11 +246,8 @@ export default Vue.extend({
             // initialize a socket session (let the server know that a new logged user is active)
             this.$socket.emit("login", this.$store.state.session.userData._id);
 
-            api
-              .unreadMessages(
-                this.$store.state.session.userData._id,
-                this.$store.getters.getSessionHeader
-              )
+            chatApi
+              .unreadMessages(this.$store.state.session.userData._id)
               .then((r: any) => {
                 this.$store.dispatch(
                   "updateUnreadMessages",
@@ -266,7 +264,7 @@ export default Vue.extend({
     },
     registrationRequest(event) {
       event.preventDefault();
-      api
+      userApi
         .registrationRequest(this.registration)
         .then(() => {
           this.$bvToast.toast(

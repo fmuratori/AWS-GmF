@@ -4,16 +4,23 @@
 
     b-row
       b-col(sm=12 md=6)
-        GmapMap(
-        :center="{lat:10, lng:10}"
-        :zoom="7"
-        map-type-id="terrain"
-        style="width: 500px; height: 300px")
-          GmapMarker(
-          :position="{lat:10, lng:10}"
-          :clickable="true"
-          :draggable="true"
-          @click="")
+        div(v-for="(donation, idx) in donations" :index="idx")
+          p {{ donation }}
+          b-button(v-if="selectedDonations.indexOf(donation) == -1" @click="selectedDonations.push(donation)") seleziona
+          b-button(v-else @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)") rimuovi
+          hr
+        b-button(block variant="outline-success" @click="submit") Procedi
+
+        //- GmapMap(
+        //- :center="{lat:10, lng:10}"
+        //- :zoom="7"
+        //- map-type-id="terrain"
+        //- style="width: 500px; height: 300px")
+        //-   GmapMarker(
+        //-   :position="{lat:10, lng:10}"
+        //-   :clickable="true"
+        //-   :draggable="true"
+        //-   @click="")
 </template>
 
 <script lang="ts">
@@ -22,9 +29,10 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import api from "../api";
+import donationApi from "../api/donation";
 
 import { Donation } from "../types";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsRetrieve",
@@ -35,7 +43,16 @@ export default Vue.extend({
   data: () => {
     return {
       donations: new Array<Donation>(),
+      selectedDonations: new Array<Donation>(),
+      expirationDate: null, // moment().add(1, "days"),
+      pickUpDate: "",
+      pickUpPeriod: "",
     };
+  },
+  computed: {
+    pickUpDay() { 
+      return this.pickUpDate ? moment(this.pickUpDate).locale("it").format("dddd").substring(0, 3) : null;
+    }
   },
   created() {
     // check if user is logged in
@@ -46,29 +63,49 @@ export default Vue.extend({
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
       
-      // scaricare donazioni
-      
-      
-      // api
-      //   .userDonationsList(
-      //     this.$store.state.session.userData._id,
-      //     this.$store.getters.getSessionHeader
-      //   )
-      //   .then((r: any) => {
-      //     this.donations = r.data.data.list;
-      //     this.donationsBackup = r.data.data.list;
-      //     this.orderBy(this.orderByMode);
-      //     this.filterBy(this.filterByMode);
-      //   })
-      //   .catch((e) => console.log(e));
-
-      // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
-      // });
+      this.filterDonations()
     } else {
       this.$router.replace({ name: "Login" });
     }
   },
   methods: {
+    filterDonations() {
+      donationApi
+        .volunteerOpenDonations( this.expirationDate, this.pickUpDay, this.pickUpPeriod)
+        .then((r: any) => {
+          console.log(r)
+          this.donations = r.data.data.list;
+        })
+        .catch((e) => console.log(e));
+    },
+    submit() {
+      const promises:Promise<AxiosResponse>[] = []
+      this.selectedDonations.forEach((element: Donation) => {
+        const pickUpData = {
+          volunteerId: this.$store.state.session.userData._id,
+          period: this.pickUpPeriod,
+          date: this.pickUpDate,
+        }
+        element.status = "selected"
+        element.pickUp = pickUpData
+
+        promises.push(donationApi.volunteerUpdateDonations(element))
+
+      });
+      
+      Promise.all(promises).then((r: any) => {
+          console.log(r)
+          this.$bvToast.toast(
+            `Donazioni prenotate per l'incarico.`,
+            {
+              title: "Donazioni",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            }
+          );
+        }).catch((e:any) => console.log(e));
+    },
   },
 });
 </script>

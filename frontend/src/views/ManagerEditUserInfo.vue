@@ -135,7 +135,7 @@ import Vue from "vue";
 
 // import bcrypt from "bcrypt"
 
-import api from "../api";
+import userApi from "../api/user";
 import { Address, editUserPayload, changePasswordPayload } from "../types";
 
 export default Vue.extend({
@@ -194,7 +194,7 @@ export default Vue.extend({
     },
     editUser(event) {
       event.preventDefault();
-      api
+      userApi
         .editUser(this.editUserForm)
         .then((r: any) => {
           if (r.status == 200) {
@@ -222,7 +222,7 @@ export default Vue.extend({
     },
     changePassword(event) {
       event.preventDefault();
-      api
+      userApi
         .changePassword(this.changePasswordForm)
         .then((r) => {
           this.$router.replace({ name: "Home" });

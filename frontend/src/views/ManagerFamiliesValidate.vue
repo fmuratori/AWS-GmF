@@ -82,7 +82,7 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import api from "../api";
+import familyApi from "../api/family";
 
 import { Family } from "../types";
 
@@ -108,7 +108,7 @@ export default Vue.extend({
       this.userRole = this.$store.state.session.userData.type;
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      familyApi
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
@@ -139,7 +139,7 @@ export default Vue.extend({
       this.view = view;
       this.status = status;
 
-      api
+      familyApi
         .familyList(payload)
         .then((r: any) => {
           this.familyList = r.data.data.list;

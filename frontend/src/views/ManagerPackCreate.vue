@@ -108,9 +108,9 @@ export default Vue.extend({
     if (!this.$store.getters.isUserLogged)
       this.$router.replace({ name: "Login" });
 
-    if ("family" in this.$route.params) {
-      this.family = this.$route.params.family;
-    }
+    // if ("family" in this.$route.params) {
+    //   this.family = this.$route.params.family;
+    // }
   },
   methods: {
     createPack(event) {

@@ -73,7 +73,7 @@ import moment from "moment";
 
 import { Donation, Address, ChatMessage } from "../types";
 
-import api from "../api";
+import donationApi from "../api/donation";
 
 export default Vue.extend({
   name: "ManagerDonationsInspect",
@@ -204,8 +204,8 @@ export default Vue.extend({
       });
     },
     deleteDonation() {
-      api
-        .deleteDonation(this.donation._id, this.$store.getters.getSessionHeader)
+      donationApi
+        .deleteDonation(this.donation._id)
         .then(() => {
           this.$router.replace({ name: "ManagerDonationsList" });
           this.$bvToast.toast(`Donazione eliminata con successo.`, {
