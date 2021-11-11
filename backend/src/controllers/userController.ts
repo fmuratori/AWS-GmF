@@ -119,7 +119,6 @@ export default class UserController {
 		user.type = "volunteer"
 
 		const upgradedUser = await UserModel.findByIdAndUpdate(user._id, user, { new: true })
-		console.log(upgradedUser)
 
 		res.status(200).json({
 			status: "success",

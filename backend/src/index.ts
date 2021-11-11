@@ -84,9 +84,9 @@ mongoose
       new ExportManager().exportAll()
     }
 
-    //if POPULATE is true -> populate db with json in data folder
+    //if IMPORT is true -> populate db with json in data folder
     //otherwise db remains empty 
-    if (process.env.POPULATE === "true") {
+    if (process.env.IMPORT === "true") {
       console.log("importo")
       new ImportManager().importAll()
     }
