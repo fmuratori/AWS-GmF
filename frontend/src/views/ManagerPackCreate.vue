@@ -4,7 +4,7 @@ b-container
     h3 
       b CREATE A PACK
     b-row
-      b-col(sm=12, md=6)
+      b-col
         h4 About the family
         b-row
           b-col
@@ -58,6 +58,10 @@ b-container
 
       b-row
         b-col
+          FoodView
+
+      b-row
+        b-col
           b-button(
             block,
             variant="outline-danger",
@@ -72,6 +76,7 @@ import Vue from "vue";
 import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
+import FoodView from "../components/FoodView.vue"
 
 import { Family, Food, PackPayload } from "../types";
 
@@ -82,6 +87,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    FoodView
   },
   data: function () {
     return {
@@ -112,13 +118,12 @@ export default Vue.extend({
       this.form.familyId = this.family._id;
     }
 
-    this.form.deliveryVolunteerId = this.$store.state.session.userData._id;
   },
   methods: {
     createPack(event) {
       this.selectedFood.forEach((elem) => {
         for (var index = 0; index < elem.number; index++)
-          this.form.foodIdList.push(elem._id);
+          this.form.foodList.push(elem);
       });
 
       event.preventDefault();
