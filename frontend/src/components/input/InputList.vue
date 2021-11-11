@@ -40,7 +40,7 @@ export default Vue.extend({
       }
 
       //evito di emettere [""], su db conta come label vuota
-      this.$emit('data', this.labels.slice(0, this.labels.length-1))
+      this.$emit("data", this.labels.slice(0, this.labels.length - 1));
     },
     labelDeleteClicked(inputIdx: number) {
       this.labels.splice(inputIdx, 1);

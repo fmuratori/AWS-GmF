@@ -66,7 +66,7 @@ export default Vue.extend({
     InputText,
     InputDate,
     InputList,
-    FoodView
+    FoodView,
   },
   data: function () {
     return {
@@ -78,7 +78,7 @@ export default Vue.extend({
       } as FoodPayload,
       foodList: new Array<Food>(),
       tableFields: ["name", "number", "expirationDate", "labels"],
-      reloadIndex: 0
+      reloadIndex: 0,
     };
   },
   created() {
@@ -107,9 +107,9 @@ export default Vue.extend({
             appendToast: false,
           });
           this.updateFoodList();
-          
+
           //aggiorno l'index per ricaricare il component ListFood
-          this.reloadIndex += 1
+          this.reloadIndex += 1;
         })
         .catch((e) => {
           this.$bvToast.toast(
