@@ -117,10 +117,10 @@ b-row.justify-content-center(no-gutters)
 <script lang="ts">
 import Vue from "vue";
 import { AxiosError } from "axios";
-import InputText from "../components/InputText.vue";
-import InputTextarea from "../components/InputTextarea.vue";
-import InputAddress from "../components/InputAddress.vue";
-import InputPasswordSelect from "../components/InputPasswordSelect.vue";
+import InputText from "../components/input/InputText.vue";
+import InputTextarea from "../components/input/InputTextarea.vue";
+import InputAddress from "../components/input/InputAddress.vue";
+import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 // import bcrypt from "bcrypt"
 
@@ -143,7 +143,7 @@ export default Vue.extend({
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
       login: {
-        email: "user@gmail.com",
+        email: "pluto@gmail.com",
         password: "Password2021!",
       } as LoginPayload,
       registration: {

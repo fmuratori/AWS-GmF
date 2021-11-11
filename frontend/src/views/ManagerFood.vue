@@ -10,84 +10,49 @@ b-container
             b-card-text
               b-card-header Add food
               .px-4.pt-4
-                b-form-group#input-group-1(label="Name:", label-for="input-1")
-                  b-form-input#input-1(
-                    required,
-                    type="text",
-                    placeholder="Insert name here",
-                    v-model="form.name"
-                  )
-
-                b-form-group#input-group-2(label="Units:", label-for="input-2")
-                  b-form-input#input-2(
-                    required,
-                    type="number",
-                    v-model="form.number"
-                  )
-
-                b-form-group#input-group-3(
-                  label="Expiration date:",
-                  label-for="input-3",
-                  required
+                InputText(
+                  title="Name:",
+                  placeholder="Insert food name here",
+                  required,
+                  v-on:data="(e) => { form.name = e; }"
                 )
-                  b-input-group
-                    b-form-datepicker#input-3.my-no-right-border(
-                      required,
-                      v-model="form.expirationDate",
-                      reset-button,
-                      close-button
-                    )
-                    b-input-group-append
-                      b-button.my-no-left-border(
-                        variant="danger",
-                        @click="form.expirationDate = null",
-                        :disabled="form.expirationDate == null"
-                      ) 
-                        span Cancel
-                        b-icon(icon="x", aria-hidden="true")
+                
+                InputText(
+                  title="Units: ",
+                  placeholder="Insert food units here",
+                  type="number",
+                  required,
+                  v-on:data="(e) => { form.number = e; }"
+                )
 
-                b-form-group#input-group-4(
-                  label="Labels:",
-                  label-for="input-4"
-                ) 
-                  b-input-group.mb-1(
-                    v-for="(labeò, idx) in form.labels",
-                    :key="idx"
-                  )
-                    b-form-input#input-4.my-no-right-border(
-                      type="text",
-                      placeholder="Insert label here",
-                      @input="labelValueChange(idx)",
-                      v-model="form.labels[idx]"
-                    )
-                    b-input-group-append
-                      b-button.my-no-left-border(
-                        variant="danger",
-                        @click="labelDeleteClicked(idx)",
-                        :disabled="form.labels[idx] == ''"
-                      ) 
-                        span Cancel
-                        b-icon(icon="x", aria-hidden="true")
+                InputDate(
+                  title="Expiration date:",
+                  placeholder="Select the expiration date",
+                  required,
+                  v-on:data="(e) => { form.expirationDate = e; }"
+                )
+
+                InputList(
+                  title="Labels:",
+                  placeholder="Insert label here"
+                  v-on:data="(e) => { form.labels = e; }"
+                )
 
               b-button.b-card-footer-button(block, type="submit", variant="success") Add
 
       b-col(sm=12, md=8)
-        b-table(striped hover :fields="tableFields" :items="foodList")
-          template(#cell(name)="data") {{data.value}}
-
-          template(#cell(number)="data") {{data.value}}
-
-          template(#cell(expirationDate)="data") {{formatDate(data.value)}}
-
-          template(#cell(labels)="data")
-            b-badge(v-for="label in data.value", variant="success") {{label}}
+        FoodView(:key="reloadIndex")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import moment from "moment";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
+import FoodView from "../components/FoodView.vue";
+import InputText from "../components/input/InputText.vue";
+import InputDate from "../components/input/InputDate.vue";
+import InputList from "../components/input/InputList.vue";
 
 import { Food, FoodPayload } from "../types";
 
@@ -98,6 +63,10 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    InputText,
+    InputDate,
+    InputList,
+    FoodView
   },
   data: function () {
     return {
@@ -105,10 +74,11 @@ export default Vue.extend({
         name: "",
         number: 0,
         expirationDate: null,
-        labels: [""],
+        labels: new Array<string>(),
       } as FoodPayload,
       foodList: new Array<Food>(),
       tableFields: ["name", "number", "expirationDate", "labels"],
+      reloadIndex: 0
     };
   },
   created() {
@@ -137,6 +107,9 @@ export default Vue.extend({
             appendToast: false,
           });
           this.updateFoodList();
+          
+          //aggiorno l'index per ricaricare il component ListFood
+          this.reloadIndex += 1
         })
         .catch((e) => {
           this.$bvToast.toast(
@@ -154,16 +127,6 @@ export default Vue.extend({
       api.foodList(null).then((r: any) => {
         this.foodList = r.data.data.list;
       });
-    },
-    labelValueChange(inputIdx: number) {
-      if (inputIdx == this.form.labels.length - 1) {
-        this.form.labels.push("");
-      } else if (this.form.labels[inputIdx] == "") {
-        this.foodDeleteClicked(inputIdx);
-      }
-    },
-    labelDeleteClicked(inputIdx: number) {
-      this.form.labels.splice(inputIdx, 1);
     },
     formatDate(date: Date) {
       return moment(date).locale("en").format("LL");

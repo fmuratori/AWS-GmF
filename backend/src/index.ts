@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { mongo } from 'mongoose'
 import http from 'http'
 import dotenv from 'dotenv'
 import app from './app'
@@ -11,7 +11,8 @@ let activeSockets = new Map();
 
 import { Server, Socket } from "socket.io";
 import { addMessageToChat, getDonationUsers, setMessageAsVisualized } from './controllers/donationController'
-import { textChangeRangeIsUnchanged } from 'typescript'
+import ExportManager from './utils/exportManager'
+import ImportManager from './utils/importManager'
 
 const io = new Server(httpServer, {});
 io.on("connection", (socket: Socket) => {
@@ -31,7 +32,7 @@ io.on("connection", (socket: Socket) => {
   })
 
   socket.on("message_to_server", (obj: any) => {
-    
+
     console.log("message_to_server: " + obj.message)
 
     addMessageToChat(obj.donationId, obj.userId, obj.fullname, obj.message)
@@ -66,7 +67,7 @@ io.on("connection", (socket: Socket) => {
     })
   });
 
-  socket.on("visualize_message", (jsonMessage:any) => {
+  socket.on("visualize_message", (jsonMessage: any) => {
     const message = JSON.parse(jsonMessage)
     console.log(message)
     setMessageAsVisualized(message.donationId, message.message.index);
@@ -79,4 +80,20 @@ dotenv.config({ path: __dirname + '/../properties.env' });
 
 mongoose
   .connect(process.env.DB || "missing db path")
-  .then(() => console.log('DB connection successfull'))
+  .then(() => {
+    console.log('DB connection successfull')
+
+    //if EXPORT is true -> save all collections in data folder
+    if (process.env.EXPORT === "true") {
+      console.log("esporto")
+      new ExportManager().exportAll()
+    }
+
+    //if POPULATE is true -> populate db with json in data folder
+    //otherwise db remains empty 
+    if (process.env.POPULATE === "true") {
+      console.log("importo")
+      new ImportManager().importAll()
+    }
+
+  }).catch(e => console.log(e))

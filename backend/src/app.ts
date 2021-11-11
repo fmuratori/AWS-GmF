@@ -16,7 +16,7 @@ app.use(express.json());
 
 //passaggio di validazione del token
 app.use((req: Request, res: Response, next: NextFunction) => {
-  if((process.env.USE_JWT || "true") === "false") {
+  if(process.env.USE_JWT === "false") {
     next()
     return
   }

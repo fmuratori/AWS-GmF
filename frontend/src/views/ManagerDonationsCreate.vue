@@ -1,69 +1,94 @@
 <template lang="pug">
-  b-row(class="justify-content-center my-5" no-gutters)
-    b-col(md=6 sm=8 cols=10)
-      p CREA UNA DONAZIONE
-      b-form(@submit="submit")
-        b-card(bg-variant="light" class="mb-2")
-          div(class="mb-4")
-            b-form-group(id="input-group-1" label="Alimenti:" label-for="input-1") 
-              b-input-group(v-for="(value, idx) in form.foods" :key="idx" class="mb-1")
-                b-form-input(id="input-1" type="text" placeholder="pacco di pasta da 250gg" class="my-no-right-border" 
-                @input="foodInputValueChange(idx)" v-model="form.foods[idx]")
-                b-input-group-append
-                  b-button(variant="danger" class="my-no-left-border" @click="foodDeleteClicked(idx)"
-                  :disabled="form.foods[idx] == ''") 
-                    span Cancella
-                    b-icon(icon="x" aria-hidden="true")
+b-row.justify-content-center.my-5(no-gutters)
+  b-col(md=6, sm=8, cols=10)
+    p CREA UNA DONAZIONE
+    b-form(@submit="submit")
+      b-card.mb-2(bg-variant="light")
+        .mb-4
+          b-form-group#input-group-1(label="Alimenti:", label-for="input-1") 
+            b-input-group.mb-1(v-for="(value, idx) in form.foods", :key="idx")
+              b-form-input#input-1.my-no-right-border(
+                type="text",
+                placeholder="pacco di pasta da 250gg",
+                @input="foodInputValueChange(idx)",
+                v-model="form.foods[idx]"
+              )
+              b-input-group-append
+                b-button.my-no-left-border(
+                  variant="danger",
+                  @click="foodDeleteClicked(idx)",
+                  :disabled="form.foods[idx] == ''"
+                ) 
+                  span Cancella
+                  b-icon(icon="x", aria-hidden="true")
 
-          div(class="mb-4")
-            b-form-group(id="input-group-2" label="Data scadenza donazione:" label-for="input-2")
-              b-input-group
-                b-form-datepicker(id="input-2" required v-model="form.expirationDate" reset-button close-button 
-                class="my-no-right-border")
-                b-input-group-append
-                  b-button(variant="danger" class="my-no-left-border" @click="form.expirationDate = null"
-                  :disabled="form.expirationDate == null") 
-                    span Cancella
-                    b-icon(icon="x" aria-hidden="true")
-          
-          div(class="mb-4")
-            b-form-group(id="input-group-6" label="Informazioni aggiuntive:" label-for="input-6")
-              b-form-textarea(id="input-6" rows="3" max-rows="6" v-model="form.additionalInformation")
+        .mb-4
+          b-form-group#input-group-2(
+            label="Data scadenza donazione:",
+            label-for="input-2"
+          )
+            b-input-group
+              b-form-datepicker#input-2.my-no-right-border(
+                required,
+                v-model="form.expirationDate",
+                reset-button,
+                close-button
+              )
+              b-input-group-append
+                b-button.my-no-left-border(
+                  variant="danger",
+                  @click="form.expirationDate = null",
+                  :disabled="form.expirationDate == null"
+                ) 
+                  span Cancella
+                  b-icon(icon="x", aria-hidden="true")
 
-          div(class="mb-4")
-            p(class="font-weight-bold text-center") Luogo ritiro
-            b-form-group(id="input-group-3" label="Città:" label-for="input-3")
-              b-form-input(id="input-3" type="text" v-model="form.address.city" required)
-            b-row
-              b-col(cols=8)
-                b-form-group(id="input-group-4" label="Indirizzo:" label-for="input-4")
-                  b-form-input(id="input-4" type="text" v-model="form.address.street" required)
-              b-col(cols=4)
-                b-form-group(id="input-group-5" label="Numero civico:" label-for="input-5")
-                  b-form-input(id="input-5" type="text" v-model="form.address.civicNumber" required)
-            div(class="text-center")
-              b-button(variant="outline-secondary") Cerca su maps
-          
+        .mb-4
+          b-form-group#input-group-6(
+            label="Informazioni aggiuntive:",
+            label-for="input-6"
+          )
+            b-form-textarea#input-6(
+              rows="3",
+              max-rows="6",
+              v-model="form.additionalInformation"
+            )
+        div
+          p.font-weight-bold.text-center Periodo ritiro
+          b-row.mb-1(
+            v-for="(weekDayName, weekDay, idx) in weekDays",
+            :index="idx"
+          )
+            b-col(cols="2")
+              label {{ weekDayName }}
+            b-col(cols="10")
+              b-button-group.d-flex
+                b-button(
+                  @click="weekDayButtonClick(weekDay, 'morning')",
+                  :variant="computeButtonVariant(weekDay, 'morning')"
+                ) Mattino
+                b-button(
+                  @click="weekDayButtonClick(weekDay, 'afternoon')",
+                  :variant="computeButtonVariant(weekDay, 'afternoon')"
+                ) Pomeriggio
+                b-button(
+                  @click="weekDayButtonClick(weekDay, 'evening')",
+                  :variant="computeButtonVariant(weekDay, 'evening')"
+                ) Sera
 
-          div()
-            p(class="font-weight-bold text-center") Periodo ritiro
-            b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :key="idx" class="mb-1")
-              b-col(cols="2")
-                label {{ weekDayName }}
-              b-col(cols="10")
-                b-button-group(class="d-flex")
-                  b-button(@click="weekDayButtonClick(weekDay, 'morning')" :variant="computeButtonVariant(weekDay, 'morning')") Mattino
-                  b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Pomeriggio
-                  b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Sera
-      
-        b-button(block variant="outline-success" type="submit") Procedi
-        b-button(block variant="outline-danger" @click="$router.replace({name: 'ManagerHome'})" type="reset") Annulla
+      b-button(block, variant="outline-success", type="submit") Procedi
+      b-button(
+        block,
+        variant="outline-danger",
+        @click="$router.replace({ name: 'ManagerHome' })",
+        type="reset"
+      ) Annulla
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 
 import { Donation, Address } from "../types";
 
