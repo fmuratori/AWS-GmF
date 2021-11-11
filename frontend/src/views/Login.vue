@@ -109,6 +109,9 @@ b-row.justify-content-center(no-gutters)
           span(v-if="isLoginSelected") ACCEDI
           span(v-else) REGISTRATI
           b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
+
+      button(@click="login.email = 'user@user.com'") Utente
+      button(@click="login.email = 'volunteer@volunteer.com'") Volontario
 </template>
 
 <script lang="ts">
@@ -167,41 +170,42 @@ export default Vue.extend({
   methods: {
     submitForm(event) {
       event.preventDefault();
-      userApi
-        .loginRequest(this.login)
-        .then((r: any) => {
-          if (r.status == 200) {
-            this.$store.dispatch("login", {
-              token: r.data.data.token,
-              userData: r.data.data.user,
-            });
-            this.showLoginErrorMessage = false;
-            this.$router.replace({ name: "ManagerHome" });
 
-            // initialize a socket session (let the server know that a new logged user is active)
-            this.$socket.emit("login", this.$store.state.session.userData._id);
+      if (this.isLoginSelected) {
+        userApi
+          .loginRequest(this.login)
+          .then((r: any) => {
+            if (r.status == 200) {
+              this.$store.dispatch("login", {
+                token: r.data.data.token,
+                userData: r.data.data.user,
+              });
+              this.showLoginErrorMessage = false;
+              this.$router.replace({ name: "Home" });
 
-            chatApi
-              .unreadMessages(this.$store.state.session.userData._id)
-              .then((r: any) => {
-                this.$store.dispatch(
-                  "updateUnreadMessages",
-                  r.data.data.counts
-                );
-              })
-              .catch((e) => console.log(e));
-          }
-        })
-        .catch((e: AxiosError): void => {
-          console.log(e);
-          this.showLoginErrorMessage = true;
-        });
-    },
-    registrationRequest(event) {
-      event.preventDefault();
-      userApi
+              // initialize a socket session (let the server know that a new logged user is active)
+              this.$socket.emit("login", this.$store.state.session.userData._id);
+
+              chatApi
+                .unreadMessages(this.$store.state.session.userData._id)
+                .then((r: any) => {
+                  this.$store.dispatch(
+                    "updateUnreadMessages",
+                    r.data.data.counts
+                  );
+                })
+                .catch((e) => console.log(e));
+            }
+          })
+          .catch((e: AxiosError): void => {
+            console.log(e);
+            this.showLoginErrorMessage = true;
+          });
+      } else {
+        userApi
         .registrationRequest(this.registration)
         .then(() => {
+          this.isLoginSelected = true;
           this.$bvToast.toast(
             `Operazione avvenuta con successo. Effettua il login per accedere.`,
             {
@@ -224,6 +228,8 @@ export default Vue.extend({
             }
           );
         });
+      }
+      
     },
     temp(v: string) {
       if (v == "user") this.login.email = "user@user.com";
