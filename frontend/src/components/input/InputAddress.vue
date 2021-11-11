@@ -47,12 +47,13 @@ export default Vue.extend({
   },
   methods: {
     find() {
-      mapsApi.getLocationCoordinates(
-          this.city + " " + 
-          this.civic + " " +
-          this.street).then(r => console.log(r))
-    }
-  }
+      mapsApi
+        .getLocationCoordinates(
+          this.city + " " + this.civic + " " + this.street
+        )
+        .then((r) => console.log(r));
+    },
+  },
 });
 </script>
 

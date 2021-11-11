@@ -205,7 +205,6 @@ export default Vue.extend({
             this.showLoginErrorMessage = true;
           });
       } else {
-        
         // userApi
         // .registrationRequest(this.registration)
         // .then(() => {
