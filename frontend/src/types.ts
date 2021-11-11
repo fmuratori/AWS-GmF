@@ -142,7 +142,7 @@ export interface Event {
 }
 
 export interface PackPayload {
-  foodList: [Food];
+  foodList: [{ foodId: string, number: number }];
   familyId: string;
 }
 

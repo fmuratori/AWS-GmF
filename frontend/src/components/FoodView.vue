@@ -1,43 +1,51 @@
 <template lang="pug">
-div Sort by:
-  b-button.ml-2(
-    pill,
-    variant="secondary",
-    size="sm",
-    @click="updateView(null, 'name', null)",
-    :class="{ 'my-button-selected': true }"
-  ) Name
-  b-button.ml-2(
-    pill,
-    variant="secondary",
-    size="sm",
-    @click="updateView(null, 'expirationDate', null)",
-    :class="{ 'my-button-selected': false }"
-  ) Expiration date
-  b-button.ml-2(
-    pill,
-    variant="secondary",
-    size="sm",
-    @click="updateView(null, 'number', null)",
-    :class="{ 'my-button-selected': false }"
-  ) Number
+div
+  b-row
+    b-col
+      b-form-group
+        b-input-group
+          b-form-input(
+            v-model="filter",
+            type="search",
+            placeholder="Type to search"
+          )
+          b-input-group-append
+            b-button(:disabled="!filter", @click="filter = ''") Clear
 
-  b-table(striped, hover, :fields="tableFields", :items="foodList")
-    template(#cell(name)="data") {{ data.value }}
-    template(#cell(expirationDate)="data") {{ formatDate(data.value) }}
+    b-col
+      b-pagination(
+        v-model="currentPage",
+        :total-rows="totalRows",
+        :per-page="perPage"
+      )
+
+  b-table(
+    striped,
+    hover,
+    :fields="tableFields",
+    :items="foodList",
+    :current-page="currentPage",
+    :per-page="perPage",
+    :filter="filter",
+    :filter-included-fields="filterOn",
+    :sort-by.sync="sortBy",
+    :sort-desc.sync="sortDesc",
+    :sort-direction="sortDirection",
+    @filtered="onFiltered"
+  )
     template(#cell(labels)="data")
       b-badge(v-for="label in data.value", variant="success") {{ label }}
-    template(#cell(number)="data") {{ data.value }}
+
     template(#cell(selected)="{ item }")
-      div
+      div(:key="index", ref="reload")
         b-button(
-          @click="removeFood(item._id)",
-          :disabled="isNoneSelected(item._id)"
+          @click="removeClick(item)",
+          :disabled="!item.selected || item.selected == 0"
         ) -
-        b {{ getSelectedQuantity(item._id) }}
+        b {{ item.selected ? item.selected : 0 }}
         b-button(
-          @click="addFood(item._id, item)",
-          :disabled="isAllSelected(item._id, item.number)"
+          @click="addClick(item)",
+          :disabled="item.selected == item.number"
         ) +
 </template>
 
@@ -50,74 +58,81 @@ import api from "../api";
 
 export default Vue.extend({
   name: "FoodView",
+  props: {
+    selectable: Boolean,
+  },
   data: () => {
     return {
       foodList: new Array<Food>(),
-      selectedFoodMap: new Map<string, number>(),
-      tableFields: ["name", "number", "selected", "expirationDate", "labels"],
-
-      actualPage: 0,
-      actualFilter: "",
-      actualSortBy: "",
+      tableFields: [
+        {
+          key: "name",
+          label: "Name",
+          sortable: true,
+        },
+        {
+          key: "number",
+          label: "Number",
+          sortable: true,
+        },
+        {
+          key: "selected",
+          label: "Selected",
+        },
+        {
+          key: "expirationDate",
+          label: "Expiration Date",
+          sortable: true,
+          formatter: (value) => {
+            return moment(value).locale("en").format("LL");
+          },
+        },
+        {
+          key: "labels",
+          label: "Labels",
+        },
+      ],
+      totalRows: 0,
+      currentPage: 1,
+      perPage: 10,
+      filter: null,
+      filterOn: ["name", "labels"],
+      sortBy: "",
+      sortDesc: false,
+      sortDirection: "asc",
+      index: 0,
     };
   },
   created() {
-    this.updateView();
+    if (!this.selectable) {
+      this.tableFields.forEach((elem, index) => {
+        if (elem.key == "selected") this.tableFields.splice(index, 1);
+      });
+    }
+
+    api.foodList({ filter: { number: { $gt: 0 } } }).then((r: any) => {
+      this.foodList = r.data.data.list;
+      this.totalRows = r.data.data.list.length;
+    });
   },
   methods: {
-    updateView(
-      filter,
-      sortBy: "name" | "expirationDate" | "number",
-      page: number
-    ) {
-      var payload = {};
-
-      // switch (filter) {
-      // }
-
-      if (sortBy) {
-        payload["sortBy"] = {}
-        payload["sortBy"][sortBy] = 1;
-      }
-
-      if (page) payload["page"] = page;
-
-      payload["pageSize"] = 10;
-
-      api.foodList( payload ).then((r: any) => {
-        this.foodList = r.data.data.list;
-      });
-    },
-    getSelectedQuantity(id: string) {
-      var count = this.selectedFoodMap[id];
-
-      if (count) return count;
-      else return 0;
-    },
-    addFood(id: string) {
-      var count = this.selectedFoodMap[id];
-
-      if (count) this.selectedFoodMap[id] = count + 1;
-      else this.selectedFoodMap[id] = 1;
-
-      this.updateView();
-    },
-    removeFood(id: string) {
-      var count = this.selectedFoodMap[id];
-
-      if (count) this.selectedFoodMap[id] = count - 1;
-      else this.selectedFoodMap.delete(id);
-
-      this.updateView();
-    },
-    isNoneSelected(id: string) {
-      return !this.selectedFoodMap[id];
-    },
-    isAllSelected(id: string, max: number) {
-      return this.selectedFoodMap[id] == max;
-    },
     formatDate(date: Date) {
       return moment(date).locale("en").format("LL");
+    },
+    onFiltered(filteredItems) {
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+    addClick(item: any) {
+      if (!item.selected) item.selected = 1;
+      else if (item.selected < item.number) item.selected += 1;
+      this.index += 1;
+      this.$emit("data", this.foodList);
+    },
+    removeClick(item: any) {
+      if (item.selected > 0) item.selected -= 1;
+      this.index += 1;
+      this.$emit("data", this.foodList);
     },
   },
 });

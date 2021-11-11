@@ -24,7 +24,7 @@ export default class PackController {
 		//dalla collezione foods e di quanto decrementarne il numero di unità
 		const foodMap = new Map()
 		req.body.foodList.forEach((elem: any) => {
-			foodMap.set(elem._id, elem.number)
+			foodMap.set(elem.foodId, elem.number)
 		});
 
 		const idList = Array.from(foodMap.keys())

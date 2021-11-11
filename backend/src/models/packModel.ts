@@ -1,35 +1,31 @@
 import mongoose, { PopulatedDoc } from "mongoose";
 import Family from "./interfaces/family";
+import Food from "./interfaces/food";
 import Pack from "./interfaces/pack";
 import User from "./interfaces/user";
 
 export interface PackDocument extends Document, Pack {
     User?: PopulatedDoc<User & Document>
+    Food?: PopulatedDoc<Food & Document>
     Family?: PopulatedDoc<Family & Document>
 }
 
 const packSchema = new mongoose.Schema({
     foodList: {
         type: [{
-            name: {
+            foodId: {
                 type: String,
                 required: true
             },
             number: {
                 type: Number,
                 required: true
-            },
-            expirationDate: {
-                type: Date,
-                required: true
-            },
-            labels: [String]
+            }
         }],
         required: [true, "missing required field foods"]
     },
     deliveryVolunteerId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "missing required field deliveryVolunteerId"],
         ref: "User"
     },
     status: {
