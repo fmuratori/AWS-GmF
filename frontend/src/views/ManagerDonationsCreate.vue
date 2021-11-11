@@ -47,7 +47,7 @@
 
           div()
             p(class="font-weight-bold text-center") Periodo ritiro
-            b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1")
+            b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :key="idx" class="mb-1")
               b-col(cols="2")
                 label {{ weekDayName }}
               b-col(cols="10")
@@ -67,7 +67,7 @@ import Sidebar from "../components/Sidebar.vue";
 
 import { Donation, Address } from "../types";
 
-import api from "../api";
+import donationApi from "../api/donation";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -162,8 +162,8 @@ export default Vue.extend({
       event.preventDefault();
       if (this.formChecks()) {
         this.form.foods.pop();
-        api
-          .editDonation(this.form, this.$store.getters.getSessionHeader)
+        donationApi
+          .editDonation(this.form)
           .then(() => {
             this.$router.replace({ name: "ManagerDonationsList" });
             this.$bvToast.toast(
@@ -195,8 +195,8 @@ export default Vue.extend({
         // removes empty string element
         this.form.foods.pop();
 
-        api
-          .addDonation(this.form, this.$store.getters.getSessionHeader)
+        donationApi
+          .addDonation(this.form)
           .then(() => {
             this.$router.replace({ name: "ManagerDonationsList" });
             this.$bvToast.toast(`Donazione effettuata con successo.`, {

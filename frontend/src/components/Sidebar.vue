@@ -9,64 +9,166 @@
         p {{ this.$store.state.session.userData.type }}
         p(@click="changePage('ManagerEditUserInfo')" class="clickable") edit
 
-    hr.sidebar-hr.my-3
+    hr(class="sidebar-hr my-3")
 
-  div#sidebar-actions 
+  div(id="sidebar-actions") 
   
-    div
-      SidebarCategory(text='Donate food', icon='drumstick-bite')
-      SidebarItem(text= 'Create a donation', route='ManagerDonationsCreate')
-      SidebarItem(text= 'Your donations', route='ManagerDonationsList')
+    div(v-if="$store.state.session.userData.type == 'user'")
+      b-row(class="pb-2" no-gutters align-v="center")
+        b-col(class="mr-1" cols="auto")
+          font-awesome-icon(icon="utensils" size="lg")
+        b-col(class="ml-1")
+          h6 Dona cibo
 
-    hr.sidebar-hr.my-3
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsCreate')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsCreate') }")
+        b-col
+          label(class="py-1") Crea una donazione
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
 
-    div
-      SidebarCategory(text='Families', icon='users')
-      SidebarItem(text= 'Report a family', route='ManagerFamiliesSubscribe')
-      SidebarItem(text= 'Your reports', route='ManagerFamilies')
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsUserList')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsUserList') }")
+        b-col
+          label(class="py-1") Tue donazioni
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+
+      hr(class="sidebar-hr my-3")
+
+    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+      b-row(class="pb-2" no-gutters align-v="center")
+        b-col(class="mr-1" cols="auto")
+          b-icon(icon="map" size="lg")
+        b-col(class="ml-1")
+          h6 Donazioni
+
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsRetrieve')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsRetrieve') }")
+        b-col
+          label(class="py-1") Crea incarico
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsVolunteerList')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsVolunteerList') }")
+        b-col
+          label(class="py-1") Tuoi incarichi
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+      
+      hr(class="sidebar-hr my-3")
+
+
+    div(v-if="['user', 'volunteer'].includes($store.state.session.userData.type)")
+      b-row(class="pb-2" no-gutters align-v="center")
+        b-col(class="mr-1" cols="auto")
+          font-awesome-icon(icon="users" size="lg")
+        b-col(class="ml-1")
+          h6 Famiglie bisognose
+
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFamiliesSubscribe')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamiliesSubscribe') }")
+        b-col
+          label(class="py-1") Segnala famiglia
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFamiliesList')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamiliesList') }")
+        b-col
+          label(class="py-1") Tue segnalazioni
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+
+      hr(class="sidebar-hr my-3")
+
+    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+      b-row(class="pb-2" no-gutters align-v="center")
+        b-col(class="mr-1" cols="auto")
+          b-icon(icon="calendar-event" size="lg")
+        b-col(class="ml-1")
+          h6 Eventi e raduni
+
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerEventCreate')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEventCreate') }")
+        b-col
+          label(class="py-1") Crea un evento
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerEvents')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEvents') }")
+        b-col
+          label(class="py-1") Gestisci eventi
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
+      hr(class="sidebar-hr my-3")
+
+    div(v-if="this.$store.state.session.userData.type != 'user'")
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFood')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFood') }")
+        b-col
+          label(class="py-1") Food manager
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
 
     hr(class="sidebar-hr my-3")
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
-      SidebarCategory(text='Events', icon='calendar')
-      SidebarItem(text= 'Create an event', route='ManagerEventCreate')
-      SidebarItem(text= 'Your events', route='ManagerEvents')
-
-    hr.sidebar-hr.my-3
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFood')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFood') }")
+        b-col
+          label(class="py-1") Food manager
+        b-col(cols="auto")
+          b-icon(icon="chevron-right")
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
-      SidebarItem(text= 'Food manager', route='ManagerFood')
-      SidebarItem(text= 'Pack manager', route='ManagerPacks')
+      //- SidebarItem(text= 'Food manager', route='ManagerFood')
+      //- SidebarItem(text= 'Pack manager', route='ManagerPacks')
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import SidebarItem from "./SidebarItem.vue";
-import SidebarCategory from "./SidebarCategory.vue"
 
 export default Vue.extend({
   name: "Sidebar",
-  components: {
-    SidebarItem,
-    SidebarCategory
-  },
+  components: {},
   data: function () {
     return {};
   },
   computed: {
+    currentRouteName() {
+      return this.$route.name;
+    },
     userFullname() {
       const fullname =
         this.$store.state.session.userData.name +
         " " +
         this.$store.state.session.userData.surname;
-      if (fullname.length > 10) {
-        return fullname.substring(0, 10) + "...";
+      if (fullname.length > 16) {
+        return fullname.substring(0, 16) + "...";
       }
       return fullname;
-    }
+    },
+    userType() {
+      switch (this.$store.state.session.userData.type) {
+        case "user":
+          return "Utente";
+        case "volunteer":
+          return "Volontario";
+        case "trusted":
+          return "Collaboratore";
+        default:
+          return "UNKNOWN";
+      }
+    },
   },
   methods: {
+    isRouteSelected(routeName: string) {
+      return this.currentRouteName == routeName;
+    },
     changePage(pageName: string) {
       this.$router.replace({ name: pageName });
 
@@ -121,4 +223,15 @@ export default Vue.extend({
   background-color: $greyscale5;
 }
 
+.sidebar-item {
+  border-radius: 0.25em;
+}
+
+.sidebar-item:hover {
+  background-color: $greyscale1;
+}
+
+.sidebar-item-selected {
+  background-color: $color1;
+}
 </style>

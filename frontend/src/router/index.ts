@@ -34,11 +34,19 @@ const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/manager/donations/list",
-    name: "ManagerDonationsList",
+    path: "/manager/donations/user-list",
+    name: "ManagerDonationsUserList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerDonationsList" */ "../views/ManagerDonationsList.vue"
+        /* webpackChunkName: "ManagerDonationsUserList" */ "../views/ManagerDonationsUserList.vue"
+      ),
+  },
+  {
+    path: "/manager/donations/volunteer-list",
+    name: "ManagerDonationsVolunteerList",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerDonationsVolunteerList" */ "../views/ManagerDonationsVolunteerList.vue"
       ),
   },
   {
@@ -47,6 +55,14 @@ const routes: Array<RouteConfig> = [
     component: () =>
       import(
         /* webpackChunkName: "ManagerDonationsInspect" */ "../views/ManagerDonationsInspect.vue"
+      ),
+  },
+  {
+    path: "/manager/donations/retrieve",
+    name: "ManagerDonationsRetrieve",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerDonationsRetrieve" */ "../views/ManagerDonationsRetrieve.vue"
       ),
   },
   {
@@ -59,10 +75,10 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/manager/families/list",
-    name: "ManagerFamilies",
+    name: "ManagerFamiliesList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerFamilies.vue"
+        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerFamiliesList.vue"
       ),
   },
   {
@@ -78,7 +94,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerEvents",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerEvents.vue"
+        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerEvents.vue"
       ),
   },
   {
@@ -102,7 +118,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerPacks",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerPacks.vue"
+        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerPacks.vue"
       ),
   },
 ];

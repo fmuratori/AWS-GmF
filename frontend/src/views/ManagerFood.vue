@@ -108,7 +108,7 @@ export default Vue.extend({
         labels: [""],
       } as FoodPayload,
       foodList: new Array<Food>(),
-      tableFields: ["name", "number", "expirationDate", "labels"]
+      tableFields: ["name", "number", "expirationDate", "labels"],
     };
   },
   created() {

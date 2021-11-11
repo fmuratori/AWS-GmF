@@ -41,7 +41,7 @@ import Sidebar from "../components/Sidebar.vue";
 
 import { Address, FamilyPayload } from "../types";
 
-import api from "../api";
+import familyApi from "../api/family";
 
 export default Vue.extend({
   name: "ManagerFamiliesSubscribe",
@@ -84,8 +84,8 @@ export default Vue.extend({
   methods: {
     addFamily(event) {
       event.preventDefault();
-      api
-        .addFamily(this.form, this.$store.getters.getSessionHeader)
+      familyApi
+        .addFamily(this.form)
         .then((r) => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilies" });

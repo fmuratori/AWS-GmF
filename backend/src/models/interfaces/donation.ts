@@ -9,6 +9,12 @@ interface ChatNode {
     visualized: Boolean
 }
 
+interface PickUp {
+    volunteerId: String,
+    date: Date, 
+    period: String
+}
+
 export default interface Donation {
     userId: String,
     chat: [ChatNode],
@@ -22,5 +28,5 @@ export default interface Donation {
         period: String
     }],
     status: String,
-    volunteerId: String
+    pickUp: PickUp
 }

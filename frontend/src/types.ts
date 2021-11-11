@@ -84,6 +84,11 @@ export interface Donation {
   chat: ChatMessage[];
   creationDate: string;
   status: string;
+  pickUp: {
+    volunteerId: string;
+    date: string;
+    period: string;
+  };
 }
 
 export interface ChatMessage {

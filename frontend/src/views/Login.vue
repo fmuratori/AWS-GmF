@@ -121,7 +121,8 @@ import InputPasswordSelect from "../components/InputPasswordSelect.vue";
 
 // import bcrypt from "bcrypt"
 
-import api from "../api";
+import userApi from "../api/user";
+import chatApi from "../api/chat";
 import { LoginPayload, RegistrationPayload, Address } from "../types";
 
 export default Vue.extend({
@@ -166,73 +167,66 @@ export default Vue.extend({
   methods: {
     submitForm(event) {
       event.preventDefault();
+      userApi
+        .loginRequest(this.login)
+        .then((r: any) => {
+          if (r.status == 200) {
+            this.$store.dispatch("login", {
+              token: r.data.data.token,
+              userData: r.data.data.user,
+            });
+            this.showLoginErrorMessage = false;
+            this.$router.replace({ name: "ManagerHome" });
 
-      if (this.isLoginSelected) {
-        //LOGIN
-        api
-          .loginRequest(this.login)
-          .then((r: any) => {
-            if (r.status == 200) {
-              this.$store.dispatch("login", {
-                token: r.data.data.token,
-                userData: r.data.data.user,
-              });
-              this.showLoginErrorMessage = false;
-              this.$router.replace({ name: "Home" });
+            // initialize a socket session (let the server know that a new logged user is active)
+            this.$socket.emit("login", this.$store.state.session.userData._id);
 
-              // initialize a socket session (let the server know that a new logged user is active)
-              this.$socket.emit(
-                "login",
-                this.$store.state.session.userData._id
-              );
-
-              api
-                .unreadMessages(
-                  this.$store.state.session.userData._id,
-                  this.$store.getters.getSessionHeader
-                )
-                .then((r: any) => {
-                  this.$store.dispatch(
-                    "updateUnreadMessages",
-                    r.data.data.counts
-                  );
-                })
-                .catch((e) => console.log(e));
+            chatApi
+              .unreadMessages(this.$store.state.session.userData._id)
+              .then((r: any) => {
+                this.$store.dispatch(
+                  "updateUnreadMessages",
+                  r.data.data.counts
+                );
+              })
+              .catch((e) => console.log(e));
+          }
+        })
+        .catch((e: AxiosError): void => {
+          console.log(e);
+          this.showLoginErrorMessage = true;
+        });
+    },
+    registrationRequest(event) {
+      event.preventDefault();
+      userApi
+        .registrationRequest(this.registration)
+        .then(() => {
+          this.$bvToast.toast(
+            `Operazione avvenuta con successo. Effettua il login per accedere.`,
+            {
+              title: "Registrazione",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
             }
-          })
-          .catch((e: AxiosError): void => {
-            console.log(e);
-            this.showLoginErrorMessage = true;
-          });
-      } else {
-        //REGISTRATION
-        api
-          .registrationRequest(this.registration)
-          .then(() => {
-            this.isLoginSelected = true;
-            this.$bvToast.toast(
-              `Operazione avvenuta con successo. Effettua il login per accedere.`,
-              {
-                title: "Registrazione",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            this.$bvToast.toast(
-              `Errore durante la fase di registrazione, riprova.`,
-              {
-                title: "Registrazione",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
-          });
-      }
+          );
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$bvToast.toast(
+            `Errore durante la fase di registrazione, riprova.`,
+            {
+              title: "Registrazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            });
+        })
+    },
+    temp(v: string) {
+      if (v == "user") this.login.email = "user@user.com";
+      else this.login.email = "volunteer@volunteer.com";
     },
   },
 });

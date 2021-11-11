@@ -22,7 +22,7 @@
       b-col(sm=12 md=6 v-if="donations.length == 0") 
         p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a( href="#" @click="$router.replace({name: 'ManagerDonationsCreate'})") qui] per inserire una nuova donazione.
 
-      b-col(v-else sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
+      b-col(v-else sm=12 md=6 v-for="(donation, idx) in donations" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")
@@ -31,7 +31,7 @@
                 b-col(cols="auto")
                   div(class="")
                     p(class="mb-0") Alimenti donati:
-                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
+                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :key="idx") {{ food }}
                   div(class="")
                     p(class="mb-0") Scade tra:
                     p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
@@ -61,12 +61,12 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import api from "../api";
+import donationApi from "../api/donation";
 
 import { Donation } from "../types";
 
 export default Vue.extend({
-  name: "ManagerDonationsList",
+  name: "ManagerDonationsUserList",
   components: {
     Navbar,
     Sidebar,
@@ -86,12 +86,8 @@ export default Vue.extend({
         this.$store.dispatch("showSidebar");
       }
 
-      // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
-        .userDonationsList(
-          this.$store.state.session.userData._id,
-          this.$store.getters.getSessionHeader
-        )
+      donationApi
+        .filterUserActiveDonations(this.$store.state.session.userData._id)
         .then((r: any) => {
           this.donations = r.data.data.list;
           this.donationsBackup = r.data.data.list;
@@ -99,9 +95,6 @@ export default Vue.extend({
           this.filterBy(this.filterByMode);
         })
         .catch((e) => console.log(e));
-
-      // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
-      // });
     } else {
       this.$router.replace({ name: "Login" });
     }
@@ -112,8 +105,8 @@ export default Vue.extend({
     },
     unreadMessagesComparer(a, b) {
       return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id)
-        ? -1
-        : 1;
+        ? 1
+        : -1;
     },
     expirationDateComparer(a, b) {
       return new Date(a.expirationDate) < new Date(b.expirationDate) ? -1 : 1;
@@ -168,17 +161,16 @@ export default Vue.extend({
     },
     hasUnreadMessages(donationId: string): boolean {
       return (
-        this.$store.state.socketio.unreadMessagesCounts.length > 0 &&
-        this.$store.state.socketio.unreadMessagesCounts.indexOf(
+        this.$store.state.socketio.unreadMessages.findIndex(
           (e) => e._id == donationId
         ) != -1
       );
     },
     unreadMessagesCount(donationId: string): number {
       if (this.hasUnreadMessages(donationId))
-        return this.$store.state.socketio.unreadMessagesCounts.find(
+        return this.$store.state.socketio.unreadMessages.find(
           (e) => e._id == donationId
-        ).count;
+        ).chat.length;
       return 0;
     },
   },

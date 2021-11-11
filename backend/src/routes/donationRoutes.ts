@@ -9,8 +9,8 @@ router.post('/add', donationController.add)
 router.post('/edit', donationController.edit)
 router.post('/delete', donationController.delete)
 
+// TODO: move to socketio
 router.post('/get-chat', donationController.getChat)
-
-router.post('/unread-messages', donationController.countUserNonVisualizedMessages)
+router.post('/unread-messages', donationController.userNonVisualizedMessages)
 
 export default router

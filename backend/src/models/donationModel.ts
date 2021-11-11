@@ -94,11 +94,21 @@ const donationSchema = new mongoose.Schema({
         default: "waiting",
         enum: ["waiting", "selected", "withdrawn"]
     },
-    volunteerId: {
-        type: mongoose.Types.ObjectId,
-        required: false,
-        ref: "User",
-        default: null
+    pickUp: {
+        volunteerId: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+            default: null
+        },
+        date: {
+            type: Date,
+            default: new Date(),
+        },
+        period: {
+            type: String,
+            enum: ["morning", "afternoon", "evening"]
+        },
+        default: {}
     }
 })
 

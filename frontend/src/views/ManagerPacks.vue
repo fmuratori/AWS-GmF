@@ -61,11 +61,11 @@ export default Vue.extend({
     changeView(view: "my" | "all") {
       var payload = null;
 
-      if (view == "my") {
-        payload = {
-          filter: { reporterId: this.$store.state.session.userData._id },
-        };
-      }
+      // if (view == "my") {
+      //   payload = {
+      //     filter: { reporterId: this.$store.state.session.userData._id },
+      //   };
+      // }
       this.view = view;
 
       api

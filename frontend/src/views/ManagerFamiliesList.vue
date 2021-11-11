@@ -20,7 +20,7 @@
       b-col(v-if="familyList.length == 0" sm=12 md=6)
         p() Non hai mai effettuato segnalazioni. Premi #[a( href="#" @click="$router.replace({name: 'ManagerFamiliesSubscribe'})") qui] per segnalare una famiglia bisognosa.
 
-      b-col(v-else sm=12 md=6 v-for="(family, idx) in familyList" :index="idx")
+      b-col(v-else sm=12 md=6 v-for="(family, idx) in familyList" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")
@@ -68,12 +68,12 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import api from "../api";
+import familyApi from "../api/family";
 
 import { Family } from "../types";
 
 export default Vue.extend({
-  name: "ManagerFamilies",
+  name: "ManagerFamiliesList",
   components: {
     Navbar,
     Sidebar,
@@ -94,7 +94,7 @@ export default Vue.extend({
       this.userRole = this.$store.state.session.userData.type;
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      familyApi
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
@@ -126,7 +126,7 @@ export default Vue.extend({
 
       this.filterByMode = filterByMode;
 
-      api
+      familyApi
         .familyList(payload)
         .then((r: any) => {
           this.familyList = r.data.data.list;

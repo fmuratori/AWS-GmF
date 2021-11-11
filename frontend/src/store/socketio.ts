@@ -1,23 +1,34 @@
-import api from "../api";
+import chatApi from "../api/chat";
 import Vue from "vue";
 import { ChatMessage } from "../types";
 
 export default {
   state: {
-    unreadMessagesCounts: [],
+    unreadMessages: [],
     chat: new Array<ChatMessage>(),
     donationId: "",
   },
   getters: {
     unreadMessagesTotalCount(state): number {
-      return state.unreadMessagesCounts
-        .map((e) => e.count)
+      return state.unreadMessages
+        .map((e) => e.chat.length)
         .reduce((a, b) => a + b, 0);
     },
   },
   mutations: {
-    addUnreadMessage(state) {
-      state.unreadMessagesCount += 1;
+    addUnreadMessage(state, message) {
+      const donationChat = state.unreadMessages.find(
+        (e) => e._id == message._id
+      );
+
+      if (donationChat) donationChat.chat.push(message.message);
+      else {
+        const newUnreadMessage = {
+          _id: message._id,
+          chat: [message.message],
+        };
+        state.unreadMessages.push(newUnreadMessage);
+      }
     },
     getChat(state, payload) {
       state.chat = payload.chat;
@@ -31,8 +42,14 @@ export default {
       state.donationId = "";
     },
 
-    updateUnreadMessages(state, counts) {
-      state.unreadMessagesCounts = counts;
+    updateUnreadMessages(state, messages) {
+      state.unreadMessages = messages;
+    },
+
+    removeDonationUnreadMessages(state, donationId) {
+      state.unreadMessages = state.unreadMessages.filter(
+        (d) => d._id != donationId
+      );
     },
   },
   actions: {
@@ -47,7 +64,7 @@ export default {
 
     SOCKET_chat_message({ commit, state, rootState }, stringMessage: string) {
       const message = JSON.parse(stringMessage);
-      if (state.donationId == message.donationId) {
+      if (state.donationId == message._id) {
         commit("addMessage", message.message);
 
         // set message as visualized
@@ -55,19 +72,16 @@ export default {
           new Vue().$socket.emit("visualize_message", stringMessage);
       } else {
         // update messages count
-        commit("addUnreadMessage");
+        commit("addUnreadMessage", message);
       }
     },
 
     getChat({ commit, getters, rootState }, donationId: string) {
-      api
-        .getDonationChat(
-          donationId,
-          rootState.session.userData._id,
-          getters.getSessionHeader
-        )
+      chatApi
+        .getDonationChat(donationId, rootState.session.userData._id)
         .then((r: any) => {
           commit("getChat", { chat: r.data.data.chat, donationId: donationId });
+          commit("removeDonationUnreadMessages", donationId);
         })
         .catch((e) => console.log(e));
     },
@@ -76,8 +90,8 @@ export default {
       commit("resetChat");
     },
 
-    updateUnreadMessages({ commit }, counts) {
-      commit("updateUnreadMessages", counts);
+    updateUnreadMessages({ commit }, messages) {
+      commit("updateUnreadMessages", messages);
     },
   },
 };
