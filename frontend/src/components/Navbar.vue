@@ -24,7 +24,7 @@
         b-nav-item(href="#" class="my-auto navbar-link text-center") Eventi
         b-nav-item(href="#" class="my-auto navbar-link text-center") Domande
         b-nav-item(href="#" class="my-auto text-center" v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
-          b-button(v-if="$store.getters.unreadMessagesTotalCount > 0" type="submit" variant="danger" class="my-2 my-sm-0 navbar-messages-button")
+          b-button(v-if="$store.getters.unreadMessagesTotalCount > 0" @click="$router.replace({name: 'ManagerDonationsUserList'})" type="submit" variant="danger" class="my-2 my-sm-0 navbar-messages-button")
             span(class="mr-1") Messaggi
             b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
         b-nav-item(href="#" class="my-auto text-center" v-if="$store.getters.isUserLogged")

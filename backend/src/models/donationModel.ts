@@ -110,8 +110,6 @@ const donationSchema = new mongoose.Schema({
         },
         default: {}
     }
-    
-    
 })
 
 export default mongoose.model<DonationDocument>('Donation', donationSchema)

@@ -89,9 +89,36 @@ content-type: application/json
 
     "projection": {
         "donationId": 1,
-        "count": { "$size":"$chat" }
+        "chat.$": 1
     }
 }
+
+# {
+#     "filter": {
+#         "userId": "61854d752b246626dc5ff76e",
+#         "chat": {
+#             "$elemMatch": {
+#                 "visualized": false,
+#                 "userId": { 
+#                     "$ne": "61854d752b246626dc5ff76e" 
+#                 }
+#             }
+#         }
+#     },
+
+#     "projection": {
+#         "donationId": 1,
+#         "chat": {
+#             "$elemMatch": {
+#                 "visualized": false,
+#                 "userId": { 
+#                     "$ne": "61854d752b246626dc5ff76e" 
+#                 }
+#             }
+#         },
+#         "count": { "$size":"$chat" }
+#     }
+# }
 
 ### DONATION find not assigned donations
 POST http://localhost:3000/api/donation

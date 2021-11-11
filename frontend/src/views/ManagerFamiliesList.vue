@@ -56,7 +56,7 @@ import familyApi from "../api/family";
 import { Family } from "../types";
 
 export default Vue.extend({
-  name: "ManagerFamilies",
+  name: "ManagerFamiliesList",
   components: {
     Navbar,
     Sidebar,

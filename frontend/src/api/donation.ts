@@ -14,21 +14,13 @@ export default {
   },
 
   async deleteDonation(donationId: string) {
-    const payload = {
-      id: donationId,
-    };
+    const payload = { id: donationId, };
     return axios.post(`${process.env.VUE_APP_API_URL}/api/donation/delete`, payload, { headers: store.getters.getSessionHeader, });
   },
 
   async userDonationsList(userId: string) {
-    const payload = {
-      userId: userId,
-    };
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/donation/find`,
-      { filter: payload },
-      { headers: store.getters.getSessionHeader, }
-    );
+    const payload = { filter: { userId: userId, } };
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/donation/find`, payload, { headers: store.getters.getSessionHeader, });
   },
 
   async volunteerOpenDonations(expiredBy: null|Date, pickUpWeekDay: null|string, pickUpPeriod:null|string) {
@@ -61,7 +53,7 @@ export default {
 
   async volunteerPickedDonations(volunteerId: string) {
     const payload = {
-      "volunteerId": volunteerId
+      "pickUp.volunteerId": volunteerId
     };
 
     return axios.post(

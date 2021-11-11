@@ -54,7 +54,8 @@ b-row.justify-content-center(no-gutters)
             b-button.login-button(block, size="lg", type="submit")
               span ACCEDI
               b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
-
+          button(@click="temp('user')") Login user
+          button(@click="temp('volunteer')") Login volontario
         div(v-else)
           b-form(@submit="registrationRequest")
             .p-3
@@ -290,6 +291,12 @@ export default Vue.extend({
           );
         });
     },
+    temp(v: string) {
+      if (v == "user")
+        this.login.email = "user@user.com"
+      else 
+        this.login.email = "volunteer@volunteer.com"
+    }
   },
 });
 </script>

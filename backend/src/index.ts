@@ -38,24 +38,29 @@ io.on("connection", (socket: Socket) => {
     .then(newMessage => {
       // send the new message to all the users involved in the chat (owner and optionally a volunteer)
       getDonationUsers(obj.donationId)
-      .then(ids => {
+      .then((ids:any) => {
         if (ids) {
           const userId = ids['userId'] ? ids['userId'].toString() : null;
           const volunteerId = ids['volunteerId'] ? ids['volunteerId'].toString() : null;
           
           // send the message to the user
           if (userId && activeSockets.has(userId)) {
+            console.log("sent message to user", userId)
             const destSocket = io.sockets.sockets.get(activeSockets.get(userId))
             if (destSocket) {
               destSocket.emit("chat_message", JSON.stringify(newMessage));
             }
           }
 
+          console.log(volunteerId, activeSockets.has(volunteerId))
           // send the message to the volunteer
-          // if (volunteerId && activeSockets.has(volunteerId)) {
-          //   const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
-          //   if (destSocket) destSocket.emit("chat_message", JSON.stringify(newMessage));
-          // }
+          if (volunteerId && activeSockets.has(volunteerId)) {
+            console.log("sent message to volunteer", userId)
+            const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
+            if (destSocket) { 
+              destSocket.emit("chat_message", JSON.stringify(newMessage));
+            }
+          }
         }
       });
     })

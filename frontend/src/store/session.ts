@@ -26,7 +26,10 @@ const sessionModule = {
       return state.token != "";
     },
     isUser(state: any) {
-      return state.type === "user";
+      return state.userData.type == "user";
+    },
+    isVolunteer(state: any) {
+      return state.userData.type == "volunteer";
     },
     getSessionHeader(state: any) {
       return {

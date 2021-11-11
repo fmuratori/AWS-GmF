@@ -6,7 +6,6 @@ import { LoginPayload, RegistrationPayload, editUserPayload, changePasswordPaylo
 
 export default {
   async loginRequest(payload: LoginPayload) {
-    console.log(process.env.VUE_APP_API_URL)
     return axios.post(`${process.env.VUE_APP_API_URL}/api/user/login`, payload);
   },
 

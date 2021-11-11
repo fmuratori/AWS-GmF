@@ -27,8 +27,8 @@
         b-col(cols="auto")
           b-icon(icon="chevron-right")
 
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsList')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsList') }")
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsUserList')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsUserList') }")
         b-col
           label(class="py-1") Tue donazioni
         b-col(cols="auto")
@@ -50,12 +50,13 @@
         b-col(cols="auto")
           b-icon(icon="chevron-right")
 
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerEvents')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerEvents') }")
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerDonationsVolunteerList')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerDonationsVolunteerList') }")
         b-col
-          label(class="py-1") I tuoi incarichi
+          label(class="py-1") Tuoi incarichi
         b-col(cols="auto")
           b-icon(icon="chevron-right")
+      
       hr(class="sidebar-hr my-3")
 
 
@@ -145,8 +146,8 @@ export default Vue.extend({
         this.$store.state.session.userData.name +
         " " +
         this.$store.state.session.userData.surname;
-      if (fullname.length > 10) {
-        return fullname.substring(0, 10) + "...";
+      if (fullname.length > 16) {
+        return fullname.substring(0, 16) + "...";
       }
       return fullname;
     },

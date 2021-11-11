@@ -195,7 +195,6 @@ export default Vue.extend({
     },
     sendMessage(event) {
       event.preventDefault();
-
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
         userId: this.$store.state.session.userData._id,
@@ -235,6 +234,9 @@ export default Vue.extend({
       });
     },
   },
+  destroyed() {
+    this.$store.dispatch("resetChat");
+  }
 });
 </script>
 

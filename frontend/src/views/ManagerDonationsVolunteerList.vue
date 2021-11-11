@@ -66,7 +66,7 @@ import donationApi from "../api/donation";
 import { Donation } from "../types";
 
 export default Vue.extend({
-  name: "ManagerDonationsList",
+  name: "ManagerDonationsVolunteerList",
   components: {
     Navbar,
     Sidebar,
@@ -86,18 +86,32 @@ export default Vue.extend({
         this.$store.dispatch("showSidebar");
       }
 
-      // TODO: mostrare uno spinner mentre sono caricati i dati
-      donationApi
-        .userDonationsList(
-          this.$store.state.session.userData._id,
-        )
-        .then((r: any) => {
-          this.donations = r.data.data.list;
-          this.donationsBackup = r.data.data.list;
-          this.orderBy(this.orderByMode);
-          this.filterBy(this.filterByMode);
-        })
-        .catch((e) => console.log(e));
+      if (this.$store.getters.isUser) { 
+        donationApi
+          .userDonationsList(
+            this.$store.state.session.userData._id,
+          )
+          .then((r: any) => {
+            this.donations = r.data.data.list;
+            this.donationsBackup = r.data.data.list;
+            this.orderBy(this.orderByMode);
+            this.filterBy(this.filterByMode);
+          })
+          .catch((e) => console.log(e));
+      } else if (this.$store.getters.isVolunteer) {
+        donationApi
+          .volunteerPickedDonations(
+            this.$store.state.session.userData._id,
+          )
+          .then((r: any) => {
+            this.donations = r.data.data.list;
+            this.donationsBackup = r.data.data.list;
+            this.orderBy(this.orderByMode);
+            this.filterBy(this.filterByMode);
+          })
+          .catch((e) => console.log(e));
+
+      }
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });
@@ -167,15 +181,14 @@ export default Vue.extend({
     },
     hasUnreadMessages(donationId: string): boolean {
       return (
-        this.$store.state.socketio.unreadMessagesCounts.length > 0 &&
-        this.$store.state.socketio.unreadMessagesCounts.indexOf(
+        this.$store.state.socketio.unreadMessages.findIndex(
           (e) => e._id == donationId
         ) != -1
       );
     },
     unreadMessagesCount(donationId: string): number {
       if (this.hasUnreadMessages(donationId))
-        return this.$store.state.socketio.unreadMessagesCounts.find(
+        return this.$store.state.socketio.unreadMessages.find(
           (e) => e._id == donationId
         ).count;
       return 0;
