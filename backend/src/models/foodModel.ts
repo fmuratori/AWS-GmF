@@ -16,12 +16,13 @@ const foodSchema = new mongoose.Schema({
     },
     expirationDate: {
         type: Date,
-        validate: {
-            validator(this: FoodDocument, expirationDate: Date): Boolean {
-                return new Date() < expirationDate
-            },
-            message: "Cannot store expired food"
-        }
+        required: [true, "missing field expirationDate"],
+        // validate: {
+        //     validator(this: FoodDocument, expirationDate: Date): Boolean {
+        //         return new Date() < expirationDate
+        //     },
+        //     message: "Cannot store expired food"
+        // }
     },
     labels: {
         type: [String],
