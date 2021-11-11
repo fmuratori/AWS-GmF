@@ -1,11 +1,7 @@
 import axios from "axios";
-import store from './store'
+import store from "./store";
 
-import {
-  EventPayload,
-  PackPayload,
-  FoodPayload,
-} from "./types";
+import { EventPayload, PackPayload, FoodPayload } from "./types";
 
 // axios.defaults.withCredentials = true
 

@@ -88,7 +88,7 @@ export interface Donation {
     volunteerId: string;
     date: string;
     period: string;
-  }
+  };
 }
 
 export interface ChatMessage {

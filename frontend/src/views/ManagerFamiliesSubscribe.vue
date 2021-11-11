@@ -85,7 +85,7 @@ export default Vue.extend({
     addFamily(event) {
       event.preventDefault();
       familyApi
-        .addFamily(this.format)
+        .addFamily(this.form)
         .then((r) => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilies" });

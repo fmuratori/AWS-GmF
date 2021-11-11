@@ -20,7 +20,7 @@
       b-col(v-if="familyList.length == 0" sm=12 md=6)
         p() Non hai mai effettuato segnalazioni. Premi #[a( href="#" @click="$router.replace({name: 'ManagerFamiliesSubscribe'})") qui] per segnalare una famiglia bisognosa.
 
-      b-col(v-else sm=12 md=6 v-for="(family, idx) in familyList" :index="idx")
+      b-col(v-else sm=12 md=6 v-for="(family, idx) in familyList" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")

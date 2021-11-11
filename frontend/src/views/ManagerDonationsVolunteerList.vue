@@ -13,7 +13,7 @@
       b-col(sm=12 md=6 v-if="donations.length == 0 && groupedDonations.length == 0") 
         p Nessuna donazione prenotata per il ritiro. Assicurati di aver selezionato correttamente i filtri oppure premi #[a( href="#" @click="$router.replace({name: 'ManagerDonationsRetrieve'})") qui] per selezionare donazioni da ritirare.
 
-      b-col(v-if="donations.length != 0 && orderByMode=='unread_messages'" sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
+      b-col(v-if="donations.length != 0 && orderByMode=='unread_messages'" sm=12 md=6 v-for="(donation, idx) in donations" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")
@@ -22,7 +22,7 @@
                 b-col(cols="auto")
                   div(class="")
                     p(class="mb-0") Alimenti donati:
-                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
+                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :key="idx") {{ food }}
                   div(class="")
                     p(class="mb-0") Scade tra:
                     p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
@@ -45,14 +45,14 @@
             b-button(block @click="inspectDonation(donation)" class="b-card-footer-button") Mostra
 
 
-      b-col(v-if="groupedDonations.length != 0 && orderByMode=='pickUp_date'" cols=12 v-for="(donations, idx) in groupedDonations" :index="idx")
+      b-col(v-if="groupedDonations.length != 0 && orderByMode=='pickUp_date'" cols=12 v-for="(donations, idx) in groupedDonations" :key="idx")
         b-row()
           b-col(cols="auto")
             p(class="font-weight-bolder") Data: {{ moment(donations.date).format("DD-MM-YYYY") }}
           b-col
             hr
 
-        b-col(sm=12 md=6 v-for="(donation, idx) in donations.donations" :index="idx")
+        b-col(sm=12 md=6 v-for="(donation, idx) in donations.donations" :key="idx")
           b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
             b-card-text
               div(class="px-4 pt-4")
@@ -61,7 +61,7 @@
                   b-col(cols="auto")
                     div(class="")
                       p(class="mb-0") Alimenti donati:
-                      p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
+                      p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :key="idx") {{ food }}
                     div(class="")
                       p(class="mb-0") Scade tra:
                       p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
@@ -111,20 +111,27 @@ export default Vue.extend({
       orderByMode: "unread_messages",
     };
   },
-  computed: { 
+  computed: {
     groupedDonations() {
-      const groupedDonations = new Array<{date: Date, donations:Donation[]}>()
+      const groupedDonations = new Array<{
+        date: string;
+        donations: Donation[];
+      }>();
       for (const donation of this.donationsBackup) {
-        const don = groupedDonations.find(d => d.date == donation.pickUp.date)
+        const don = groupedDonations.find(
+          (d) => d.date == donation.pickUp.date
+        );
         if (don) {
-          don.donations.push(donation)
+          don.donations.push(donation);
         } else {
-          groupedDonations.push({date: donation.pickUp.date, donations: [donation]})
+          groupedDonations.push({
+            date: donation.pickUp.date,
+            donations: [donation],
+          });
         }
-        
       }
-      return groupedDonations
-    }
+      return groupedDonations;
+    },
   },
   created() {
     // check if user is logged in
@@ -134,16 +141,13 @@ export default Vue.extend({
       }
 
       donationApi
-        .filterPickedDonations(
-          this.$store.state.session.userData._id,
-        )
+        .filterPickedDonations(this.$store.state.session.userData._id)
         .then((r: any) => {
           this.donations = r.data.data.list;
           this.donationsBackup = r.data.data.list;
           this.orderBy(this.orderByMode);
         })
         .catch((e) => console.log(e));
-
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });

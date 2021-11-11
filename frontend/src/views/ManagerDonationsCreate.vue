@@ -47,7 +47,7 @@
 
           div()
             p(class="font-weight-bold text-center") Periodo ritiro
-            b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1")
+            b-row(v-for="(weekDayName, weekDay, idx) in weekDays" :key="idx" class="mb-1")
               b-col(cols="2")
                 label {{ weekDayName }}
               b-col(cols="10")

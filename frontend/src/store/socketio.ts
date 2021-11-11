@@ -17,15 +17,16 @@ export default {
   },
   mutations: {
     addUnreadMessage(state, message) {
-      const donationChat = state.unreadMessages.find(e => e._id == message._id)
-      
-      if (donationChat)
-        donationChat.chat.push(message.message);
+      const donationChat = state.unreadMessages.find(
+        (e) => e._id == message._id
+      );
+
+      if (donationChat) donationChat.chat.push(message.message);
       else {
         const newUnreadMessage = {
-          "_id": message._id,
-          "chat": [ message.message ]
-        }
+          _id: message._id,
+          chat: [message.message],
+        };
         state.unreadMessages.push(newUnreadMessage);
       }
     },
@@ -46,7 +47,9 @@ export default {
     },
 
     removeDonationUnreadMessages(state, donationId) {
-      state.unreadMessages = state.unreadMessages.filter(d => d._id != donationId);
+      state.unreadMessages = state.unreadMessages.filter(
+        (d) => d._id != donationId
+      );
     },
   },
   actions: {
@@ -75,10 +78,7 @@ export default {
 
     getChat({ commit, getters, rootState }, donationId: string) {
       chatApi
-        .getDonationChat(
-          donationId,
-          rootState.session.userData._id
-        )
+        .getDonationChat(donationId, rootState.session.userData._id)
         .then((r: any) => {
           commit("getChat", { chat: r.data.data.chat, donationId: donationId });
           commit("removeDonationUnreadMessages", donationId);

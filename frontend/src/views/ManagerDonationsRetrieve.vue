@@ -17,7 +17,7 @@
           b-form-group(id="input-group-3" label="Periodo della giornata:" label-for="input-3")
             b-form-select(v-model="pickUpPeriod" :options="['morning', 'afternoon', 'evening']" required)
 
-          div(v-for="(donation, idx) in donations" :index="idx")
+          div(v-for="(donation, idx) in donations" :key="idx")
             p {{ donation }}
             b-button(v-if="selectedDonations.indexOf(donation) == -1" @click="selectedDonations.push(donation)") seleziona
             b-button(v-else @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)") rimuovi
@@ -58,15 +58,15 @@ export default Vue.extend({
     return {
       donations: new Array<Donation>(),
       selectedDonations: new Array<Donation>(),
-      pickUpDate: null,
-      pickUpPeriod: null,
+      pickUpDate: "",
+      pickUpPeriod: "",
     };
   },
   watch: {
-    pickUpDate: function(val, oldVal) {
+    pickUpDate: function (val, oldVal) {
       this.filterDonations();
     },
-    pickUpPeriod: function(val, oldVal) {
+    pickUpPeriod: function (val, oldVal) {
       this.filterDonations();
     },
   },
@@ -76,8 +76,8 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
-      
-      this.filterDonations()
+
+      this.filterDonations();
     } else {
       this.$router.replace({ name: "Login" });
     }
@@ -88,14 +88,14 @@ export default Vue.extend({
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
       donationApi
-        .filterUnpickedDonations( this.pickUpDate, this.pickUpPeriod)
+        .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
         .then((r: any) => {
           this.donations = r.data.data.list;
         })
         .catch((e) => console.log(e));
     },
-    submit(e:any) {
-      e.preventDefault()
+    submit(e: any) {
+      e.preventDefault();
       if (!this.pickUpDate) {
         this.$bvToast.toast(
           `Selezionare il giorno in cui verrà effettuato il ritiro della donazione.`,
@@ -107,41 +107,39 @@ export default Vue.extend({
           }
         );
       } else {
-        const promises:Promise<AxiosResponse>[] = []
+        const promises: Promise<AxiosResponse>[] = [];
         this.selectedDonations.forEach((element: Donation) => {
-          element.status = "selected"
+          element.status = "selected";
           element.pickUp = {
             volunteerId: this.$store.state.session.userData._id,
             period: this.pickUpPeriod,
             date: this.pickUpDate,
-          }
-          promises.push(donationApi.editDonation(element))
-
+          };
+          promises.push(donationApi.editDonation(element));
         });
-        
-        Promise.all(promises).then((r: any) => {
-          this.$router.replace({name: "ManagerDonationsVolunteerList"})
-          this.$bvToast.toast(
-            `Donazioni prenotate con successo.`,
-            {
+
+        Promise.all(promises)
+          .then((r: any) => {
+            this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+            this.$bvToast.toast(`Donazioni prenotate con successo.`, {
               title: "Donazioni",
               autoHideDelay: 5000,
               variant: "success",
               appendToast: false,
-            }
-          );
-        }).catch((e:any) => {
-          console.log(e);
-          this.$bvToast.toast(
-            `Impossibile prenotare le donazioni selezionate.`,
-            {
-              title: "Donazioni",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        });
+            });
+          })
+          .catch((e: any) => {
+            console.log(e);
+            this.$bvToast.toast(
+              `Impossibile prenotare le donazioni selezionate.`,
+              {
+                title: "Donazioni",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+          });
       }
     },
   },
@@ -150,5 +148,4 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 @import "@/assets/style.scss";
-
 </style>

@@ -25,7 +25,7 @@ b-container
 
     b-row
       div(v-if="familyList.length == 0") No family segnalation found for this user
-      b-col(sm=12 md=6 v-for="(family, idx) in familyList" :index="idx")
+      b-col(sm=12 md=6 v-for="(family, idx) in familyList" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")

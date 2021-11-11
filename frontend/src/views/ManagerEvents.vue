@@ -4,7 +4,7 @@
       p YOUR EVENTS
       b-row
         div(v-if="events.length==0") No event found for this user
-        b-col(sm=12 md=6 v-for="(event, idx) in events" :index="idx")
+        b-col(sm=12 md=6 v-for="(event, idx) in events" :key="idx")
           b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
             b-card-text
               div(class="px-4 pt-4")

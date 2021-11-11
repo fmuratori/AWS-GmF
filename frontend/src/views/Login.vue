@@ -292,11 +292,9 @@ export default Vue.extend({
         });
     },
     temp(v: string) {
-      if (v == "user")
-        this.login.email = "user@user.com"
-      else 
-        this.login.email = "volunteer@volunteer.com"
-    }
+      if (v == "user") this.login.email = "user@user.com";
+      else this.login.email = "volunteer@volunteer.com";
+    },
   },
 });
 </script>

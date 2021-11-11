@@ -162,8 +162,8 @@ export default Vue.extend({
           name: this.foodList[srcIndex].name,
           number: 1,
           expirationDate: this.foodList[srcIndex].expirationDate,
-          labels: this.foodList[srcIndex].labels
-        }
+          labels: this.foodList[srcIndex].labels,
+        };
         this.selectedFood.push(newFood);
       }
 
@@ -191,8 +191,8 @@ export default Vue.extend({
           name: this.selectedFood[srcIndex].name,
           number: 1,
           expirationDate: this.selectedFood[srcIndex].expirationDate,
-          labels: this.selectedFood[srcIndex].labels
-        }
+          labels: this.selectedFood[srcIndex].labels,
+        };
         this.foodList.push(newFood);
       }
 

@@ -18,10 +18,9 @@ export default Vue.extend({
     icon: String,
   },
   created() {
-    console.log(this.icon)
-  }
+    console.log(this.icon);
+  },
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

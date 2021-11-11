@@ -7,7 +7,7 @@
           b-card-text(class="m-2")
             div(id="messages-area" class="mb-1" ref="messagesArea")
 
-              Message(v-for="(message, idx) in processedChat" :index="idx" :username="message.userFullname" 
+              Message(v-for="(message, idx) in processedChat" :key="idx" :username="message.userFullname" 
               :isOwner="message.userId == $store.state.session.userData._id" :date="formatDatetime(message.date)" :isVisualized="message.visualized"
               :messages="message.messages" :ref="'scrollTo' + idx")
               
@@ -63,7 +63,7 @@
               
             div(class="")
               label(class="mb-0") Periodi di ritiro:
-              p(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
+              p(v-for="(weekDayName, weekDay, idx) in weekDays" :key="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
                 label(class="font-weight-bold") {{ weekDayName + ":&nbsp;" + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}    
 
         div(v-if="$store.getters.isUser" ) 
@@ -130,8 +130,8 @@ export default Vue.extend({
         pickUp: {
           period: "",
           date: "",
-          volunteerId: ""
-        }
+          volunteerId: "",
+        },
       } as Donation,
       chatMessage: "",
     };
@@ -262,39 +262,39 @@ export default Vue.extend({
     },
     cancelReservation() {
       this.donation.pickUp = {
-        volunteerId: null,
-        date: null,
-        period: null
-      }
-      this.donation.status = "waiting"
-      donationApi.editDonation(this.donation).then((r:any) => {
-        this.$bvToast.toast(
-          `Ritiro della donazione annulato con successo.`,
-          {
+        volunteerId: "",
+        date: "",
+        period: "",
+      };
+      this.donation.status = "waiting";
+      donationApi
+        .editDonation(this.donation)
+        .then((r: any) => {
+          this.$bvToast.toast(`Ritiro della donazione annulato con successo.`, {
             title: "Donazione",
             autoHideDelay: 5000,
             variant: "success",
             appendToast: false,
-          }
-        );
-        this.$router.replace({name: "ManagerDonationsVolunteerList"})
-      }).catch((e:any) => {
-        this.$bvToast.toast(
-          `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
-          {
-            title: "Donazione",
-            autoHideDelay: 5000,
-            variant: "danger",
-            appendToast: false,
-          }
-        );
-        console.log(e); 
-      });
-    }
+          });
+          this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+        })
+        .catch((e: any) => {
+          this.$bvToast.toast(
+            `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
+            {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+          console.log(e);
+        });
+    },
   },
   destroyed() {
     this.$store.dispatch("resetChat");
-  }
+  },
 });
 </script>
 

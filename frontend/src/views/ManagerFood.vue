@@ -108,7 +108,7 @@ export default Vue.extend({
         labels: [""],
       } as FoodPayload,
       foodList: new Array<Food>(),
-      tableFields: ["name", "number", "expirationDate", "labels"]
+      tableFields: ["name", "number", "expirationDate", "labels"],
     };
   },
   created() {
@@ -117,7 +117,7 @@ export default Vue.extend({
     //populate the food list
     api.foodList(null).then((r: any) => {
       this.foodList = r.data.data.list;
-      console.log(this.foodList)
+      console.log(this.foodList);
     });
 
     // check if user is logged in

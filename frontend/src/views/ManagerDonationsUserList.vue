@@ -22,7 +22,7 @@
       b-col(sm=12 md=6 v-if="donations.length == 0") 
         p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a( href="#" @click="$router.replace({name: 'ManagerDonationsCreate'})") qui] per inserire una nuova donazione.
 
-      b-col(v-else sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
+      b-col(v-else sm=12 md=6 v-for="(donation, idx) in donations" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")
@@ -31,7 +31,7 @@
                 b-col(cols="auto")
                   div(class="")
                     p(class="mb-0") Alimenti donati:
-                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :index="idx") {{ food }}
+                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :key="idx") {{ food }}
                   div(class="")
                     p(class="mb-0") Scade tra:
                     p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
@@ -87,9 +87,7 @@ export default Vue.extend({
       }
 
       donationApi
-        .filterUserActiveDonations(
-          this.$store.state.session.userData._id,
-        )
+        .filterUserActiveDonations(this.$store.state.session.userData._id)
         .then((r: any) => {
           this.donations = r.data.data.list;
           this.donationsBackup = r.data.data.list;

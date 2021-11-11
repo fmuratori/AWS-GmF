@@ -63,10 +63,10 @@ export default Vue.extend({
     },
     routeToDonations() {
       if (this.$store.getters.isUser)
-        this.$router.replace({name: 'ManagerDonationsUserList'})
+        this.$router.replace({ name: "ManagerDonationsUserList" });
       else if (this.$store.getters.isVolunteer)
-        this.$router.replace({name: 'ManagerDonationsVolunteerList'})
-    }
+        this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+    },
   },
 });
 </script>
