@@ -266,7 +266,30 @@ export default Vue.extend({
         date: null,
         period: null
       }
-      donationApi.editDonation(this.donation).then().catch();
+      this.donation.status = "waiting"
+      donationApi.editDonation(this.donation).then((r:any) => {
+        this.$bvToast.toast(
+          `Ritiro della donazione annulato con successo.`,
+          {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          }
+        );
+        this.$router.replace({name: "ManagerDonationsVolunteerList"})
+      }).catch((e:any) => {
+        this.$bvToast.toast(
+          `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
+          {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "danger",
+            appendToast: false,
+          }
+        );
+        console.log(e); 
+      });
     }
   },
   destroyed() {

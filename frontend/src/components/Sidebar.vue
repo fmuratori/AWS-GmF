@@ -74,8 +74,8 @@
         b-col(cols="auto")
           b-icon(icon="chevron-right")
 
-      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFamilies')" 
-      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamilies') }")
+      b-row(class="pl-3 pr-1 sidebar-item" no-gutters align-v="center" @click="changePage('ManagerFamiliesList')" 
+      :class="{ 'sidebar-item-selected': isRouteSelected('ManagerFamiliesList') }")
         b-col
           label(class="py-1") Tue segnalazioni
         b-col(cols="auto")

@@ -124,7 +124,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerPacks",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamilies" */ "../views/ManagerPacks.vue"
+        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerPacks.vue"
       ),
   },
 ];

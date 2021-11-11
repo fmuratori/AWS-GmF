@@ -36,6 +36,11 @@ Vue.use(VueGoogleMaps, {
   installComponents: true
 })
 
+/* enable moment package usage inside html/pug code */
+import moment from "moment"
+Vue.prototype.moment = moment
+
+
 /* local style sheet */
 import "./assets/style.scss";
 
