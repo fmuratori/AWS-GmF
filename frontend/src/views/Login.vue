@@ -202,32 +202,33 @@ export default Vue.extend({
             this.showLoginErrorMessage = true;
           });
       } else {
-        userApi
-        .registrationRequest(this.registration)
-        .then(() => {
-          this.isLoginSelected = true;
-          this.$bvToast.toast(
-            `Operazione avvenuta con successo. Effettua il login per accedere.`,
-            {
-              title: "Registrazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            }
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$bvToast.toast(
-            `Errore durante la fase di registrazione, riprova.`,
-            {
-              title: "Registrazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        });
+        
+        // userApi
+        // .registrationRequest(this.registration)
+        // .then(() => {
+        //   this.isLoginSelected = true;
+        //   this.$bvToast.toast(
+        //     `Operazione avvenuta con successo. Effettua il login per accedere.`,
+        //     {
+        //       title: "Registrazione",
+        //       autoHideDelay: 5000,
+        //       variant: "success",
+        //       appendToast: false,
+        //     }
+        //   );
+        // })
+        // .catch((e) => {
+        //   console.log(e);
+        //   this.$bvToast.toast(
+        //     `Errore durante la fase di registrazione, riprova.`,
+        //     {
+        //       title: "Registrazione",
+        //       autoHideDelay: 5000,
+        //       variant: "danger",
+        //       appendToast: false,
+        //     }
+        //   );
+        // });
       }
       
     },
