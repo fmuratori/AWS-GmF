@@ -4,29 +4,20 @@
 
     b-row(no-gutters class="mb-2")
       b-col(cols="auto")
-      p Stato donazione:
-      b-col
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('waiting')" :class="{'my-button-selected': filterByMode == 'waiting'}") In attesa
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('selected')" :class="{'my-button-selected': filterByMode == 'selected'}") Prenotata
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('all')" :class="{'my-button-selected': filterByMode == 'all'}") Tutte le donazioni
-    
-    b-row(no-gutters class="mb-2")
-      b-col(cols="auto")
       p Ordina per:
       b-col
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('creation_date')" :class="{'my-button-selected': orderByMode == 'creation_date'}") Data creazione
+        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('pickUp_date')" :class="{'my-button-selected': orderByMode == 'pickUp_date'}") Data ritiro
         b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('unread_messages')" :class="{'my-button-selected': orderByMode == 'unread_messages'}") Messaggi non letti
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('expiration_date')" :class="{'my-button-selected': orderByMode == 'expiration_date'}") Data scadenza
     
     b-row
       b-col(sm=12 md=6 v-if="donations.length == 0") 
-        p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a( href="#" @click="$router.replace({name: 'ManagerDonationsCreate'})") qui] per inserire una nuova donazione.
+        p Nessuna donazione prenotata per il ritiro. Assicurati di aver selezionato correttamente i filtri oppure premi #[a( href="#" @click="$router.replace({name: 'ManagerDonationsRetrieve'})") qui] per selezionare donazioni da ritirare.
 
       b-col(v-else sm=12 md=6 v-for="(donation, idx) in donations" :index="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")
-              h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
+              h5 Data ritiro: {{ formatDonation(donation) }}
               b-row()
                 b-col(cols="auto")
                   div(class="")
@@ -76,7 +67,6 @@ export default Vue.extend({
       donations: new Array<Donation>(),
       donationsBackup: new Array<Donation>(),
       orderByMode: "unread_messages",
-      filterByMode: "all",
     };
   },
   created() {
@@ -86,32 +76,17 @@ export default Vue.extend({
         this.$store.dispatch("showSidebar");
       }
 
-      if (this.$store.getters.isUser) { 
-        donationApi
-          .userDonationsList(
-            this.$store.state.session.userData._id,
-          )
-          .then((r: any) => {
-            this.donations = r.data.data.list;
-            this.donationsBackup = r.data.data.list;
-            this.orderBy(this.orderByMode);
-            this.filterBy(this.filterByMode);
-          })
-          .catch((e) => console.log(e));
-      } else if (this.$store.getters.isVolunteer) {
-        donationApi
-          .volunteerPickedDonations(
-            this.$store.state.session.userData._id,
-          )
-          .then((r: any) => {
-            this.donations = r.data.data.list;
-            this.donationsBackup = r.data.data.list;
-            this.orderBy(this.orderByMode);
-            this.filterBy(this.filterByMode);
-          })
-          .catch((e) => console.log(e));
+      donationApi
+        .filterPickedDonations(
+          this.$store.state.session.userData._id,
+        )
+        .then((r: any) => {
+          this.donations = r.data.data.list;
+          this.donationsBackup = r.data.data.list;
+          this.orderBy(this.orderByMode);
+        })
+        .catch((e) => console.log(e));
 
-      }
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });
@@ -120,48 +95,22 @@ export default Vue.extend({
     }
   },
   methods: {
-    creationDateComparer(a, b) {
-      return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
+    pickUpDateComparer(a, b) {
+      return new Date(a.pickUp.date) < new Date(b.pickUp.date) ? -1 : 1;
     },
     unreadMessagesComparer(a, b) {
       return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id)
         ? -1
         : 1;
     },
-    expirationDateComparer(a, b) {
-      return new Date(a.expirationDate) < new Date(b.expirationDate) ? -1 : 1;
-    },
     orderBy(mode: string) {
       this.orderByMode = mode;
       switch (mode) {
-        case "creation_date":
-          this.donations = this.donations.sort(this.creationDateComparer);
+        case "pickUp_date":
+          this.donations = this.donations.sort(this.pickUpDateComparer);
           break;
         case "unread_messages":
           this.donations = this.donations.sort(this.unreadMessagesComparer);
-          break;
-        case "expiration_date":
-          this.donations = this.donations.sort(this.expirationDateComparer);
-          break;
-        default:
-          null;
-      }
-    },
-    filterBy(mode: string) {
-      this.filterByMode = mode;
-      switch (mode) {
-        case "waiting":
-          this.donations = this.donationsBackup.filter(
-            (d) => d.status == "waiting"
-          );
-          break;
-        case "selected":
-          this.donations = this.donationsBackup.filter(
-            (d) => d.status == "selected"
-          );
-          break;
-        case "all":
-          this.donations = this.donationsBackup;
           break;
         default:
           null;
@@ -171,7 +120,7 @@ export default Vue.extend({
       return moment(donation.expirationDate).diff(moment.now(), "days");
     },
     formatDonation(donation: Donation) {
-      return moment(donation.creationDate).locale("it").format("LL");
+      return moment(donation.pickUp.date).locale("it").format("LL");
     },
     inspectDonation(donation: Donation) {
       this.$router.replace({

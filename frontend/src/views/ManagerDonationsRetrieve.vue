@@ -4,12 +4,26 @@
 
     b-row
       b-col(sm=12 md=6)
-        div(v-for="(donation, idx) in donations" :index="idx")
-          p {{ donation }}
-          b-button(v-if="selectedDonations.indexOf(donation) == -1" @click="selectedDonations.push(donation)") seleziona
-          b-button(v-else @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)") rimuovi
-          hr
-        b-button(block variant="outline-success" @click="submit") Procedi
+        b-form(@submit="submit")
+          b-form-group(id="input-group-2" label="Data ritiro:" label-for="input-2")
+            b-input-group
+              b-form-datepicker(id="input-2" required v-model="pickUpDate" reset-button close-button 
+              class="my-no-right-border")
+              b-input-group-append
+                b-button(variant="danger" class="my-no-left-border" @click="pickUpDate = null"
+                :disabled="pickUpDate == null") 
+                  span Cancella
+                  b-icon(icon="x" aria-hidden="true")
+          b-form-group(id="input-group-3" label="Periodo della giornata:" label-for="input-3")
+            b-form-select(v-model="pickUpPeriod" :options="['morning', 'afternoon', 'evening']" required)
+
+          div(v-for="(donation, idx) in donations" :index="idx")
+            p {{ donation }}
+            b-button(v-if="selectedDonations.indexOf(donation) == -1" @click="selectedDonations.push(donation)") seleziona
+            b-button(v-else @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)") rimuovi
+            hr
+
+          b-button(block variant="outline-success" type="submit") Procedi
 
         //- GmapMap(
         //- :center="{lat:10, lng:10}"
@@ -44,15 +58,17 @@ export default Vue.extend({
     return {
       donations: new Array<Donation>(),
       selectedDonations: new Array<Donation>(),
-      expirationDate: null, // moment().add(1, "days"),
-      pickUpDate: "",
-      pickUpPeriod: "",
+      pickUpDate: null,
+      pickUpPeriod: null,
     };
   },
-  computed: {
-    pickUpDay() { 
-      return this.pickUpDate ? moment(this.pickUpDate).locale("it").format("dddd").substring(0, 3) : null;
-    }
+  watch: {
+    pickUpDate: function(val, oldVal) {
+      this.filterDonations();
+    },
+    pickUpPeriod: function(val, oldVal) {
+      this.filterDonations();
+    },
   },
   created() {
     // check if user is logged in
@@ -60,8 +76,6 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
-
-      // TODO: mostrare uno spinner mentre sono caricati i dati
       
       this.filterDonations()
     } else {
@@ -70,33 +84,45 @@ export default Vue.extend({
   },
   methods: {
     filterDonations() {
+      this.selectedDonations = [];
+
+      // TODO: mostrare uno spinner mentre sono caricati i dati
       donationApi
-        .volunteerOpenDonations( this.expirationDate, this.pickUpDay, this.pickUpPeriod)
+        .filterUnpickedDonations( this.pickUpDate, this.pickUpPeriod)
         .then((r: any) => {
-          console.log(r)
           this.donations = r.data.data.list;
         })
         .catch((e) => console.log(e));
     },
-    submit() {
-      const promises:Promise<AxiosResponse>[] = []
-      this.selectedDonations.forEach((element: Donation) => {
-        const pickUpData = {
-          volunteerId: this.$store.state.session.userData._id,
-          period: this.pickUpPeriod,
-          date: this.pickUpDate,
-        }
-        element.status = "selected"
-        element.pickUp = pickUpData
+    submit(e:any) {
+      e.preventDefault()
+      if (!this.pickUpDate) {
+        this.$bvToast.toast(
+          `Selezionare il giorno in cui verrà effettuato il ritiro della donazione.`,
+          {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "warning",
+            appendToast: false,
+          }
+        );
+      } else {
+        const promises:Promise<AxiosResponse>[] = []
+        this.selectedDonations.forEach((element: Donation) => {
+          element.status = "selected"
+          element.pickUp = {
+            volunteerId: this.$store.state.session.userData._id,
+            period: this.pickUpPeriod,
+            date: this.pickUpDate,
+          }
+          promises.push(donationApi.editDonation(element))
 
-        promises.push(donationApi.volunteerUpdateDonations(element))
-
-      });
-      
-      Promise.all(promises).then((r: any) => {
-          console.log(r)
+        });
+        
+        Promise.all(promises).then((r: any) => {
+          this.$router.replace({name: "ManagerDonationsVolunteerList"})
           this.$bvToast.toast(
-            `Donazioni prenotate per l'incarico.`,
+            `Donazioni prenotate con successo.`,
             {
               title: "Donazioni",
               autoHideDelay: 5000,
@@ -104,7 +130,19 @@ export default Vue.extend({
               appendToast: false,
             }
           );
-        }).catch((e:any) => console.log(e));
+        }).catch((e:any) => {
+          console.log(e);
+          this.$bvToast.toast(
+            `Impossibile prenotare le donazioni selezionate.`,
+            {
+              title: "Donazioni",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
+      }
     },
   },
 });

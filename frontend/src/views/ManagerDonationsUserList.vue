@@ -87,7 +87,7 @@ export default Vue.extend({
       }
 
       donationApi
-        .userDonationsList(
+        .filterUserActiveDonations(
           this.$store.state.session.userData._id,
         )
         .then((r: any) => {

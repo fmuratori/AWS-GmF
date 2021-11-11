@@ -18,48 +18,52 @@ export default {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/donation/delete`, payload, { headers: store.getters.getSessionHeader, });
   },
 
-  async userDonationsList(userId: string) {
-    const payload = { filter: { userId: userId, } };
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/donation/find`, payload, { headers: store.getters.getSessionHeader, });
+  async filterDonations(filter: any) {
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/donation/find`, { filter: filter }, { headers: store.getters.getSessionHeader, });
   },
 
-  async volunteerOpenDonations(expiredBy: null|Date, pickUpWeekDay: null|string, pickUpPeriod:null|string) {
-    const payload = {
-      "volunteerId": {
-        "$in" : [null],
-        "$exists" : true
-      },
-      "status": { "$ne": "selected" },   
+  async filterUserActiveDonations(userId: string) {
+    const filter = { 
+      "$and": [
+        { "userId": userId },
+        { "expirationDate": { "$gte": moment().format('YYYY-MM-DD'), }, }
+      ],
+    }
+    return this.filterDonations(filter)
+  },
+
+  async filterUnpickedDonations(pickUpDate: null|Date, pickUpPeriod:null|string) {
+    const filter:any = {
+      "$and": [ {
+          "status": "waiting", 
+        }, { 
+          "expirationDate": { "$gte" : moment().format('YYYY-MM-DD'), } 
+        }
+      ],
     };
-    if (expiredBy) payload["expirationDate"] = { "$lte" : moment(expiredBy).format('YYYY-MM-DD'), }
-    if (pickUpWeekDay) payload["pickUpPeriod.weekDay"] = { "$in": [ pickUpWeekDay ], }
-    if (pickUpPeriod) payload["pickUpPeriod.period"] = { "$in": [ pickUpPeriod ], }
 
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/donation/find`,
-      { filter: payload },
-      { headers: store.getters.getSessionHeader, }
-    );
+    const pickUpFilter = {}
+    if (pickUpDate) {
+      const dayName =  moment(pickUpDate).locale("it").format("dddd").substring(0, 3);
+      pickUpFilter["weekDay"] = dayName;
+      filter["$and"].push({ "expirationDate": { "$gte" : moment(pickUpDate).format('YYYY-MM-DD'), } });
+    }
+
+    if (pickUpPeriod) pickUpFilter["period"] = pickUpPeriod
+    
+    filter["$and"].push({
+      "pickUpPeriod": {
+        "$elemMatch": pickUpFilter,
+      },
+    })
+    return this.filterDonations(filter);
   },
 
-  async volunteerUpdateDonations(donation: Donation) {
-    // both for pick and reset picked donation
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/donation/edit`,
-      donation,
-      { headers: store.getters.getSessionHeader, }
-    );
-  },
-
-  async volunteerPickedDonations(volunteerId: string) {
-    const payload = {
+  async filterPickedDonations(volunteerId: string) {
+    const filter = {
       "pickUp.volunteerId": volunteerId
     };
 
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/donation/find`,
-      { filter: payload },
-      { headers: store.getters.getSessionHeader, }
-    );
+    return this.filterDonations(filter);
   },
 }
