@@ -48,10 +48,7 @@ export default {
     return this.filterDonations(filter);
   },
 
-  async filterUnpickedDonations(
-    pickUpDate: string,
-    pickUpPeriod: string
-  ) {
+  async filterUnpickedDonations(pickUpDate: string, pickUpPeriod: string) {
     const filter: any = {
       $and: [
         {

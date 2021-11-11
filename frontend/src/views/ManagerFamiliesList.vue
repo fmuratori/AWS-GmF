@@ -112,7 +112,7 @@ export default Vue.extend({
     },
 
     filterBy(filterByMode: "verified" | "pending" | "all") {
-      if(this.filterByMode == filterByMode) return
+      if (this.filterByMode == filterByMode) return;
 
       var payload = { filter: {} };
 

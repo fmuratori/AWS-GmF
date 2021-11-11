@@ -221,8 +221,9 @@ export default Vue.extend({
               autoHideDelay: 5000,
               variant: "danger",
               appendToast: false,
-            });
-        })
+            }
+          );
+        });
     },
     temp(v: string) {
       if (v == "user") this.login.email = "user@user.com";

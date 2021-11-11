@@ -38,7 +38,7 @@ export default Vue.extend({
     return {
       view: "all",
       packList: new Array<Pack>(),
-      tableFields: ["status", "familyId", "deliveryDate", "deliveryPeriod"]
+      tableFields: ["status", "familyId", "deliveryDate", "deliveryPeriod"],
     };
   },
   created() {

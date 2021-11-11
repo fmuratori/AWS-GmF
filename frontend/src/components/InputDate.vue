@@ -37,7 +37,7 @@ export default Vue.extend({
     };
   },
   created() {
-    this.selectedDate = this.date
+    this.selectedDate = this.date;
   },
   methods: {
     onCancel() {
