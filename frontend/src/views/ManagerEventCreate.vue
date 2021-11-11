@@ -29,7 +29,7 @@ b-row.justify-content-md-center.my-5.no-gutters
           v-on:data="(e) => { form.date = e; }"
         )
 
-      .mb-3
+      .mb-4
         InputAddress(
           title="Location",
           :city="form.address.city",
@@ -50,11 +50,11 @@ b-row.justify-content-md-center.my-5.no-gutters
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
-import InputText from "../components/InputText.vue";
-import InputTextarea from "../components/InputTextarea.vue";
-import InputAddress from "../components/InputAddress.vue";
-import InputDate from "../components/InputDate.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
+import InputText from "../components/input/InputText.vue";
+import InputTextarea from "../components/input/InputTextarea.vue";
+import InputAddress from "../components/input/InputAddress.vue";
+import InputDate from "../components/input/InputDate.vue";
 
 import { Address, EventPayload } from "../types";
 

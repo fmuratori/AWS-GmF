@@ -94,9 +94,9 @@ b-row.justify-content-md-center.my-5.no-gutters
 
 <script lang="ts">
 import Vue from "vue";
-import InputText from "../components/InputText.vue";
-import InputAddress from "../components/InputAddress.vue";
-import InputPasswordSelect from "../components/InputPasswordSelect.vue";
+import InputText from "../components/input/InputText.vue";
+import InputAddress from "../components/input/InputAddress.vue";
+import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 // import bcrypt from "bcrypt"
 

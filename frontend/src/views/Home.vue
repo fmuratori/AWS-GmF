@@ -1,5 +1,10 @@
 <template lang="pug">
-div homeee
+b-container
+  b-row.justify-content-md-center.my-5.no-gutters
+    h4 What is BringMeFood?
+
+  b-row.justify-content-md-center.my-5.no-gutters
+    p bla bla bla
 </template>
 
 <script lang="ts">

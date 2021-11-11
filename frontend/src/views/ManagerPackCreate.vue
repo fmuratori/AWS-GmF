@@ -43,7 +43,7 @@ b-container
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 import FoodView from "../components/FoodView.vue";
 
 import { Family, Food, PackPayload } from "../types";
