@@ -28,11 +28,13 @@ b-form-group(:label="title")
     )
 
   .text-center
-    b-button(variant="outline-secondary") Find on maps
+    b-button(variant="outline-secondary" @click="find") Find on maps
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+
+import mapsApi from "../api/maps";
 
 export default Vue.extend({
   name: "InputAddress",
@@ -43,6 +45,14 @@ export default Vue.extend({
     street: String,
     civic: String,
   },
+  methods: {
+    find() {
+      mapsApi.getLocationCoordinates(
+          this.city + " " + 
+          this.civic + " " +
+          this.street).then(r => console.log(r))
+    }
+  }
 });
 </script>
 
