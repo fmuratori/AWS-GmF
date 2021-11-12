@@ -62,10 +62,10 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import donationApi from "../api/donation";
+import api from "../api/donation";
 
 import { Donation } from "../types";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsRetrieve",
@@ -82,10 +82,10 @@ export default Vue.extend({
     };
   },
   watch: {
-    pickUpDate: function (val, oldVal) {
+    pickUpDate: function (): void {
       this.filterDonations();
     },
-    pickUpPeriod: function (val, oldVal) {
+    pickUpPeriod: function (): void {
       this.filterDonations();
     },
   },
@@ -100,12 +100,19 @@ export default Vue.extend({
       this.selectedDonations = [];
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      donationApi
+      api
         .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
         .then((r: AxiosResponse): void => {
           this.donations = r.data as Donation[];
         })
-        .catch((e: AxiosError): void => console.log(e));
+        .catch((): void => {
+          this.$root.$bvToast.toast(`Error.`, {
+            title: "Donazioni",
+            autoHideDelay: 5000,
+            variant: "danger",
+            appendToast: false,
+          });
+        });
     },
     submit(e: any) {
       e.preventDefault();
@@ -128,11 +135,11 @@ export default Vue.extend({
             period: this.pickUpPeriod,
             date: this.pickUpDate,
           };
-          promises.push(donationApi.editDonation(element));
+          promises.push(api.editDonation(element));
         });
 
         Promise.all(promises)
-          .then(() => {
+          .then((): void => {
             this.$router.push({ name: "ManagerDonationsVolunteerList" });
             this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
               title: "Donazioni",
@@ -141,7 +148,7 @@ export default Vue.extend({
               appendToast: false,
             });
           })
-          .catch(() => {
+          .catch((): void => {
             this.$root.$bvToast.toast(
               `Impossibile prenotare le donazioni selezionate.`,
               {

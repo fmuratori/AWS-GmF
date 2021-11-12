@@ -21,10 +21,10 @@ export default Vue.extend({
     route: String,
   },
   methods: {
-    isRouteSelected(routeName: string) {
-      return this.$route == routeName;
+    isRouteSelected(routeName: string): boolean {
+      return this.$router.currentRoute.name == routeName;
     },
-    changePage(pageName: string) {
+    changePage(pageName: string): void {
       if (this.$router.currentRoute.name != pageName) {
         this.$router.push({ name: pageName });
 

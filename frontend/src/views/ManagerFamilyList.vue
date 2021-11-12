@@ -44,13 +44,7 @@ b-container.justify-content-center.my-5
     b-col(v-if="familyList.length == 0", sm=12, md=6)
       p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamiliesSubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-    b-col(
-      v-else,
-      sm=12,
-      md=6,
-      v-for="(family, idx) in familyList",
-      :key="idx"
-    )
+    b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList", :key="idx")
       b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
         b-card-text
           .px-4.pt-4
@@ -105,13 +99,13 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import familyApi from "../api/family";
+import api from "../api/family";
 
 import { Family } from "../types";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
-  name: "ManagerFamiliesList",
+  name: "ManagerFamilyList",
   components: {
     Navbar,
     Sidebar,
@@ -132,25 +126,40 @@ export default Vue.extend({
       this.userRole = this.$store.state.session.userData.type;
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      familyApi
+      api
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
         .then((r: AxiosResponse): void => {
           this.familyList = r.data as Family[];
         })
-        .catch((e: AxiosError): void => console.log(e));
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to verify the family. Retry later or contact us.`,
+            {
+              title: "Verify",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    creationDateComparer(a, b) {
+    creationDateComparer(a, b): number {
       return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
     },
-    verifyFamily(familyId: string) {
-      familyApi
+    verifyFamily(familyId: string): void {
+      api
         .verifyFamily({ id: familyId })
-        .then((r) => {
-          this.changeView(this.view);
+        .then((r: AxiosResponse) => {
+          this.familyList.forEach((elem, index) => {
+            if (elem._id == familyId) {
+              this.familyList[index] = r.data as Family;
+            }
+          });
+
           this.$root.$bvToast.toast(`Family verified with success.`, {
             title: "Verify",
             autoHideDelay: 5000,
@@ -158,7 +167,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
+        .catch((): void => {
           this.$root.$bvToast.toast(
             `Unable to verify the family. Retry later or contact us.`,
             {
@@ -170,7 +179,7 @@ export default Vue.extend({
           );
         });
     },
-    filterBy(filterByMode: "verified" | "pending" | "all") {
+    filterBy(filterByMode: "verified" | "pending" | "all"): void {
       if (this.filterByMode == filterByMode) return;
 
       var payload = { filter: {} };
@@ -185,14 +194,24 @@ export default Vue.extend({
 
       this.filterByMode = filterByMode;
 
-      familyApi
+      api
         .familyList(payload)
         .then((r: AxiosResponse): void => {
           this.familyList = r.data as Family[];
         })
-        .catch((e: AxiosError): void => console.log(e));
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
+            {
+              title: "Family",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     },
-    orderBy(mode: string) {
+    orderBy(mode: string): void {
       this.orderByMode = mode;
       switch (mode) {
         case "creation_date":

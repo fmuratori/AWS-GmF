@@ -29,6 +29,7 @@ b-form-group(:label="title")
 </template>
 
 <script lang="ts">
+import { AxiosResponse } from "axios";
 import Vue from "vue";
 
 import mapsApi from "../../api/maps";
@@ -71,7 +72,7 @@ export default Vue.extend({
             " " +
             this.address.street
         )
-        .then((r: any) => {
+        .then((r: any): void => {
           this.address.city = r.data.results[0].address_components.find((c) =>
             c.types.includes("administrative_area_level_3")
           ).long_name;

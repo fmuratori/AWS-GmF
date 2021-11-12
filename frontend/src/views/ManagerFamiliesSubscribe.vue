@@ -113,7 +113,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if ("family" in this.$route.params) {
-        this.form = this.$route.params.family;
+        this.form = this.$route.params.family as unknown as FamilyPayload;
       }
 
       if (!this.$store.getters.isMediumScreenWidth) {

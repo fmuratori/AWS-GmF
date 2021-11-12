@@ -40,11 +40,8 @@ export default class FamilyController {
 		}
 
 		family.status = "verified"
-		await FamilyModel.findByIdAndUpdate(req.body.id, family)
+		const updatedFamily = await FamilyModel.findByIdAndUpdate(req.body.id, family)
 
-		res.status(200).json({
-			status: "success",
-			message: "Family segnalation verified"
-		})
+		res.status(200).json(updatedFamily)
 	})
 }

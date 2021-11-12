@@ -164,7 +164,7 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    onAddressUpdate(address: Address) { 
+    onAddressUpdate(address: Address) {
       this.registration.address = address;
     },
     submitForm(event) {

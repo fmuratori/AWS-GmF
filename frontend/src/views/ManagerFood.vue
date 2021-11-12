@@ -62,7 +62,7 @@ import { Food, FoodPayload } from "../types";
 
 import api from "../api";
 import { FoodManagerView } from "../viewTypes";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFood",
@@ -95,13 +95,21 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           this.foodList = r.data as Food[];
         })
-        .catch((e: AxiosError): void => {
-          console.log(e);
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
         });
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    addFood(event) {
+    addFood(event): void {
       event.preventDefault();
 
       api
@@ -113,16 +121,17 @@ export default Vue.extend({
             variant: "success",
             appendToast: false,
           });
+
           this.updateFoodList();
 
           //aggiorno l'index per ricaricare il component ListFood
           this.reloadIndex += 1;
         })
-        .catch((e: AxiosError) => {
+        .catch((): void => {
           this.$root.$bvToast.toast(
             `Unable to add food. Retry later or contact us if the problem persist.`,
             {
-              title: "food",
+              title: "Food",
               autoHideDelay: 5000,
               variant: "danger",
               appendToast: false,
@@ -130,14 +139,22 @@ export default Vue.extend({
           );
         });
     },
-    updateFoodList() {
+    updateFoodList(): void {
       api
         .foodList({})
         .then((r: AxiosResponse): void => {
           this.foodList = r.data as Food[];
         })
-        .catch((e: AxiosError): void => {
-          console.log(e);
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
         });
     },
     formatDate(date: Date): string {
@@ -147,8 +164,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-.food-item:hover {
-  background-color: yellow;
-}
-</style>
+<style scoped lang="scss"></style>

@@ -140,7 +140,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    onAddressUpdate(address: Address) { 
+    onAddressUpdate(address: Address) {
       this.form.address = address;
     },
     computeButtonVariant(weekDay: string, period: string) {
@@ -208,12 +208,15 @@ export default Vue.extend({
         return false;
       }
       if (!this.form.foods.length) {
-        this.$root.$bvToast.toast(`Inserire almeno un alimento che vuoi donare.`, {
-          title: "Donazione",
-          autoHideDelay: 5000,
-          variant: "warning",
-          appendToast: false,
-        });
+        this.$root.$bvToast.toast(
+          `Inserire almeno un alimento che vuoi donare.`,
+          {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "warning",
+            appendToast: false,
+          }
+        );
         return false;
       }
       return true;
