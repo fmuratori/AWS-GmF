@@ -27,4 +27,9 @@ export default {
       { headers: store.getters.getSessionHeader }
     );
   },
+
+  async editFamily(payload: FamilyPayload) {
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/family/edit`, payload,
+    { headers: store.getters.getSessionHeader });
+  },
 };

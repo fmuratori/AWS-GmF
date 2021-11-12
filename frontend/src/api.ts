@@ -6,7 +6,6 @@ import { EventPayload, PackPayload, FoodPayload } from "./types";
 
 export default {
   /* events */
-
   async createEvent(payload: EventPayload) {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/event/add`, payload);
   },

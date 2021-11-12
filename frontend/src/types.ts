@@ -3,8 +3,8 @@ export interface Address {
   civicNumber: string;
   city: string;
   coordinates: {
-    x: number;
-    y: number;
+    x: number,
+    y: number
   };
 }
 

@@ -36,13 +36,8 @@ b-container
 
         .mb-4
           InputAddress(
-            title="Location:",
-            :city="form.address.city",
-            :street="form.address.street",
-            :civic="form.address.civicNumber",
-            v-on:city="(e) => { form.address.city = e; }",
-            v-on:street="(e) => { form.address.street = e; }",
-            v-on:civic="(e) => { form.address.civicNumber = e; }"
+            title="Location",
+            ref="inputAddress"
           )
 
         b-row
@@ -104,6 +99,7 @@ export default Vue.extend({
   methods: {
     addFamily(event) {
       event.preventDefault();
+      this.form.address = this.$refs.inputAddress.address;
       familyApi
         .addFamily(this.form)
         .then((r) => {
