@@ -70,7 +70,7 @@ export default Vue.extend({
     InputText,
     InputAddress,
   },
-  data: ():{form: FamilyPayload} => {
+  data: ():{form: Family} => {
     return {
       form: {
         reporterId: "",
@@ -98,9 +98,11 @@ export default Vue.extend({
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
+    onAddressUpdate(address: Address) { 
+      this.form.address = address;
+    },
     addFamily(event) {
       event.preventDefault();
-      this.form.address = this.$refs.inputAddress.address;
       familyApi
         .addFamily(this.form)
         .then((r) => {

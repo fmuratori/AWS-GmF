@@ -79,9 +79,7 @@ b-row.justify-content-center(no-gutters)
           )
 
           InputAddress(
-            title="Location",
-            ref="inputAddress"
-          )
+            title="Location")
 
           InputPasswordSelect(
             title1="Password: ",
@@ -166,6 +164,9 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
+    onAddressUpdate(address: Address) { 
+      this.registration.address = address;
+    },
     submitForm(event) {
       event.preventDefault();
 
@@ -203,7 +204,6 @@ export default Vue.extend({
             this.showLoginErrorMessage = true;
           });
       } else {
-        this.registration.address = this.$refs.inputAddress.address;
         userApi
           .registrationRequest(this.registration)
           .then(() => {

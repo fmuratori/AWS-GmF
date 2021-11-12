@@ -51,7 +51,6 @@ export default Vue.extend({
           x: 0,
         },
       } as Address,
-      isChecked: false,
     };
   },
   methods: {
@@ -65,8 +64,6 @@ export default Vue.extend({
             this.address.street
         )
         .then((r: any) => {
-          this.isChecked = true;
-
           this.address.city = r.data.results[0].address_components.find((c) =>
             c.types.includes("administrative_area_level_3")
           ).long_name;
@@ -78,6 +75,8 @@ export default Vue.extend({
           ).long_name;
           this.address.coordinates.x = r.data.results[0].geometry.location.lat;
           this.address.coordinates.y = r.data.results[0].geometry.location.lng;
+        
+          this.$emit("onAddressUpdate", this.address)
         });
     },
   },
