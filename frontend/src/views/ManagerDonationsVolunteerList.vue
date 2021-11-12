@@ -27,7 +27,7 @@ b-container.justify-content-center.my-5
       md=6,
       v-if="donations.length == 0 && groupedDonations.length == 0"
     ) 
-      p Nessuna donazione prenotata per il ritiro. Assicurati di aver selezionato correttamente i filtri oppure premi #[a(href="#", @click="$router.replace({ name: 'ManagerDonationsRetrieve' })") qui] per selezionare donazioni da ritirare.
+      p Nessuna donazione prenotata per il ritiro. Assicurati di aver selezionato correttamente i filtri oppure premi #[a(href="#", @click="$router.push({ name: 'ManagerDonationsRetrieve' })") qui] per selezionare donazioni da ritirare.
 
     b-col(
       v-if="donations.length != 0 && orderByMode == 'unread_messages'",
@@ -205,7 +205,7 @@ export default Vue.extend({
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     pickUpDateComparer(a, b) {
@@ -235,7 +235,7 @@ export default Vue.extend({
       return moment(donation.pickUp.date).locale("it").format("LL");
     },
     inspectDonation(donation: Donation) {
-      this.$router.replace({
+      this.$router.push({
         name: "ManagerDonationsInspect",
         params: { donation: JSON.stringify(donation) },
       });

@@ -96,7 +96,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.replace({ name: 'ManagerDonationsUserList' })",
+          @click="$router.push({ name: 'ManagerDonationsUserList' })",
           type="reset"
         ) Indietro
 
@@ -110,7 +110,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.replace({ name: 'ManagerDonationsVolunteerList' })",
+          @click="$router.push({ name: 'ManagerDonationsVolunteerList' })",
           type="reset"
         ) Indietro
 </template>
@@ -221,12 +221,12 @@ export default Vue.extend({
       if ("donation" in this.$route.params) {
         this.donation = this.$route.params.donation as unknown as Donation;
       } else {
-        this.$router.replace({ name: "ManagerDonationsList" });
+        this.$router.push({ name: "ManagerDonationsList" });
       }
 
       // load donation messages
       this.$store.dispatch("getChat", this.donation._id);
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     formatDatetime(date) {
@@ -262,7 +262,7 @@ export default Vue.extend({
       donationApi
         .deleteDonation(this.donation._id)
         .then(() => {
-          this.$router.replace({ name: "ManagerDonationsList" });
+          this.$router.push({ name: "ManagerDonationsList" });
           this.$bvToast.toast(`Donazione eliminata con successo.`, {
             title: "Donazione",
             autoHideDelay: 5000,
@@ -284,7 +284,7 @@ export default Vue.extend({
         });
     },
     modifyDonation() {
-      this.$router.replace({
+      this.$router.push({
         name: "ManagerDonationsCreate",
         params: { donation: JSON.stringify(this.donation) },
       });
@@ -305,7 +305,7 @@ export default Vue.extend({
             variant: "success",
             appendToast: false,
           });
-          this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+          this.$router.push({ name: "ManagerDonationsVolunteerList" });
         })
         .catch((e: AxiosError): void => {
           this.$bvToast.toast(

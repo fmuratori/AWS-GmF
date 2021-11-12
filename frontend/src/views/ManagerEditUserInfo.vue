@@ -94,7 +94,7 @@ b-container
           b-button(
             block,
             variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerHome' })"
+            @click="$router.go(-1)"
           ) Cancel
         b-col
           b-button(block, variant="success", type="submit") Edit
@@ -148,17 +148,19 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      // this.editUserForm = this.$store.state.session.userData;
-      this.editUserForm.name = this.$store.state.session.userData.name;
-      this.editUserForm.surname = this.$store.state.session.userData.surname;
-      this.editUserForm.email = this.$store.state.session.userData.email;
-      this.editUserForm.phoneNumber =
-        this.$store.state.session.userData.phoneNumber;
-      this.editUserForm.address = this.$store.state.session.userData.address;
-      this.editUserForm.id = this.$store.state.session.userData._id;
+      console.log(this.$store.state.session.userData)
+      this.editUserForm = this.$store.state.session.userData;
+      console.log(this.editUserForm)
+      // this.editUserForm.name = this.$store.state.session.userData.name;
+      // this.editUserForm.surname = this.$store.state.session.userData.surname;
+      // this.editUserForm.email = this.$store.state.session.userData.email;
+      // this.editUserForm.phoneNumber =
+      //   this.$store.state.session.userData.phoneNumber;
+      // this.editUserForm.address = this.$store.state.session.userData.address;
+      // this.editUserForm.id = this.$store.state.session.userData._id;
 
       this.changePasswordForm.id = this.$store.state.session.userData._id;
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     registrationPasswordCheck() {
@@ -174,7 +176,7 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
             (this.$store.state.session.userData = r.data),
-              this.$router.replace({ name: "Home" });
+              this.$router.push({ name: "Home" });
             this.$bvToast.toast(`Account information successfully edited.`, {
               title: "User info",
               autoHideDelay: 5000,
@@ -202,7 +204,7 @@ export default Vue.extend({
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
-            this.$router.replace({ name: "Home" });
+            this.$router.push({ name: "Home" });
             this.$bvToast.toast(`Password successfully changed.`, {
               title: "Password change",
               autoHideDelay: 5000,

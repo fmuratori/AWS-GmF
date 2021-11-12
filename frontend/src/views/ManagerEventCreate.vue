@@ -47,7 +47,7 @@ b-container
             b-button(
               block,
               variant="outline-danger",
-              @click="$router.replace({ name: 'ManagerEvents' })"
+              @click="$router.push({ name: 'ManagerEvents' })"
             ) Cancel
           b-col
             b-button(block, variant="success", type="submit") {{ this.submitLabel }}
@@ -108,7 +108,7 @@ export default Vue.extend({
         this.form = this.$route.params.event as unknown as EventPayload;
         this.submitLabel = "Edit";
       }
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     createEvent(event) {
@@ -120,7 +120,7 @@ export default Vue.extend({
 
       fun(this.form)
         .then(() => {
-          this.$router.replace({ name: "ManagerEvents" });
+          this.$router.push({ name: "ManagerEvents" });
           this.$bvToast.toast(`Event successfully created.`, {
             title: "Event",
             autoHideDelay: 5000,

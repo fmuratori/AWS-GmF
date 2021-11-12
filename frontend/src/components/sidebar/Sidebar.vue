@@ -46,7 +46,7 @@
       hr.sidebar-hr.my-3
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
-      SidebarItem(text= 'Food manager', route='ManagerFood')
+      SidebarItem(text="Food manager", route="ManagerFood")
       //- SidebarItem(text= 'Pack manager', route='ManagerPacks')
 </template>
 
@@ -84,10 +84,12 @@ export default Vue.extend({
       return this.currentRouteName == routeName;
     },
     changePage(pageName: string) {
-      this.$router.replace({ name: pageName });
+      if (this.$router.currentRoute.name != pageName) {
+        this.$router.push({ name: pageName });
 
-      if (this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("hideSidebar");
+        if (this.$store.getters.isMediumScreenWidth) {
+          this.$store.dispatch("hideSidebar");
+        }
       }
     },
     isSidebarOpen() {

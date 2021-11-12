@@ -58,7 +58,7 @@ b-container
           b-button(
             block,
             variant="outline-danger",
-            @click="$router.replace({ name: 'Home' })",
+            @click="$router.push({ name: 'Home' })",
             type="reset"
           ) Cancel
         b-col
@@ -130,7 +130,7 @@ export default Vue.extend({
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     computeButtonVariant(weekDay: string, period: string) {
@@ -162,7 +162,7 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then(() => {
-            this.$router.replace({ name: "ManagerDonationsList" });
+            this.$router.push({ name: "ManagerDonationsList" });
             this.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,

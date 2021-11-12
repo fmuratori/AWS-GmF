@@ -42,7 +42,7 @@ b-container
             b-button(
               block,
               variant="outline-danger",
-              @click="$router.replace({ name: 'ManagerFamilyList' })"
+              @click="$router.push({ name: 'ManagerFamilyList' })"
             ) Cancel
           b-col
             b-button(block, variant="outline-success", type="submit") {{ submitLabel }}
@@ -97,7 +97,7 @@ export default Vue.extend({
         this.submitLabel = "Edit";
       }
       this.form.reporterId = this.$store.state.session.userData._id;
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     onAddressUpdate(address: Address) {
@@ -113,7 +113,7 @@ export default Vue.extend({
       fun(this.form)
         .then((r: AxiosResponse): void => {
           console.log(r);
-          this.$router.replace({ name: "ManagerFamilyList" });
+          this.$router.push({ name: "ManagerFamilyList" });
           this.$bvToast.toast(`Familgia segnalata con successo.`, {
             title: "Famiglia",
             autoHideDelay: 5000,

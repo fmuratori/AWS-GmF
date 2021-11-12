@@ -21,7 +21,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerEditUserInfo",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerHome" */ "../views/ManagerEditUserInfo.vue"
+        /* webpackChunkName: "ManagerEditUserInfo" */ "../views/ManagerEditUserInfo.vue"
       ),
   },
 

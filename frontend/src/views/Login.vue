@@ -180,7 +180,7 @@ export default Vue.extend({
                 userData: r.data["user"] as UserData,
               });
               this.showLoginErrorMessage = false;
-              this.$router.replace({ name: "Home" });
+              this.$router.push({ name: "Home" });
 
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(
