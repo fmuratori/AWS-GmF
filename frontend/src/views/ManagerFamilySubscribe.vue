@@ -35,15 +35,7 @@ b-container
           )
 
         .mb-4
-          InputAddress(
-            title="Location:",
-            :city="form.address.city",
-            :street="form.address.street",
-            :civic="form.address.civicNumber",
-            v-on:city="(e) => { form.address.city = e; }",
-            v-on:street="(e) => { form.address.street = e; }",
-            v-on:civic="(e) => { form.address.civicNumber = e; }"
-          )
+          InputAddress(title="Location", ref="inputAddress")
 
         b-row
           b-col
@@ -108,6 +100,9 @@ export default Vue.extend({
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
+    onAddressUpdate(address: Address) {
+      this.form.address = address;
+    },
     submit(event) {
       event.preventDefault();
 

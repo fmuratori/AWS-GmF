@@ -21,7 +21,7 @@ b-row.justify-content-center(no-gutters)
         ) Sign up
 
       b-form(@submit="submitForm")
-        .p-3(v-if="isLoginSelected")
+        .p-5(v-if="isLoginSelected")
           p.text-danger(v-if="showLoginErrorMessage") Invalid email or password.
           h5.mt-4 Credentials
 
@@ -79,11 +79,7 @@ b-row.justify-content-center(no-gutters)
           )
 
           InputAddress(
-            title="Location",
-            v-on:city="(e) => { registration.address.city = e; }",
-            v-on:street="(e) => { registration.address.street = e; }",
-            v-on:civic="(e) => { registration.address.civicNumber = e; }"
-          )
+            title="Location")
 
           InputPasswordSelect(
             title1="Password: ",
@@ -168,6 +164,9 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
+    onAddressUpdate(address: Address) { 
+      this.registration.address = address;
+    },
     submitForm(event) {
       event.preventDefault();
 
@@ -202,32 +201,32 @@ export default Vue.extend({
             this.showLoginErrorMessage = true;
           });
       } else {
-        // userApi
-        // .registrationRequest(this.registration)
-        // .then(() => {
-        //   this.isLoginSelected = true;
-        //   this.$bvToast.toast(
-        //     `Operazione avvenuta con successo. Effettua il login per accedere.`,
-        //     {
-        //       title: "Registrazione",
-        //       autoHideDelay: 5000,
-        //       variant: "success",
-        //       appendToast: false,
-        //     }
-        //   );
-        // })
-        // .catch((e) => {
-        //   console.log(e);
-        //   this.$bvToast.toast(
-        //     `Errore durante la fase di registrazione, riprova.`,
-        //     {
-        //       title: "Registrazione",
-        //       autoHideDelay: 5000,
-        //       variant: "danger",
-        //       appendToast: false,
-        //     }
-        //   );
-        // });
+        userApi
+          .registrationRequest(this.registration)
+          .then(() => {
+            this.isLoginSelected = true;
+            this.$bvToast.toast(
+              `Operazione avvenuta con successo. Effettua il login per accedere.`,
+              {
+                title: "Registrazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+            this.$bvToast.toast(
+              `Errore durante la fase di registrazione, riprova.`,
+              {
+                title: "Registrazione",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+          });
       }
     },
   },

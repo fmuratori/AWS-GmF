@@ -108,7 +108,6 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import familyApi from "../api/family";
 
 import { Family } from "../types";
-import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamiliesList",
@@ -136,11 +135,13 @@ export default Vue.extend({
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
-        .then((r: AxiosResponse): void => {
-          this.familyList = r.data as Family[];
+        .then((r: any) => {
+          this.familyList = r.data.data.list;
         })
-        .catch((e: AxiosError): void => console.log(e));
-    } else this.$router.replace({ name: "Login" });
+        .catch((e) => console.log(e));
+    } else {
+      this.$router.replace({ name: "Login" });
+    }
   },
   methods: {
     creationDateComparer(a, b) {
@@ -187,10 +188,10 @@ export default Vue.extend({
 
       familyApi
         .familyList(payload)
-        .then((r: AxiosResponse): void => {
-          this.familyList = r.data as Family[];
+        .then((r: any) => {
+          this.familyList = r.data.data.list;
         })
-        .catch((e: AxiosError): void => console.log(e));
+        .catch((e) => console.log(e));
     },
     orderBy(mode: string) {
       this.orderByMode = mode;
