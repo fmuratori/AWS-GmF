@@ -34,7 +34,7 @@ b-form-group(:label="title")
 <script lang="ts">
 import Vue from "vue";
 
-import mapsApi from "../api/maps";
+import mapsApi from "../../api/maps";
 
 export default Vue.extend({
   name: "InputAddress",
