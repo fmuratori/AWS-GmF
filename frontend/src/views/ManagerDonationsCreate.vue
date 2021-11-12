@@ -137,7 +137,7 @@ export default Vue.extend({
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     onAddressUpdate(address: Address) { 
@@ -172,7 +172,7 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then(() => {
-            this.$router.replace({ name: "ManagerDonationsUserList" });
+            this.$router.push({ name: "ManagerDonationsList" });
             this.$root.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,

@@ -42,7 +42,7 @@ b-container.justify-content-center.my-5
 
   b-row
     b-col(v-if="familyList.length == 0", sm=12, md=6)
-      p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.replace({ name: 'ManagerFamiliesSubscribe' })") qui] per segnalare una famiglia bisognosa.
+      p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamiliesSubscribe' })") qui] per segnalare una famiglia bisognosa.
 
     b-col(
       v-else,
@@ -80,7 +80,7 @@ b-container.justify-content-center.my-5
             block,
             :disabled="family.status == 'verified'",
             variant="success",
-            @click="$router.replace({ name: 'ManagerFamiliesSubscribe', params: { family: family } })"
+            @click="$router.push({ name: 'ManagerFamiliesSubscribe', params: { family: family } })"
           ) EDIT
 
           b-button.b-card-footer-button(
@@ -96,7 +96,7 @@ b-container.justify-content-center.my-5
             v-if="userRole != 'user'",
             variant="primary",
             :disabled="family.status != 'verified'",
-            @click="$router.replace({ name: 'ManagerPackCreate', params: { family: family } })"
+            @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
           ) PACK
 </template>
 
@@ -140,7 +140,7 @@ export default Vue.extend({
           this.familyList = r.data.data.list as Family[];
         })
         .catch((e: AxiosError): void => console.log(e));
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     creationDateComparer(a, b) {

@@ -22,13 +22,15 @@ export default Vue.extend({
   },
   methods: {
     isRouteSelected(routeName: string) {
-      return this.$route.name == routeName;
+      return this.$route == routeName;
     },
     changePage(pageName: string) {
-      this.$router.replace({ name: pageName });
+      if (this.$router.currentRoute.name != pageName) {
+        this.$router.push({ name: pageName });
 
-      if (this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("hideSidebar");
+        if (this.$store.getters.isMediumScreenWidth) {
+          this.$store.dispatch("hideSidebar");
+        }
       }
     },
   },

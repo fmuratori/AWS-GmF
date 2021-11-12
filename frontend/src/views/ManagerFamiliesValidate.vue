@@ -93,7 +93,7 @@ b-container
           //-   block,
           //-   v-if="userRole != 'user' && family.status == 'verified'",
           //-   variant="primary",
-          //-   @click="$router.replace({ name: 'ManagerPackCreate', params: { family: family } })"
+          //-   @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
           //- ) PACK
           //- b-button.b-card-footer-button(
           //-   block,
@@ -141,7 +141,7 @@ export default Vue.extend({
           this.familyList = r.data as Family[];
         })
         .catch((e: AxiosError): void => console.log(e));
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     changeView(view: "my" | "all", status: "verified" | "pending" | "all") {

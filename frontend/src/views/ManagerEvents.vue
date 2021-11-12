@@ -19,7 +19,7 @@ b-container
             b-button(
               block,
               variant="success",
-              @click="$router.replace({ name: 'ManagerEventCreate', params: { event: event } })"
+              @click="$router.push({ name: 'ManagerEventCreate', params: { event: event } })"
             ) Edit
 </template>
 
@@ -58,7 +58,7 @@ export default Vue.extend({
           console.log(r);
         })
         .catch((e: AxiosError): void => console.log(e));
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     // getExpirationDays(donation: Event) {

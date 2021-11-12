@@ -81,18 +81,17 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
-            @onAddressUpdate="onAddressUpdate",
+            :city="editUserForm.address.city",
+            :civic="editUserForm.address.civicNumber",
+            :street="editUserForm.address.street",
+            v-on:data="(e) => { editUserForm.address = e; }"
           )
 
-        b-row
-          b-col
-            b-button(
-              block,
-              variant="outline-danger",
-              @click="$router.replace({ name: 'ManagerHome' })"
-            ) Cancel
-          b-col
-            b-button(block, variant="success", type="submit") Edit
+      b-row
+        b-col
+          b-button(block, variant="outline-danger", @click="$router.go(-1)") Cancel
+        b-col
+          b-button(block, variant="success", type="submit") Edit
 </template>
 
 <script lang="ts">
@@ -143,22 +142,11 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      // this.editUserForm = this.$store.state.session.userData;
-      this.editUserForm.name = this.$store.state.session.userData.name;
-      this.editUserForm.surname = this.$store.state.session.userData.surname;
-      this.editUserForm.email = this.$store.state.session.userData.email;
-      this.editUserForm.phoneNumber =
-        this.$store.state.session.userData.phoneNumber;
-      this.editUserForm.address = this.$store.state.session.userData.address;
-      this.editUserForm.id = this.$store.state.session.userData._id;
-
+      this.editUserForm = this.$store.state.session.userData;
       this.changePasswordForm.id = this.$store.state.session.userData._id;
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
-    onAddressUpdate(address: Address) { 
-      this.editUserForm.address = address;
-    },
     registrationPasswordCheck() {
       return (
         this.changePasswordForm.newPassword == this.regRepeatPassword &&
@@ -172,13 +160,16 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
             (this.$store.state.session.userData = r.data),
-              this.$router.replace({ name: "Home" });
-            this.$root.$bvToast.toast(`Account information successfully edited.`, {
-              title: "User info",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            });
+              this.$router.push({ name: "Home" });
+            this.$root.$bvToast.toast(
+              `Account information successfully edited.`,
+              {
+                title: "User info",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
           }
         })
         .catch((e: AxiosError) => {
@@ -200,7 +191,7 @@ export default Vue.extend({
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
-            this.$router.replace({ name: "Home" });
+            this.$router.push({ name: "Home" });
             this.$root.$bvToast.toast(`Password successfully changed.`, {
               title: "Password change",
               autoHideDelay: 5000,

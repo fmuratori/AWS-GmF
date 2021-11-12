@@ -68,7 +68,7 @@ b-row.justify-content-center.my-5(no-gutters)
       b-button(
         block,
         variant="outline-danger",
-        @click="$router.replace({ name: 'ManagerFamilies' })"
+        @click="$router.push({ name: 'ManagerFamilies' })"
       ) Annulla
 </template>
 
@@ -121,7 +121,7 @@ export default Vue.extend({
       }
       this.form.reporterId = this.$store.state.session.userData._id;
     } else {
-      this.$router.replace({ name: "Login" });
+      this.$router.push({ name: "Login" });
     }
   },
   methods: {
@@ -135,7 +135,7 @@ export default Vue.extend({
       fun(this.form, this.$store.getters.getSessionHeader)
         .then((r) => {
           console.log(r);
-          this.$router.replace({ name: "ManagerFamilies" });
+          this.$router.push({ name: "ManagerFamilies" });
           this.$root.$bvToast.toast(`Familgia segnalata con successo.`, {
             title: "Famiglia",
             autoHideDelay: 5000,
