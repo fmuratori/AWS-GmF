@@ -25,7 +25,7 @@ export default Vue.extend({
     icon: String,
     type: {
       type: String,
-      validator: (val) => ["text", "email", "password"].includes(val),
+      validator: (val) => ["text", "number", "email", "password"].includes(val),
       default: "text",
     },
     required: {
