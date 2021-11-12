@@ -21,7 +21,7 @@ b-row.justify-content-center(no-gutters)
         ) Sign up
 
       b-form(@submit="submitForm")
-        .p-3(v-if="isLoginSelected")
+        .p-5(v-if="isLoginSelected")
           p.text-danger(v-if="showLoginErrorMessage") Invalid email or password.
           h5.mt-4 Credentials
 

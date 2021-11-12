@@ -58,7 +58,7 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 
-import { Address, FamilyPayload } from "../types";
+import { Address, Family } from "../types";
 
 import familyApi from "../api/family";
 
@@ -86,7 +86,7 @@ export default Vue.extend({
             y: 0,
           },
         } as Address,
-      } as FamilyPayload,
+      } as Family,
     };
   },
   created() {
