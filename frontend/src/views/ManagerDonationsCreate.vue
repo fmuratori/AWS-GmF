@@ -58,29 +58,16 @@ b-container
             @onAddressUpdate="onAddressUpdate",
           )
 
-<<<<<<< HEAD
-        b-row
-          b-col
-            b-button(
-              block,
-              variant="outline-danger",
-              @click="$router.replace({ name: 'ManagerHome' })",
-              type="reset"
-            ) Cancel
-          b-col
-            b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
-=======
       b-row
         b-col
           b-button(
             block,
             variant="outline-danger",
-            @click="$router.replace({ name: 'Home' })",
+            @click="$router.push({ name: 'Home' })",
             type="reset"
           ) Cancel
         b-col
           b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
->>>>>>> 77856bdd322ce4ce3b96a55f01bbbb04c2b813d9
 </template>
 
 <script lang="ts">
@@ -150,7 +137,7 @@ export default Vue.extend({
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     onAddressUpdate(address: Address) { 
@@ -185,7 +172,7 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then(() => {
-            this.$router.replace({ name: "ManagerDonationsUserList" });
+            this.$router.push({ name: "ManagerDonationsList" });
             this.$root.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,

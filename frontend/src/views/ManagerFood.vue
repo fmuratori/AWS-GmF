@@ -98,7 +98,7 @@ export default Vue.extend({
         .catch((e: AxiosError): void => {
           console.log(e);
         });
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     addFood(event) {

@@ -36,7 +36,7 @@ b-container
           b-button(
             block,
             variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerFamilies' })"
+            @click="$router.push({ name: 'ManagerFamilies' })"
           ) Cancel
         b-col
           b-button(block, variant="success", type="submit") Create
@@ -78,7 +78,7 @@ export default Vue.extend({
         this.family = this.$route.params.family as unknown as Family;
         this.form.familyId = this.family._id;
       }
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     log(e) {
@@ -97,7 +97,7 @@ export default Vue.extend({
       api
         .createPack(this.form)
         .then(() => {
-          this.$router.replace({ name: "ManagerPacks" });
+          this.$router.push({ name: "ManagerPacks" });
           this.$root.$bvToast.toast(`Pack successfully created.`, {
             title: "Pack",
             autoHideDelay: 5000,

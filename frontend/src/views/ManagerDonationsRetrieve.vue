@@ -93,7 +93,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       this.filterDonations();
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     filterDonations() {
@@ -133,7 +133,7 @@ export default Vue.extend({
 
         Promise.all(promises)
           .then(() => {
-            this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+            this.$router.push({ name: "ManagerDonationsVolunteerList" });
             this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
               title: "Donazioni",
               autoHideDelay: 5000,

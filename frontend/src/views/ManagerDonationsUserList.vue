@@ -56,7 +56,7 @@ b-container.justify-content-center.my-5
 
   b-row
     b-col(sm=12, md=6, v-if="donations.length == 0") 
-      p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a(href="#", @click="$router.replace({ name: 'ManagerDonationsCreate' })") qui] per inserire una nuova donazione.
+      p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a(href="#", @click="$router.push({ name: 'ManagerDonationsCreate' })") qui] per inserire una nuova donazione.
 
     b-col(
       v-else,
@@ -148,7 +148,7 @@ export default Vue.extend({
           this.filterBy(this.filterByMode);
         })
         .catch((e: AxiosError): void => console.log(e));
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     creationDateComparer(a, b) {
@@ -205,7 +205,7 @@ export default Vue.extend({
       return moment(donation.creationDate).locale("it").format("LL");
     },
     inspectDonation(donation: Donation) {
-      this.$router.replace({
+      this.$router.push({
         name: "ManagerDonationsInspect",
         params: { donation: JSON.stringify(donation) },
       });

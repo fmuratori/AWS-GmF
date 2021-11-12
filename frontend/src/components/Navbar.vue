@@ -1,44 +1,80 @@
 <template lang="pug">
-  b-navbar(toggleable="lg" type="dark" id="navbar" sticky)
-    b-navbar-brand(href="#")
-      h3 Bring me Food
-    
-    b-navbar-nav(class="ml-auto mr-2" v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
-      b-nav-item(href="#" class="my-auto text-center" )
-        b-button(v-if="$store.getters.unreadMessagesTotalCount > 0" type="submit" variant="danger" class="my-2 my-sm-0 navbar-messages-button" @click="$router.replace({name: 'ManagerDonationsList'})")
-          b-icon(icon="envelope" class="mr-1")
+b-navbar#navbar(toggleable="lg", type="dark", sticky)
+  b-navbar-brand(href="#")
+    h3 Bring me Food
+
+  b-navbar-nav.ml-auto.mr-2(
+    v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
+  )
+    b-nav-item.my-auto.text-center(href="#")
+      b-button.my-2.my-sm-0.navbar-messages-button(
+        v-if="$store.getters.unreadMessagesTotalCount > 0",
+        type="submit",
+        variant="danger",
+        @click="$router.push({ name: 'ManagerDonationsList' })"
+      )
+        b-icon.mr-1(icon="envelope")
+        b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
+  b-navbar-nav.mr-2(
+    v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
+  )
+    b-nav-item.my-auto.text-center(href="#")
+      b-button.my-2.my-sm-0(
+        type="submit",
+        variant="light",
+        @click="toggleSidebar()"
+      )
+        font-awesome-icon(icon="cogs")
+  b-navbar-nav(v-if="$store.getters.isMediumScreenWidth")
+    b-nav-item.my-auto.text-center(href="#")
+      b-button.my-2.my-sm-0(
+        type="submit",
+        variant="light",
+        @click="isOpen = !isOpen"
+      )
+        font-awesome-icon(v-if="isOpen", icon="times")
+        font-awesome-icon(v-else, icon="bars")
+
+  b-collapse#nav-collapse(is-nav="", v-model="isOpen")
+    b-navbar-nav.ml-auto
+      b-nav-item.my-auto.navbar-link.text-center(
+        href="#",
+        @click="changePage('Home')"
+      ) Home
+
+      b-nav-item.my-auto.navbar-link.text-center(href="#") Eventi
+
+      b-nav-item.my-auto.navbar-link.text-center(href="#") Domande
+
+      b-nav-item.my-auto.text-center(
+        href="#",
+        v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
+      )
+        b-button.my-2.my-sm-0.navbar-messages-button(
+          v-if="$store.getters.unreadMessagesTotalCount > 0",
+          @click="routeToDonations()",
+          type="submit",
+          variant="danger"
+        )
+          span.mr-1 Messaggi
           b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
-    b-navbar-nav(class="mr-2" v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
-      b-nav-item(href="#" class="my-auto text-center")
-        b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="toggleSidebar()")
-          font-awesome-icon(icon="cogs")
-    b-navbar-nav(v-if="$store.getters.isMediumScreenWidth")
-      b-nav-item(href="#" class="my-auto text-center")
-        b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="isOpen = !isOpen")
-          font-awesome-icon(v-if="isOpen" icon="times")
-          font-awesome-icon(v-else icon="bars")
-    
-    b-collapse#nav-collapse(is-nav="" v-model="isOpen")
-      b-navbar-nav(class="ml-auto")
-        b-nav-item(href="#" class="my-auto navbar-link text-center" @click="$router.replace({name: 'Home'})") Home
-        b-nav-item(href="#" class="my-auto navbar-link text-center") Eventi
-        b-nav-item(href="#" class="my-auto navbar-link text-center") Domande
-        b-nav-item(href="#" class="my-auto text-center" v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
-          b-button(v-if="$store.getters.unreadMessagesTotalCount > 0" @click="routeToDonations()" type="submit" variant="danger" class="my-2 my-sm-0 navbar-messages-button")
-            span(class="mr-1") Messaggi
-            b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
-        b-nav-item(href="#" class="my-auto text-center" v-if="$store.getters.isUserLogged")
-          b-button(type="submit" variant="light" class="my-2 my-sm-0" @click="$router.replace({name: 'ManagerHome'})")
-            span(class="mr-1") Area personale
-            font-awesome-icon(icon="cogs")
-        b-nav-item(href="#" class="my-auto navbar-link text-center" v-if="$store.getters.isUserLogged" @click="logout()") 
-          span(class="mr-1") Disconnetti
-          font-awesome-icon(icon="sign-out-alt")
-        b-nav-item(href="#" class="my-auto navbar-link text-center" @click="$router.replace({name: 'Login'})" v-if="!$store.getters.isUserLogged") 
-          b-button(type="submit" variant="light" class="my-2 my-sm-0")
-            span(class="mr-1") Connetti
-            font-awesome-icon(icon="sign-in-alt")
-        
+
+      b-nav-item.my-auto.navbar-link.text-center(
+        href="#",
+        v-if="$store.getters.isUserLogged",
+        @click="logout()"
+      ) 
+        span.mr-1 Disconnetti
+        font-awesome-icon(icon="sign-out-alt")
+
+      b-nav-item.my-auto.navbar-link.text-center(
+        href="#",
+        @click="changePage('Login')",
+        v-if="!$store.getters.isUserLogged"
+      ) 
+        b-button.my-2.my-sm-0(type="submit", variant="light")
+          span.mr-1 Connetti
+          font-awesome-icon(icon="sign-in-alt")
 </template>
 
 <script lang="ts">
@@ -58,14 +94,19 @@ export default Vue.extend({
     logout() {
       this.$socket.emit("logout", this.$store.state.session.userData._id);
       this.$store.dispatch("logout");
-      this.$router.replace({ name: "Home" });
+      this.changePage("Home");
       this.$store.dispatch("hideSidebar");
     },
     routeToDonations() {
       if (this.$store.getters.isUser)
-        this.$router.replace({ name: "ManagerDonationsUserList" });
+        this.$router.push({ name: "ManagerDonationsUserList" });
       else if (this.$store.getters.isVolunteer)
-        this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+        this.$router.push({ name: "ManagerDonationsVolunteerList" });
+    },
+    changePage(pageName: string) {
+      if (this.$router.currentRoute.name != pageName) {
+        this.$router.push({ name: pageName });
+      }
     },
   },
 });

@@ -2,30 +2,30 @@
 b-form-group(:label="title")
   b-form-group(label="City", label-cols-sm="3", label-align-sm="right")
     b-form-input(
-      placeholder="Insert city here"
+      placeholder="Insert city here",
       required,
       type="text",
-      v-model="address.city",
+      v-model="address.city"
     )
 
   b-form-group(label="Street", label-cols-sm="3", label-align-sm="right")
     b-form-input(
-      placeholder="Insert street here"
+      placeholder="Insert street here",
       required,
       type="text",
-      v-model="address.street",
+      v-model="address.street"
     )
 
   b-form-group(label="Civic", label-cols-sm="3", label-align-sm="right")
     b-form-input(
-      placeholder="Insert civic number here"
+      placeholder="Insert civic number here",
       required,
       type="text",
-      v-model="address.civicNumber",
+      v-model="address.civicNumber"
     )
 
   .text-center
-    b-button(variant="outline-secondary" @click="find") Trova in maps
+    b-button(variant="outline-secondary", @click="find") Trova in maps
 </template>
 
 <script lang="ts">
@@ -39,6 +39,9 @@ export default Vue.extend({
   props: {
     title: String,
     required: Boolean,
+    city: String,
+    street: String,
+    civic: String,
   },
   data: () => {
     return {
@@ -52,6 +55,11 @@ export default Vue.extend({
         },
       } as Address,
     };
+  },
+  created() {
+    this.address.city = this.city;
+    this.address.street = this.street;
+    this.address.civicNumber = this.civic;
   },
   methods: {
     find() {
@@ -75,8 +83,8 @@ export default Vue.extend({
           ).long_name;
           this.address.coordinates.x = r.data.results[0].geometry.location.lat;
           this.address.coordinates.y = r.data.results[0].geometry.location.lng;
-        
-          this.$emit("onAddressUpdate", this.address)
+
+          this.$emit("onAddressUpdate", this.address);
         });
     },
   },
