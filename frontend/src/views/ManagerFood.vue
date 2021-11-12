@@ -135,7 +135,7 @@ export default Vue.extend({
       api
         .foodList({})
         .then((r: AxiosResponse): void => {
-          this.foodList = r.data;
+          this.foodList = r.data as Food[];
         })
         .catch((e: AxiosError): void => {
           console.log(e);

@@ -63,7 +63,7 @@ export default Vue.extend({
   },
   methods: {
     changeView(view: "my" | "all") {
-      var payload = null;
+      var payload = {};
 
       // if (view == "my") {
       //   payload = {
@@ -74,10 +74,10 @@ export default Vue.extend({
 
       api
         .packList(payload)
-        .then((r: any) => {
-          this.packList = r.data;
+        .then((r: AxiosResponse): void => {
+          this.packList = r.data as Pack[];
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     },
   },
 });

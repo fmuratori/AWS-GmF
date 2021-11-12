@@ -165,7 +165,7 @@ export default Vue.extend({
       familyApi
         .familyList(payload)
         .then((r: AxiosResponse): void => {
-          this.familyList = r.data;
+          this.familyList = r.data as Family[];
         })
         .catch((e: AxiosError): void => console.log(e));
     },
