@@ -1,5 +1,9 @@
-import chatApi from "../api/chat";
+
+import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
+
+import chatApi from "../api/chat";
+import userApi from "../api/user";
 import { ChatMessage } from "../types";
 
 export default {
@@ -42,11 +46,11 @@ export default {
       state.donationId = "";
     },
 
-    updateUnreadMessages(state, messages) {
+    updateUnreadMessages(state, messages: ChatMessage[]) {
       state.unreadMessages = messages;
     },
 
-    removeDonationUnreadMessages(state, donationId) {
+    removeDonationUnreadMessages(state, donationId:string) {
       state.unreadMessages = state.unreadMessages.filter(
         (d) => d._id != donationId
       );
@@ -76,21 +80,21 @@ export default {
       }
     },
 
-    getChat({ commit, getters, rootState }, donationId: string) {
+    getChat({ commit, rootState }, donationId: string) {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)
-        .then((r: any) => {
-          commit("getChat", { chat: r.data, donationId: donationId });
+        .then((value: AxiosResponse<{data: { chat: ChatMessage[] }}>): void => {
+          commit("getChat", { chat: r.data.data.chat, donationId: donationId });
           commit("removeDonationUnreadMessages", donationId);
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError) => console.log(e));
     },
 
     resetChat({ commit }) {
       commit("resetChat");
     },
 
-    updateUnreadMessages({ commit }, messages) {
+    updateUnreadMessages({ commit }, messages: ChatMessage[]) {
       commit("updateUnreadMessages", messages);
     },
   },

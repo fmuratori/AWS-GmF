@@ -219,7 +219,7 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) {
-        this.donation = this.$route.params.donation as unknown as Donation;
+        this.donation = JSON.parse(this.$route.params.donation) as Donation;
       } else {
         this.$router.replace({ name: "ManagerDonationsList" });
       }

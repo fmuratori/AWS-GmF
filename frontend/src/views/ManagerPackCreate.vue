@@ -105,7 +105,8 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e: AxiosError) => {
+        .catch((e: AxiosError): void => {
+          console.log(e);
           this.$root.$bvToast.toast(
             `Unable to create pack. Retry later or contact us if the problem persist.`,
             {

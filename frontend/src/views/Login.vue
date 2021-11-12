@@ -122,7 +122,7 @@ import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
-import { LoginPayload, RegistrationPayload, Address, UserData } from "../types";
+import { LoginPayload, RegistrationPayload, Address, UserData, ChatMessage } from "../types";
 
 export default Vue.extend({
   name: "Login",
@@ -173,11 +173,11 @@ export default Vue.extend({
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
-          .then((r: AxiosResponse): void => {
+          .then((r: AxiosResponse<{ data: { data : { user:UserData, token: string}}}>): void => {
             if (r.status == 200) {
               this.$store.dispatch("login", {
-                token: r.data["token"] as string,
-                userData: r.data["user"] as UserData,
+                token: r.data.data["token"] as string,
+                userData: r.data.data["user"] as UserData,
               });
               this.showLoginErrorMessage = false;
               this.$router.replace({ name: "Home" });
@@ -190,8 +190,8 @@ export default Vue.extend({
 
               chatApi
                 .unreadMessages(this.$store.state.session.userData._id)
-                .then((r: AxiosResponse): void => {
-                  this.$store.dispatch("updateUnreadMessages", r.data);
+                .then((r: AxiosResponse<{ data: { counts:ChatMessage }}>): void => {
+                  this.$store.dispatch("updateUnreadMessages", r.data.data.counts);
                 })
                 .catch((e: AxiosError): void => console.log(e));
             }

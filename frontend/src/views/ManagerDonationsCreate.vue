@@ -58,29 +58,16 @@ b-container
             @onAddressUpdate="onAddressUpdate",
           )
 
-<<<<<<< HEAD
         b-row
           b-col
             b-button(
               block,
               variant="outline-danger",
-              @click="$router.replace({ name: 'ManagerHome' })",
+              @click="$router.replace({ name: 'Home' })",
               type="reset"
             ) Cancel
           b-col
             b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
-=======
-      b-row
-        b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.replace({ name: 'Home' })",
-            type="reset"
-          ) Cancel
-        b-col
-          b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
->>>>>>> 77856bdd322ce4ce3b96a55f01bbbb04c2b813d9
 </template>
 
 <script lang="ts">

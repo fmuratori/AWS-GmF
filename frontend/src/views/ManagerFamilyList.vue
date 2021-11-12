@@ -136,8 +136,8 @@ export default Vue.extend({
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
-        .then((r: AxiosResponse): void => {
-          this.familyList = r.data as Family[];
+        .then((r: AxiosResponse<{data: {list: Family[]}}>): void => {
+          this.familyList = r.data.data.list as Family[];
         })
         .catch((e: AxiosError): void => console.log(e));
     } else this.$router.replace({ name: "Login" });
