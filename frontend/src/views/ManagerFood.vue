@@ -62,6 +62,7 @@ import { Food, FoodPayload } from "../types";
 
 import api from "../api";
 import { FoodManagerView } from "../viewTypes";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFood",
@@ -73,7 +74,7 @@ export default Vue.extend({
     InputList,
     FoodView,
   },
-  data: ():FoodManagerView => {
+  data: (): FoodManagerView => {
     return {
       form: {
         name: "",
@@ -89,9 +90,14 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       //populate the food list
-      api.foodList(null).then((r: any) => {
-        this.foodList = r.data.data.list;
-      });
+      api
+        .foodList({})
+        .then((r: AxiosResponse): void => {
+          this.foodList = r.data as Food[];
+        })
+        .catch((e: AxiosError): void => {
+          console.log(e);
+        });
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
@@ -100,7 +106,7 @@ export default Vue.extend({
 
       api
         .addFood(this.form)
-        .then((r) => {
+        .then((): void => {
           this.$root.$bvToast.toast(`Food successfully created.`, {
             title: "Food",
             autoHideDelay: 5000,
@@ -112,7 +118,7 @@ export default Vue.extend({
           //aggiorno l'index per ricaricare il component ListFood
           this.reloadIndex += 1;
         })
-        .catch((e) => {
+        .catch((e: AxiosError) => {
           this.$root.$bvToast.toast(
             `Unable to add food. Retry later or contact us if the problem persist.`,
             {
@@ -125,11 +131,16 @@ export default Vue.extend({
         });
     },
     updateFoodList() {
-      api.foodList(null).then((r: any) => {
-        this.foodList = r.data.data.list;
-      });
+      api
+        .foodList({})
+        .then((r: AxiosResponse): void => {
+          this.foodList = r.data as Food[];
+        })
+        .catch((e: AxiosError): void => {
+          console.log(e);
+        });
     },
-    formatDate(date: Date) {
+    formatDate(date: Date): string {
       return moment(date).locale("en").format("LL");
     },
   },

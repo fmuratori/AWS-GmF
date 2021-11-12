@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
 
@@ -10,18 +10,20 @@ import {
 } from "../types";
 
 export default {
-  async loginRequest(payload: LoginPayload) {
+  async loginRequest(payload: LoginPayload): Promise<AxiosResponse> {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/user/login`, payload);
   },
 
-  async registrationRequest(payload: RegistrationPayload) {
+  async registrationRequest(
+    payload: RegistrationPayload
+  ): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/user/register`,
       payload
     );
   },
 
-  async editUser(payload: editUserPayload) {
+  async editUser(payload: editUserPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/user/update`,
       payload,
@@ -29,7 +31,7 @@ export default {
     );
   },
 
-  async changePassword(payload: changePasswordPayload) {
+  async changePassword(payload: changePasswordPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/user/change-password`,
       payload,

@@ -58,6 +58,7 @@ b-container
             @onAddressUpdate="onAddressUpdate",
           )
 
+<<<<<<< HEAD
         b-row
           b-col
             b-button(
@@ -68,6 +69,18 @@ b-container
             ) Cancel
           b-col
             b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+=======
+      b-row
+        b-col
+          b-button(
+            block,
+            variant="outline-danger",
+            @click="$router.replace({ name: 'Home' })",
+            type="reset"
+          ) Cancel
+        b-col
+          b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+>>>>>>> 77856bdd322ce4ce3b96a55f01bbbb04c2b813d9
 </template>
 
 <script lang="ts">
@@ -79,10 +92,11 @@ import InputList from "../components/input/InputList.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 
-import { Donation, Address, DonationCreationPayload } from "../types";
+import { Address, DonationCreationPayload } from "../types";
 
 import api from "../api/donation";
 import { CreatedonationView } from "../viewTypes";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -131,7 +145,8 @@ export default Vue.extend({
       this.form.address = this.$store.state.session.userData.address;
 
       if ("donation" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.donation);
+        this.form = this.$route.params
+          .donation as unknown as DonationCreationPayload;
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
@@ -178,7 +193,8 @@ export default Vue.extend({
               appendToast: false,
             });
           })
-          .catch(() => {
+          .catch((e: AxiosError): void => {
+            console.log(e);
             this.$root.$bvToast.toast(
               `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
               {

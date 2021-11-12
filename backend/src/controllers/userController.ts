@@ -62,11 +62,8 @@ export default class UserController {
 		const token = createToken(user._id)
 
 		res.status(200).json({
-			status: "success",
-			data: {
-				user: await UserModel.findById(user._id),
-				token: token
-			}
+			user: await UserModel.findById(user._id),
+			token: token
 		})
 	})
 
@@ -89,11 +86,7 @@ export default class UserController {
 
 		const updatedUser = await UserModel.findByIdAndUpdate(user._id, user, { new: true })
 
-		res.status(200).json({
-			status: "success",
-			message: "User updated",
-			data: { user: updatedUser }
-		})
+		res.status(200).json(updatedUser)
 	})
 
 	//upgrade user to volunteer type

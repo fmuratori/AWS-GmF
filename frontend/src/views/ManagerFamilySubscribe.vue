@@ -5,7 +5,7 @@ b-container
       .mb-4
         h4
           p REPORT A FAMILY
-      b-form(@submit="addFamily")
+      b-form(@submit="submit")
         .mb4
           InputText(
             title="Family name:",
@@ -47,7 +47,7 @@ b-container
               @click="$router.replace({ name: 'ManagerFamilyList' })"
             ) Cancel
           b-col
-            b-button(block, variant="outline-success", type="submit") Report
+            b-button(block, variant="outline-success", type="submit") {{ submitLabel }}
 </template>
 
 <script lang="ts">
@@ -57,9 +57,11 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 
-import { Address, Family } from "../types";
+import { Address, FamilyPayload } from "../types";
 
-import familyApi from "../api/family";
+import api from "../api/family";
+import { AxiosError, AxiosResponse } from "axios";
+import { ReportFamilyView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerFamilySubscribe",
@@ -69,12 +71,13 @@ export default Vue.extend({
     InputText,
     InputAddress,
   },
-  data: ():{form: Family} => {
+  data: (): ReportFamilyView => {
     return {
       form: {
         reporterId: "",
         name: "",
         phoneNumber: "",
+        // components: new Number(),
         address: {
           city: "",
           street: "",
@@ -84,27 +87,33 @@ export default Vue.extend({
             y: 0,
           },
         } as Address,
-      } as Family,
+      } as FamilyPayload,
+      submitLabel: "Report",
     };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if ("family" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.family);
+        this.form = this.$route.params.family as unknown as FamilyPayload;
+        this.submitLabel = "Edit";
       }
       this.form.reporterId = this.$store.state.session.userData._id;
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
-    onAddressUpdate(address: Address) { 
+    onAddressUpdate(address: Address) {
       this.form.address = address;
     },
-    addFamily(event) {
+    submit(event) {
       event.preventDefault();
-      familyApi
-        .addFamily(this.form)
-        .then((r) => {
+
+      var fun;
+      if ("family" in this.$route.params) fun = api.editFamily;
+      else fun = api.addFamily;
+
+      fun(this.form)
+        .then((r: AxiosResponse): void => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilyList" });
           this.$root.$bvToast.toast(`Familgia segnalata con successo.`, {
@@ -114,7 +123,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
+        .catch((e: AxiosError): void => {
           console.log(e);
           this.$root.$bvToast.toast(
             `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,

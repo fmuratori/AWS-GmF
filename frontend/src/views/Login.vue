@@ -112,7 +112,7 @@ b-row.justify-content-center(no-gutters)
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import InputText from "../components/input/InputText.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
@@ -122,7 +122,7 @@ import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
-import { LoginPayload, RegistrationPayload, Address } from "../types";
+import { LoginPayload, RegistrationPayload, Address, UserData } from "../types";
 
 export default Vue.extend({
   name: "Login",
@@ -173,11 +173,11 @@ export default Vue.extend({
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
-          .then((r: any) => {
+          .then((r: AxiosResponse): void => {
             if (r.status == 200) {
               this.$store.dispatch("login", {
-                token: r.data.data.token,
-                userData: r.data.data.user,
+                token: r.data["token"] as string,
+                userData: r.data["user"] as UserData,
               });
               this.showLoginErrorMessage = false;
               this.$router.replace({ name: "Home" });
@@ -190,13 +190,10 @@ export default Vue.extend({
 
               chatApi
                 .unreadMessages(this.$store.state.session.userData._id)
-                .then((r: any) => {
-                  this.$store.dispatch(
-                    "updateUnreadMessages",
-                    r.data.data.counts
-                  );
+                .then((r: AxiosResponse): void => {
+                  this.$store.dispatch("updateUnreadMessages", r.data);
                 })
-                .catch((e) => console.log(e));
+                .catch((e: AxiosError): void => console.log(e));
             }
           })
           .catch((e: AxiosError): void => {
@@ -231,10 +228,6 @@ export default Vue.extend({
             );
           });
       }
-    },
-    temp(v: string) {
-      if (v == "user") this.login.email = "user@user.com";
-      else this.login.email = "volunteer@volunteer.com";
     },
   },
 });

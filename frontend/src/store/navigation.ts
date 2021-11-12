@@ -1,38 +1,40 @@
+import { NavigationState } from "@/types";
+
 const screenSmallWidth = 576;
 const screenMediumWidth = 768;
 const screenLargeWidth = 992;
 const screenExtraLargeWidth = 1200;
 
 const navigationModule = {
-  state: () => ({
+  state: (): NavigationState => ({
     isSidebarOpen: false,
-    screenWidth: Number,
+    screenWidth: /*Number*/ 0,
   }),
   getters: {
-    isExtraSmallScreenWidth(state) {
+    isExtraSmallScreenWidth(state: NavigationState): boolean {
       return state.screenWidth < screenSmallWidth;
     },
-    isSmallScreenWidth(state) {
+    isSmallScreenWidth(state: NavigationState): boolean {
       return state.screenWidth < screenMediumWidth;
     },
-    isMediumScreenWidth(state) {
+    isMediumScreenWidth(state: NavigationState): boolean {
       return state.screenWidth < screenLargeWidth;
     },
-    isLargeScreenWidth(state) {
+    isLargeScreenWidth(state: NavigationState): boolean {
       return state.screenWidth < screenExtraLargeWidth;
     },
-    isExtraLargeScreenWidth(state) {
+    isExtraLargeScreenWidth(state: NavigationState): boolean {
       return state.screenWidth >= screenExtraLargeWidth;
     },
   },
   mutations: {
-    toggleSidebar(state) {
+    toggleSidebar(state: NavigationState): void {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    setSidebarVisible(state, value: boolean) {
+    setSidebarVisible(state: NavigationState, value: boolean): void {
       state.isSidebarOpen = value;
     },
-    updateScreenWidth(state, value: number) {
+    updateScreenWidth(state: NavigationState, value: number): void {
       state.screenWidth = value;
 
       if (
@@ -43,22 +45,22 @@ const navigationModule = {
     },
   },
   actions: {
-    showSidebar({ commit }) {
+    showSidebar({ commit }): void {
       commit("setSidebarVisible", true);
     },
-    hideSidebar({ commit }) {
+    hideSidebar({ commit }): void {
       commit("setSidebarVisible", false);
     },
-    toggleSidebar({ commit }) {
+    toggleSidebar({ commit }): void {
       commit("toggleSidebar");
     },
-    setMangerMode({ commit }) {
+    setMangerMode({ commit }): void {
       commit("setMangerMode");
     },
-    unsetMangerMode({ commit }) {
+    unsetMangerMode({ commit }): void {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit, state }, value: number) {
+    updateScreenWidth({ commit, state }, value: number): void {
       commit("updateScreenWidth", value);
     },
   },

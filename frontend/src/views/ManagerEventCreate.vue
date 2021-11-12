@@ -44,7 +44,11 @@ b-container
 
         b-row
           b-col
-            b-button(block, variant="outline-danger", @click="cancel") Cancel
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.replace({ name: 'ManagerEvents' })"
+            ) Cancel
           b-col
             b-button(block, variant="success", type="submit") {{ this.submitLabel }}
 </template>
@@ -62,6 +66,7 @@ import { Address, EventPayload } from "../types";
 import { CreateEventView } from "../viewTypes";
 
 import api from "../api";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerEventCreate",
@@ -91,7 +96,6 @@ export default Vue.extend({
           },
         } as Address,
       } as EventPayload,
-      cancelRoute: "ManagerHome",
       submitLabel: "Create",
     };
   },
@@ -101,8 +105,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if ("event" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.event);
-        this.cancelRoute = "ManagerEvents";
+        this.form = this.$route.params.event as unknown as EventPayload;
         this.submitLabel = "Edit";
       }
     } else this.$router.replace({ name: "Login" });
@@ -116,8 +119,7 @@ export default Vue.extend({
       else fun = api.createEvent;
 
       fun(this.form)
-        .then((r) => {
-          console.log(r);
+        .then(() => {
           this.$router.replace({ name: "ManagerEvents" });
           this.$root.$bvToast.toast(`Event successfully created.`, {
             title: "Event",
@@ -126,7 +128,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
+        .catch((e: AxiosError) => {
           this.$root.$bvToast.toast(
             `Unable to create the event. Retry later or contact us if the problem persist.`,
             {
@@ -137,9 +139,6 @@ export default Vue.extend({
             }
           );
         });
-    },
-    cancel() {
-      this.$router.replace({ name: this.cancelRoute });
     },
   },
 });

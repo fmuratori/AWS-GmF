@@ -125,6 +125,7 @@ import moment from "moment";
 import { Donation, Address, ChatMessage } from "../types";
 
 import donationApi from "../api/donation";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsInspect",
@@ -218,7 +219,7 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) {
-        this.donation = JSON.parse(this.$route.params.donation);
+        this.donation = this.$route.params.donation as unknown as Donation;
       } else {
         this.$router.replace({ name: "ManagerDonationsList" });
       }
@@ -269,7 +270,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
+        .catch((e: AxiosError): void => {
           this.$root.$bvToast.toast(
             `Impossibile eliminare la donazione. Riprova tra qualche minuto.`,
             {
@@ -297,7 +298,7 @@ export default Vue.extend({
       this.donation.status = "waiting";
       donationApi
         .editDonation(this.donation)
-        .then((r: any) => {
+        .then(() => {
           this.$root.$bvToast.toast(`Ritiro della donazione annulato con successo.`, {
             title: "Donazione",
             autoHideDelay: 5000,
@@ -306,7 +307,7 @@ export default Vue.extend({
           });
           this.$router.replace({ name: "ManagerDonationsVolunteerList" });
         })
-        .catch((e: any) => {
+        .catch((e: AxiosError): void => {
           this.$root.$bvToast.toast(
             `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
             {

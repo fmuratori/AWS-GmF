@@ -30,11 +30,11 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import familyApi from "../api/family";
 import api from "../api";
 
 import { Pack } from "../types";
 import { PackManagerView } from "../viewTypes";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerPacks",
@@ -54,16 +54,16 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       // TODO: mostrare uno spinner mentre sono caricati i dati
       api
-        .packList(null)
-        .then((r: any) => {
-          this.packList = r.data.data.list;
+        .packList({})
+        .then((r: AxiosResponse): void => {
+          this.packList = r.data as Pack[];
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
     changeView(view: "my" | "all") {
-      var payload = null;
+      var payload = {};
 
       // if (view == "my") {
       //   payload = {
@@ -74,10 +74,10 @@ export default Vue.extend({
 
       api
         .packList(payload)
-        .then((r: any) => {
-          this.packList = r.data.data.list;
+        .then((r: AxiosResponse): void => {
+          this.packList = r.data as Pack[];
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     },
   },
 });

@@ -65,7 +65,7 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import donationApi from "../api/donation";
 
 import { Donation } from "../types";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsRetrieve",
@@ -102,10 +102,10 @@ export default Vue.extend({
       // TODO: mostrare uno spinner mentre sono caricati i dati
       donationApi
         .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
-        .then((r: any) => {
-          this.donations = r.data.data.list;
+        .then((r: AxiosResponse): void => {
+          this.donations = r.data as Donation[];
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     },
     submit(e: any) {
       e.preventDefault();
@@ -132,7 +132,7 @@ export default Vue.extend({
         });
 
         Promise.all(promises)
-          .then((r: any) => {
+          .then(() => {
             this.$router.replace({ name: "ManagerDonationsVolunteerList" });
             this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
               title: "Donazioni",
@@ -141,8 +141,7 @@ export default Vue.extend({
               appendToast: false,
             });
           })
-          .catch((e: any) => {
-            console.log(e);
+          .catch(() => {
             this.$root.$bvToast.toast(
               `Impossibile prenotare le donazioni selezionate.`,
               {

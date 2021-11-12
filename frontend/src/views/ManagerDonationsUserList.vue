@@ -120,6 +120,7 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import donationApi from "../api/donation";
 
 import { Donation } from "../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsUserList",
@@ -140,13 +141,13 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       donationApi
         .filterUserActiveDonations(this.$store.state.session.userData._id)
-        .then((r: any) => {
-          this.donations = r.data.data.list;
-          this.donationsBackup = r.data.data.list;
+        .then((r: AxiosResponse): void => {
+          this.donations = r.data as Donation[];
+          this.donationsBackup = r.data as Donation[];
           this.orderBy(this.orderByMode);
           this.filterBy(this.filterByMode);
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     } else this.$router.replace({ name: "Login" });
   },
   methods: {

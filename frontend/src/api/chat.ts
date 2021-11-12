@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
 
 export default {
-  async unreadMessages(userId: string) {
+  async unreadMessages(userId: string): Promise<AxiosResponse> {
     const payload = {
       userId: userId,
     };
@@ -14,7 +14,10 @@ export default {
     );
   },
 
-  async getDonationChat(donationId: string, userId: string) {
+  async getDonationChat(
+    donationId: string,
+    userId: string
+  ): Promise<AxiosResponse> {
     const payload = {
       donationId: donationId,
       userId: userId,

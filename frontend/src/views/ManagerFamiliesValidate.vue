@@ -111,6 +111,7 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import familyApi from "../api/family";
 
 import { Family } from "../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamilies",
@@ -136,10 +137,10 @@ export default Vue.extend({
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
-        .then((r: any) => {
-          this.familyList = r.data.data.list;
+        .then((r: AxiosResponse): void => {
+          this.familyList = r.data as Family[];
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
@@ -163,10 +164,10 @@ export default Vue.extend({
 
       familyApi
         .familyList(payload)
-        .then((r: any) => {
-          this.familyList = r.data.data.list;
+        .then((r: AxiosResponse): void => {
+          this.familyList = r.data as Family[];
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     },
     // verifyFamily(familyId: string) {
     //   api

@@ -21,7 +21,7 @@ export default Vue.extend({
   props: {
     title: String,
     placeholder: String,
-    text: String,
+    text: [String, Number],
     icon: String,
     type: {
       type: String,

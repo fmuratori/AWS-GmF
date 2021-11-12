@@ -32,6 +32,7 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import api from "../api";
 
 import { Event } from "../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsList",
@@ -52,10 +53,11 @@ export default Vue.extend({
         .eventList({
           filter: { ownerVolunteerId: this.$store.state.session.userData._id },
         })
-        .then((r: any) => {
-          this.events = r.data.data.list;
+        .then((r: AxiosResponse): void => {
+          this.events = r.data as Event[];
+          console.log(r);
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
     } else this.$router.replace({ name: "Login" });
   },
   methods: {

@@ -14,9 +14,7 @@ export default class ControllerFactory<T> {
             //create a new document
             await model.create(req.body)
 
-            res.status(200).json({
-                status: "success"
-            })
+            res.status(200).send("success")
         })
 
     /**
@@ -37,17 +35,17 @@ export default class ControllerFactory<T> {
                 })
                 return
             }
-            
+
             // TODO: verificare se _id rompe qualcosa
             // const elem = await model.findByIdAndUpdate(req.body.id, req.body, {new: true})
-            const elem = await model.findByIdAndUpdate(req.body._id, req.body, {new: true})
+            await model.findByIdAndUpdate(req.body._id, req.body, { new: true })
 
             res.status(200).json({
                 status: "success"
             })
         })
 
-    delete = (model: Model<T>) => 
+    delete = (model: Model<T>) =>
         catchAsync(async (req: Request, res: Response) => {
             if (!req.body.id) {
                 res.status(400).json({
@@ -57,7 +55,7 @@ export default class ControllerFactory<T> {
                 return
             }
 
-            const elem = await model.findByIdAndDelete(req.body.id)
+            await model.findByIdAndDelete(req.body.id)
 
             res.status(200).json({
                 status: "success"
@@ -82,11 +80,7 @@ export default class ControllerFactory<T> {
                 .skip(req.body.page * req.body.pageSize)
                 .limit(req.body.pageSize)
 
-            res.status(200).json({
-                status: "success",
-                results: list.length,
-                data: { list }
-            })
+            res.status(200).json(list)
         })
 
     findOne = (model: Model<T>, filter: FilterQuery<T>, projection: any | null) =>
@@ -101,9 +95,6 @@ export default class ControllerFactory<T> {
                 return
             }
 
-            res.status(200).json({
-                status: "success",
-                data: { elem }
-            })
+            res.status(200).json(elem)
         })
 }
