@@ -61,6 +61,7 @@ import InputList from "../components/input/InputList.vue";
 import { Food, FoodPayload } from "../types";
 
 import api from "../api";
+import { FoodManagerView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerFood",
@@ -72,12 +73,11 @@ export default Vue.extend({
     InputList,
     FoodView,
   },
-  data: function () {
+  data: ():FoodManagerView => {
     return {
       form: {
         name: "",
         number: 0,
-        expirationDate: null,
         labels: new Array<string>(),
       } as FoodPayload,
       foodList: new Array<Food>(),

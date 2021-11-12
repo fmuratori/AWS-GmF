@@ -75,13 +75,12 @@ export default Vue.extend({
     InputText,
     InputAddress,
   },
-  data: function () {
+  data: ():{form: FamilyPayload} => {
     return {
       form: {
         reporterId: "",
         name: "",
         phoneNumber: "",
-        components: null,
         address: {
           city: "",
           street: "",
@@ -97,7 +96,9 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if ("family" in this.$route.params) this.form = this.$route.params.family;
+      if ("family" in this.$route.params) {
+        this.form = JSON.parse(this.$route.params.family);
+      }
       this.form.reporterId = this.$store.state.session.userData._id;
     } else this.$router.replace({ name: "Login" });
   },

@@ -34,6 +34,7 @@ import familyApi from "../api/family";
 import api from "../api";
 
 import { Pack } from "../types";
+import { PackManagerView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerPacks",
@@ -41,7 +42,7 @@ export default Vue.extend({
     Navbar,
     Sidebar,
   },
-  data: () => {
+  data: (): PackManagerView => {
     return {
       view: "all",
       packList: new Array<Pack>(),
@@ -71,10 +72,10 @@ export default Vue.extend({
       // }
       this.view = view;
 
-      familyApi
-        .familyList(payload)
+      api
+        .packList(payload)
         .then((r: any) => {
-          this.familyList = r.data.data.list;
+          this.packList = r.data.data.list;
         })
         .catch((e) => console.log(e));
     },

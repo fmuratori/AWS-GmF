@@ -56,16 +56,11 @@ export interface changePasswordPayload {
 
 export interface DonationCreationPayload {
   userId: string;
-  foods: [string];
+  foods: Array<string>;
   expirationDate: string;
   address: Address;
   additionalInformation: string;
-  pickUpPeriod: [
-    {
-      weekDay: string;
-      period: string;
-    }
-  ];
+  pickUpPeriod: Array<{ weekDay: string, period: string }>
 }
 
 export interface Donation {
@@ -127,7 +122,7 @@ export interface Family {
 }
 
 export interface EventPayload {
-  id: string | null;
+  _id: string | null;
   ownerVolunteerId: string;
   eventTitle: string;
   description: string;
@@ -173,6 +168,9 @@ export interface Food {
   number: number;
   expirationDate: Date;
   labels: [string];
+}
+export interface SelectableFood extends Food {
+  selected: number
 }
 
 // export interface OfferResponse {

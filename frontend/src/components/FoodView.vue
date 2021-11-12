@@ -51,7 +51,8 @@ div
 
 <script lang="ts">
 import Vue from "vue";
-import { Food } from "../types";
+import { SelectableFood } from "../types";
+import { FoodView } from "../viewTypes";
 import moment from "moment";
 
 import api from "../api";
@@ -61,9 +62,9 @@ export default Vue.extend({
   props: {
     selectable: Boolean,
   },
-  data: () => {
+  data: (): FoodView => {
     return {
-      foodList: new Array<Food>(),
+      foodList: new Array<SelectableFood>(),
       tableFields: [
         {
           key: "name",
@@ -78,6 +79,7 @@ export default Vue.extend({
         {
           key: "selected",
           label: "Selected",
+          sortable: false
         },
         {
           key: "expirationDate",
@@ -90,12 +92,13 @@ export default Vue.extend({
         {
           key: "labels",
           label: "Labels",
+          sortable: false
         },
       ],
       totalRows: 0,
       currentPage: 1,
       perPage: 10,
-      filter: null,
+      filter: "",
       filterOn: ["name", "labels"],
       sortBy: "",
       sortDesc: false,

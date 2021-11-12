@@ -59,6 +59,7 @@ import InputAddress from "../components/input/InputAddress.vue";
 import InputDate from "../components/input/InputDate.vue";
 
 import { Address, EventPayload } from "../types";
+import { CreateEventView } from "../viewTypes";
 
 import api from "../api";
 
@@ -72,14 +73,13 @@ export default Vue.extend({
     InputAddress,
     InputDate,
   },
-  data: function () {
+  data: (): CreateEventView => {
     return {
       form: {
-        id: null,
+        _id: null,
         ownerVolunteerId: "",
         eventTitle: "",
         description: "",
-        date: null,
         image: "",
         address: {
           city: "",
@@ -101,8 +101,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if ("event" in this.$route.params) {
-        this.form = this.$route.params.event;
-        this.form.id = this.$route.params.event._id;
+        this.form = JSON.parse(this.$route.params.event);
         this.cancelRoute = "ManagerEvents";
         this.submitLabel = "Edit";
       }
@@ -141,11 +140,6 @@ export default Vue.extend({
     },
     cancel() {
       this.$router.replace({ name: this.cancelRoute });
-    },
-    tmp(e) {
-      console.log(e);
-      this.date = e;
-      console.log("date: " + this.date);
     },
   },
 });
