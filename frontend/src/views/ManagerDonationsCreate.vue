@@ -73,9 +73,10 @@ import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 
-import { Donation, Address } from "../types";
+import { Donation, Address, DonationCreationPayload } from "../types";
 
 import api from "../api/donation";
+import { CreatedonationView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -86,7 +87,7 @@ export default Vue.extend({
     InputList,
     InputTextarea,
   },
-  data: function () {
+  data: (): CreatedonationView => {
     return {
       weekDays: {
         lun: "Monday",
@@ -100,7 +101,7 @@ export default Vue.extend({
       form: {
         userId: "",
         foods: new Array<string>(),
-        expirationDate: null,
+        expirationDate: "",
         address: {
           city: "",
           street: "",
@@ -112,7 +113,7 @@ export default Vue.extend({
         } as Address,
         additionalInformation: "",
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
-      } as Donation,
+      } as DonationCreationPayload,
       submitLabel: "Create",
     };
   },
@@ -123,11 +124,9 @@ export default Vue.extend({
       this.form.address = this.$store.state.session.userData.address;
 
       if ("donation" in this.$route.params) {
-        this.form = this.$route.params.donation;
+        this.form = JSON.parse(this.$route.params.donation);
         this.form.foods.push("");
-        this.mode = "edit";
-      } else {
-        this.mode = "create";
+        this.submitLabel = "Edit";
       }
     } else this.$router.replace({ name: "Login" });
   },

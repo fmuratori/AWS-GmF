@@ -4,7 +4,7 @@ b-form-group(:label="title")
     b-form-datepicker.my-no-right-border(
       :placeholder="placeholder",
       :required="required",
-      :value="date"
+      :value="date",
       v-model="selectedDate",
       @input="$emit('data', $event)",
       reset-button,
@@ -28,12 +28,12 @@ export default Vue.extend({
   props: {
     title: String,
     placeholder: String,
-    date: Date,
+    date: String,
     required: Boolean,
   },
-  data: function () {
+  data: (): { selectedDate: string } => {
     return {
-      selectedDate: null,
+      selectedDate: "",
     };
   },
   created() {
@@ -41,8 +41,8 @@ export default Vue.extend({
   },
   methods: {
     onCancel() {
-      this.selectedDate = null;
-      this.$emit("data", this.$event);
+      this.selectedDate = "";
+      this.$emit("data", "");
     },
   },
 });

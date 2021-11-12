@@ -48,9 +48,10 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import FoodView from "../components/FoodView.vue";
 
-import { Family, Food, PackPayload } from "../types";
+import { Family, PackPayload, SelectableFood } from "../types";
 
 import api from "../api";
+import { PackCreateView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerPackCreate",
@@ -59,9 +60,9 @@ export default Vue.extend({
     Sidebar,
     FoodView,
   },
-  data: function () {
+  data: (): PackCreateView => {
     return {
-      foodList: new Array<Food>(),
+      foodList: new Array<SelectableFood>(),
       family: {} as Family,
       form: {
         foodList: new Array<{ foodId: string; number: number }>(),
@@ -73,7 +74,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if ("family" in this.$route.params) {
-        this.family = this.$route.params.family;
+        this.family = JSON.parse(this.$route.params.family);
         this.form.familyId = this.family._id;
       }
     } else this.$router.replace({ name: "Login" });
