@@ -101,9 +101,7 @@ const routes: Array<RouteConfig> = [
     path: "/manager/food/add",
     name: "ManagerFood",
     component: () =>
-      import(
-        /* webpackChunkName: "ManagerFood" */ "../views/ManagerFood.vue"
-      ),
+      import(/* webpackChunkName: "ManagerFood" */ "../views/ManagerFood.vue"),
   },
   {
     path: "/manager/pack/create",

@@ -156,7 +156,7 @@ export default Vue.extend({
           city: "",
           coordinates: {
             x: 0,
-            y: 0
+            y: 0,
           },
         } as Address,
       } as RegistrationPayload,
@@ -205,31 +205,31 @@ export default Vue.extend({
       } else {
         this.registration.address = this.$refs.inputAddress.address;
         userApi
-        .registrationRequest(this.registration)
-        .then(() => {
-          this.isLoginSelected = true;
-          this.$bvToast.toast(
-            `Operazione avvenuta con successo. Effettua il login per accedere.`,
-            {
-              title: "Registrazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            }
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$bvToast.toast(
-            `Errore durante la fase di registrazione, riprova.`,
-            {
-              title: "Registrazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
-        });
+          .registrationRequest(this.registration)
+          .then(() => {
+            this.isLoginSelected = true;
+            this.$bvToast.toast(
+              `Operazione avvenuta con successo. Effettua il login per accedere.`,
+              {
+                title: "Registrazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+            this.$bvToast.toast(
+              `Errore durante la fase di registrazione, riprova.`,
+              {
+                title: "Registrazione",
+                autoHideDelay: 5000,
+                variant: "danger",
+                appendToast: false,
+              }
+            );
+          });
       }
     },
     temp(v: string) {

@@ -29,7 +29,10 @@ export default {
   },
 
   async editFamily(payload: FamilyPayload) {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/family/edit`, payload,
-    { headers: store.getters.getSessionHeader });
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/family/edit`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
   },
 };

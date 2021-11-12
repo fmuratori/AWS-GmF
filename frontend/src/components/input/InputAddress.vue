@@ -38,7 +38,7 @@ export default Vue.extend({
   name: "InputAddress",
   props: {
     title: String,
-    required: Boolean
+    required: Boolean,
   },
   data: () => {
     return {
@@ -48,26 +48,36 @@ export default Vue.extend({
         civicNumber: "75",
         coordinates: {
           y: 0,
-          x: 0
-        }
+          x: 0,
+        },
       } as Address,
       isChecked: false,
-    }
+    };
   },
   methods: {
     find() {
       mapsApi
         .getLocationCoordinates(
-          this.address.city + " " + this.address.civicNumber + " " + this.address.street
+          this.address.city +
+            " " +
+            this.address.civicNumber +
+            " " +
+            this.address.street
         )
-        .then((r:any) => {
+        .then((r: any) => {
           this.isChecked = true;
 
-          this.address.city = r.data.results[0].address_components.find(c => c.types.includes("administrative_area_level_3")).long_name
-          this.address.street = r.data.results[0].address_components.find(c => c.types.includes("route")).long_name
-          this.address.civicNumber = r.data.results[0].address_components.find(c => c.types.includes("street_number")).long_name
-          this.address.coordinates.x = r.data.results[0].geometry.location.lat
-          this.address.coordinates.y = r.data.results[0].geometry.location.lng
+          this.address.city = r.data.results[0].address_components.find((c) =>
+            c.types.includes("administrative_area_level_3")
+          ).long_name;
+          this.address.street = r.data.results[0].address_components.find((c) =>
+            c.types.includes("route")
+          ).long_name;
+          this.address.civicNumber = r.data.results[0].address_components.find(
+            (c) => c.types.includes("street_number")
+          ).long_name;
+          this.address.coordinates.x = r.data.results[0].geometry.location.lat;
+          this.address.coordinates.y = r.data.results[0].geometry.location.lng;
         });
     },
   },
