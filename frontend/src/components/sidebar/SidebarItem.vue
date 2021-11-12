@@ -6,7 +6,7 @@ b-row.pl-3.pr-1.sidebar-item(
   :class="{ 'sidebar-item-selected': isRouteSelected(route) }"
 )
   b-col
-    label.py-1 {{ text }}
+    label {{ text }}
   b-col(cols="auto")
     b-icon(icon="chevron-right")
 </template>
@@ -21,8 +21,8 @@ export default Vue.extend({
     route: String,
   },
   methods: {
-    isRouteSelected(routeName: string): boolean {
-      return this.$router.currentRoute.name == routeName;
+    isRouteSelected(routeName: string) {
+      return this.$route.name == routeName;
     },
     changePage(pageName: string): void {
       if (this.$router.currentRoute.name != pageName) {

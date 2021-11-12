@@ -65,9 +65,6 @@ export default Vue.extend({
     return {};
   },
   computed: {
-    currentRouteName() {
-      return this.$route.name;
-    },
     userFullname() {
       const fullname =
         this.$store.state.session.userData.name +
@@ -80,9 +77,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    isRouteSelected(routeName: string) {
-      return this.currentRouteName == routeName;
-    },
     changePage(pageName: string) {
       if (this.$router.currentRoute.name != pageName) {
         this.$router.push({ name: pageName });
@@ -137,17 +131,5 @@ export default Vue.extend({
 
 .sidebar-hr {
   background-color: $greyscale5;
-}
-
-.sidebar-item {
-  border-radius: 0.25em;
-}
-
-.sidebar-item:hover {
-  background-color: $greyscale1;
-}
-
-.sidebar-item-selected {
-  background-color: $color1;
 }
 </style>
