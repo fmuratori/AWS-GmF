@@ -6,7 +6,9 @@ b-container
 
     b-row
       b-col
-        b-button-group(v-if="this.$store.state.session.userData.type != 'user'")
+        b-button-group(
+          v-if="this.$store.state.session.userData.type != 'user'"
+        )
           b-button(@click="changeView('my', status)") Only my
           b-button(@click="changeView('all', status)") All
 
@@ -15,40 +17,64 @@ b-container
           b-button(@click="changeView(view, 'pending')") In attesa
           b-button(@click="changeView(view, 'all')") Tutte
 
-    b-row(no-gutters class="mb-2")
+    b-row.mb-2(no-gutters)
       b-col(cols="auto")
       p Stato segnalazioni:
       b-col
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="changeView(view, 'verified')" :class="{'my-button-selected': orderByMode == 'creation_date'}") Segnalazioni accettate
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="changeView(view, 'pending')" :class="{'my-button-selected': orderByMode == 'unread_messages'}") In attesa di accettazione
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="changeView(view, 'all')" :class="{'my-button-selected': orderByMode == 'expiration_date'}") Tutte le segnalazioni
+        b-button.ml-2(
+          pill,
+          variant="secondary",
+          size="sm",
+          @click="changeView(view, 'verified')",
+          :class="{ 'my-button-selected': orderByMode == 'creation_date' }"
+        ) Segnalazioni accettate
+        b-button.ml-2(
+          pill,
+          variant="secondary",
+          size="sm",
+          @click="changeView(view, 'pending')",
+          :class="{ 'my-button-selected': orderByMode == 'unread_messages' }"
+        ) In attesa di accettazione
+        b-button.ml-2(
+          pill,
+          variant="secondary",
+          size="sm",
+          @click="changeView(view, 'all')",
+          :class="{ 'my-button-selected': orderByMode == 'expiration_date' }"
+        ) Tutte le segnalazioni
 
     b-row
       div(v-if="familyList.length == 0") No family segnalation found for this user
-      b-col(sm=12 md=6 v-for="(family, idx) in familyList" :key="idx")
-        b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
+      b-col(sm=12, md=6, v-for="(family, idx) in familyList", :key="idx")
+        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
           b-card-text
-            div(class="px-4 pt-4")
+            .px-4.pt-4
               h5 {{ family.name }}
               b-row
                 b-col(cols="auto")
                   div(class="")
-                    p(class="mb-0") Numero di cellulare:
-                    p(class="font-weight-bold mb-2") {{ family.phoneNumber }}
+                    p.mb-0 Numero di cellulare:
+                    p.font-weight-bold.mb-2 {{ family.phoneNumber }}
 
                   div(class="")
-                    p(class="mb-0") Numero elementi della famiglia:
-                    p(class="font-weight-bold mb-2") {{ family.components }}
+                    p.mb-0 Numero elementi della famiglia:
+                    p.font-weight-bold.mb-2 {{ family.components }}
 
                   div(class="")
-                    p(class="mb-0") Indirizzo:
-                    p(class="font-weight-bold mb-2") {{ family.address.street }} {{ family.address.civicNumber }}, {{ family.address.city }}
+                    p.mb-0 Indirizzo:
+                    p.font-weight-bold.mb-2 {{ family.address.street }} {{ family.address.civicNumber }}, {{ family.address.city }}
                 b-col(cols="auto")
-                  div(class="mb-2")
-                    p(class="mb-0") Stato segnalazione:
+                  .mb-2
+                    p.mb-0 Stato segnalazione:
                     h5
-                      b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-                      b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
+                      b-badge(
+                        v-if="family.status == 'pending'",
+                        variant="warning"
+                      ) {{ family.status }}
+                      b-badge(
+                        v-if="family.status == 'verified'",
+                        variant="success"
+                      ) {{ family.status }}
 
           //- b-button.b-card-footer-button(
           //-   block,
@@ -103,8 +129,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
-
       this.userRole = this.$store.state.session.userData.type;
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
@@ -116,9 +140,7 @@ export default Vue.extend({
           this.familyList = r.data.data.list;
         })
         .catch((e) => console.log(e));
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     changeView(view: "my" | "all", status: "verified" | "pending" | "all") {

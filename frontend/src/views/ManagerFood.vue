@@ -16,7 +16,7 @@ b-container
                   required,
                   v-on:data="(e) => { form.name = e; }"
                 )
-                
+
                 InputText(
                   title="Units: ",
                   placeholder="Insert food units here",
@@ -34,11 +34,15 @@ b-container
 
                 InputList(
                   title="Labels:",
-                  placeholder="Insert label here"
+                  placeholder="Insert label here",
                   v-on:data="(e) => { form.labels = e; }"
                 )
 
-              b-button.b-card-footer-button(block, type="submit", variant="success") Add
+              b-button.b-card-footer-button(
+                block,
+                type="submit",
+                variant="success"
+              ) Add
 
       b-col(sm=12, md=8)
         FoodView(:key="reloadIndex")
@@ -82,16 +86,13 @@ export default Vue.extend({
     };
   },
   created() {
-    this.$store.dispatch("showSidebar");
-
-    //populate the food list
-    api.foodList(null).then((r: any) => {
-      this.foodList = r.data.data.list;
-    });
-
     // check if user is logged in
-    if (!this.$store.getters.isUserLogged)
-      this.$router.replace({ name: "Login" });
+    if (this.$store.getters.isUserLogged) {
+      //populate the food list
+      api.foodList(null).then((r: any) => {
+        this.foodList = r.data.data.list;
+      });
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     addFood(event) {

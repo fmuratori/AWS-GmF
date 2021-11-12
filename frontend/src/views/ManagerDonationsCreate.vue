@@ -1,59 +1,36 @@
 <template lang="pug">
-b-row.justify-content-center.my-5(no-gutters)
-  b-col(md=6, sm=8, cols=10)
-    p CREA UNA DONAZIONE
-    b-form(@submit="submit")
-      b-card.mb-2(bg-variant="light")
+b-container
+  b-row.justify-content-center.my-5.no-gutters
+    b-col(lg=8, md=10, sm=12)
+      .mb-4
+        h4
+          p CREATE DONATION
+      b-form(@submit="submit")
         .mb-4
-          b-form-group#input-group-1(label="Alimenti:", label-for="input-1") 
-            b-input-group.mb-1(v-for="(value, idx) in form.foods", :key="idx")
-              b-form-input#input-1.my-no-right-border(
-                type="text",
-                placeholder="pacco di pasta da 250gg",
-                @input="foodInputValueChange(idx)",
-                v-model="form.foods[idx]"
-              )
-              b-input-group-append
-                b-button.my-no-left-border(
-                  variant="danger",
-                  @click="foodDeleteClicked(idx)",
-                  :disabled="form.foods[idx] == ''"
-                ) 
-                  span Cancella
-                  b-icon(icon="x", aria-hidden="true")
+          InputList(
+            title="Foods:",
+            placeholder="Insert foods here",
+            v-on:data="(e) => { form.foods = e; }"
+          )
 
         .mb-4
-          b-form-group#input-group-2(
-            label="Data scadenza donazione:",
-            label-for="input-2"
+          InputDate(
+            title="Donation expiration date:",
+            placeholder="Select a date",
+            :date="form.expirationDate",
+            required,
+            v-on:data="(e) => { form.expirationDate = e; }"
           )
-            b-input-group
-              b-form-datepicker#input-2.my-no-right-border(
-                required,
-                v-model="form.expirationDate",
-                reset-button,
-                close-button
-              )
-              b-input-group-append
-                b-button.my-no-left-border(
-                  variant="danger",
-                  @click="form.expirationDate = null",
-                  :disabled="form.expirationDate == null"
-                ) 
-                  span Cancella
-                  b-icon(icon="x", aria-hidden="true")
 
         .mb-4
-          b-form-group#input-group-6(
-            label="Informazioni aggiuntive:",
-            label-for="input-6"
+          InputTextarea(
+            title="Additional information:",
+            placeholder="Insert additional information here",
+            :text="form.additionalInformation",
+            v-on:data="(e) => { form.additionalInformation = e; }"
           )
-            b-form-textarea#input-6(
-              rows="3",
-              max-rows="6",
-              v-model="form.additionalInformation"
-            )
-        div
+
+        .mb-4
           p.font-weight-bold.text-center Periodo ritiro
           b-row.mb-1(
             v-for="(weekDayName, weekDay, idx) in weekDays",
@@ -66,55 +43,64 @@ b-row.justify-content-center.my-5(no-gutters)
                 b-button(
                   @click="weekDayButtonClick(weekDay, 'morning')",
                   :variant="computeButtonVariant(weekDay, 'morning')"
-                ) Mattino
+                ) Morning
                 b-button(
                   @click="weekDayButtonClick(weekDay, 'afternoon')",
                   :variant="computeButtonVariant(weekDay, 'afternoon')"
-                ) Pomeriggio
+                ) Afternoon
                 b-button(
                   @click="weekDayButtonClick(weekDay, 'evening')",
                   :variant="computeButtonVariant(weekDay, 'evening')"
-                ) Sera
+                ) Evening
 
-      b-button(block, variant="outline-success", type="submit") Procedi
-      b-button(
-        block,
-        variant="outline-danger",
-        @click="$router.replace({ name: 'ManagerHome' })",
-        type="reset"
-      ) Annulla
+      b-row
+        b-col
+          b-button(
+            block,
+            variant="outline-danger",
+            @click="$router.replace({ name: 'ManagerHome' })",
+            type="reset"
+          ) Cancel
+        b-col
+          b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
+import InputDate from "../components/input/InputDate.vue";
+import InputList from "../components/input/InputList.vue";
+import InputTextarea from "../components/input/InputTextarea.vue";
 
 import { Donation, Address } from "../types";
 
-import donationApi from "../api/donation";
+import api from "../api/donation";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
   components: {
     Navbar,
     Sidebar,
+    InputDate,
+    InputList,
+    InputTextarea,
   },
   data: function () {
     return {
       weekDays: {
-        lun: "Lunedì",
-        mar: "Martedì",
-        mer: "Mercoledì",
-        gio: "Giovedì",
-        ven: "Venerdì",
-        sab: "Sabato",
-        dom: "Domenica",
+        lun: "Monday",
+        mar: "Tuesday",
+        mer: "Wednesday",
+        gio: "Thursday",
+        ven: "Friday",
+        sab: "Saturday",
+        dom: "Sunday",
       },
       form: {
         userId: "",
-        foods: [""],
-        expirationDate: "",
+        foods: new Array<string>(),
+        expirationDate: null,
         address: {
           city: "",
           street: "",
@@ -127,28 +113,23 @@ export default Vue.extend({
         additionalInformation: "",
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
       } as Donation,
-      mode: "",
+      submitLabel: "Create",
     };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
       this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
 
       if ("donation" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.donation);
+        this.form = this.$route.params.donation;
         this.form.foods.push("");
         this.mode = "edit";
       } else {
         this.mode = "create";
       }
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     computeButtonVariant(weekDay: string, period: string) {
@@ -157,16 +138,6 @@ export default Vue.extend({
           wd.weekDay == weekDay && wd.period == period
       );
       return idx != -1 ? "dark" : "outline-secondary";
-    },
-    foodInputValueChange(inputIdx: number) {
-      if (inputIdx == this.form.foods.length - 1) {
-        this.form.foods.push("");
-      } else if (this.form.foods[inputIdx] == "") {
-        this.foodDeleteClicked(inputIdx);
-      }
-    },
-    foodDeleteClicked(inputIdx: number) {
-      this.form.foods.splice(inputIdx, 1);
     },
     weekDayButtonClick(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(
@@ -181,47 +152,14 @@ export default Vue.extend({
       }
     },
     submit(event) {
-      this.mode == "edit" ? this.editDonation(event) : this.addDonation(event);
-    },
-    editDonation(event) {
       event.preventDefault();
-      if (this.formChecks()) {
-        this.form.foods.pop();
-        donationApi
-          .editDonation(this.form)
-          .then(() => {
-            this.$router.replace({ name: "ManagerDonationsList" });
-            this.$bvToast.toast(
-              `Modifica della donazione effettuata con successo.`,
-              {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
-          })
-          .catch(() => {
-            this.$bvToast.toast(
-              `Impossibile modificare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
-              {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
-          });
-      }
-    },
-    addDonation(event) {
-      event.preventDefault();
-      if (this.formChecks()) {
-        // removes empty string element
-        this.form.foods.pop();
 
-        donationApi
-          .addDonation(this.form)
+      var fun;
+      if ("donation" in this.$route.params) fun = api.editDonation;
+      else fun = api.addDonation;
+
+      if (this.formChecks()) {
+        fun(this.form)
           .then(() => {
             this.$router.replace({ name: "ManagerDonationsList" });
             this.$bvToast.toast(`Donazione effettuata con successo.`, {

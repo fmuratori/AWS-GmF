@@ -1,23 +1,26 @@
 <template lang="pug">
-  b-container
-    div(class="justify-content-center my-5")
-      p YOUR EVENTS
-      b-row
-        div(v-if="events.length==0") No event found for this user
-        b-col(sm=12 md=6 v-for="(event, idx) in events" :key="idx")
-          b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
-            b-card-text
-              div(class="px-4 pt-4")
-                h5 {{ event.eventTitle }}
-                b-row()
-                  b-col(cols="auto")
-                    div(class="mb-2")
-                      p(class="mb-0") Date: 
-                        b {{ formatDate(event) }}
-                  b-col(cols="auto")
-                    p(class="mb-2") {{ event.description }}
-              b-button(block @click="$router.replace({name: 'ManagerEventCreate', params: {'event': event}})" class="b-card-footer-button") Edit
-
+b-container
+  .justify-content-center.my-5
+    h3 YOUR EVENTS
+    b-row
+      div(v-if="events.length == 0") No event found for this user
+      b-col(sm=12, md=6, v-for="(event, idx) in events", :key="idx")
+        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+          b-card-text
+            .px-4.pt-4
+              h5 {{ event.eventTitle }}
+              b-row
+                b-col(cols="auto")
+                  .mb-2
+                    p.mb-0 Date:
+                      b {{ formatDate(event) }}
+                b-col(cols="auto")
+                  p.mb-2 {{ event.description }}
+            b-button(
+              block,
+              variant="success",
+              @click="$router.replace({ name: 'ManagerEventCreate', params: { event: event } })"
+            ) Edit
 </template>
 
 <script lang="ts">
@@ -44,8 +47,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
-
       // TODO: mostrare uno spinner mentre sono caricati i dati
       api
         .eventList({
@@ -55,9 +56,7 @@ export default Vue.extend({
           this.events = r.data.data.list;
         })
         .catch((e) => console.log(e));
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     // getExpirationDays(donation: Event) {

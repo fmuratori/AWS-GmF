@@ -1,58 +1,114 @@
 <template lang="pug">
-  b-container(class="justify-content-center my-5")
-    p TUE DONAZIONI
+b-container.justify-content-center.my-5
+  p TUE DONAZIONI
 
-    b-row(no-gutters class="mb-2")
-      b-col(cols="auto")
-      p Stato donazione:
-      b-col
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('waiting')" :class="{'my-button-selected': filterByMode == 'waiting'}") In attesa
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('selected')" :class="{'my-button-selected': filterByMode == 'selected'}") Prenotata
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="filterBy('all')" :class="{'my-button-selected': filterByMode == 'all'}") Tutte le donazioni
-    
-    b-row(no-gutters class="mb-2")
-      b-col(cols="auto")
-      p Ordina per:
-      b-col
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('creation_date')" :class="{'my-button-selected': orderByMode == 'creation_date'}") Data creazione
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('unread_messages')" :class="{'my-button-selected': orderByMode == 'unread_messages'}") Messaggi non letti
-        b-button(pill variant="secondary" size="sm" class="ml-2" @click="orderBy('expiration_date')" :class="{'my-button-selected': orderByMode == 'expiration_date'}") Data scadenza
-    
-    b-row
-      b-col(sm=12 md=6 v-if="donations.length == 0") 
-        p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a( href="#" @click="$router.replace({name: 'ManagerDonationsCreate'})") qui] per inserire una nuova donazione.
+  b-row.mb-2(no-gutters)
+    b-col(cols="auto")
+    p Stato donazione:
+    b-col
+      b-button.ml-2(
+        pill,
+        variant="secondary",
+        size="sm",
+        @click="filterBy('waiting')",
+        :class="{ 'my-button-selected': filterByMode == 'waiting' }"
+      ) In attesa
+      b-button.ml-2(
+        pill,
+        variant="secondary",
+        size="sm",
+        @click="filterBy('selected')",
+        :class="{ 'my-button-selected': filterByMode == 'selected' }"
+      ) Prenotata
+      b-button.ml-2(
+        pill,
+        variant="secondary",
+        size="sm",
+        @click="filterBy('all')",
+        :class="{ 'my-button-selected': filterByMode == 'all' }"
+      ) Tutte le donazioni
 
-      b-col(v-else sm=12 md=6 v-for="(donation, idx) in donations" :key="idx")
-        b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
-          b-card-text
-            div(class="px-4 pt-4")
-              h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
-              b-row()
-                b-col(cols="auto")
-                  div(class="")
-                    p(class="mb-0") Alimenti donati:
-                    p(class="font-weight-bold mb-2" v-for="(food, idx) in donation.foods" :key="idx") {{ food }}
-                  div(class="")
-                    p(class="mb-0") Scade tra:
-                    p(class="font-weight-bold mb-2") {{ getExpirationDays(donation) }} giorni
-                  //- div 
-                  //-   p(class="mb-0") Orari disponibili per il ritiro:
-                  //-   p(class="font-weight-bold") 12/12/2012 
-                  //-     span(class="font-weight-normal") Scade tra 12 giorni
-                  div(class="")
-                    p(class="mb-0") Luogo ritiro:
-                    p(class="font-weight-bold") {{ donation.address.street + " " + donation.address.civicNumber + ", " + donation.address.city }}
-                b-col(cols="auto")
-                  div(class="mb-2")
-                    p(class="mb-0") Stato donazione:
-                    h5
-                      b-badge(v-if="donation.status == 'waiting'" variant="warning") In attesa di valutazione
-                      b-badge(v-if="donation.status == 'selected'" variant="success") Prenotato per il ritiro 
-                      b-badge(v-if="donation.status == 'withdrawn'" variant="secondary") Ritirato
-                  div(class="mb-2" v-if="hasUnreadMessages(donation._id)")
-                    a(href="#") Hai {{ unreadMessagesCount(donation._id) }} messaggi non letti
-            b-button(block @click="inspectDonation(donation)" class="b-card-footer-button") Mostra
+  b-row.mb-2(no-gutters)
+    b-col(cols="auto")
+    p Ordina per:
+    b-col
+      b-button.ml-2(
+        pill,
+        variant="secondary",
+        size="sm",
+        @click="orderBy('creation_date')",
+        :class="{ 'my-button-selected': orderByMode == 'creation_date' }"
+      ) Data creazione
+      b-button.ml-2(
+        pill,
+        variant="secondary",
+        size="sm",
+        @click="orderBy('unread_messages')",
+        :class="{ 'my-button-selected': orderByMode == 'unread_messages' }"
+      ) Messaggi non letti
+      b-button.ml-2(
+        pill,
+        variant="secondary",
+        size="sm",
+        @click="orderBy('expiration_date')",
+        :class="{ 'my-button-selected': orderByMode == 'expiration_date' }"
+      ) Data scadenza
 
+  b-row
+    b-col(sm=12, md=6, v-if="donations.length == 0") 
+      p Nessuna donazione trovata. Assicurati di aver selezionato correttamente i filtri oppure premi #[a(href="#", @click="$router.replace({ name: 'ManagerDonationsCreate' })") qui] per inserire una nuova donazione.
+
+    b-col(
+      v-else,
+      sm=12,
+      md=6,
+      v-for="(donation, idx) in donations",
+      :key="idx"
+    )
+      b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+        b-card-text
+          .px-4.pt-4
+            h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
+            b-row
+              b-col(cols="auto")
+                div(class="")
+                  p.mb-0 Alimenti donati:
+                  p.font-weight-bold.mb-2(
+                    v-for="(food, idx) in donation.foods",
+                    :key="idx"
+                  ) {{ food }}
+                div(class="")
+                  p.mb-0 Scade tra:
+                  p.font-weight-bold.mb-2 {{ getExpirationDays(donation) }} giorni
+                //- div 
+                //-   p(class="mb-0") Orari disponibili per il ritiro:
+                //-   p(class="font-weight-bold") 12/12/2012 
+                //-     span(class="font-weight-normal") Scade tra 12 giorni
+                div(class="")
+                  p.mb-0 Luogo ritiro:
+                  p.font-weight-bold {{ donation.address.street + ' ' + donation.address.civicNumber + ', ' + donation.address.city }}
+              b-col(cols="auto")
+                .mb-2
+                  p.mb-0 Stato donazione:
+                  h5
+                    b-badge(
+                      v-if="donation.status == 'waiting'",
+                      variant="warning"
+                    ) In attesa di valutazione
+                    b-badge(
+                      v-if="donation.status == 'selected'",
+                      variant="success"
+                    ) Prenotato per il ritiro
+                    b-badge(
+                      v-if="donation.status == 'withdrawn'",
+                      variant="secondary"
+                    ) Ritirato
+                .mb-2(v-if="hasUnreadMessages(donation._id)")
+                  a(href="#") Hai {{ unreadMessagesCount(donation._id) }} messaggi non letti
+          b-button.b-card-footer-button(
+            block,
+            @click="inspectDonation(donation)"
+          ) Mostra
 </template>
 
 <script lang="ts">
@@ -82,10 +138,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       donationApi
         .filterUserActiveDonations(this.$store.state.session.userData._id)
         .then((r: any) => {
@@ -95,9 +147,7 @@ export default Vue.extend({
           this.filterBy(this.filterByMode);
         })
         .catch((e) => console.log(e));
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     creationDateComparer(a, b) {

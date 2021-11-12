@@ -1,6 +1,8 @@
 <template lang="pug">
 b-container
-  .justify-content-md-center.my-5.no-gutters
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(lg=8, md=8, sm=12)
+
     h3 
       b CREATE A PACK
     b-row
@@ -68,16 +70,13 @@ export default Vue.extend({
     };
   },
   created() {
-    this.$store.dispatch("showSidebar");
-
     // check if user is logged in
-    if (!this.$store.getters.isUserLogged)
-      this.$router.replace({ name: "Login" });
-
-    if ("family" in this.$route.params) {
-      this.family = this.$route.params.family;
-      this.form.familyId = this.family._id;
-    }
+    if (this.$store.getters.isUserLogged) {
+      if ("family" in this.$route.params) {
+        this.family = this.$route.params.family;
+        this.form.familyId = this.family._id;
+      }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     log(e) {

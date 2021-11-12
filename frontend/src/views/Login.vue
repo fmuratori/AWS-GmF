@@ -13,17 +13,17 @@ b-row.justify-content-center(no-gutters)
           variant="light",
           @click="isLoginSelected = true",
           :class="{ 'login-selected-button': isLoginSelected }"
-        ) Accedi
+        ) Sign in
         b-button.login-select-button(
           variant="light",
           @click="isLoginSelected = false",
           :class="{ 'login-selected-button': !isLoginSelected }"
-        ) Registrati
+        ) Sign up
 
       b-form(@submit="submitForm")
         .p-3(v-if="isLoginSelected")
-          p.text-danger(v-if="showLoginErrorMessage") Email o password inserita errata.
-          h5.mt-4 Credenziali
+          p.text-danger(v-if="showLoginErrorMessage") Invalid email or password.
+          h5.mt-4 Credentials
 
           InputText(
             placeholder="Insert your email",
@@ -44,10 +44,10 @@ b-row.justify-content-center(no-gutters)
           )
 
           b-row.justify-content-md-center.mb-4
-            a(href="#") Ti sei dimenticato la password?
+            a(href="#") Forgot password?
 
         .p-3(v-else)
-          h5.mt-4 Informazioni personali
+          h5.mt-4 Personal information
 
           InputText(
             title="Name: ",
@@ -99,15 +99,15 @@ b-row.justify-content-center(no-gutters)
             name="checkbox-1",
             v-model="registrationPrivacyChecked"
           )
-            i accetto i termini di servizio e la
+            i I agree to the
               a(href="#") privacy policy
 
           b-form-checkbox#checkbox-2.mt-2(name="checkbox-2")
-            i voglio ricevere email su eventi nella mia città
+            i I want to receive marketing information (optional)
 
         b-button.login-button(block, size="lg", type="submit")
-          span(v-if="isLoginSelected") ACCEDI
-          span(v-else) REGISTRATI
+          span(v-if="isLoginSelected") SIGN IN
+          span(v-else) SIGN UP
           b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
 
       button(@click="login.email = 'user@user.com'") Utente
@@ -143,7 +143,7 @@ export default Vue.extend({
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
       login: {
-        email: "pluto@gmail.com",
+        email: "volunteer@gmail.com",
         password: "Password2021!",
       } as LoginPayload,
       registration: {

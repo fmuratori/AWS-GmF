@@ -1,40 +1,60 @@
 <template lang="pug">
-  b-container(class="justify-content-center my-5")
-    p RACCOLTA DONAZIONI
+b-container.justify-content-center.my-5
+  p RACCOLTA DONAZIONI
 
-    b-row
-      b-col(sm=12 md=6)
-        b-form(@submit="submit")
-          b-form-group(id="input-group-2" label="Data ritiro:" label-for="input-2")
-            b-input-group
-              b-form-datepicker(id="input-2" required v-model="pickUpDate" reset-button close-button 
-              class="my-no-right-border")
-              b-input-group-append
-                b-button(variant="danger" class="my-no-left-border" @click="pickUpDate = null"
-                :disabled="pickUpDate == null") 
-                  span Cancella
-                  b-icon(icon="x" aria-hidden="true")
-          b-form-group(id="input-group-3" label="Periodo della giornata:" label-for="input-3")
-            b-form-select(v-model="pickUpPeriod" :options="['morning', 'afternoon', 'evening']" required)
+  b-row
+    b-col(sm=12, md=6)
+      b-form(@submit="submit")
+        b-form-group#input-group-2(label="Data ritiro:", label-for="input-2")
+          b-input-group
+            b-form-datepicker#input-2.my-no-right-border(
+              required,
+              v-model="pickUpDate",
+              reset-button,
+              close-button
+            )
+            b-input-group-append
+              b-button.my-no-left-border(
+                variant="danger",
+                @click="pickUpDate = null",
+                :disabled="pickUpDate == null"
+              ) 
+                span Cancella
+                b-icon(icon="x", aria-hidden="true")
+        b-form-group#input-group-3(
+          label="Periodo della giornata:",
+          label-for="input-3"
+        )
+          b-form-select(
+            v-model="pickUpPeriod",
+            :options="['morning', 'afternoon', 'evening']",
+            required
+          )
 
-          div(v-for="(donation, idx) in donations" :key="idx")
-            p {{ donation }}
-            b-button(v-if="selectedDonations.indexOf(donation) == -1" @click="selectedDonations.push(donation)") seleziona
-            b-button(v-else @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)") rimuovi
-            hr
+        div(v-for="(donation, idx) in donations", :key="idx")
+          p {{ donation }}
+          b-button(
+            v-if="selectedDonations.indexOf(donation) == -1",
+            @click="selectedDonations.push(donation)"
+          ) seleziona
+          b-button(
+            v-else,
+            @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)"
+          ) rimuovi
+          hr
 
-          b-button(block variant="outline-success" type="submit") Procedi
+        b-button(block, variant="outline-success", type="submit") Procedi
 
-        //- GmapMap(
-        //- :center="{lat:10, lng:10}"
-        //- :zoom="7"
-        //- map-type-id="terrain"
-        //- style="width: 500px; height: 300px")
-        //-   GmapMarker(
-        //-   :position="{lat:10, lng:10}"
-        //-   :clickable="true"
-        //-   :draggable="true"
-        //-   @click="")
+      //- GmapMap(
+      //- :center="{lat:10, lng:10}"
+      //- :zoom="7"
+      //- map-type-id="terrain"
+      //- style="width: 500px; height: 300px")
+      //-   GmapMarker(
+      //-   :position="{lat:10, lng:10}"
+      //-   :clickable="true"
+      //-   :draggable="true"
+      //-   @click="")
 </template>
 
 <script lang="ts">
@@ -72,14 +92,8 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       this.filterDonations();
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     filterDonations() {

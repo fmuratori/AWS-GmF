@@ -1,50 +1,52 @@
 <template lang="pug">
-b-row.justify-content-md-center.my-5.no-gutters
-  b-col(cols="6")
-    p CREATE AN EVENT
-    b-form(@submit="createEvent")
-      .mb4
-        InputText(
-          title="Title:",
-          placeholder="Insert title here",
-          :text="form.eventTitle",
-          required,
-          v-on:data="(e) => { form.eventTitle = e; }"
-        )
+b-container
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(lg=8, md=10, sm=12)
+      h4
+        b CREATE AN EVENT
+      b-form(@submit="createEvent")
+        .mb4
+          InputText(
+            title="Title:",
+            placeholder="Insert title here",
+            :text="form.eventTitle",
+            required,
+            v-on:data="(e) => { form.eventTitle = e; }"
+          )
 
-      .mb-4
-        InputTextarea(
-          title="Description:",
-          placeholder="Insert description here",
-          :text="form.description",
-          v-on:data="(e) => { form.description = e; }"
-        )
+        .mb-4
+          InputTextarea(
+            title="Description:",
+            placeholder="Insert description here",
+            :text="form.description",
+            v-on:data="(e) => { form.description = e; }"
+          )
 
-      .mb-4
-        InputDate(
-          title="Date:",
-          placeholder="Select a date",
-          :date="form.date",
-          required,
-          v-on:data="(e) => { form.date = e; }"
-        )
+        .mb-4
+          InputDate(
+            title="Date:",
+            placeholder="Select a date",
+            :date="form.date",
+            required,
+            v-on:data="(e) => { form.date = e; }"
+          )
 
-      .mb-4
-        InputAddress(
-          title="Location",
-          :city="form.address.city",
-          :street="form.address.street",
-          :civic="form.address.civicNumber",
-          v-on:city="(e) => { form.address.city = e; }",
-          v-on:street="(e) => { form.address.street = e; }",
-          v-on:civic="(e) => { form.address.civicNumber = e; }"
-        )
+        .mb-4
+          InputAddress(
+            title="Location:",
+            :city="form.address.city",
+            :street="form.address.street",
+            :civic="form.address.civicNumber",
+            v-on:city="(e) => { form.address.city = e; }",
+            v-on:street="(e) => { form.address.street = e; }",
+            v-on:civic="(e) => { form.address.civicNumber = e; }"
+          )
 
-      b-row
-        b-col
-          b-button(block, variant="outline-danger", @click="cancel") Cancel
-        b-col
-          b-button(block, variant="success", type="submit") {{ this.submitLabel }}
+        b-row
+          b-col
+            b-button(block, variant="outline-danger", @click="cancel") Cancel
+          b-col
+            b-button(block, variant="success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
@@ -94,19 +96,17 @@ export default Vue.extend({
     };
   },
   created() {
-    this.$store.dispatch("showSidebar");
     this.form.ownerVolunteerId = this.$store.state.session.userData._id;
 
     // check if user is logged in
-    if (!this.$store.getters.isUserLogged)
-      this.$router.replace({ name: "Login" });
-    if ("event" in this.$route.params) {
-      this.form = this.$route.params.event;
-      this.form.id = this.$route.params.event._id;
-      this.cancelRoute = "ManagerEvents";
-      this.submitLabel = "Edit";
-      //TODO carico i dati
-    }
+    if (this.$store.getters.isUserLogged) {
+      if ("event" in this.$route.params) {
+        this.form = this.$route.params.event;
+        this.form.id = this.$route.params.event._id;
+        this.cancelRoute = "ManagerEvents";
+        this.submitLabel = "Edit";
+      }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     createEvent(event) {

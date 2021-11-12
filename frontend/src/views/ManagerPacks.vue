@@ -10,13 +10,19 @@ b-container
         b-button.btn-all(@click="changeView('all')") All
 
     b-row
-      b-table(hover, striped, responsive, :fields="tableFields", :items="packList")
-        template(#cell(status)="data") {{data.value}}
+      b-table(
+        hover,
+        striped,
+        responsive,
+        :fields="tableFields",
+        :items="packList"
+      )
+        template(#cell(status)="data") {{ data.value }}
 
-        template(#cell(familyId)="data") {{data.value}}
-        
-        template(#cell(deliveryDate)="data") {{data.value}}
-        template(#cell(deliveryPeriod)="data") {{data.value}}
+        template(#cell(familyId)="data") {{ data.value }}
+
+        template(#cell(deliveryDate)="data") {{ data.value }}
+        template(#cell(deliveryPeriod)="data") {{ data.value }}
 </template>
 
 <script lang="ts">
@@ -24,6 +30,7 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
+import familyApi from "../api/family";
 import api from "../api";
 
 import { Pack } from "../types";
@@ -44,8 +51,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
-
       // TODO: mostrare uno spinner mentre sono caricati i dati
       api
         .packList(null)
@@ -53,9 +58,7 @@ export default Vue.extend({
           this.packList = r.data.data.list;
         })
         .catch((e) => console.log(e));
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     changeView(view: "my" | "all") {
@@ -68,7 +71,7 @@ export default Vue.extend({
       // }
       this.view = view;
 
-      api
+      familyApi
         .familyList(payload)
         .then((r: any) => {
           this.familyList = r.data.data.list;
@@ -80,14 +83,4 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/style.scss";
-
-.b-card-footer-button {
-  background-color: $color3;
-
-  border: 0px;
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
 </style>

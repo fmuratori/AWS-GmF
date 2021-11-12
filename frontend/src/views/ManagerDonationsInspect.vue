@@ -1,84 +1,118 @@
 <template lang="pug">
-  b-container
-    b-row(class="justify-content-center my-5")
-      b-col(lg=4 md=8 cols=11 class="ml-2")
-        p CHAT
-        b-card(bg-variant="light" class="mb-2" no-body)
-          b-card-text(class="m-2")
-            div(id="messages-area" class="mb-1" ref="messagesArea")
+b-container
+  b-row.justify-content-center.my-5
+    b-col.ml-2(lg=4, md=8, cols=11)
+      p CHAT
+      b-card.mb-2(bg-variant="light", no-body)
+        b-card-text.m-2
+          #messages-area.mb-1(ref="messagesArea")
+            Message(
+              v-for="(message, idx) in processedChat",
+              :key="idx",
+              :username="message.userFullname",
+              :isOwner="message.userId == $store.state.session.userData._id",
+              :date="formatDatetime(message.date)",
+              :isVisualized="message.visualized",
+              :messages="message.messages",
+              :ref="'scrollTo' + idx"
+            )
 
-              Message(v-for="(message, idx) in processedChat" :key="idx" :username="message.userFullname" 
-              :isOwner="message.userId == $store.state.session.userData._id" :date="formatDatetime(message.date)" :isVisualized="message.visualized"
-              :messages="message.messages" :ref="'scrollTo' + idx")
-              
-            //- div(class="")
-            //-   label(class="font-italic") Marco stà scrivendo...
-            b-form(@submit="sendMessage")
-              b-input-group(class="")
-                b-form-input(type="text" placeholder="Scrivi qui il tuo messaggio." v-model="chatMessage" required)
-                b-input-group-append
-                  b-button(variant="success" type="submit") Invia
+          //- div(class="")
+          //-   label(class="font-italic") Marco stà scrivendo...
+          b-form(@submit="sendMessage")
+            b-input-group(class="")
+              b-form-input(
+                type="text",
+                placeholder="Scrivi qui il tuo messaggio.",
+                v-model="chatMessage",
+                required
+              )
+              b-input-group-append
+                b-button(variant="success", type="submit") Invia
 
-      b-col(lg=6 md=8 cols=11)
+    b-col(lg=6, md=8, cols=11)
+      p INFORMAZIONI SUL RITIRO
 
-        p INFORMAZIONI SUL RITIRO
-        
-        b-card(bg-variant="light" class="mb-2")
-          b-card-text
-            div(class="mb-2")
-              label(class="mb-0") Stato donazione:
-              p(class="font-weight-bold") {{ status }}
-            div(class="mb-2")
-              label(class="mb-0") Data ritiro: 
-              p(class="font-weight-bold") {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
+      b-card.mb-2(bg-variant="light")
+        b-card-text
+          .mb-2
+            label.mb-0 Stato donazione:
+            p.font-weight-bold {{ status }}
+          .mb-2
+            label.mb-0 Data ritiro:
+            p.font-weight-bold {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
 
-        p INFORMAZIONI DONAZIONE
-        
-        b-card(bg-variant="light" class="mb-2")
-          b-card-text
-            div(class="mb-2")
-              label(class="mb-0") Alimenti: 
-              p(v-for="(value, idx) in donation.foods" :key="idx" class="mb-0")
-                label(class="font-weight-bold") {{ value }}
-            
-            div(class="mb-2")
-              label(class="mb-0") La donazione scade tra:
-              p(class="font-weight-bold") {{ expirationDays }} giorni
+      p INFORMAZIONI DONAZIONE
 
-            div(class="mb-2")
-              label(class="mb-0") Data creazione donazione:
-              p(class="font-weight-bold") {{ formatDatetime(donation.creationDate) }} 
-            
-            div(class="mb-2")
-              label(class="mb-0") Data scadenza donazione:
-              p(class="font-weight-bold") {{ formatDatetime(donation.expirationDate) }} 
+      b-card.mb-2(bg-variant="light")
+        b-card-text
+          .mb-2
+            label.mb-0 Alimenti:
+            p.mb-0(v-for="(value, idx) in donation.foods", :key="idx")
+              label.font-weight-bold {{ value }}
 
-            div(class="mb-2")
-              label(class="mb-0") Luogo ritiro:
-              p(class="font-weight-bold") {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
+          .mb-2
+            label.mb-0 La donazione scade tra:
+            p.font-weight-bold {{ expirationDays }} giorni
 
-            div(class="mb-2" v-if="donation.additionalInformation != null")
-              label(class="mb-0") Informazioni aggiuntive:
-              p(class="font-weight-bold") {{ donation.additionalInformation }}
-              
-            div(class="")
-              label(class="mb-0") Periodi di ritiro:
-              p(v-for="(weekDayName, weekDay, idx) in weekDays" :key="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
-                label(class="font-weight-bold") {{ weekDayName + ":&nbsp;" + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}    
+          .mb-2
+            label.mb-0 Data creazione donazione:
+            p.font-weight-bold {{ formatDatetime(donation.creationDate) }}
 
-        div(v-if="$store.getters.isUser" ) 
-          b-button(block variant="outline-danger" type="submit" @click="modifyDonation") Modifica
-          b-button(block variant="outline-danger" type="submit" @click="deleteDonation") Cancella
-          b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsUserList'})" type="reset") Indietro
-        
-        div(v-if="$store.getters.isVolunteer" )
-          b-button(block variant="outline-danger" type="submit" @click="cancelReservation") Annulla prenotazione
-          b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsVolunteerList'})" type="reset") Indietro
-        
+          .mb-2
+            label.mb-0 Data scadenza donazione:
+            p.font-weight-bold {{ formatDatetime(donation.expirationDate) }}
 
-        
-        
+          .mb-2
+            label.mb-0 Luogo ritiro:
+            p.font-weight-bold {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
 
+          .mb-2(v-if="donation.additionalInformation != null")
+            label.mb-0 Informazioni aggiuntive:
+            p.font-weight-bold {{ donation.additionalInformation }}
+
+          div(class="")
+            label.mb-0 Periodi di ritiro:
+            p.mb-1(
+              v-for="(weekDayName, weekDay, idx) in weekDays",
+              :key="idx",
+              v-if="weekDayDonations(weekDay).length > 0"
+            )
+              label.font-weight-bold {{ weekDayName + ':&nbsp;' + weekDayDonations(weekDay).map((d) => translatePeriod(d.period)).join(', ') }}
+
+      div(v-if="$store.getters.isUser") 
+        b-button(
+          block,
+          variant="outline-danger",
+          type="submit",
+          @click="modifyDonation"
+        ) Modifica
+        b-button(
+          block,
+          variant="outline-danger",
+          type="submit",
+          @click="deleteDonation"
+        ) Cancella
+        b-button(
+          block,
+          variant="outline-secondary",
+          @click="$router.replace({ name: 'ManagerDonationsUserList' })",
+          type="reset"
+        ) Indietro
+
+      div(v-if="$store.getters.isVolunteer")
+        b-button(
+          block,
+          variant="outline-danger",
+          type="submit",
+          @click="cancelReservation"
+        ) Annulla prenotazione
+        b-button(
+          block,
+          variant="outline-secondary",
+          @click="$router.replace({ name: 'ManagerDonationsVolunteerList' })",
+          type="reset"
+        ) Indietro
 </template>
 
 <script lang="ts">
@@ -182,10 +216,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) {
         this.donation = JSON.parse(this.$route.params.donation);
@@ -195,9 +225,7 @@ export default Vue.extend({
 
       // load donation messages
       this.$store.dispatch("getChat", this.donation._id);
-    } else {
-      this.$router.replace({ name: "Login" });
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     formatDatetime(date) {

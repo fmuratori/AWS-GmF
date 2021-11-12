@@ -67,18 +67,18 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/manager/families/subscribe",
-    name: "ManagerFamiliesSubscribe",
+    name: "ManagerFamilySubscribe",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerFamiliesSubscribe.vue"
+        /* webpackChunkName: "ManagerFamilySubscribe" */ "../views/ManagerFamilySubscribe.vue"
       ),
   },
   {
     path: "/manager/families/list",
-    name: "ManagerFamiliesList",
+    name: "ManagerFamilyList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerFamiliesList.vue"
+        /* webpackChunkName: "ManagerFamilyList" */ "../views/ManagerFamilyList.vue"
       ),
   },
   {
@@ -86,7 +86,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerEventCreate",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerEventCreate.vue"
+        /* webpackChunkName: "ManagerEventCreate" */ "../views/ManagerEventCreate.vue"
       ),
   },
   {
@@ -94,7 +94,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerEvents",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerEvents.vue"
+        /* webpackChunkName: "ManagerEvents" */ "../views/ManagerEvents.vue"
       ),
   },
   {
@@ -102,7 +102,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerFood",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerFood.vue"
+        /* webpackChunkName: "ManagerFood" */ "../views/ManagerFood.vue"
       ),
   },
   {
@@ -110,7 +110,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerPackCreate",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesSubscribe" */ "../views/ManagerPackCreate.vue"
+        /* webpackChunkName: "ManagerPackCreate" */ "../views/ManagerPackCreate.vue"
       ),
   },
   {
@@ -118,7 +118,7 @@ const routes: Array<RouteConfig> = [
     name: "ManagerPacks",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerFamiliesList" */ "../views/ManagerPacks.vue"
+        /* webpackChunkName: "ManagerPacks" */ "../views/ManagerPacks.vue"
       ),
   },
 ];

@@ -1,18 +1,23 @@
 <template lang="pug">
-b-row.justify-content-md-center.my-5.no-gutters
-  b-col(md="auto", xs=12)
-    p CHANGE PASSWORD
-    b-form(@submit="changePassword")
-      .mb-3
-        b-card
+b-container
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(cols="6")
+      .mb-4
+        h4
+          b CHANGE PASSWORD
+
+      .mb-4
+        b-form(@submit="changePassword")
           InputText(
-            placeholder="Old password",
+            title="Old password:",
+            placeholder="Insert your old password here",
             type="password",
             required,
             :text="changePasswordForm.oldPassword",
             v-on:data="(e) => { changePasswordForm.oldPassword = e; }"
           )
 
+        .mb-4
           InputPasswordSelect(
             title1="New password: ",
             title2="Confirm password: ",
@@ -21,14 +26,18 @@ b-row.justify-content-md-center.my-5.no-gutters
             v-on:data="(e) => { changePasswordForm.newPassword = e; }"
           )
 
-          b-row
-            b-col
-              b-button(block, variant="success", type="submit") Edit
+        b-row
+          b-col
+            b-button(block, variant="success", type="submit") Edit
 
-    p EDIT USER INFO
-    b-form(@submit="editUser")
-      .mb-3
-        b-card
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(cols="6")
+      .mb-4
+        h4
+          b EDIT USER INFO
+
+      b-form(@submit="editUser")
+        .mb-4
           b-row
             b-col
               InputText(
@@ -48,29 +57,28 @@ b-row.justify-content-md-center.my-5.no-gutters
                 v-on:data="(e) => { editUserForm.surname = e; }"
               )
 
-          b-row
-            b-col
-              InputText(
-                title="Email: ",
-                placeholder="Insert your email here",
-                type="email",
-                required,
-                :text="editUserForm.email",
-                v-on:data="(e) => { editUserForm.email = e; }"
-              )
+        .mb-4
+          InputText(
+            title="Email: ",
+            placeholder="Insert your email here",
+            type="email",
+            required,
+            :text="editUserForm.email",
+            v-on:data="(e) => { editUserForm.email = e; }"
+          )
 
-          b-row
-            b-col
-              InputText(
-                title="Phone number: ",
-                placeholder="Insert your phone number here",
-                required,
-                :text="editUserForm.phoneNumber",
-                v-on:data="(e) => { editUserForm.phoneNumber = e; }"
-              )
+        .mb-4
+          InputText(
+            title="Phone number: ",
+            placeholder="Insert your phone number here",
+            required,
+            :text="editUserForm.phoneNumber",
+            v-on:data="(e) => { editUserForm.phoneNumber = e; }"
+          )
 
-          hr
+        hr
 
+        .mb-4
           InputAddress(
             title="Location",
             :city="editUserForm.address.city",
@@ -139,10 +147,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       // this.editUserForm = this.$store.state.session.userData;
       this.editUserForm.name = this.$store.state.session.userData.name;
       this.editUserForm.surname = this.$store.state.session.userData.surname;
@@ -153,7 +157,7 @@ export default Vue.extend({
       this.editUserForm.id = this.$store.state.session.userData._id;
 
       this.changePasswordForm.id = this.$store.state.session.userData._id;
-    }
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     registrationPasswordCheck() {
@@ -218,40 +222,6 @@ export default Vue.extend({
   },
 });
 </script>
+
 <style lang="scss">
-@import "@/assets/style.scss";
-
-#login {
-  border: 0px;
-  padding: 0px;
-}
-
-#login-header {
-  color: $color1;
-  background-color: $greyscaleE;
-
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-.login-select-button {
-  border-radius: 0;
-}
-.login-select-button:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.login-selected-button {
-  border-bottom: 1px solid $greyscaleD;
-}
-
-.login-button {
-  background-color: $color3;
-
-  border: 0px;
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
 </style>
