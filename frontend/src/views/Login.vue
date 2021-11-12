@@ -177,8 +177,8 @@ export default Vue.extend({
           .then((r: any) => {
             if (r.status == 200) {
               this.$store.dispatch("login", {
-                token: r.data.data.token,
-                userData: r.data.data.user,
+                token: r.data.token,
+                userData: r.data.user,
               });
               this.showLoginErrorMessage = false;
               this.$router.replace({ name: "Home" });
@@ -194,7 +194,7 @@ export default Vue.extend({
                 .then((r: any) => {
                   this.$store.dispatch(
                     "updateUnreadMessages",
-                    r.data.data.counts
+                    r.data
                   );
                 })
                 .catch((e) => console.log(e));

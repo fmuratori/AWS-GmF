@@ -173,6 +173,7 @@ export interface SelectableFood extends Food {
   selected: number;
 }
 
+
 // export interface OfferResponse {
 
 // }

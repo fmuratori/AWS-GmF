@@ -15,25 +15,23 @@ export default class FoodController {
 		var elem = await FoodModel.findOne({
 			name: req.body.name,
 			expirationDate: req.body.expirationDate
-		}) 
+		})
 
-		if(!elem){
+		if (!elem) {
 			//creo un nuovo nodo
 			elem = await FoodModel.create(req.body)
 		} else {
 			//aggiorno il nodo già esistente
-			if(req.body.number) {
-				elem.number += req.body.number}
+			if (req.body.number) {
+				elem.number += req.body.number
+			}
 			else {
 				elem.number = elem.number.valueOf() + 1
 			}
-			elem = await FoodModel.findByIdAndUpdate(elem._id, elem, {new: true})
+			elem = await FoodModel.findByIdAndUpdate(elem._id, elem, { new: true })
 		}
 
-		res.status(200).json({
-			status: "success",
-			data: {elem}
-		})
+		res.status(200).json(elem)
 
 	})
 

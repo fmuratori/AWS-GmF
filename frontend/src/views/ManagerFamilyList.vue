@@ -130,7 +130,7 @@ export default Vue.extend({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
         .then((r: any) => {
-          this.familyList = r.data.data.list;
+          this.familyList = r.data;
         })
         .catch((e) => console.log(e));
     } else this.$router.replace({ name: "Login" });
@@ -158,7 +158,7 @@ export default Vue.extend({
       familyApi
         .familyList(payload)
         .then((r: any) => {
-          this.familyList = r.data.data.list;
+          this.familyList = r.data;
         })
         .catch((e) => console.log(e));
     },

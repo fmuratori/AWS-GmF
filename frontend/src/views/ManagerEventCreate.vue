@@ -44,7 +44,11 @@ b-container
 
         b-row
           b-col
-            b-button(block, variant="outline-danger", @click="cancel") Cancel
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.replace({ name: 'ManagerEvents' })"
+            ) Cancel
           b-col
             b-button(block, variant="success", type="submit") {{ this.submitLabel }}
 </template>
@@ -58,7 +62,7 @@ import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputDate from "../components/input/InputDate.vue";
 
-import { Address, EventPayload } from "../types";
+import { Address, Event, EventPayload } from "../types";
 import { CreateEventView } from "../viewTypes";
 
 import api from "../api";
@@ -91,7 +95,6 @@ export default Vue.extend({
           },
         } as Address,
       } as EventPayload,
-      cancelRoute: "ManagerHome",
       submitLabel: "Create",
     };
   },
@@ -101,8 +104,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if ("event" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.event);
-        this.cancelRoute = "ManagerEvents";
+        this.form = this.$route.params.event as unknown as EventPayload;
         this.submitLabel = "Edit";
       }
     } else this.$router.replace({ name: "Login" });
@@ -138,9 +140,6 @@ export default Vue.extend({
             }
           );
         });
-    },
-    cancel() {
-      this.$router.replace({ name: this.cancelRoute });
     },
   },
 });

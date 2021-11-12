@@ -56,7 +56,7 @@ export default Vue.extend({
       api
         .packList(null)
         .then((r: any) => {
-          this.packList = r.data.data.list;
+          this.packList = r.data;
         })
         .catch((e) => console.log(e));
     } else this.$router.replace({ name: "Login" });
@@ -75,7 +75,7 @@ export default Vue.extend({
       api
         .packList(payload)
         .then((r: any) => {
-          this.packList = r.data.data.list;
+          this.packList = r.data;
         })
         .catch((e) => console.log(e));
     },

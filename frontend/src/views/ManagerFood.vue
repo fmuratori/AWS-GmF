@@ -90,7 +90,7 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       //populate the food list
       api.foodList(null).then((r: any) => {
-        this.foodList = r.data.data.list;
+        this.foodList = r.data;
       });
     } else this.$router.replace({ name: "Login" });
   },
@@ -101,6 +101,7 @@ export default Vue.extend({
       api
         .addFood(this.form)
         .then((r) => {
+          console.log(r)
           this.$bvToast.toast(`Food successfully created.`, {
             title: "Food",
             autoHideDelay: 5000,
@@ -127,7 +128,7 @@ export default Vue.extend({
     },
     updateFoodList() {
       api.foodList(null).then((r: any) => {
-        this.foodList = r.data.data.list;
+        this.foodList = r.data;
       });
     },
     formatDate(date: Date) {

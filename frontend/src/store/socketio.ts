@@ -80,7 +80,7 @@ export default {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)
         .then((r: any) => {
-          commit("getChat", { chat: r.data.data.chat, donationId: donationId });
+          commit("getChat", { chat: r.data, donationId: donationId });
           commit("removeDonationUnreadMessages", donationId);
         })
         .catch((e) => console.log(e));

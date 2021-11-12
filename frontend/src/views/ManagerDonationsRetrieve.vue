@@ -103,7 +103,7 @@ export default Vue.extend({
       donationApi
         .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
         .then((r: any) => {
-          this.donations = r.data.data.list;
+          this.donations = r.data;
         })
         .catch((e) => console.log(e));
     },

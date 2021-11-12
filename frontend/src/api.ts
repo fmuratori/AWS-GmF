@@ -16,7 +16,7 @@ export default {
   },
 
   async eventList(payload: any) {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/event/find`, payload);
+    return axios.post<Event[]>(`${process.env.VUE_APP_API_URL}/api/event/find`, payload);
   },
 
   /* packs */

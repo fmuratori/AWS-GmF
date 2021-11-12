@@ -114,8 +114,8 @@ export default Vue.extend({
     }
 
     api.foodList({ filter: { number: { $gt: 0 } } }).then((r: any) => {
-      this.foodList = r.data.data.list;
-      this.totalRows = r.data.data.list.length;
+      this.foodList = r.data;
+      this.totalRows = r.data.length;
     });
   },
   methods: {

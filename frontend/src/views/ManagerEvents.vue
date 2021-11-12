@@ -53,7 +53,8 @@ export default Vue.extend({
           filter: { ownerVolunteerId: this.$store.state.session.userData._id },
         })
         .then((r: any) => {
-          this.events = r.data.data.list;
+          this.events = r.data;
+          console.log(r)
         })
         .catch((e) => console.log(e));
     } else this.$router.replace({ name: "Login" });

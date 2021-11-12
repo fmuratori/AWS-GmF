@@ -11,7 +11,6 @@ import {
 
 export interface CreateEventView {
   form: EventPayload;
-  cancelRoute: string;
   submitLabel: string;
 }
 export interface CreatedonationView {

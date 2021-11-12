@@ -58,7 +58,7 @@ b-container
           b-button(
             block,
             variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerHome' })",
+            @click="$router.replace({ name: 'Home' })",
             type="reset"
           ) Cancel
         b-col
@@ -73,7 +73,7 @@ import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 
-import { Donation, Address, DonationCreationPayload } from "../types";
+import { Address, DonationCreationPayload } from "../types";
 
 import api from "../api/donation";
 import { CreatedonationView } from "../viewTypes";
@@ -124,7 +124,7 @@ export default Vue.extend({
       this.form.address = this.$store.state.session.userData.address;
 
       if ("donation" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.donation);
+        this.form = this.$route.params.donation as unknown as DonationCreationPayload;
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
