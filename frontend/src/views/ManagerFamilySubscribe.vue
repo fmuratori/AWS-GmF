@@ -5,7 +5,7 @@ b-container
       .mb-4
         h4
           p REPORT A FAMILY
-      b-form(@submit="addFamily")
+      b-form(@submit="submit")
         .mb4
           InputText(
             title="Family name:",
@@ -53,7 +53,7 @@ b-container
               @click="$router.replace({ name: 'ManagerFamilyList' })"
             ) Cancel
           b-col
-            b-button(block, variant="outline-success", type="submit") Report
+            b-button(block, variant="outline-success", type="submit") {{ submitLabel }}
 </template>
 
 <script lang="ts">
@@ -65,8 +65,9 @@ import InputAddress from "../components/input/InputAddress.vue";
 
 import { Address, FamilyPayload } from "../types";
 
-import familyApi from "../api/family";
+import api from "../api/family";
 import { AxiosError, AxiosResponse } from "axios";
+import { ReportFamilyView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerFamilySubscribe",
@@ -76,13 +77,13 @@ export default Vue.extend({
     InputText,
     InputAddress,
   },
-  data: (): { form: FamilyPayload } => {
+  data: (): ReportFamilyView => {
     return {
       form: {
         reporterId: "",
         name: "",
         phoneNumber: "",
-        components: new Number(),
+        // components: new Number(),
         address: {
           city: "",
           street: "",
@@ -93,6 +94,7 @@ export default Vue.extend({
           },
         } as Address,
       } as FamilyPayload,
+      submitLabel: "Report",
     };
   },
   created() {
@@ -100,15 +102,20 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       if ("family" in this.$route.params) {
         this.form = this.$route.params.family as unknown as FamilyPayload;
+        this.submitLabel = "Edit";
       }
       this.form.reporterId = this.$store.state.session.userData._id;
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
-    addFamily(event) {
+    submit(event) {
       event.preventDefault();
-      familyApi
-        .addFamily(this.form)
+
+      var fun;
+      if ("family" in this.$route.params) fun = api.editFamily;
+      else fun = api.addFamily;
+
+      fun(this.form)
         .then((r: AxiosResponse): void => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilyList" });

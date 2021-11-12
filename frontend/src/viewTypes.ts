@@ -2,6 +2,7 @@ import {
   DonationCreationPayload,
   EventPayload,
   Family,
+  FamilyPayload,
   Food,
   FoodPayload,
   Pack,
@@ -13,6 +14,12 @@ export interface CreateEventView {
   form: EventPayload;
   submitLabel: string;
 }
+
+export interface ReportFamilyView {
+  form: FamilyPayload;
+  submitLabel: string;
+}
+
 export interface CreatedonationView {
   weekDays: any;
   form: DonationCreationPayload;
