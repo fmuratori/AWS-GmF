@@ -110,7 +110,7 @@ export default Vue.extend({
     submit(e: any) {
       e.preventDefault();
       if (!this.pickUpDate) {
-        this.$bvToast.toast(
+        this.$root.$bvToast.toast(
           `Selezionare il giorno in cui verrà effettuato il ritiro della donazione.`,
           {
             title: "Donazione",
@@ -134,7 +134,7 @@ export default Vue.extend({
         Promise.all(promises)
           .then((r: any) => {
             this.$router.replace({ name: "ManagerDonationsVolunteerList" });
-            this.$bvToast.toast(`Donazioni prenotate con successo.`, {
+            this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
               title: "Donazioni",
               autoHideDelay: 5000,
               variant: "success",
@@ -143,7 +143,7 @@ export default Vue.extend({
           })
           .catch((e: any) => {
             console.log(e);
-            this.$bvToast.toast(
+            this.$root.$bvToast.toast(
               `Impossibile prenotare le donazioni selezionate.`,
               {
                 title: "Donazioni",

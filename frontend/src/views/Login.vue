@@ -208,7 +208,7 @@ export default Vue.extend({
           .registrationRequest(this.registration)
           .then(() => {
             this.isLoginSelected = true;
-            this.$bvToast.toast(
+            this.$root.$bvToast.toast(
               `Operazione avvenuta con successo. Effettua il login per accedere.`,
               {
                 title: "Registrazione",
@@ -220,7 +220,7 @@ export default Vue.extend({
           })
           .catch((e) => {
             console.log(e);
-            this.$bvToast.toast(
+            this.$root.$bvToast.toast(
               `Errore durante la fase di registrazione, riprova.`,
               {
                 title: "Registrazione",

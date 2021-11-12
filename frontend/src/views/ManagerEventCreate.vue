@@ -119,7 +119,7 @@ export default Vue.extend({
         .then((r) => {
           console.log(r);
           this.$router.replace({ name: "ManagerEvents" });
-          this.$bvToast.toast(`Event successfully created.`, {
+          this.$root.$bvToast.toast(`Event successfully created.`, {
             title: "Event",
             autoHideDelay: 5000,
             variant: "success",
@@ -127,7 +127,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Unable to create the event. Retry later or contact us if the problem persist.`,
             {
               title: "Event",

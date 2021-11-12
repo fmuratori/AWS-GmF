@@ -100,7 +100,7 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import "@/assets/style.scss";
 
-* {
+* > * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

@@ -43,9 +43,9 @@ export default Vue.extend({
   data: () => {
     return {
       address: {
-        city: "san clemente",
-        street: "via provinciale",
-        civicNumber: "75",
+        city: "",
+        street: "",
+        civicNumber: "",
         coordinates: {
           y: 0,
           x: 0,

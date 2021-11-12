@@ -81,23 +81,18 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
-            :city="editUserForm.address.city",
-            :street="editUserForm.address.street",
-            :civic="editUserForm.address.civicNumber",
-            v-on:city="(e) => { editUserForm.address.city = e; }",
-            v-on:street="(e) => { editUserForm.address.street = e; }",
-            v-on:civic="(e) => { editUserForm.address.civicNumber = e; }"
+            @onAddressUpdate="onAddressUpdate",
           )
 
-      b-row
-        b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerHome' })"
-          ) Cancel
-        b-col
-          b-button(block, variant="success", type="submit") Edit
+        b-row
+          b-col
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.replace({ name: 'ManagerHome' })"
+            ) Cancel
+          b-col
+            b-button(block, variant="success", type="submit") Edit
 </template>
 
 <script lang="ts">
@@ -160,6 +155,9 @@ export default Vue.extend({
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
+    onAddressUpdate(address: Address) { 
+      this.editUserForm.address = address;
+    },
     registrationPasswordCheck() {
       return (
         this.changePasswordForm.newPassword == this.regRepeatPassword &&
@@ -174,7 +172,7 @@ export default Vue.extend({
           if (r.status == 200) {
             (this.$store.state.session.userData = r.data.data.user),
               this.$router.replace({ name: "Home" });
-            this.$bvToast.toast(`Account information successfully edited.`, {
+            this.$root.$bvToast.toast(`Account information successfully edited.`, {
               title: "User info",
               autoHideDelay: 5000,
               variant: "success",
@@ -183,7 +181,7 @@ export default Vue.extend({
           }
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Unable to change the user info. Contact us if the problem persists.`,
             {
               title: "User info",
@@ -200,7 +198,7 @@ export default Vue.extend({
         .changePassword(this.changePasswordForm)
         .then((r) => {
           this.$router.replace({ name: "Home" });
-          this.$bvToast.toast(`Password successfully changed.`, {
+          this.$root.$bvToast.toast(`Password successfully changed.`, {
             title: "Password change",
             autoHideDelay: 5000,
             variant: "success",
@@ -208,7 +206,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Unable to change the user password. Contact us if the problem persists.`,
             {
               title: "Password change",

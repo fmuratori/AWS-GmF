@@ -101,7 +101,7 @@ export default Vue.extend({
       api
         .addFood(this.form)
         .then((r) => {
-          this.$bvToast.toast(`Food successfully created.`, {
+          this.$root.$bvToast.toast(`Food successfully created.`, {
             title: "Food",
             autoHideDelay: 5000,
             variant: "success",
@@ -113,7 +113,7 @@ export default Vue.extend({
           this.reloadIndex += 1;
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Unable to add food. Retry later or contact us if the problem persist.`,
             {
               title: "food",

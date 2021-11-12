@@ -98,7 +98,7 @@ export default Vue.extend({
         .then((r) => {
           console.log(r);
           this.$router.replace({ name: "ManagerPacks" });
-          this.$bvToast.toast(`Pack successfully created.`, {
+          this.$root.$bvToast.toast(`Pack successfully created.`, {
             title: "Pack",
             autoHideDelay: 5000,
             variant: "success",
@@ -106,7 +106,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Unable to create pack. Retry later or contact us if the problem persist.`,
             {
               title: "Pack",

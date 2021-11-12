@@ -152,7 +152,7 @@ export default Vue.extend({
         .verifyFamily({ id: familyId })
         .then((r) => {
           this.changeView(this.view);
-          this.$bvToast.toast(`Family verified with success.`, {
+          this.$root.$bvToast.toast(`Family verified with success.`, {
             title: "Verify",
             autoHideDelay: 5000,
             variant: "success",
@@ -160,7 +160,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Unable to verify the family. Retry later or contact us.`,
             {
               title: "Verify",

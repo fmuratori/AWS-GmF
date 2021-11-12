@@ -37,7 +37,6 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
-            ref="inputAddress"
           )
 
         b-row
@@ -108,7 +107,7 @@ export default Vue.extend({
         .then((r) => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilyList" });
-          this.$bvToast.toast(`Familgia segnalata con successo.`, {
+          this.$root.$bvToast.toast(`Familgia segnalata con successo.`, {
             title: "Famiglia",
             autoHideDelay: 5000,
             variant: "success",
@@ -117,7 +116,7 @@ export default Vue.extend({
         })
         .catch((e) => {
           console.log(e);
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,
             {
               title: "Famiglia",

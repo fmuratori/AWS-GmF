@@ -262,7 +262,7 @@ export default Vue.extend({
         .deleteDonation(this.donation._id)
         .then(() => {
           this.$router.replace({ name: "ManagerDonationsList" });
-          this.$bvToast.toast(`Donazione eliminata con successo.`, {
+          this.$root.$bvToast.toast(`Donazione eliminata con successo.`, {
             title: "Donazione",
             autoHideDelay: 5000,
             variant: "success",
@@ -270,7 +270,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Impossibile eliminare la donazione. Riprova tra qualche minuto.`,
             {
               title: "Donazione",
@@ -298,7 +298,7 @@ export default Vue.extend({
       donationApi
         .editDonation(this.donation)
         .then((r: any) => {
-          this.$bvToast.toast(`Ritiro della donazione annulato con successo.`, {
+          this.$root.$bvToast.toast(`Ritiro della donazione annulato con successo.`, {
             title: "Donazione",
             autoHideDelay: 5000,
             variant: "success",
@@ -307,7 +307,7 @@ export default Vue.extend({
           this.$router.replace({ name: "ManagerDonationsVolunteerList" });
         })
         .catch((e: any) => {
-          this.$bvToast.toast(
+          this.$root.$bvToast.toast(
             `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
             {
               title: "Donazione",

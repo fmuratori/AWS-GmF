@@ -52,17 +52,22 @@ b-container
                   @click="weekDayButtonClick(weekDay, 'evening')",
                   :variant="computeButtonVariant(weekDay, 'evening')"
                 ) Evening
+        .mb-4
+          InputAddress(
+            title="Location",
+            @onAddressUpdate="onAddressUpdate",
+          )
 
-      b-row
-        b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.replace({ name: 'ManagerHome' })",
-            type="reset"
-          ) Cancel
-        b-col
-          b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+        b-row
+          b-col
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.replace({ name: 'ManagerHome' })",
+              type="reset"
+            ) Cancel
+          b-col
+            b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
@@ -71,6 +76,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
+import InputAddress from "../components/input/InputAddress.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 
 import { Donation, Address, DonationCreationPayload } from "../types";
@@ -85,6 +91,7 @@ export default Vue.extend({
     Sidebar,
     InputDate,
     InputList,
+    InputAddress,
     InputTextarea,
   },
   data: (): CreatedonationView => {
@@ -131,6 +138,9 @@ export default Vue.extend({
     } else this.$router.replace({ name: "Login" });
   },
   methods: {
+    onAddressUpdate(address: Address) { 
+      this.form.address = address;
+    },
     computeButtonVariant(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(
         (wd: { weekDay: string; period: string }) =>
@@ -160,8 +170,8 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then(() => {
-            this.$router.replace({ name: "ManagerDonationsList" });
-            this.$bvToast.toast(`Donazione effettuata con successo.`, {
+            this.$router.replace({ name: "ManagerDonationsUserList" });
+            this.$root.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,
               variant: "success",
@@ -169,7 +179,7 @@ export default Vue.extend({
             });
           })
           .catch(() => {
-            this.$bvToast.toast(
+            this.$root.$bvToast.toast(
               `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
               {
                 title: "Donazione",
@@ -183,7 +193,7 @@ export default Vue.extend({
     },
     formChecks() {
       if (!this.form.pickUpPeriod.length) {
-        this.$bvToast.toast(
+        this.$root.$bvToast.toast(
           `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
           {
             title: "Donazione",
@@ -194,8 +204,8 @@ export default Vue.extend({
         );
         return false;
       }
-      if (!(this.form.foods.length - 1)) {
-        this.$bvToast.toast(`Inserire almeno un alimento che vuoi donare.`, {
+      if (!this.form.foods.length) {
+        this.$root.$bvToast.toast(`Inserire almeno un alimento che vuoi donare.`, {
           title: "Donazione",
           autoHideDelay: 5000,
           variant: "warning",
