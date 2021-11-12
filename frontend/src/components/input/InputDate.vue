@@ -1,5 +1,5 @@
 <template lang="pug">
-b-form-group(:label=title)
+b-form-group(:label="title")
   b-input-group
     b-form-datepicker.my-no-right-border(
       :placeholder="placeholder",
