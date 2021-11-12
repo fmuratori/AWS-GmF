@@ -28,7 +28,7 @@ export default Vue.extend({
   props: {
     title: String,
     placeholder: String,
-    date: Date,
+    date: String,
     required: Boolean,
   },
   data: function () {
