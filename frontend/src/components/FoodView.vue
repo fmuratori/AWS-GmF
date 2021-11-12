@@ -79,7 +79,7 @@ export default Vue.extend({
         {
           key: "selected",
           label: "Selected",
-          sortable: false
+          sortable: false,
         },
         {
           key: "expirationDate",
@@ -92,7 +92,7 @@ export default Vue.extend({
         {
           key: "labels",
           label: "Labels",
-          sortable: false
+          sortable: false,
         },
       ],
       totalRows: 0,

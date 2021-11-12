@@ -60,7 +60,7 @@ export interface DonationCreationPayload {
   expirationDate: string;
   address: Address;
   additionalInformation: string;
-  pickUpPeriod: Array<{ weekDay: string, period: string }>
+  pickUpPeriod: Array<{ weekDay: string; period: string }>;
 }
 
 export interface Donation {
@@ -170,7 +170,7 @@ export interface Food {
   labels: [string];
 }
 export interface SelectableFood extends Food {
-  selected: number
+  selected: number;
 }
 
 // export interface OfferResponse {

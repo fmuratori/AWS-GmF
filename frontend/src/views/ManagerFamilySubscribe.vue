@@ -75,7 +75,7 @@ export default Vue.extend({
     InputText,
     InputAddress,
   },
-  data: ():{form: FamilyPayload} => {
+  data: (): { form: FamilyPayload } => {
     return {
       form: {
         reporterId: "",

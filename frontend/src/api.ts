@@ -32,7 +32,10 @@ export default {
   /* foods */
 
   async addFood(payload: FoodPayload) {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/food/add-or-update`, payload);
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/food/add-or-update`,
+      payload
+    );
   },
 
   async foodList(payload: any) {

@@ -73,7 +73,7 @@ export default Vue.extend({
     InputList,
     FoodView,
   },
-  data: ():FoodManagerView => {
+  data: (): FoodManagerView => {
     return {
       form: {
         name: "",
@@ -113,6 +113,7 @@ export default Vue.extend({
           this.reloadIndex += 1;
         })
         .catch((e) => {
+          console.log(e);
           this.$bvToast.toast(
             `Unable to add food. Retry later or contact us if the problem persist.`,
             {

@@ -127,6 +127,7 @@ export default Vue.extend({
           });
         })
         .catch((e) => {
+          console.log(e);
           this.$bvToast.toast(
             `Unable to create the event. Retry later or contact us if the problem persist.`,
             {
