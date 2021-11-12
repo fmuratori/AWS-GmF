@@ -2,7 +2,7 @@
 b-container
   .justify-content-center.my-5
     h3 
-      b REPORTED FAMILIES
+      b AVAILABLE PACKS
 
     b-row(v-if="this.$store.state.session.userData.type != 'user'")
       b-button-group(size="lg")
@@ -10,48 +10,23 @@ b-container
         b-button.btn-all(@click="changeView('all')") All
 
     b-row
-      div(v-if="familyList.length == 0") No family segnalation found for this user
-      b-col(sm=12, md=6, v-for="(family, idx) in familyList", :index="idx")
-        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-          b-card-text
-            .px-4.pt-4
-              h4 
-                b {{ family.name }}
-              b-row
-                b-col(cols="auto")
-                  p.mb-0 Phone number:
-                    b {{ family.phoneNumber }}
-              b-row
-                b-col(cols="auto")
-                  p.mb-0 Components:
-                    b {{ family.components }}
-              b-row
-                b-col(cols="auto")
-                  p.mb-0 Address:
-                    b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
+      b-table(hover, striped, responsive, :fields="tableFields", :items="packList")
+        template(#cell(status)="data") {{data.value}}
 
-          b-card-footer
-            h4 status:
-              b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-              b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
-          span.card-footer-btn(
-            v-if="family.status == 'verified'",
-            variant="success"
-          )
-            b-button.b-card-footer-button(
-              block,
-              @click="$router.replace({ name: 'ManagerPackCreate', params: { event: event } })"
-            ) Create pack
+        template(#cell(familyId)="data") {{data.value}}
+        
+        template(#cell(deliveryDate)="data") {{data.value}}
+        template(#cell(deliveryPeriod)="data") {{data.value}}
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 
 import api from "../api";
 
-import { Family } from "../types";
+import { Pack } from "../types";
 
 export default Vue.extend({
   name: "ManagerPacks",
@@ -62,7 +37,8 @@ export default Vue.extend({
   data: () => {
     return {
       view: "all",
-      familyList: new Array<Family>(),
+      packList: new Array<Pack>(),
+      tableFields: ["status", "familyId", "deliveryDate", "deliveryPeriod"],
     };
   },
   created() {
@@ -72,11 +48,9 @@ export default Vue.extend({
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
       api
-        .familyList({
-          filter: { reporterId: this.$store.state.session.userData._id },
-        })
+        .packList(null)
         .then((r: any) => {
-          this.familyList = r.data.data.list;
+          this.packList = r.data.data.list;
         })
         .catch((e) => console.log(e));
     } else {
@@ -87,11 +61,11 @@ export default Vue.extend({
     changeView(view: "my" | "all") {
       var payload = null;
 
-      if (view == "my") {
-        payload = {
-          filter: { reporterId: this.$store.state.session.userData._id },
-        };
-      }
+      // if (view == "my") {
+      //   payload = {
+      //     filter: { reporterId: this.$store.state.session.userData._id },
+      //   };
+      // }
       this.view = view;
 
       api

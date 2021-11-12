@@ -75,11 +75,11 @@ b-row.justify-content-center.my-5(no-gutters)
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 
 import { Address, FamilyPayload } from "../types";
 
-import api from "../api";
+import familyApi from "../api/family";
 
 export default Vue.extend({
   name: "ManagerFamiliesSubscribe",
@@ -129,8 +129,8 @@ export default Vue.extend({
       event.preventDefault();
 
       var fun;
-      if ("family" in this.$route.params) fun = api.editFamily;
-      else fun = api.addFamily;
+      if ("family" in this.$route.params) fun = familyApi.editFamily;
+      else fun = familyApi.addFamily;
 
       fun(this.form, this.$store.getters.getSessionHeader)
         .then((r) => {

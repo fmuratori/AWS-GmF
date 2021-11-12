@@ -1,0 +1,52 @@
+<template lang="pug">
+b-row.pl-3.pr-1.sidebar-item(
+  no-gutters,
+  align-v="center",
+  @click="changePage(route)",
+  :class="{ 'sidebar-item-selected': isRouteSelected(route) }"
+)
+  b-col
+    label.py-1 {{ text }}
+  b-col(cols="auto")
+    b-icon(icon="chevron-right")
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "SidebarItem",
+  props: {
+    text: String,
+    route: String,
+  },
+  methods: {
+    isRouteSelected(routeName: string) {
+      return this.$route.name == routeName;
+    },
+    changePage(pageName: string) {
+      this.$router.replace({ name: pageName });
+
+      if (this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("hideSidebar");
+      }
+    },
+  },
+});
+</script>
+
+<style scoped lang="scss">
+@import "@/assets/style.scss";
+
+.sidebar-item {
+  border-radius: 0.25em;
+}
+
+.sidebar-item:hover {
+  background-color: $greyscale1;
+}
+
+.sidebar-item-selected {
+  background-color: $color1;
+}
+</style>

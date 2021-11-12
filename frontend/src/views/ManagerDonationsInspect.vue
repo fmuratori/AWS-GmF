@@ -2,13 +2,13 @@
   b-container
     b-row(class="justify-content-center my-5")
       b-col(lg=4 md=8 cols=11 class="ml-2")
-        p MESSAGGI
+        p CHAT
         b-card(bg-variant="light" class="mb-2" no-body)
           b-card-text(class="m-2")
             div(id="messages-area" class="mb-1" ref="messagesArea")
 
-              Message(v-for="(message, idx) in processedChat" :index="idx" :username="message.userFullname" 
-              :isOwner="message.userId == $store.state.session.userData._id" :date="formatDate(message.date)" :isVisualized="message.visualized"
+              Message(v-for="(message, idx) in processedChat" :key="idx" :username="message.userFullname" 
+              :isOwner="message.userId == $store.state.session.userData._id" :date="formatDatetime(message.date)" :isVisualized="message.visualized"
               :messages="message.messages" :ref="'scrollTo' + idx")
               
             //- div(class="")
@@ -20,6 +20,18 @@
                   b-button(variant="success" type="submit") Invia
 
       b-col(lg=6 md=8 cols=11)
+
+        p INFORMAZIONI SUL RITIRO
+        
+        b-card(bg-variant="light" class="mb-2")
+          b-card-text
+            div(class="mb-2")
+              label(class="mb-0") Stato donazione:
+              p(class="font-weight-bold") {{ status }}
+            div(class="mb-2")
+              label(class="mb-0") Data ritiro: 
+              p(class="font-weight-bold") {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
+
         p INFORMAZIONI DONAZIONE
         
         b-card(bg-variant="light" class="mb-2")
@@ -30,20 +42,16 @@
                 label(class="font-weight-bold") {{ value }}
             
             div(class="mb-2")
-              label(class="mb-0") Stato donazione:
-              p(class="font-weight-bold") {{ status }}
-
-            div(class="mb-2")
               label(class="mb-0") La donazione scade tra:
               p(class="font-weight-bold") {{ expirationDays }} giorni
 
             div(class="mb-2")
               label(class="mb-0") Data creazione donazione:
-              p(class="font-weight-bold") {{ formatDate(donation.creationDate) }} 
+              p(class="font-weight-bold") {{ formatDatetime(donation.creationDate) }} 
             
             div(class="mb-2")
               label(class="mb-0") Data scadenza donazione:
-              p(class="font-weight-bold") {{ formatDate(donation.expirationDate) }} 
+              p(class="font-weight-bold") {{ formatDatetime(donation.expirationDate) }} 
 
             div(class="mb-2")
               label(class="mb-0") Luogo ritiro:
@@ -55,25 +63,34 @@
               
             div(class="")
               label(class="mb-0") Periodi di ritiro:
-              p(v-for="(weekDayName, weekDay, idx) in weekDays" :index="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
-                label(class="font-weight-bold") {{ weekDayName + ":&nbsp;" + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}
-                
-        b-button(block variant="outline-danger" type="submit" @click="modifyDonation") Modifica
-        b-button(block variant="outline-danger" type="submit" @click="deleteDonation") Cancella
-        b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsList'})" type="reset") Indietro
+              p(v-for="(weekDayName, weekDay, idx) in weekDays" :key="idx" class="mb-1" v-if="weekDayDonations(weekDay).length > 0")
+                label(class="font-weight-bold") {{ weekDayName + ":&nbsp;" + weekDayDonations(weekDay).map(d => translatePeriod(d.period)).join(", ") }}    
+
+        div(v-if="$store.getters.isUser" ) 
+          b-button(block variant="outline-danger" type="submit" @click="modifyDonation") Modifica
+          b-button(block variant="outline-danger" type="submit" @click="deleteDonation") Cancella
+          b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsUserList'})" type="reset") Indietro
         
+        div(v-if="$store.getters.isVolunteer" )
+          b-button(block variant="outline-danger" type="submit" @click="cancelReservation") Annulla prenotazione
+          b-button(block variant="outline-secondary" @click="$router.replace({name: 'ManagerDonationsVolunteerList'})" type="reset") Indietro
+        
+
+        
+        
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 import Message from "../components/Message.vue";
 import moment from "moment";
 
 import { Donation, Address, ChatMessage } from "../types";
 
-import api from "../api";
+import donationApi from "../api/donation";
 
 export default Vue.extend({
   name: "ManagerDonationsInspect",
@@ -110,6 +127,11 @@ export default Vue.extend({
         additionalInformation: "",
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
         creationDate: "",
+        pickUp: {
+          period: "",
+          date: "",
+          volunteerId: "",
+        },
       } as Donation,
       chatMessage: "",
     };
@@ -178,9 +200,14 @@ export default Vue.extend({
     }
   },
   methods: {
-    formatDate(date) {
+    formatDatetime(date) {
       return moment(new Date(date)).locale("it").calendar();
     },
+
+    formatDate(date) {
+      return moment(date).locale("it").format("DD-MM-YYYY");
+    },
+
     weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
       return this.donation.pickUpPeriod.filter(
         (p: { weekDay: string; period: string }) => p.weekDay == weekDay
@@ -195,7 +222,6 @@ export default Vue.extend({
     },
     sendMessage(event) {
       event.preventDefault();
-
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
         userId: this.$store.state.session.userData._id,
@@ -204,8 +230,8 @@ export default Vue.extend({
       });
     },
     deleteDonation() {
-      api
-        .deleteDonation(this.donation._id, this.$store.getters.getSessionHeader)
+      donationApi
+        .deleteDonation(this.donation._id)
         .then(() => {
           this.$router.replace({ name: "ManagerDonationsList" });
           this.$bvToast.toast(`Donazione eliminata con successo.`, {
@@ -234,6 +260,40 @@ export default Vue.extend({
         params: { donation: JSON.stringify(this.donation) },
       });
     },
+    cancelReservation() {
+      this.donation.pickUp = {
+        volunteerId: "",
+        date: "",
+        period: "",
+      };
+      this.donation.status = "waiting";
+      donationApi
+        .editDonation(this.donation)
+        .then((r: any) => {
+          this.$bvToast.toast(`Ritiro della donazione annulato con successo.`, {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+          this.$router.replace({ name: "ManagerDonationsVolunteerList" });
+        })
+        .catch((e: any) => {
+          this.$bvToast.toast(
+            `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
+            {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+          console.log(e);
+        });
+    },
+  },
+  destroyed() {
+    this.$store.dispatch("resetChat");
   },
 });
 </script>

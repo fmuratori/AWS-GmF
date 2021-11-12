@@ -25,7 +25,7 @@ b-container
 
     b-row
       div(v-if="familyList.length == 0") No family segnalation found for this user
-      b-col(sm=12 md=6 v-for="(family, idx) in familyList" :index="idx")
+      b-col(sm=12 md=6 v-for="(family, idx) in familyList" :key="idx")
         b-card(bg-variant="light" text-variant="dark" no-body class="mb-2")
           b-card-text
             div(class="px-4 pt-4")
@@ -80,9 +80,9 @@ b-container
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api";
+import familyApi from "../api/family";
 
 import { Family } from "../types";
 
@@ -108,7 +108,7 @@ export default Vue.extend({
       this.userRole = this.$store.state.session.userData.type;
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      familyApi
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
@@ -139,7 +139,7 @@ export default Vue.extend({
       this.view = view;
       this.status = status;
 
-      api
+      familyApi
         .familyList(payload)
         .then((r: any) => {
           this.familyList = r.data.data.list;

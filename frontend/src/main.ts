@@ -24,9 +24,26 @@ Vue.use(IconsPlugin);
 import vueSocket from "./socket";
 Vue.use(vueSocket);
 
+/* vue google maps components */
+// look here for documentation: https://www.npmjs.com/package/gmap-vue
+import * as VueGoogleMaps from "gmap-vue";
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: process.env.VUE_APP_MAPS_API_KEY,
+    libraries: "places",
+  },
+  installComponents: true,
+});
+
+/* enable moment package usage inside html/pug code */
+import moment from "moment";
+Vue.prototype.moment = moment;
+
 /* local style sheet */
 import "./assets/style.scss";
 
+/* vue instance creation */
 new Vue({
   router,
   store,

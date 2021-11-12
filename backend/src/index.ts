@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { mongo } from 'mongoose'
 import http from 'http'
 import dotenv from 'dotenv'
 import app from './app'
@@ -11,7 +11,8 @@ let activeSockets = new Map();
 
 import { Server, Socket } from "socket.io";
 import { addMessageToChat, getDonationUsers, setMessageAsVisualized } from './controllers/donationController'
-import { textChangeRangeIsUnchanged } from 'typescript'
+import ExportManager from './utils/exportManager'
+import ImportManager from './utils/importManager'
 
 const io = new Server(httpServer, {});
 io.on("connection", (socket: Socket) => {
@@ -31,37 +32,42 @@ io.on("connection", (socket: Socket) => {
   })
 
   socket.on("message_to_server", (obj: any) => {
-    
+
     console.log("message_to_server: " + obj.message)
 
     addMessageToChat(obj.donationId, obj.userId, obj.fullname, obj.message)
     .then(newMessage => {
       // send the new message to all the users involved in the chat (owner and optionally a volunteer)
       getDonationUsers(obj.donationId)
-      .then(ids => {
+      .then((ids:any) => {
         if (ids) {
           const userId = ids['userId'] ? ids['userId'].toString() : null;
           const volunteerId = ids['volunteerId'] ? ids['volunteerId'].toString() : null;
           
           // send the message to the user
           if (userId && activeSockets.has(userId)) {
+            console.log("sent message to user", userId)
             const destSocket = io.sockets.sockets.get(activeSockets.get(userId))
             if (destSocket) {
               destSocket.emit("chat_message", JSON.stringify(newMessage));
             }
           }
 
+          console.log(volunteerId, activeSockets.has(volunteerId))
           // send the message to the volunteer
-          // if (volunteerId && activeSockets.has(volunteerId)) {
-          //   const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
-          //   if (destSocket) destSocket.emit("chat_message", JSON.stringify(newMessage));
-          // }
+          if (volunteerId && activeSockets.has(volunteerId)) {
+            console.log("sent message to volunteer", userId)
+            const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
+            if (destSocket) { 
+              destSocket.emit("chat_message", JSON.stringify(newMessage));
+            }
+          }
         }
       });
     })
   });
 
-  socket.on("visualize_message", (jsonMessage:any) => {
+  socket.on("visualize_message", (jsonMessage: any) => {
     const message = JSON.parse(jsonMessage)
     console.log(message)
     setMessageAsVisualized(message.donationId, message.message.index);
@@ -74,4 +80,20 @@ dotenv.config({ path: __dirname + '/../properties.env' });
 
 mongoose
   .connect(process.env.DB || "missing db path")
-  .then(() => console.log('DB connection successfull'))
+  .then(() => {
+    console.log('DB connection successfull')
+
+    //if EXPORT is true -> save all collections in data folder
+    if (process.env.EXPORT === "true") {
+      console.log("esporto")
+      new ExportManager().exportAll()
+    }
+
+    //if IMPORT is true -> populate db with json in data folder
+    //otherwise db remains empty 
+    if (process.env.IMPORT === "true") {
+      console.log("importo")
+      new ImportManager().importAll()
+    }
+
+  }).catch(e => console.log(e))

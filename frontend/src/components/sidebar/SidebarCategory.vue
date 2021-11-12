@@ -1,0 +1,23 @@
+<template lang="pug">
+b-row.pb-2(no-gutters align-v="center")
+  b-col.mr-1(cols="auto")
+    font-awesome-icon(v-if="this.icon == 'users'" icon="users" size="lg")
+    font-awesome-icon(v-else-if="this.icon == 'calendar'" icon="calendar" size="lg")
+    font-awesome-icon(v-else-if="this.icon == 'drumstick-bite'" icon="drumstick-bite" size="lg")
+  b-col.ml-1
+    h6 {{text}}
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "SidebarCategory",
+  props: {
+    text: String,
+    icon: String,
+  },
+});
+</script>
+
+<style scoped lang="scss"></style>

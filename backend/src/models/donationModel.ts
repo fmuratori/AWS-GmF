@@ -38,13 +38,12 @@ const donationSchema = new mongoose.Schema({
     expirationDate: {
         type: Date,
         required: [true, "missing required field expirationDate"],
-        validate: {
-            validator(this: DonationDocument, expirationDate: Date): Boolean {
-                return new Date() < expirationDate
-            },
-            message: "expirationDate should be a future date"
-        }
-
+        // validate: {
+        //     validator(this: DonationDocument, expirationDate: Date): Boolean {
+        //         return new Date() < expirationDate
+        //     },
+        //     message: "expirationDate should be a future date"
+        // }
     },
     creationDate: {
         type: Date,
@@ -94,11 +93,21 @@ const donationSchema = new mongoose.Schema({
         default: "waiting",
         enum: ["waiting", "selected", "withdrawn"]
     },
-    volunteerId: {
-        type: mongoose.Types.ObjectId,
-        required: false,
-        ref: "User",
-        default: null
+    pickUp: {
+        volunteerId: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+            default: null
+        },
+        date: {
+            type: Date,
+            default: new Date(),
+        },
+        period: {
+            type: String,
+            enum: ["morning", "afternoon", "evening"]
+        },
+        default: {}
     }
 })
 

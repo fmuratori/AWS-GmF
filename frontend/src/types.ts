@@ -3,8 +3,8 @@ export interface Address {
   civicNumber: string;
   city: string;
   coordinates: {
-    x: number;
-    y: number;
+    x: number,
+    y: number
   };
 }
 
@@ -84,6 +84,11 @@ export interface Donation {
   chat: ChatMessage[];
   creationDate: string;
   status: string;
+  pickUp: {
+    volunteerId: string;
+    date: string;
+    period: string;
+  };
 }
 
 export interface ChatMessage {
@@ -142,10 +147,8 @@ export interface Event {
 }
 
 export interface PackPayload {
-  foodIdList: [string];
+  foodList: [{ foodId: string; number: number }];
   familyId: string;
-  deliveryDate: Date;
-  deliveryPeriod: string;
 }
 
 export interface Pack {

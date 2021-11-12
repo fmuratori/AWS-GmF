@@ -24,7 +24,7 @@
         b-nav-item(href="#" class="my-auto navbar-link text-center") Eventi
         b-nav-item(href="#" class="my-auto navbar-link text-center") Domande
         b-nav-item(href="#" class="my-auto text-center" v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged")
-          b-button(v-if="$store.getters.unreadMessagesTotalCount > 0" type="submit" variant="danger" class="my-2 my-sm-0 navbar-messages-button")
+          b-button(v-if="$store.getters.unreadMessagesTotalCount > 0" @click="routeToDonations()" type="submit" variant="danger" class="my-2 my-sm-0 navbar-messages-button")
             span(class="mr-1") Messaggi
             b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
         b-nav-item(href="#" class="my-auto text-center" v-if="$store.getters.isUserLogged")
@@ -60,6 +60,12 @@ export default Vue.extend({
       this.$store.dispatch("logout");
       this.$router.replace({ name: "Home" });
       this.$store.dispatch("hideSidebar");
+    },
+    routeToDonations() {
+      if (this.$store.getters.isUser)
+        this.$router.replace({ name: "ManagerDonationsUserList" });
+      else if (this.$store.getters.isVolunteer)
+        this.$router.replace({ name: "ManagerDonationsVolunteerList" });
     },
   },
 });

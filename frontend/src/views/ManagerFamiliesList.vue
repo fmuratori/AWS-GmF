@@ -103,14 +103,14 @@ b-container.justify-content-center.my-5
 <script lang="ts">
 import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api";
+import familyApi from "../api/family";
 
 import { Family } from "../types";
 
 export default Vue.extend({
-  name: "ManagerFamilies",
+  name: "ManagerFamiliesList",
   components: {
     Navbar,
     Sidebar,
@@ -131,7 +131,7 @@ export default Vue.extend({
       this.userRole = this.$store.state.session.userData.type;
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      familyApi
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
@@ -148,7 +148,7 @@ export default Vue.extend({
       return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
     },
     verifyFamily(familyId: string) {
-      api
+      familyApi
         .verifyFamily({ id: familyId })
         .then((r) => {
           this.changeView(this.view);
@@ -186,7 +186,7 @@ export default Vue.extend({
 
       this.filterByMode = filterByMode;
 
-      api
+      familyApi
         .familyList(payload)
         .then((r: any) => {
           this.familyList = r.data.data.list;

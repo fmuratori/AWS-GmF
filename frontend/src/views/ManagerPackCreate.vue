@@ -4,7 +4,7 @@ b-container
     h3 
       b CREATE A PACK
     b-row
-      b-col(sm=12, md=6)
+      b-col
         h4 About the family
         b-row
           b-col
@@ -27,34 +27,7 @@ b-container
             span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
     b-form(@submit="createPack")
-      b-row
-        b-col
-          b-table(striped, hover, :fields="tableFields", :items="foodList")
-            template(#cell(name)="data") {{ data.value }}
-
-            template(#cell(number)="data") {{ data.value }}
-
-            template(#cell(expirationDate)="data") {{ formatDate(data.value) }}
-
-            template(#cell(labels)="data")
-              b-badge(v-for="label in data.value", variant="success") {{ label }}
-
-            template(#cell(_id)="data")
-              b-button(@click="select(data.value)") Add
-
-        b-col
-          b-table(striped, hover, :fields="tableFields", :items="selectedFood")
-            template(#cell(name)="data") {{ data.value }}
-
-            template(#cell(number)="data") {{ data.value }}
-
-            template(#cell(expirationDate)="data") {{ formatDate(data.value) }}
-
-            template(#cell(labels)="data")
-              b-badge(v-for="label in data.value", variant="success") {{ label }}
-
-            template(#cell(_id)="data")
-              b-button(@click="unselect(data.value)") Remove
+      FoodView(selectable, v-on:data="(e) => { this.foodList = e; }")
 
       b-row
         b-col
@@ -69,9 +42,9 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
-import moment from "moment";
 import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebar/Sidebar.vue";
+import FoodView from "../components/FoodView.vue";
 
 import { Family, Food, PackPayload } from "../types";
 
@@ -82,27 +55,20 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    FoodView,
   },
   data: function () {
     return {
       foodList: new Array<Food>(),
-      selectedFood: new Array<Food>(),
-      tableFields: ["name", "number", "expirationDate", "labels", "_id"],
       family: {} as Family,
       form: {
-        foodIdList: new Array<string>(),
+        foodList: new Array<{ foodId: string; number: number }>(),
         familyId: "",
-        deliveryDate: new Date(),
-        deliveryPeriod: "",
       } as PackPayload,
     };
   },
   created() {
     this.$store.dispatch("showSidebar");
-
-    api.foodList(null).then((r: any) => {
-      this.foodList = r.data.data.list;
-    });
 
     // check if user is logged in
     if (!this.$store.getters.isUserLogged)
@@ -110,11 +76,22 @@ export default Vue.extend({
 
     if ("family" in this.$route.params) {
       this.family = this.$route.params.family;
+      this.form.familyId = this.family._id;
     }
   },
   methods: {
+    log(e) {
+      console.log(e);
+    },
     createPack(event) {
       event.preventDefault();
+      console.log(this.foodList);
+
+      this.foodList.forEach((elem) => {
+        if (elem.selected) {
+          this.form.foodList.push({ foodId: elem._id, number: elem.selected });
+        }
+      });
 
       api
         .createPack(this.form)
@@ -140,73 +117,8 @@ export default Vue.extend({
           );
         });
     },
-    formatDate(date: Date) {
-      return moment(date).locale("en").format("LL");
-    },
-    select(_id) {
-      var srcIndex;
-      this.foodList.forEach((elem, index) => {
-        if (elem._id == _id) srcIndex = index;
-      });
-
-      var destIndex = -1;
-      this.selectedFood.forEach((elem, index) => {
-        if (elem._id == _id) destIndex = index;
-      });
-
-      //verifico se nell'array destinazione c'è già un nodo con quell'id
-      if (destIndex != -1) this.selectedFood[destIndex].number += 1;
-      else {
-        const newFood = {
-          _id: this.foodList[srcIndex]._id,
-          name: this.foodList[srcIndex].name,
-          number: 1,
-          expirationDate: this.foodList[srcIndex].expirationDate,
-          labels: this.foodList[srcIndex].labels
-        }
-        this.selectedFood.push(newFood);
-      }
-
-      //modifico il nodo nell'array sorgente
-      if (this.foodList[srcIndex].number > 1) {
-        this.foodList[srcIndex].number -= 1;
-      } else this.foodList.splice(srcIndex, 1);
-    },
-    unselect(_id) {
-      var srcIndex;
-      this.selectedFood.forEach((elem, index) => {
-        if (elem._id == _id) srcIndex = index;
-      });
-
-      var destIndex = -1;
-      this.foodList.forEach((elem, index) => {
-        if (elem._id == _id) destIndex = index;
-      });
-
-      //verifico se nell'array destinazione c'è già un nodo con quell'id
-      if (destIndex != -1) this.foodList[destIndex].number += 1;
-      else {
-        const newFood = {
-          _id: this.selectedFood[srcIndex]._id,
-          name: this.selectedFood[srcIndex].name,
-          number: 1,
-          expirationDate: this.selectedFood[srcIndex].expirationDate,
-          labels: this.selectedFood[srcIndex].labels
-        }
-        this.foodList.push(newFood);
-      }
-
-      //modifico il nodo nell'array sorgente
-      if (this.selectedFood[srcIndex].number > 1)
-        this.selectedFood[srcIndex].number -= 1;
-      else this.selectedFood.splice(srcIndex, 1);
-    },
   },
 });
 </script>
 
-<style scoped lang="scss">
-.food-item:hover {
-  background-color: yellow;
-}
-</style>
+<style scoped lang="scss"></style>

@@ -18,17 +18,13 @@ export default class FoodController {
 		}) 
 
 		if(!elem){
-			console.log("creo un nuovo nodo")
 			//creo un nuovo nodo
 			elem = await FoodModel.create(req.body)
 		} else {
-			console.log("aggiorno il nodo esistente")
 			//aggiorno il nodo già esistente
 			if(req.body.number) {
-				console.log("aggiungo " + req.body.number)
 				elem.number += req.body.number}
 			else {
-				console.log("aggiungo 1")
 				elem.number = elem.number.valueOf() + 1
 			}
 			elem = await FoodModel.findByIdAndUpdate(elem._id, elem, {new: true})

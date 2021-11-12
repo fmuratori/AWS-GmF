@@ -1,5 +1,7 @@
+import Food from "./food";
+
 export default interface Pack {
-    foodIds: [String],
+    foodList: [Food],
     deliveryVolunteerId: String,
     status: String,
     familyId: String, 

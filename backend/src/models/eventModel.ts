@@ -34,13 +34,12 @@ const eventSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: [true, "missing required field date"],
-        validate: {
-            validator(this: EventDocument, expirationDate: Date): Boolean {
-                return new Date() < expirationDate
-            },
-            message: "Cannot create event in the past"
-        }
-
+        // validate: {
+        //     validator(this: EventDocument, expirationDate: Date): Boolean {
+        //         return new Date() < expirationDate
+        //     },
+        //     message: "Cannot create event in the past"
+        // }
     },
     ownerVolunteerId: {
         type: mongoose.Types.ObjectId,
