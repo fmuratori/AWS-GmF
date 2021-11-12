@@ -110,6 +110,7 @@ import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import userApi from "../api/user";
 import { Address, editUserPayload, changePasswordPayload } from "../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerEditUserInfo",
@@ -170,7 +171,7 @@ export default Vue.extend({
       event.preventDefault();
       userApi
         .editUser(this.editUserForm)
-        .then((r: any) => {
+        .then((r: AxiosResponse): void => {
           if (r.status == 200) {
             (this.$store.state.session.userData = r.data),
               this.$router.replace({ name: "Home" });
@@ -182,7 +183,8 @@ export default Vue.extend({
             });
           }
         })
-        .catch((e) => {
+        .catch((e: AxiosError): void => {
+          console.log(e);
           this.$bvToast.toast(
             `Unable to change the user info. Contact us if the problem persists.`,
             {
@@ -198,16 +200,19 @@ export default Vue.extend({
       event.preventDefault();
       userApi
         .changePassword(this.changePasswordForm)
-        .then((r) => {
-          this.$router.replace({ name: "Home" });
-          this.$bvToast.toast(`Password successfully changed.`, {
-            title: "Password change",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+        .then((r: AxiosResponse): void => {
+          if (r.status == 200) {
+            this.$router.replace({ name: "Home" });
+            this.$bvToast.toast(`Password successfully changed.`, {
+              title: "Password change",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            });
+          }
         })
-        .catch((e) => {
+        .catch((e: AxiosError): void => {
+          console.log(e);
           this.$bvToast.toast(
             `Unable to change the user password. Contact us if the problem persists.`,
             {

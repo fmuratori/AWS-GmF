@@ -62,10 +62,11 @@ import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputDate from "../components/input/InputDate.vue";
 
-import { Address, Event, EventPayload } from "../types";
+import { Address, EventPayload } from "../types";
 import { CreateEventView } from "../viewTypes";
 
 import api from "../api";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerEventCreate",
@@ -118,8 +119,7 @@ export default Vue.extend({
       else fun = api.createEvent;
 
       fun(this.form)
-        .then((r) => {
-          console.log(r);
+        .then(() => {
           this.$router.replace({ name: "ManagerEvents" });
           this.$bvToast.toast(`Event successfully created.`, {
             title: "Event",
@@ -128,7 +128,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
+        .catch((e: AxiosError): void => {
           console.log(e);
           this.$bvToast.toast(
             `Unable to create the event. Retry later or contact us if the problem persist.`,

@@ -1,7 +1,7 @@
-import { SessionHeader, UserData } from "../types";
+import { SessionHeader, UserData, UserState } from "../types";
 
 const sessionModule = {
-  state: () => ({
+  state: (): UserState => ({
     token: "",
     userData: {
       _id: "",
@@ -22,16 +22,16 @@ const sessionModule = {
     } as UserData,
   }),
   getters: {
-    isUserLogged(state: any) {
+    isUserLogged(state: UserState): boolean {
       return state.token != "";
     },
-    isUser(state: any) {
+    isUser(state: UserState): boolean {
       return state.userData.type == "user";
     },
-    isVolunteer(state: any) {
+    isVolunteer(state: UserState): boolean {
       return state.userData.type == "volunteer";
     },
-    getSessionHeader(state: any) {
+    getSessionHeader(state: UserState): SessionHeader {
       return {
         content: {
           "x-access-token": state.token,
@@ -39,7 +39,7 @@ const sessionModule = {
         },
       } as SessionHeader;
     },
-    userFullName(state: any) {
+    userFullName(state: UserState): string {
       return state.userData.name + " " + state.userData.surname;
     },
     // isVolunteer(state: any) {
@@ -50,20 +50,20 @@ const sessionModule = {
     // },
   },
   mutations: {
-    login(state: any, payload: { token: string; userData: UserData }) {
+    login(state: UserState, payload: UserState): void {
       state.token = payload.token;
       state.userData = payload.userData;
     },
-    logout(state: any) {
+    logout(state: UserState): void {
       state.token = "";
-      state.userData = null;
+      state.userData = {} as UserData;
     },
   },
   actions: {
-    login({ commit }: any, payload: any) {
+    login({ commit }: any, payload: any): void {
       commit("login", payload);
     },
-    logout({ commit }) {
+    logout({ commit }): void {
       commit("logout");
     },
   },

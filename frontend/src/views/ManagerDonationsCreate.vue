@@ -77,6 +77,7 @@ import { Address, DonationCreationPayload } from "../types";
 
 import api from "../api/donation";
 import { CreatedonationView } from "../viewTypes";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -124,7 +125,8 @@ export default Vue.extend({
       this.form.address = this.$store.state.session.userData.address;
 
       if ("donation" in this.$route.params) {
-        this.form = this.$route.params.donation as unknown as DonationCreationPayload;
+        this.form = this.$route.params
+          .donation as unknown as DonationCreationPayload;
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
@@ -168,7 +170,8 @@ export default Vue.extend({
               appendToast: false,
             });
           })
-          .catch(() => {
+          .catch((e: AxiosError): void => {
+            console.log(e);
             this.$bvToast.toast(
               `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
               {

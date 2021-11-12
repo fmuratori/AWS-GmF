@@ -173,6 +173,22 @@ export interface SelectableFood extends Food {
   selected: number;
 }
 
+export interface FindPayload {
+  filter?: any;
+  sortBy?: any;
+  pageSize?: number;
+  page?: number;
+}
+
+export interface UserState {
+  token: string;
+  userData: UserData;
+}
+
+export interface NavigationState {
+  isSidebarOpen: boolean;
+  screenWidth: number;
+}
 
 // export interface OfferResponse {
 

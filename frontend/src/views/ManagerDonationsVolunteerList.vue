@@ -154,6 +154,7 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import donationApi from "../api/donation";
 
 import { Donation } from "../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsVolunteerList",
@@ -195,12 +196,12 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       donationApi
         .filterPickedDonations(this.$store.state.session.userData._id)
-        .then((r: any) => {
-          this.donations = r.data;
-          this.donationsBackup = r.data;
+        .then((r: AxiosResponse): void => {
+          this.donations = r.data as Donation[];
+          this.donationsBackup = r.data as Donation[];
           this.orderBy(this.orderByMode);
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError): void => console.log(e));
 
       // api.donationsMessagesCounts(this.$store.state.session.userId,this.$store.getters.getSessionHeader).then((r:any) => {
       // });

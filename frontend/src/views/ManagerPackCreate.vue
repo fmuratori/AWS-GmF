@@ -52,6 +52,7 @@ import { Family, PackPayload, SelectableFood } from "../types";
 
 import api from "../api";
 import { PackCreateView } from "../viewTypes";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerPackCreate",
@@ -95,8 +96,7 @@ export default Vue.extend({
 
       api
         .createPack(this.form)
-        .then((r) => {
-          console.log(r);
+        .then(() => {
           this.$router.replace({ name: "ManagerPacks" });
           this.$bvToast.toast(`Pack successfully created.`, {
             title: "Pack",
@@ -105,8 +105,8 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
-          console.log(e)
+        .catch((e: AxiosError): void => {
+          console.log(e);
           this.$bvToast.toast(
             `Unable to create pack. Retry later or contact us if the problem persist.`,
             {

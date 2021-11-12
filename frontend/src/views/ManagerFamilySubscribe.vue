@@ -66,6 +66,7 @@ import InputAddress from "../components/input/InputAddress.vue";
 import { Address, FamilyPayload } from "../types";
 
 import familyApi from "../api/family";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamilySubscribe",
@@ -81,6 +82,7 @@ export default Vue.extend({
         reporterId: "",
         name: "",
         phoneNumber: "",
+        components: new Number(),
         address: {
           city: "",
           street: "",
@@ -107,7 +109,7 @@ export default Vue.extend({
       event.preventDefault();
       familyApi
         .addFamily(this.form)
-        .then((r) => {
+        .then((r: AxiosResponse): void => {
           console.log(r);
           this.$router.replace({ name: "ManagerFamilyList" });
           this.$bvToast.toast(`Familgia segnalata con successo.`, {
@@ -117,7 +119,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e) => {
+        .catch((e: AxiosError): void => {
           console.log(e);
           this.$bvToast.toast(
             `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,

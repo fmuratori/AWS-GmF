@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import moment from "moment";
 
 import store from "../store";
-import { Donation } from "../types";
+import { Donation, FindPayload } from "../types";
 
 export default {
-  async addDonation(payload: Donation) {
+  async addDonation(payload: Donation): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/add`,
       payload,
@@ -13,7 +13,7 @@ export default {
     );
   },
 
-  async editDonation(payload: Donation) {
+  async editDonation(payload: Donation): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/edit`,
       payload,
@@ -21,7 +21,7 @@ export default {
     );
   },
 
-  async deleteDonation(donationId: string) {
+  async deleteDonation(donationId: string): Promise<AxiosResponse> {
     const payload = { id: donationId };
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/delete`,
@@ -30,7 +30,7 @@ export default {
     );
   },
 
-  async filterDonations(filter: any) {
+  async filterDonations(filter: FindPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/find`,
       { filter: filter },
@@ -38,18 +38,21 @@ export default {
     );
   },
 
-  async filterUserActiveDonations(userId: string) {
+  async filterUserActiveDonations(userId: string): Promise<AxiosResponse> {
     const filter = {
       $and: [
         { userId: userId },
         { expirationDate: { $gte: moment().format("YYYY-MM-DD") } },
       ],
-    };
+    } as FindPayload;
     return this.filterDonations(filter);
   },
 
-  async filterUnpickedDonations(pickUpDate: string, pickUpPeriod: string) {
-    const filter: any = {
+  async filterUnpickedDonations(
+    pickUpDate: string,
+    pickUpPeriod: string
+  ): Promise<AxiosResponse> {
+    const filter = {
       $and: [
         {
           status: "waiting",
@@ -58,7 +61,7 @@ export default {
           expirationDate: { $gte: moment().format("YYYY-MM-DD") },
         },
       ],
-    };
+    } as FindPayload;
 
     const pickUpFilter = {};
     if (pickUpDate) {
@@ -82,10 +85,10 @@ export default {
     return this.filterDonations(filter);
   },
 
-  async filterPickedDonations(volunteerId: string) {
+  async filterPickedDonations(volunteerId: string): Promise<AxiosResponse> {
     const filter = {
       "pickUp.volunteerId": volunteerId,
-    };
+    } as FindPayload;
 
     return this.filterDonations(filter);
   },

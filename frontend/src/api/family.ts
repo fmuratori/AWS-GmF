@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { FamilyPayload } from "../types";
+import { FamilyPayload, FindPayload } from "../types";
 
 export default {
-  async addFamily(payload: FamilyPayload) {
+  async addFamily(payload: FamilyPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/family/add`,
       payload,
@@ -12,7 +12,7 @@ export default {
     );
   },
 
-  async familyList(payload: any) {
+  async familyList(payload: FindPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/family/find`,
       payload,
@@ -20,7 +20,7 @@ export default {
     );
   },
 
-  async verifyFamily(payload: any) {
+  async verifyFamily(payload: { id: string }): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/family/verify`,
       payload,

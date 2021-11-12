@@ -56,6 +56,7 @@ import { FoodView } from "../viewTypes";
 import moment from "moment";
 
 import api from "../api";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "FoodView",
@@ -113,26 +114,31 @@ export default Vue.extend({
       });
     }
 
-    api.foodList({ filter: { number: { $gt: 0 } } }).then((r: any) => {
-      this.foodList = r.data;
-      this.totalRows = r.data.length;
-    });
+    api
+      .foodList({ filter: { number: { $gt: 0 } } })
+      .then((r: AxiosResponse): void => {
+        this.foodList = r.data as SelectableFood[];
+        this.totalRows = (r.data as SelectableFood[]).length;
+      })
+      .catch((e: AxiosError): void => {
+        console.log(e);
+      });
   },
   methods: {
     formatDate(date: Date) {
       return moment(date).locale("en").format("LL");
     },
-    onFiltered(filteredItems) {
+    onFiltered(filteredItems: SelectableFood[]) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    addClick(item: any) {
+    addClick(item: SelectableFood) {
       if (!item.selected) item.selected = 1;
       else if (item.selected < item.number) item.selected += 1;
       this.index += 1;
       this.$emit("data", this.foodList);
     },
-    removeClick(item: any) {
+    removeClick(item: SelectableFood) {
       if (item.selected > 0) item.selected -= 1;
       this.index += 1;
       this.$emit("data", this.foodList);
