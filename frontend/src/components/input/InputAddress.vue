@@ -29,7 +29,6 @@ b-form-group(:label="title")
 </template>
 
 <script lang="ts">
-import { AxiosResponse } from "axios";
 import Vue from "vue";
 
 import mapsApi from "../../api/maps";

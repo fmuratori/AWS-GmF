@@ -58,16 +58,16 @@ b-container
             @onAddressUpdate="onAddressUpdate",
           )
 
-      b-row
-        b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.push({ name: 'Home' })",
-            type="reset"
-          ) Cancel
-        b-col
-          b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+        b-row
+          b-col
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.push({ name: 'Home' })",
+              type="reset"
+            ) Cancel
+          b-col
+            b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
@@ -134,6 +134,7 @@ export default Vue.extend({
       if ("donation" in this.$route.params) {
         this.form = this.$route.params
           .donation as unknown as DonationCreationPayload;
+        //ccreate an empty textbox
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
@@ -194,8 +195,9 @@ export default Vue.extend({
           });
       }
     },
-    formChecks() {
+    formChecks(): boolean {
       if (!this.form.pickUpPeriod.length) {
+        console.log("ramo1")
         this.$root.$bvToast.toast(
           `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
           {
@@ -208,6 +210,7 @@ export default Vue.extend({
         return false;
       }
       if (!this.form.foods.length) {
+        console.log("ramo1")
         this.$root.$bvToast.toast(
           `Inserire almeno un alimento che vuoi donare.`,
           {
@@ -219,6 +222,7 @@ export default Vue.extend({
         );
         return false;
       }
+      console.log("ramo3")
       return true;
     },
   },
