@@ -1,10 +1,10 @@
 import Address from "./utilInterfaces/address";
 
 export default interface Family {
-    reporteId: String,
-    name: String,
-    phoneNumber: String,
-    components: Number,
+    reporteId: string,
+    name: string,
+    phoneNumber: string,
+    components: number,
     address: Address,
-    status: String
+    status: string
 }

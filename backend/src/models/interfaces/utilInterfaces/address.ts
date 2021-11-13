@@ -1,9 +1,9 @@
 export default interface Address {
-    street: String,
-    civicNumber: String,
-    city: String,
+    street: string,
+    civicNumber: string,
+    city: string,
     coordinates: {
-        x: Number,
-        y: Number
+        x: number,
+        y: number
     }
 }

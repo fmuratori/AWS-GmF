@@ -1,6 +1,6 @@
 export default interface Food {
-    name: String,
-    number: Number,
+    name: string,
+    number: number,
     expirationDate:  Date,
-    labels: [String]
+    labels: [string]
 }
