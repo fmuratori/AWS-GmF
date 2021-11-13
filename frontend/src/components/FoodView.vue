@@ -42,11 +42,13 @@ div
     template(#cell(selected)="{ item }")
       div(:key="index", ref="reload")
         b-button(
+          pill
           @click="removeClick(item)",
           :disabled="!item.selected || item.selected == 0"
         ) -
-        b {{ item.selected ? item.selected : 0 }}
+        b.ml-4.mr-4 {{ item.selected ? item.selected : 0 }}
         b-button(
+          pill
           @click="addClick(item)",
           :disabled="item.selected == item.number"
         ) +
