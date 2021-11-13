@@ -83,8 +83,8 @@ export default {
     getChat({ commit, rootState }, donationId: string) {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)
-        .then((value: AxiosResponse<{data: { chat: ChatMessage[] }}>): void => {
-          commit("getChat", { chat: r.data.data.chat, donationId: donationId });
+        .then((r: AxiosResponse): void => {
+          commit("getChat", { chat: r.data, donationId: donationId });
           commit("removeDonationUnreadMessages", donationId);
         })
         .catch((e: AxiosError) => console.log(e));

@@ -172,7 +172,7 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then(() => {
-            this.$router.push({ name: "ManagerDonationsList" });
+            this.$router.push({ name: "ManagerDonationsUserList" });
             this.$root.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,

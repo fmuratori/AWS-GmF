@@ -173,11 +173,11 @@ export default Vue.extend({
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
-          .then((r: AxiosResponse<{ data: { data : { user:UserData, token: string}}}>): void => {
+          .then((r: AxiosResponse<{ data: { user:UserData, token: string}}>): void => {
             if (r.status == 200) {
               this.$store.dispatch("login", {
-                token: r.data.data["token"] as string,
-                userData: r.data.data["user"] as UserData,
+                token: r.data["token"] as string,
+                userData: r.data["user"] as UserData,
               });
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });
@@ -190,8 +190,8 @@ export default Vue.extend({
 
               chatApi
                 .unreadMessages(this.$store.state.session.userData._id)
-                .then((r: AxiosResponse<{ data: { counts:ChatMessage }}>): void => {
-                  this.$store.dispatch("updateUnreadMessages", r.data.data.counts);
+                .then((r: AxiosResponse): void => {
+                  this.$store.dispatch("updateUnreadMessages", r.data);
                 })
                 .catch((e: AxiosError): void => console.log(e));
             }
