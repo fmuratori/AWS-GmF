@@ -49,7 +49,12 @@ b-container
               ) Add
 
       b-col(sm=12, md=8)
-        FoodView(:key="reloadIndex", loadableItems, v-on:load="(e) => load(e)")
+        FoodView(
+          :key="reloadIndex",
+          loadableItems,
+          deletableItem,
+          v-on:load="(e) => load(e)"
+        )
 </template>
 
 <script lang="ts">
@@ -163,12 +168,12 @@ export default Vue.extend({
       return moment(date).locale("en").format("LL");
     },
     load(item: SelectableFood) {
-      console.log(item)
+      console.log(item);
       this.form.name = item.name;
       this.form.number = item.number;
       this.form.expirationDate = item.expirationDate;
       this.form.labels = item.labels;
-      console.log(this.form)
+      console.log(this.form);
     },
   },
 });

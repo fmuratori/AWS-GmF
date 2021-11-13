@@ -34,9 +34,7 @@ div
     @filtered="onFiltered"
   )
     template(#cell(load)="{ item }")
-      b-button(
-        @click="load(item)"
-      ) Load
+      b-button(@click="load(item)", size="sm") Load
 
     template(#cell(labels)="data")
       b-badge(v-for="label in data.value", variant="success") {{ label }}
@@ -52,6 +50,9 @@ div
           @click="addClick(item)",
           :disabled="item.selected == item.number"
         ) +
+
+    template(#cell(delete)="{ item }")
+      b-button(@click="deleteFood(item._id)", size="sm", variant="danger") Delete
 </template>
 
 <script lang="ts">
@@ -68,6 +69,7 @@ export default Vue.extend({
   props: {
     selectableItems: Boolean,
     loadableItems: Boolean,
+    deletableItem: Boolean,
   },
   data: (): FoodView => {
     return {
@@ -107,6 +109,11 @@ export default Vue.extend({
           label: "Labels",
           sortable: false,
         },
+        {
+          key: "delete",
+          label: "",
+          sortable: false,
+        },
       ],
       totalRows: 0,
       currentPage: 1,
@@ -126,6 +133,10 @@ export default Vue.extend({
       );
     if (!this.loadableItems)
       this.tableFields = this.tableFields.filter((elem) => elem.key != "load");
+    if (!this.deletableItem)
+      this.tableFields = this.tableFields.filter(
+        (elem) => elem.key != "delete"
+      );
 
     api
       .foodList({ filter: { number: { $gt: 0 } } })
@@ -156,9 +167,33 @@ export default Vue.extend({
       this.index += 1;
       this.$emit("data", this.foodList);
     },
-    load(item: SelectableFood){
+    load(item: SelectableFood) {
       this.$emit("load", item);
-    }
+    },
+    deleteFood(id: string) {
+      api
+        .deleteFood({ id: id })
+        .then((): void => {
+          this.foodList = this.foodList.filter((e) => e._id != id);
+          this.$root.$bvToast.toast(`Food deleted.`, {
+            title: "Food",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to delete food. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
+    },
   },
 });
 </script>
