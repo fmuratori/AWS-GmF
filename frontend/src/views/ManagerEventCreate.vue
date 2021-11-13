@@ -37,9 +37,7 @@ b-container
             :city="form.address.city",
             :street="form.address.street",
             :civic="form.address.civicNumber",
-            v-on:city="(e) => { form.address.city = e; }",
-            v-on:street="(e) => { form.address.street = e; }",
-            v-on:civic="(e) => { form.address.civicNumber = e; }"
+            v-on:data="(e) => { form.address = e; }"
           )
 
         b-row

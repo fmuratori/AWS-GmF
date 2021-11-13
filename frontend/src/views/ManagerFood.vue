@@ -13,6 +13,7 @@ b-container
                 InputText(
                   title="Name:",
                   placeholder="Insert food name here",
+                  :text="form.name",
                   required,
                   v-on:data="(e) => { form.name = e; }"
                 )
@@ -21,6 +22,7 @@ b-container
                   title="Units: ",
                   placeholder="Insert food units here",
                   type="number",
+                  :text="form.number",
                   required,
                   v-on:data="(e) => { form.number = e; }"
                 )
@@ -28,6 +30,7 @@ b-container
                 InputDate(
                   title="Expiration date:",
                   placeholder="Select the expiration date",
+                  :date="form.expirationDate",
                   required,
                   v-on:data="(e) => { form.expirationDate = e; }"
                 )
@@ -35,6 +38,7 @@ b-container
                 InputList(
                   title="Labels:",
                   placeholder="Insert label here",
+                  :labelList="form.labels",
                   v-on:data="(e) => { form.labels = e; }"
                 )
 
@@ -45,7 +49,7 @@ b-container
               ) Add
 
       b-col(sm=12, md=8)
-        FoodView(:key="reloadIndex")
+        FoodView(:key="reloadIndex", loadableItems, v-on:load="(e) => load(e)")
 </template>
 
 <script lang="ts">
@@ -58,7 +62,7 @@ import InputText from "../components/input/InputText.vue";
 import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 
-import { Food, FoodPayload } from "../types";
+import { Food, FoodPayload, SelectableFood } from "../types";
 
 import api from "../api";
 import { FoodManagerView } from "../viewTypes";
@@ -77,8 +81,6 @@ export default Vue.extend({
   data: (): FoodManagerView => {
     return {
       form: {
-        name: "",
-        number: 0,
         labels: new Array<string>(),
       } as FoodPayload,
       foodList: new Array<Food>(),
@@ -159,6 +161,14 @@ export default Vue.extend({
     },
     formatDate(date: Date): string {
       return moment(date).locale("en").format("LL");
+    },
+    load(item: SelectableFood) {
+      console.log(item)
+      this.form.name = item.name;
+      this.form.number = item.number;
+      this.form.expirationDate = item.expirationDate;
+      this.form.labels = item.labels;
+      console.log(this.form)
     },
   },
 });

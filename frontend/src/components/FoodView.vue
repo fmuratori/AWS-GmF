@@ -33,6 +33,11 @@ div
     :sort-direction="sortDirection",
     @filtered="onFiltered"
   )
+    template(#cell(load)="{ item }")
+      b-button(
+        @click="load(item)"
+      ) Load
+
     template(#cell(labels)="data")
       b-badge(v-for="label in data.value", variant="success") {{ label }}
 
@@ -61,12 +66,19 @@ import { AxiosError, AxiosResponse } from "axios";
 export default Vue.extend({
   name: "FoodView",
   props: {
-    selectable: Boolean,
+    selectableItems: Boolean,
+    loadableItems: Boolean,
   },
   data: (): FoodView => {
     return {
       foodList: new Array<SelectableFood>(),
       tableFields: [
+        {
+          key: "load",
+          label: "",
+          sortable: false,
+        },
+
         {
           key: "name",
           label: "Name",
@@ -108,11 +120,12 @@ export default Vue.extend({
     };
   },
   created() {
-    if (!this.selectable) {
-      this.tableFields.forEach((elem, index) => {
-        if (elem.key == "selected") this.tableFields.splice(index, 1);
-      });
-    }
+    if (!this.selectableItems)
+      this.tableFields = this.tableFields.filter(
+        (elem) => elem.key != "selected"
+      );
+    if (!this.loadableItems)
+      this.tableFields = this.tableFields.filter((elem) => elem.key != "load");
 
     api
       .foodList({ filter: { number: { $gt: 0 } } })
@@ -143,6 +156,9 @@ export default Vue.extend({
       this.index += 1;
       this.$emit("data", this.foodList);
     },
+    load(item: SelectableFood){
+      this.$emit("load", item);
+    }
   },
 });
 </script>

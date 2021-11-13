@@ -79,7 +79,9 @@ b-row.justify-content-center(no-gutters)
           )
 
           InputAddress(
-            title="Location")
+            title="Location",
+            v-on:data="(e) => { registration.address = e; }"
+          )
 
           InputPasswordSelect(
             title1="Password: ",

@@ -4,8 +4,7 @@ b-form-group(:label="title")
     b-form-datepicker.my-no-right-border(
       :placeholder="placeholder",
       :required="required",
-      :value="date",
-      v-model="selectedDate",
+      v-model="dateModel",
       @input="$emit('data', $event)",
       reset-button,
       close-button
@@ -14,7 +13,7 @@ b-form-group(:label="title")
       b-button.my-no-left-border(
         variant="danger",
         @click="onCancel",
-        :disabled="selectedDate == null"
+        :disabled="dateModel == ''"
       ) 
         span Cancel
         b-icon(icon="x", aria-hidden="true")
@@ -31,17 +30,22 @@ export default Vue.extend({
     date: String,
     required: Boolean,
   },
-  data: (): { selectedDate: string } => {
+  data: () => {
     return {
-      selectedDate: "",
+      dateModel: "",
     };
   },
+  watch: {
+    date: function (val: string) {
+      this.dateModel = val;
+    },
+  },
   created() {
-    this.selectedDate = this.date;
+    this.dateModel = this.date
   },
   methods: {
     onCancel() {
-      this.selectedDate = "";
+      this.dateModel = "";
       this.$emit("data", "");
     },
   },

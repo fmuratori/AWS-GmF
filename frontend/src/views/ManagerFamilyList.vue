@@ -42,7 +42,7 @@ b-container.justify-content-center.my-5
 
   b-row
     b-col(v-if="familyList.length == 0", sm=12, md=6)
-      p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamiliesSubscribe' })") qui] per segnalare una famiglia bisognosa.
+      p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
     b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList", :key="idx")
       b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
@@ -74,7 +74,7 @@ b-container.justify-content-center.my-5
             block,
             :disabled="family.status == 'verified'",
             variant="success",
-            @click="$router.push({ name: 'ManagerFamiliesSubscribe', params: { family: family } })"
+            @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
           ) EDIT
 
           b-button.b-card-footer-button(

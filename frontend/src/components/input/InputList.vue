@@ -25,11 +25,21 @@ export default Vue.extend({
   props: {
     title: String,
     placeholder: String,
+    labelList: Array,
   },
   data: () => {
     return {
       labels: [""],
     };
+  },
+  watch: {
+    labelList: function (val: Array<string>) {
+      this.labels = val.concat("")
+    },
+  },
+  created() {
+    this.labels = this.labelList as Array<string>;
+    this.labels.push("");
   },
   methods: {
     labelValueChange(inputIdx: number) {

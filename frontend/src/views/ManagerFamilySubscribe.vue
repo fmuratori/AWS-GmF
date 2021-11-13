@@ -37,6 +37,10 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
+            :city="form.address.city",
+            :civic="form.address.civicNumber",
+            :street="form.address.street",
+            v-on:data="(e) => { form.address = e; }"
           )
 
         b-row

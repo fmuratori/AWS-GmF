@@ -29,7 +29,7 @@ b-container
             span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
     b-form(@submit="createPack")
-      FoodView(selectable, v-on:data="(e) => { this.foodList = e; }")
+      FoodView(selectableItems, v-on:data="(e) => { this.foodList = e; }")
 
       b-row
         b-col
