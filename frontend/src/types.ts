@@ -190,6 +190,11 @@ export interface NavigationState {
   screenWidth: number;
 }
 
+export interface LoginResponse {
+  token: string;
+  user: UserData;
+}
+
 // export interface OfferResponse {
 
 // }

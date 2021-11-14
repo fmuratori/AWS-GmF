@@ -16,7 +16,7 @@ export default {
     },
   },
   mutations: {
-    addUnreadMessage(state, message) {
+    addUnreadMessage(state, message): void {
       const donationChat = state.unreadMessages.find(
         (e) => e._id == message._id
       );
@@ -30,23 +30,23 @@ export default {
         state.unreadMessages.push(newUnreadMessage);
       }
     },
-    getChat(state, payload) {
+    getChat(state, payload): void {
       state.chat = payload.chat;
       state.donationId = payload.donationId;
     },
-    addMessage(state, message) {
+    addMessage(state, message): void {
       state.chat.push(message);
     },
-    resetChat(state) {
+    resetChat(state): void {
       state.chat = new Array<ChatMessage>();
       state.donationId = "";
     },
 
-    updateUnreadMessages(state, messages) {
+    updateUnreadMessages(state, messages): void {
       state.unreadMessages = messages;
     },
 
-    removeDonationUnreadMessages(state, donationId) {
+    removeDonationUnreadMessages(state, donationId: string): void {
       state.unreadMessages = state.unreadMessages.filter(
         (d) => d._id != donationId
       );
@@ -76,7 +76,7 @@ export default {
       }
     },
 
-    getChat({ commit, getters, rootState }, donationId: string) {
+    getChat({ commit, getters, rootState }, donationId: string): void {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)
         .then((r: any) => {
@@ -86,11 +86,11 @@ export default {
         .catch((e) => console.log(e));
     },
 
-    resetChat({ commit }) {
+    resetChat({ commit }): void {
       commit("resetChat");
     },
 
-    updateUnreadMessages({ commit }, messages) {
+    updateUnreadMessages({ commit }, messages): void {
       commit("updateUnreadMessages", messages);
     },
   },

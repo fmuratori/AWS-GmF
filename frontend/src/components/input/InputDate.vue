@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   created() {
-    this.dateModel = this.date
+    this.dateModel = this.date;
   },
   methods: {
     onCancel() {

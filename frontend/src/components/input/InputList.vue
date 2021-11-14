@@ -34,13 +34,13 @@ export default Vue.extend({
   },
   watch: {
     labelList: function (val: Array<string>) {
-      if(val[0] == "") this.labels = val
+      if (val[0] == "") this.labels = val;
       else this.labels = val.concat("");
     },
   },
   created() {
     this.labels = this.labelList as Array<string>;
-    this.labels.push("")
+    this.labels.push("");
   },
   methods: {
     labelValueChange(inputIdx: number) {

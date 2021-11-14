@@ -124,7 +124,12 @@ import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
-import { LoginPayload, RegistrationPayload, Address, UserData } from "../types";
+import {
+  LoginPayload,
+  RegistrationPayload,
+  Address,
+  LoginResponse,
+} from "../types";
 
 export default Vue.extend({
   name: "Login",
@@ -166,9 +171,6 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    onAddressUpdate(address: Address) {
-      this.registration.address = address;
-    },
     submitForm(event) {
       event.preventDefault();
 
@@ -177,9 +179,10 @@ export default Vue.extend({
           .loginRequest(this.login)
           .then((r: AxiosResponse): void => {
             if (r.status == 200) {
+              const data = r.data as LoginResponse;
               this.$store.dispatch("login", {
-                token: r.data["token"] as string,
-                userData: r.data["user"] as UserData,
+                token: data.token,
+                userData: data.user,
               });
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });

@@ -55,7 +55,7 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
-            @onAddressUpdate="onAddressUpdate",
+            v-on:data="(e) => { form.address = e; }"
           )
 
         b-row
@@ -197,7 +197,7 @@ export default Vue.extend({
     },
     formChecks(): boolean {
       if (!this.form.pickUpPeriod.length) {
-        console.log("ramo1")
+        console.log("ramo1");
         this.$root.$bvToast.toast(
           `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
           {
@@ -210,7 +210,7 @@ export default Vue.extend({
         return false;
       }
       if (!this.form.foods.length) {
-        console.log("ramo1")
+        console.log("ramo1");
         this.$root.$bvToast.toast(
           `Inserire almeno un alimento che vuoi donare.`,
           {
@@ -222,7 +222,7 @@ export default Vue.extend({
         );
         return false;
       }
-      console.log("ramo3")
+      console.log("ramo3");
       return true;
     },
   },

@@ -1,7 +1,7 @@
 import {} from "../types";
 
 const sessionModule = {
-  state: () => ({}),
+  state: (): any => ({}),
   getters: {},
   mutations: {},
   actions: {},

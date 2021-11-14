@@ -42,16 +42,13 @@ export default {
   },
 
   async foodList(payload: FindPayload): Promise<AxiosResponse> {
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/food/find`,
-      payload
-    );
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/food/find`, payload);
   },
 
   async deleteFood(payload: { id: string }): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/food/delete`,
       payload
-    )
-  }
+    );
+  },
 };
