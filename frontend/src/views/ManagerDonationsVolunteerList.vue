@@ -196,9 +196,9 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       donationApi
         .filterPickedDonations(this.$store.state.session.userData._id)
-        .then((r: AxiosResponse): void => {
-          this.donations = r.data as Donation[];
-          this.donationsBackup = r.data as Donation[];
+        .then((r: AxiosResponse<{ data: Donation[] }>): void => {
+          this.donations = r.data;
+          this.donationsBackup = r.data;
           this.orderBy(this.orderByMode);
         })
         .catch((e: AxiosError): void => console.log(e));

@@ -173,7 +173,7 @@ export default Vue.extend({
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
-          .then((r: AxiosResponse<{ data: { user:UserData, token: string}}>): void => {
+          .then((r: AxiosResponse<{ data: { user:UserData, token: string}}, any>): void => {
             if (r.status == 200) {
               this.$store.dispatch("login", {
                 token: r.data["token"] as string,

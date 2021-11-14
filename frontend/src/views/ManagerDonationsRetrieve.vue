@@ -1,64 +1,101 @@
 <template lang="pug">
-b-container.justify-content-center.my-5
-  p RACCOLTA DONAZIONI
+  div(class="gmapContainer")
+    b-row(class="gmapContainer" no-gutters)
+      b-col(class="gmapContainer" cols=9)
+        GmapMap(
+        :center="{lat:44.1396, lng:12.2464}"
+        :zoom="14"
+        map-type-id="terrain"
+        id="gmap")
+          //- GmapMarker(v-for="(donation, idx) in donations" :key="idx"
+          //- :position="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
+          //- :clickable="true"
+          //- :draggable="true"
+          //- @click="clickedDonation(donation)")
+          div
+            gmap-custom-marker(v-for="(donation, idx) in selectedDonations" :key="idx" 
+              :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
+              @click.native="deselectDonation(donation)")
+              h1
+                b-icon(icon="check-circle-fill" variant="success")
+          div 
+            gmap-custom-marker(v-for="(donation, idx) in donations" :key="idx" 
+              :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
+              @click.native="selectDonation(donation)")
+              h1
+                b-icon(icon="exclamation-circle-fill" variant="warning")
 
-  b-row
-    b-col(sm=12, md=6)
-      b-form(@submit="submit")
-        b-form-group#input-group-2(label="Data ritiro:", label-for="input-2")
-          b-input-group
-            b-form-datepicker#input-2.my-no-right-border(
-              required,
-              v-model="pickUpDate",
-              reset-button,
-              close-button
-            )
-            b-input-group-append
-              b-button.my-no-left-border(
-                variant="danger",
-                @click="pickUpDate = null",
-                :disabled="pickUpDate == null"
-              ) 
-                span Cancella
-                b-icon(icon="x", aria-hidden="true")
-        b-form-group#input-group-3(
-          label="Periodo della giornata:",
-          label-for="input-3"
-        )
-          b-form-select(
-            v-model="pickUpPeriod",
-            :options="['morning', 'afternoon', 'evening']",
-            required
-          )
+            
+      b-col
+        div(id="filters")
+          p RACCOLTA DONAZIONI
 
-        div(v-for="(donation, idx) in donations", :key="idx")
-          p {{ donation }}
-          b-button(
-            v-if="selectedDonations.indexOf(donation) == -1",
-            @click="selectedDonations.push(donation)"
-          ) seleziona
-          b-button(
-            v-else,
-            @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)"
-          ) rimuovi
-          hr
+          b-form(@submit="submit")
+            b-form-group#input-group-2(label="Data ritiro:", label-for="input-2")
+              b-input-group
+                b-form-datepicker#input-2.my-no-right-border(
+                  required,
+                  v-model="pickUpDate",
+                  reset-button,
+                  close-button
+                )
+                b-input-group-append
+                  b-button.my-no-left-border(
+                    variant="danger",
+                    @click="pickUpDate = null",
+                    :disabled="pickUpDate == null"
+                  )
+                    span Cancella
+                    b-icon(icon="x", aria-hidden="true")
+            
+            //- b-form-group#input-group-3(
+            //-   label="Periodo della giornata:",
+            //-   label-for="input-3"
+            //- )
+            //-   b-form-select(
+            //-     v-model="pickUpPeriod",
+            //-     :options="['morning', 'afternoon', 'evening']",
+            //-     required
+            //-   )
+            //- div(v-for="(donation, idx) in donations", :key="idx")
+            //-   p {{ donation }}
+            //-   b-button(
+            //-     v-if="selectedDonations.indexOf(donation) == -1",
+            //-     @click="selectedDonations.push(donation)"
+            //-   ) seleziona
+            //-   b-button(
+            //-     v-else,
+            //-     @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)"
+            //-   ) rimuovi
 
-        b-button(block, variant="outline-success", type="submit") Procedi
+            b-button(block, variant="outline-success", type="submit") Procedi
 
-      //- GmapMap(
-      //- :center="{lat:10, lng:10}"
-      //- :zoom="7"
-      //- map-type-id="terrain"
-      //- style="width: 500px; height: 300px")
-      //-   GmapMarker(
-      //-   :position="{lat:10, lng:10}"
-      //-   :clickable="true"
-      //-   :draggable="true"
-      //-   @click="")
 </template>
+
+
+<style scoped lang="scss">
+@import "@/assets/style.scss";
+
+.gmapContainer {
+  height: 100%;
+}
+
+#gmap {
+  height: 100%;
+}
+
+#filters {
+  height: 100%;
+}
+
+</style>
+
 
 <script lang="ts">
 import Vue from "vue";
+
+import GmapCustomMarker from 'vue2-gmap-custom-marker';
+
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
@@ -72,6 +109,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    GmapCustomMarker,
   },
   data: () => {
     return {
@@ -96,14 +134,22 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
+    selectDonation(donation: Donation) {
+      this.selectedDonations.push(donation);
+      this.donations.splice(this.donations.findIndex(e => e._id == donation._id), 1)
+    },
+    deselectDonation(donation: Donation) {
+      this.selectedDonations.splice(this.selectedDonations.findIndex(e => e._id == donation._id), 1)
+      this.donations.push(donation)
+    },
     filterDonations() {
       this.selectedDonations = [];
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
       donationApi
         .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
-        .then((r: AxiosResponse): void => {
-          this.donations = r.data as Donation[];
+        .then((r: AxiosResponse<{data: { list: Donation[]}}>): void => {
+          this.donations = r.data.data.list as Donation[];
         })
         .catch((e: AxiosError): void => console.log(e));
     },
@@ -157,7 +203,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped lang="scss">
-@import "@/assets/style.scss";
-</style>
