@@ -1,32 +1,32 @@
 import Address from "./utilInterfaces/address";
 
 interface ChatNode {
-    index: Number, 
-    userId: String,
-    userFullname: String,
-    text: String,
+    index: number, 
+    userId: string,
+    userFullname: string,
+    text: string,
     date: Date,
-    visualized: Boolean
+    visualized: boolean
 }
 
 interface PickUp {
-    volunteerId: String,
+    volunteerId: string,
     date: Date, 
-    period: String
+    period: string
 }
 
 export default interface Donation {
-    userId: String,
+    userId: string,
     chat: [ChatNode],
-    foods: [String],
+    foods: [string],
     expirationDate: Date,
     creationDate: Date,
     address: Address,
-    additionalInformations: String,
+    additionalInformations: string,
     pickUpPeriod: [{
-        weekDay: String,
-        period: String
+        weekDay: string,
+        period: string
     }],
-    status: String,
+    status: string,
     pickUp: PickUp
 }

@@ -37,6 +37,10 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
+            :city="form.address.city",
+            :civic="form.address.civicNumber",
+            :street="form.address.street",
+            v-on:data="(e) => { form.address = e; }"
           )
 
         b-row
@@ -60,7 +64,6 @@ import InputAddress from "../components/input/InputAddress.vue";
 import { Address, FamilyPayload } from "../types";
 
 import api from "../api/family";
-import { AxiosError, AxiosResponse } from "axios";
 import { ReportFamilyView } from "../viewTypes";
 
 export default Vue.extend({
@@ -102,10 +105,10 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    onAddressUpdate(address: Address) {
+    onAddressUpdate(address: Address): void {
       this.form.address = address;
     },
-    submit(event) {
+    submit(event): void {
       event.preventDefault();
 
       var fun;
@@ -113,8 +116,7 @@ export default Vue.extend({
       else fun = api.addFamily;
 
       fun(this.form)
-        .then((r: AxiosResponse): void => {
-          console.log(r);
+        .then((): void => {
           this.$router.push({ name: "ManagerFamilyList" });
           this.$root.$bvToast.toast(`Familgia segnalata con successo.`, {
             title: "Famiglia",
@@ -123,8 +125,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e: AxiosError): void => {
-          console.log(e);
+        .catch((): void => {
           this.$root.$bvToast.toast(
             `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,
             {

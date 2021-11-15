@@ -60,7 +60,7 @@ const navigationModule = {
     unsetMangerMode({ commit }): void {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit, state }, value: number): void {
+    updateScreenWidth({ commit }, value: number): void {
       commit("updateScreenWidth", value);
     },
   },

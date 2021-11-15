@@ -25,11 +25,22 @@ export default Vue.extend({
   props: {
     title: String,
     placeholder: String,
+    labelList: Array,
   },
   data: () => {
     return {
       labels: [""],
     };
+  },
+  watch: {
+    labelList: function (val: Array<string>) {
+      if (val[0] == "") this.labels = val;
+      else this.labels = val.concat("");
+    },
+  },
+  created() {
+    this.labels = this.labelList as Array<string>;
+    this.labels.push("");
   },
   methods: {
     labelValueChange(inputIdx: number) {
@@ -40,7 +51,10 @@ export default Vue.extend({
       }
 
       //evito di emettere [""], su db conta come label vuota
-      this.$emit("data", this.labels.slice(0, this.labels.length - 1));
+      this.$emit(
+        "data",
+        this.labels.filter((l) => l != "")
+      );
     },
     labelDeleteClicked(inputIdx: number) {
       this.labels.splice(inputIdx, 1);

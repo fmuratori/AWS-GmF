@@ -29,7 +29,7 @@ b-container
             span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
     b-form(@submit="createPack")
-      FoodView(selectable, v-on:data="(e) => { this.foodList = e; }")
+      FoodView(selectableItems, v-on:data="(e) => { this.foodList = e; }")
 
       b-row
         b-col
@@ -44,6 +44,8 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosError } from "axios";
+
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import FoodView from "../components/FoodView.vue";
@@ -52,7 +54,6 @@ import { Family, PackPayload, SelectableFood } from "../types";
 
 import api from "../api";
 import { PackCreateView } from "../viewTypes";
-import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerPackCreate",
@@ -81,10 +82,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    log(e) {
-      console.log(e);
-    },
-    createPack(event) {
+    createPack(event): void {
       event.preventDefault();
       console.log(this.foodList);
 
@@ -96,7 +94,7 @@ export default Vue.extend({
 
       api
         .createPack(this.form)
-        .then(() => {
+        .then((): void => {
           this.$router.push({ name: "ManagerPacks" });
           this.$root.$bvToast.toast(`Pack successfully created.`, {
             title: "Pack",

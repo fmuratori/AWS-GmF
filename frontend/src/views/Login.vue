@@ -79,7 +79,9 @@ b-row.justify-content-center(no-gutters)
           )
 
           InputAddress(
-            title="Location")
+            title="Location",
+            v-on:data="(e) => { registration.address = e; }"
+          )
 
           InputPasswordSelect(
             title1="Password: ",
@@ -122,7 +124,14 @@ import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
-import { LoginPayload, RegistrationPayload, Address, UserData, ChatMessage } from "../types";
+import {
+  LoginPayload,
+  RegistrationPayload,
+  Address,
+  LoginResponse, 
+  UserData, 
+  ChatMessage
+} from "../types";
 
 export default Vue.extend({
   name: "Login",
@@ -164,9 +173,6 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    onAddressUpdate(address: Address) { 
-      this.registration.address = address;
-    },
     submitForm(event) {
       event.preventDefault();
 
@@ -175,9 +181,10 @@ export default Vue.extend({
           .loginRequest(this.login)
           .then((r: AxiosResponse<{ data: { data : { user:UserData, token: string}}}>): void => {
             if (r.status == 200) {
+              const data = r.data as LoginResponse;
               this.$store.dispatch("login", {
-                token: r.data.data["token"] as string,
-                userData: r.data.data["user"] as UserData,
+                token: data.token,
+                userData: data.user,
               });
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });

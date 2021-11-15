@@ -62,7 +62,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    changeView(view: "my" | "all") {
+    changeView(view: "my" | "all"): void {
       var payload = {};
 
       // if (view == "my") {

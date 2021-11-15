@@ -37,9 +37,7 @@ b-container
             :city="form.address.city",
             :street="form.address.street",
             :civic="form.address.civicNumber",
-            v-on:city="(e) => { form.address.city = e; }",
-            v-on:street="(e) => { form.address.street = e; }",
-            v-on:civic="(e) => { form.address.civicNumber = e; }"
+            v-on:data="(e) => { form.address = e; }"
           )
 
         b-row
@@ -66,7 +64,6 @@ import { Address, EventPayload } from "../types";
 import { CreateEventView } from "../viewTypes";
 
 import api from "../api";
-import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerEventCreate",
@@ -111,7 +108,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    createEvent(event) {
+    createEvent(event): void {
       event.preventDefault();
 
       var fun;
@@ -119,7 +116,7 @@ export default Vue.extend({
       else fun = api.createEvent;
 
       fun(this.form)
-        .then(() => {
+        .then((): void => {
           this.$router.push({ name: "ManagerEvents" });
           this.$root.$bvToast.toast(`Event successfully created.`, {
             title: "Event",
@@ -128,7 +125,7 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((e: AxiosError) => {
+        .catch((): void => {
           this.$root.$bvToast.toast(
             `Unable to create the event. Retry later or contact us if the problem persist.`,
             {

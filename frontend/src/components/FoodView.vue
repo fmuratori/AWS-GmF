@@ -33,20 +33,28 @@ div
     :sort-direction="sortDirection",
     @filtered="onFiltered"
   )
+    template(#cell(load)="{ item }")
+      b-button(@click="load(item)", size="sm") Load
+
     template(#cell(labels)="data")
       b-badge(v-for="label in data.value", variant="success") {{ label }}
 
     template(#cell(selected)="{ item }")
       div(:key="index", ref="reload")
         b-button(
+          pill
           @click="removeClick(item)",
           :disabled="!item.selected || item.selected == 0"
         ) -
-        b {{ item.selected ? item.selected : 0 }}
+        b.ml-4.mr-4 {{ item.selected ? item.selected : 0 }}
         b-button(
+          pill
           @click="addClick(item)",
           :disabled="item.selected == item.number"
         ) +
+
+    template(#cell(delete)="{ item }")
+      b-button(@click="deleteFood(item._id)", size="sm", variant="danger") Delete
 </template>
 
 <script lang="ts">
@@ -61,12 +69,20 @@ import { AxiosError, AxiosResponse } from "axios";
 export default Vue.extend({
   name: "FoodView",
   props: {
-    selectable: Boolean,
+    selectableItems: Boolean,
+    loadableItems: Boolean,
+    deletableItem: Boolean,
   },
   data: (): FoodView => {
     return {
       foodList: new Array<SelectableFood>(),
       tableFields: [
+        {
+          key: "load",
+          label: "",
+          sortable: false,
+        },
+
         {
           key: "name",
           label: "Name",
@@ -95,6 +111,11 @@ export default Vue.extend({
           label: "Labels",
           sortable: false,
         },
+        {
+          key: "delete",
+          label: "",
+          sortable: false,
+        },
       ],
       totalRows: 0,
       currentPage: 1,
@@ -108,11 +129,16 @@ export default Vue.extend({
     };
   },
   created() {
-    if (!this.selectable) {
-      this.tableFields.forEach((elem, index) => {
-        if (elem.key == "selected") this.tableFields.splice(index, 1);
-      });
-    }
+    if (!this.selectableItems)
+      this.tableFields = this.tableFields.filter(
+        (elem) => elem.key != "selected"
+      );
+    if (!this.loadableItems)
+      this.tableFields = this.tableFields.filter((elem) => elem.key != "load");
+    if (!this.deletableItem)
+      this.tableFields = this.tableFields.filter(
+        (elem) => elem.key != "delete"
+      );
 
     api
       .foodList({ filter: { number: { $gt: 0 } } })
@@ -142,6 +168,33 @@ export default Vue.extend({
       if (item.selected > 0) item.selected -= 1;
       this.index += 1;
       this.$emit("data", this.foodList);
+    },
+    load(item: SelectableFood) {
+      this.$emit("load", item);
+    },
+    deleteFood(id: string) {
+      api
+        .deleteFood({ id: id })
+        .then((): void => {
+          this.foodList = this.foodList.filter((e) => e._id != id);
+          this.$root.$bvToast.toast(`Food deleted.`, {
+            title: "Food",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to delete food. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     },
   },
 });

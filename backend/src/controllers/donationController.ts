@@ -56,7 +56,7 @@ export default class DonationController {
 	})
 }
 
-export async function addMessageToChat(donationId: String, userId: String, fullname: String, message: String) {
+export async function addMessageToChat(donationId: string, userId: string, fullname: string, message: string) {
 	const donation = await DonationModel.findById(donationId)
 		.select("+chat")
 

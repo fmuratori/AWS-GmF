@@ -55,7 +55,6 @@ export default Vue.extend({
         })
         .then((r: AxiosResponse): void => {
           this.events = r.data as Event[];
-          console.log(r);
         })
         .catch((e: AxiosError): void => console.log(e));
     } else this.$router.push({ name: "Login" });

@@ -20,7 +20,7 @@ export default {
     },
   },
   mutations: {
-    addUnreadMessage(state, message) {
+    addUnreadMessage(state, message): void {
       const donationChat = state.unreadMessages.find(
         (e) => e._id == message._id
       );
@@ -34,23 +34,23 @@ export default {
         state.unreadMessages.push(newUnreadMessage);
       }
     },
-    getChat(state, payload) {
+    getChat(state, payload): void {
       state.chat = payload.chat;
       state.donationId = payload.donationId;
     },
-    addMessage(state, message) {
+    addMessage(state, message): void {
       state.chat.push(message);
     },
-    resetChat(state) {
+    resetChat(state): void {
       state.chat = new Array<ChatMessage>();
       state.donationId = "";
     },
 
-    updateUnreadMessages(state, messages: ChatMessage[]) {
+    updateUnreadMessages(state, messages: ChatMessage[]): void {
       state.unreadMessages = messages;
     },
 
-    removeDonationUnreadMessages(state, donationId:string) {
+    removeDonationUnreadMessages(state, donationId: string): void {
       state.unreadMessages = state.unreadMessages.filter(
         (d) => d._id != donationId
       );
@@ -80,21 +80,21 @@ export default {
       }
     },
 
-    getChat({ commit, rootState }, donationId: string) {
+    getChat({ commit, rootState }, donationId: string): void {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)
-        .then((value: AxiosResponse<{data: { chat: ChatMessage[] }}>): void => {
-          commit("getChat", { chat: r.data.data.chat, donationId: donationId });
+        .then((value: AxiosResponse<any>): void => {
+          commit("getChat", { chat: value.data.data.chat, donationId: donationId });
           commit("removeDonationUnreadMessages", donationId);
         })
         .catch((e: AxiosError) => console.log(e));
     },
 
-    resetChat({ commit }) {
+    resetChat({ commit }): void {
       commit("resetChat");
     },
 
-    updateUnreadMessages({ commit }, messages: ChatMessage[]) {
+    updateUnreadMessages({ commit }, messages: ChatMessage[]): void {
       commit("updateUnreadMessages", messages);
     },
   },

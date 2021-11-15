@@ -55,7 +55,7 @@ b-container
         .mb-4
           InputAddress(
             title="Location",
-            @onAddressUpdate="onAddressUpdate",
+            v-on:data="(e) => { form.address = e; }"
           )
 
         b-row
@@ -63,7 +63,7 @@ b-container
             b-button(
               block,
               variant="outline-danger",
-              @click="$router.replace({ name: 'Home' })",
+              @click="$router.push({ name: 'Home' })",
               type="reset"
             ) Cancel
           b-col
@@ -134,13 +134,14 @@ export default Vue.extend({
       if ("donation" in this.$route.params) {
         this.form = this.$route.params
           .donation as unknown as DonationCreationPayload;
+        //ccreate an empty textbox
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    onAddressUpdate(address: Address) { 
+    onAddressUpdate(address: Address) {
       this.form.address = address;
     },
     computeButtonVariant(weekDay: string, period: string) {
@@ -194,8 +195,9 @@ export default Vue.extend({
           });
       }
     },
-    formChecks() {
+    formChecks(): boolean {
       if (!this.form.pickUpPeriod.length) {
+        console.log("ramo1");
         this.$root.$bvToast.toast(
           `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
           {
@@ -208,14 +210,19 @@ export default Vue.extend({
         return false;
       }
       if (!this.form.foods.length) {
-        this.$root.$bvToast.toast(`Inserire almeno un alimento che vuoi donare.`, {
-          title: "Donazione",
-          autoHideDelay: 5000,
-          variant: "warning",
-          appendToast: false,
-        });
+        console.log("ramo1");
+        this.$root.$bvToast.toast(
+          `Inserire almeno un alimento che vuoi donare.`,
+          {
+            title: "Donazione",
+            autoHideDelay: 5000,
+            variant: "warning",
+            appendToast: false,
+          }
+        );
         return false;
       }
+      console.log("ramo3");
       return true;
     },
   },

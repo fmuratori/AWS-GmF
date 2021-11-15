@@ -13,6 +13,7 @@ b-container
                 InputText(
                   title="Name:",
                   placeholder="Insert food name here",
+                  :text="form.name",
                   required,
                   v-on:data="(e) => { form.name = e; }"
                 )
@@ -21,6 +22,7 @@ b-container
                   title="Units: ",
                   placeholder="Insert food units here",
                   type="number",
+                  :text="form.number",
                   required,
                   v-on:data="(e) => { form.number = e; }"
                 )
@@ -28,6 +30,7 @@ b-container
                 InputDate(
                   title="Expiration date:",
                   placeholder="Select the expiration date",
+                  :date="form.expirationDate",
                   required,
                   v-on:data="(e) => { form.expirationDate = e; }"
                 )
@@ -35,6 +38,7 @@ b-container
                 InputList(
                   title="Labels:",
                   placeholder="Insert label here",
+                  :labelList="form.labels",
                   v-on:data="(e) => { form.labels = e; }"
                 )
 
@@ -45,7 +49,12 @@ b-container
               ) Add
 
       b-col(sm=12, md=8)
-        FoodView(:key="reloadIndex")
+        FoodView(
+          :key="reloadIndex",
+          loadableItems,
+          deletableItem,
+          v-on:load="(e) => load(e)"
+        )
 </template>
 
 <script lang="ts">
@@ -58,11 +67,11 @@ import InputText from "../components/input/InputText.vue";
 import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 
-import { Food, FoodPayload } from "../types";
+import { Food, FoodPayload, SelectableFood } from "../types";
 
 import api from "../api";
 import { FoodManagerView } from "../viewTypes";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFood",
@@ -77,8 +86,6 @@ export default Vue.extend({
   data: (): FoodManagerView => {
     return {
       form: {
-        name: "",
-        number: 0,
         labels: new Array<string>(),
       } as FoodPayload,
       foodList: new Array<Food>(),
@@ -95,13 +102,21 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           this.foodList = r.data as Food[];
         })
-        .catch((e: AxiosError): void => {
-          console.log(e);
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
         });
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    addFood(event) {
+    addFood(event): void {
       event.preventDefault();
 
       api
@@ -113,16 +128,17 @@ export default Vue.extend({
             variant: "success",
             appendToast: false,
           });
+
           this.updateFoodList();
 
           //aggiorno l'index per ricaricare il component ListFood
           this.reloadIndex += 1;
         })
-        .catch((e: AxiosError) => {
+        .catch((): void => {
           this.$root.$bvToast.toast(
             `Unable to add food. Retry later or contact us if the problem persist.`,
             {
-              title: "food",
+              title: "Food",
               autoHideDelay: 5000,
               variant: "danger",
               appendToast: false,
@@ -130,25 +146,37 @@ export default Vue.extend({
           );
         });
     },
-    updateFoodList() {
+    updateFoodList(): void {
       api
         .foodList({})
         .then((r: AxiosResponse): void => {
           this.foodList = r.data as Food[];
         })
-        .catch((e: AxiosError): void => {
-          console.log(e);
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
         });
     },
     formatDate(date: Date): string {
       return moment(date).locale("en").format("LL");
     },
+    load(item: SelectableFood) {
+      console.log(item);
+      this.form.name = item.name;
+      this.form.number = item.number;
+      this.form.expirationDate = item.expirationDate;
+      this.form.labels = item.labels;
+      console.log(this.form);
+    },
   },
 });
 </script>
 
-<style scoped lang="scss">
-.food-item:hover {
-  background-color: yellow;
-}
-</style>
+<style scoped lang="scss"></style>
