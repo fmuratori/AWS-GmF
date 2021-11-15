@@ -1,5 +1,5 @@
 <template lang="pug">
-b-form-group(:label="title")
+b-form-group(:label="title" label-cols-sm="3", label-align-sm="right")
   b-input-group
     b-form-datepicker.my-no-right-border(
       :placeholder="placeholder",
@@ -12,11 +12,10 @@ b-form-group(:label="title")
     )
     b-input-group-append
       b-button.my-no-left-border(
-        variant="danger",
+        :variant="!selectedDate ? 'outline-danger' : 'danger'",
         @click="onCancel",
         :disabled="selectedDate == null"
       ) 
-        span Cancel
         b-icon(icon="x", aria-hidden="true")
 </template>
 

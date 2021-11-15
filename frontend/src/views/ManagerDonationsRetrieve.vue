@@ -12,6 +12,7 @@
               :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
               @click.native="deselectDonation(donation)")
               h1
+                //truck
                 b-icon(icon="check-circle-fill" variant="success")
           div 
             gmap-custom-marker(v-for="(donation, idx) in donations" :key="idx" 
@@ -20,50 +21,61 @@
               h1
                 b-icon(icon="exclamation-circle-fill" variant="warning")
 
+          //- gmap-info-window(
+          //- v-if="selectedDonation"
+          //- :options="{maxWidth: 300, pixelOffset: { width: 0, height: -35 } }"
+          //- :position="infoWindow.position"
+          //- :opened="infoWindow.open"
+          //- @closeclick="infoWindow.open=false")
+          //-   div(v-html="infoWindow.template")
+          //-     p {{selectedDonation}}
+          //-     b-button(variant="success") select
+
             
       b-col
-        div(id="filters")
-          p RACCOLTA DONAZIONI
+        div.py-3.px-1(id="filters")
 
-          b-form(@submit="submit")
-            b-form-group#input-group-2(label="Data ritiro:", label-for="input-2")
-              b-input-group
-                b-form-datepicker#input-2.my-no-right-border(
-                  required,
-                  v-model="pickUpDate",
-                  reset-button,
-                  close-button
+          div(class="b-flex flex-column")
+
+            div
+              p FILTRI
+
+            div()
+              b-form(@submit="submit")
+                b-form-group#input-group-2(label="Pick up date:", label-for="input-2")
+                  b-input-group
+                    b-form-datepicker#input-2.my-no-right-border(
+                      required,
+                      v-model="pickUpDate",
+                      reset-button,
+                      close-button,
+                      size="sm"
+                    )
+                    b-input-group-append
+                      b-button.my-no-left-border(
+                        variant="outline-danger",
+                        @click="pickUpDate = null",
+                        :disabled="pickUpDate == null",
+                        size="sm"
+                      )
+                        b-icon(icon="x", aria-hidden="true")
+                
+                b-form-group#input-group-3(
+                  label="Time of day:",
+                  label-for="input-3"
                 )
-                b-input-group-append
-                  b-button.my-no-left-border(
-                    variant="danger",
-                    @click="pickUpDate = null",
-                    :disabled="pickUpDate == null"
+                  b-form-select(
+                    v-model="pickUpPeriod",
+                    :options="['morning', 'afternoon', 'evening']",
+                    required, 
+                    size="sm"
                   )
-                    span Cancella
-                    b-icon(icon="x", aria-hidden="true")
-            
-            //- b-form-group#input-group-3(
-            //-   label="Periodo della giornata:",
-            //-   label-for="input-3"
-            //- )
-            //-   b-form-select(
-            //-     v-model="pickUpPeriod",
-            //-     :options="['morning', 'afternoon', 'evening']",
-            //-     required
-            //-   )
-            //- div(v-for="(donation, idx) in donations", :key="idx")
-            //-   p {{ donation }}
-            //-   b-button(
-            //-     v-if="selectedDonations.indexOf(donation) == -1",
-            //-     @click="selectedDonations.push(donation)"
-            //-   ) seleziona
-            //-   b-button(
-            //-     v-else,
-            //-     @click="selectedDonations.splice(selectedDonations.indexOf(donation), 1)"
-            //-   ) rimuovi
 
-            b-button(block, variant="outline-success", type="submit") Procedi
+            div.mt-auto
+              p.m-0.p-0.text-center Selected donations: {{ selectedDonations.length }}
+              p.text-center
+                a(href="#" @click="showSelectedDonations") &nbsp;(Inspect)
+              b-button(variant="success" size="sm" block) Select
 
 </template>
 
@@ -119,8 +131,10 @@ export default Vue.extend({
         "clickableIcons": false },
       donations: new Array<Donation>(),
       selectedDonations: new Array<Donation>(),
+      selectedDonation: {} as Donation,
       pickUpDate: "",
       pickUpPeriod: "",
+      isModalOpen: false
     };
   },
   watch: {
@@ -139,8 +153,9 @@ export default Vue.extend({
   },
   methods: {
     selectDonation(donation: Donation) {
-      this.selectedDonations.push(donation);
-      this.donations.splice(this.donations.findIndex(e => e._id == donation._id), 1)
+      this.selectedDonation = donation;
+      // this.selectedDonations.push(donation);
+      // this.donations.splice(this.donations.findIndex(e => e._id == donation._id), 1)
     },
     deselectDonation(donation: Donation) {
       this.selectedDonations.splice(this.selectedDonations.findIndex(e => e._id == donation._id), 1)
@@ -156,6 +171,9 @@ export default Vue.extend({
           this.donations = r.data;
         })
         .catch((e: AxiosError): void => console.log(e));
+    },
+    showSelectedDonations() {
+      this.isModalOpen = true;
     },
     submit(e: any) {
       e.preventDefault();

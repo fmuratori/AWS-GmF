@@ -3,11 +3,7 @@ b-container
   b-row.justify-content-center.my-5.no-gutters
     b-col(lg=6, md=10, sm=12)
     
-      b-card(bg-variant="light")
-        b-card-text
-          .mb-4
-            h4
-              p CREATE A DONATION
+          h4.mb-5.text-center CREATE A DONATION
           b-form(@submit="submit")
             .mb-4
               InputList(
@@ -18,7 +14,7 @@ b-container
 
             .mb-4
               InputDate(
-                title="Donation expiration date:",
+                title="Expiration date:",
                 placeholder="Select a date",
                 :date="form.expirationDate",
                 required,
@@ -33,28 +29,28 @@ b-container
                 v-on:data="(e) => { form.additionalInformation = e; }"
               )
             hr
-            .mb-4
-              p.font-weight-bold.text-center Pick Up periods
-              b-row.mb-1(
-                v-for="(weekDayName, weekDay, idx) in weekDays",
-                :index="idx"
-              )
-                b-col(lg="3" md="3" sm="12")
-                  label {{ weekDayName }}
-                b-col(lg="9" md="9" sm="12")
-                  b-button-group.d-flex
-                    b-button(
-                      @click="weekDayButtonClick(weekDay, 'morning')",
-                      :variant="computeButtonVariant(weekDay, 'morning')"
-                    ) Morning
-                    b-button(
-                      @click="weekDayButtonClick(weekDay, 'afternoon')",
-                      :variant="computeButtonVariant(weekDay, 'afternoon')"
-                    ) Afternoon
-                    b-button(
-                      @click="weekDayButtonClick(weekDay, 'evening')",
-                      :variant="computeButtonVariant(weekDay, 'evening')"
-                    ) Evening
+            //- .mb-4
+            //-   p.font-weight-bold.text-center Pick Up periods
+            //-   b-row.mb-1(
+            //-     v-for="(weekDayName, weekDay, idx) in weekDays",
+            //-     :index="idx"
+            //-   )
+            //-     b-col(lg="3" md="3" sm="12")
+            //-       label {{ weekDayName }}
+            //-     b-col(lg="9" md="9" sm="12")
+            //-       b-button-group.d-flex
+            //-         b-button(
+            //-           @click="weekDayButtonClick(weekDay, 'morning')",
+            //-           :variant="computeButtonVariant(weekDay, 'morning')"
+            //-         ) Morning
+            //-         b-button(
+            //-           @click="weekDayButtonClick(weekDay, 'afternoon')",
+            //-           :variant="computeButtonVariant(weekDay, 'afternoon')"
+            //-         ) Afternoon
+            //-         b-button(
+            //-           @click="weekDayButtonClick(weekDay, 'evening')",
+            //-           :variant="computeButtonVariant(weekDay, 'evening')"
+            //-         ) Evening
 
             .mb-4
               p.font-weight-bold.text-center Pick Up periods
