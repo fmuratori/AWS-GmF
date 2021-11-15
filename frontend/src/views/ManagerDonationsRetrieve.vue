@@ -2,16 +2,11 @@
   div(class="gmapContainer")
     b-row(class="gmapContainer" no-gutters)
       b-col(class="gmapContainer" cols=9)
-        GmapMap(
+        GmapMap(:options="mapsOptions" 
         :center="{lat:44.1396, lng:12.2464}"
         :zoom="14"
         map-type-id="terrain"
-        id="gmap")
-          //- GmapMarker(v-for="(donation, idx) in donations" :key="idx"
-          //- :position="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-          //- :clickable="true"
-          //- :draggable="true"
-          //- @click="clickedDonation(donation)")
+        id="gmap" ref="map")
           div
             gmap-custom-marker(v-for="(donation, idx) in selectedDonations" :key="idx" 
               :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
@@ -113,6 +108,15 @@ export default Vue.extend({
   },
   data: () => {
     return {
+      mapsOptions: {
+        "zoomControl": true,
+        "mapTypeControl": false,
+        "scaleControl": false,
+        "streetViewControl": false,
+        "rotateControl": true,
+        "fullscreenControl": true, 
+        "disableDefaultUi": false,
+        "clickableIcons": false },
       donations: new Array<Donation>(),
       selectedDonations: new Array<Donation>(),
       pickUpDate: "",
@@ -148,8 +152,8 @@ export default Vue.extend({
       // TODO: mostrare uno spinner mentre sono caricati i dati
       donationApi
         .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
-        .then((r: AxiosResponse<{data: { list: Donation[]}}>): void => {
-          this.donations = r.data.data.list as Donation[];
+        .then((r: AxiosResponse<{data: Donation[]}>): void => {
+          this.donations = r.data;
         })
         .catch((e: AxiosError): void => console.log(e));
     },

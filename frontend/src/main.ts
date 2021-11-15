@@ -34,6 +34,7 @@ Vue.use(VueGoogleMaps, {
     libraries: "places",
   },
   installComponents: true,
+  autobindAllEvents: false,
 });
 
 /* enable moment package usage inside html/pug code */
