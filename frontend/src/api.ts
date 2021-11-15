@@ -22,6 +22,14 @@ export default {
     );
   },
 
+  async deleteEvent(payload: {id: string}): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/event/delete`,
+      payload
+    );
+  },
+
+
   /* packs */
 
   async createPack(payload: PackPayload): Promise<AxiosResponse> {

@@ -2,7 +2,7 @@
 b-container
   b-row.justify-content-md-center.my-5.no-gutters
     b-col(lg=8, md=10, sm=12)
-      h4
+      h4.text-center
         b CREATE AN EVENT
       b-form(@submit="createEvent")
         .mb4
@@ -44,7 +44,7 @@ b-container
           b-col
             b-button(
               block,
-              variant="outline-danger",
+              variant="outline-warning",
               @click="$router.push({ name: 'ManagerEvents' })"
             ) Cancel
           b-col
