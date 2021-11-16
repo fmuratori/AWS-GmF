@@ -13,22 +13,11 @@ b-container
               :isOwner="message.userId == $store.state.session.userData._id",
               :date="formatDatetime(message.date)",
               :isVisualized="message.visualized",
+              :isEvent="message.isEventMessage"
               :messages="message.messages",
               :ref="'scrollTo' + idx"
             )
 
-            Message(
-              :key="12345",
-              username="Fabio Muratori",
-              isOwner=false,
-              isEvent=true,
-              :date="moment().calendar()",
-              isVisualized=false,
-              :messages="['Donazione eliminata']",
-            )
-
-          //- div(class="")
-          //-   label(class="font-italic") Marco stà scrivendo...
           b-form(@submit="sendMessage")
             b-input-group(class="")
               b-form-input(
@@ -39,6 +28,8 @@ b-container
               )
               b-input-group-append
                 b-button(variant="success", type="submit") Invia
+          
+          b-button(@click="test") test
 
     b-col(lg=6, md=8, cols=11)
       p INFORMAZIONI SUL RITIRO
@@ -47,7 +38,7 @@ b-container
         b-card-text
           .mb-2
             label.mb-0 Stato donazione:
-            p.font-weight-bold {{ status }}
+            p.font-weight-bold {{ donation.status }}
           .mb-2
             label.mb-0 Data ritiro:
             p.font-weight-bold {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
@@ -88,7 +79,7 @@ b-container
               :key="idx",
               v-if="weekDayDonations(weekDay).length > 0"
             )
-              label.font-weight-bold {{ weekDayName + ':&nbsp;' + weekDayDonations(weekDay).map((d) => translatePeriod(d.period)).join(', ') }}
+              label.font-weight-bold {{ weekDayName + ':&nbsp;' + weekDayDonations(weekDay).map((d) => d.period).join(', ') }}
 
       div(v-if="$store.getters.isUser") 
         b-button(
@@ -135,7 +126,7 @@ import moment from "moment";
 import { Donation, Address, ChatMessage } from "../types";
 
 import donationApi from "../api/donation";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsInspect",
@@ -191,7 +182,7 @@ export default Vue.extend({
 
       for (const message of this.chat) {
         message.messages = [message.text];
-        if (newChat.length == 0) {
+        if (newChat.length == 0 || message.isEventMessage) {
           newChat.push(message);
         } else if (newChat[newChat.length - 1].userId == message.userId) {
           const firstMessageTime = moment(newChat[newChat.length - 1].date);
@@ -209,19 +200,6 @@ export default Vue.extend({
 
     expirationDays(): number {
       return moment(this.donation.expirationDate).diff(moment.now(), "days");
-    },
-
-    status() {
-      switch (this.donation.status) {
-        case "waiting":
-          return "In attesa";
-        case "selected":
-          return "Ritiro prenotato";
-        case "withdrawn":
-          return "Ritirato";
-        default:
-          return "";
-      }
     },
   },
   created() {
@@ -254,19 +232,18 @@ export default Vue.extend({
     },
     translatePeriod(period: string): string {
       return period == "morning"
-        ? "mattino"
+        ? "Morning"
         : period == "afternoon"
-        ? "pomeriggio"
-        : "sera";
+        ? "Afternoon"
+        : "Evening";
     },
     sendMessage(event) {
       event.preventDefault();
-      this.$socket.emit("message_to_server", {
+      this.$store.emit("sendMessage", {
         donationId: this.donation._id,
-        userId: this.$store.state.session.userData._id,
         message: this.chatMessage,
-        fullname: this.$store.getters.userFullName,
-      });
+        isEventMessage: false,
+      })
     },
     deleteDonation() {
       donationApi
@@ -299,6 +276,13 @@ export default Vue.extend({
         params: { donation: JSON.stringify(this.donation) },
       });
     },
+    test() {
+      this.$store.dispatch("sendMessage", {
+        donationId: this.donation._id,
+        message: "The volunteer in charge cancelled the reservation.",
+        isEventMessage: true,
+      })
+    },
     cancelReservation() {
       this.donation.pickUp = {
         volunteerId: "",
@@ -308,17 +292,25 @@ export default Vue.extend({
       this.donation.status = "waiting";
       donationApi
         .editDonation(this.donation)
-        .then(() => {
-          this.$root.$bvToast.toast(
-            `Ritiro della donazione annulato con successo.`,
-            {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            }
-          );
-          this.$router.push({ name: "ManagerDonationsVolunteerList" });
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            this.$store.dispatch("sendMessage", {
+              donationId: this.donation._id,
+              message: "The volunteer in charge cancelled the reservation.",
+              isEventMessage: false,
+            })
+
+            this.$root.$bvToast.toast(
+              `Ritiro della donazione annulato con successo.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+            this.$router.push({ name: "ManagerDonationsVolunteerList" });
+          }
         })
         .catch((e: AxiosError): void => {
           this.$root.$bvToast.toast(

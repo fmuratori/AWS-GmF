@@ -56,9 +56,11 @@ export default class DonationController {
 	})
 }
 
-export async function addMessageToChat(donationId: string, userId: string, fullname: string, message: string) {
+export async function addMessageToChat(donationId: string, userId: string, fullname: string, message: string, isEventMessage: boolean) {
 	const donation = await DonationModel.findById(donationId)
 		.select("+chat")
+
+	console.log(isEventMessage)
 
 	if (!donation) {
 		console.log("donation not found")
@@ -71,7 +73,8 @@ export async function addMessageToChat(donationId: string, userId: string, fulln
 		userFullname: fullname,
 		text: message,
 		visualized: false,
-		date: new Date()
+		date: new Date(),
+		isEventMessage: isEventMessage,
 	})
 
 	await DonationModel.findByIdAndUpdate(donationId, donation)
