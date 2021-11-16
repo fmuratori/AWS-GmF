@@ -40,6 +40,7 @@ import api from "../api";
 
 import { Event } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
+import { EventListView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerDonationsList",
@@ -47,7 +48,7 @@ export default Vue.extend({
     Navbar,
     Sidebar,
   },
-  data: () => {
+  data: (): EventListView => {
     return {
       events: new Array<Event>(),
       tableFields: [
