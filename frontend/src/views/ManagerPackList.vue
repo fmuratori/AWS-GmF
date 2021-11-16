@@ -17,12 +17,8 @@ b-container
         :fields="tableFields",
         :items="packList"
       )
-        template(#cell(status)="data") {{ data.value }}
-
-        template(#cell(familyId)="data") {{ data.value }}
-
-        template(#cell(deliveryDate)="data") {{ data.value }}
-        template(#cell(deliveryPeriod)="data") {{ data.value }}
+        template(#cell(delete)="{ item }")
+          b-button(variant="danger", @click="deletePack(item._id)") Delete
 </template>
 
 <script lang="ts">
@@ -37,7 +33,7 @@ import { PackManagerView } from "../viewTypes";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
-  name: "ManagerPacks",
+  name: "ManagerPackList",
   components: {
     Navbar,
     Sidebar,
@@ -46,7 +42,13 @@ export default Vue.extend({
     return {
       view: "all",
       packList: new Array<Pack>(),
-      tableFields: ["status", "familyId", "deliveryDate", "deliveryPeriod"],
+      tableFields: [
+        "status",
+        "familyId",
+        "deliveryDate",
+        "deliveryPeriod",
+        "delete",
+      ],
     };
   },
   created() {
@@ -78,6 +80,30 @@ export default Vue.extend({
           this.packList = r.data as Pack[];
         })
         .catch((e: AxiosError): void => console.log(e));
+    },
+    deletePack(id: string): void {
+      api
+        .deletePack({ id: id })
+        .then((): void => {
+          this.packList = this.packList.filter((e) => e._id != id);
+          this.$root.$bvToast.toast(`Food successfully created.`, {
+            title: "Food",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to add food. Retry later or contact us if the problem persist.`,
+            {
+              title: "Food",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     },
   },
 });

@@ -40,6 +40,10 @@ export default {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/find`, payload);
   },
 
+  async deletePack(payload: {id: string}): Promise<AxiosResponse> {
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/delete`, payload);
+  },
+
   /* foods */
 
   async addFood(payload: FoodPayload): Promise<AxiosResponse> {

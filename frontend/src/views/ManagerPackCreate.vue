@@ -93,7 +93,7 @@ export default Vue.extend({
       api
         .createPack(this.form)
         .then((): void => {
-          this.$router.push({ name: "ManagerPacks" });
+          this.$router.push({ name: "ManagerPackList" });
           this.$root.$bvToast.toast(`Pack successfully created.`, {
             title: "Pack",
             autoHideDelay: 5000,
