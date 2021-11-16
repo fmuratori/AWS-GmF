@@ -17,6 +17,16 @@ b-container
               :ref="'scrollTo' + idx"
             )
 
+            Message(
+              :key="12345",
+              username="Fabio Muratori",
+              isOwner=false,
+              isEvent=true,
+              :date="moment().calendar()",
+              isVisualized=false,
+              :messages="['Donazione eliminata']",
+            )
+
           //- div(class="")
           //-   label(class="font-italic") Marco stà scrivendo...
           b-form(@submit="sendMessage")

@@ -1,73 +1,100 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5.no-gutters
-    b-col(lg=8, md=10, sm=12)
-      .mb-4
-        h4
-          p CREATE DONATION
-      b-form(@submit="submit")
-        .mb-4
-          InputList(
-            title="Foods:",
-            placeholder="Insert foods here",
-            v-on:data="(e) => { form.foods = e; }"
-          )
+    b-col(lg=6, md=10, sm=12)
+    
+          h4.mb-5.text-center CREATE A DONATION
+          b-form(@submit="submit")
+            .mb-4
+              InputList(
+                title="Foods:",
+                placeholder="Insert foods here",
+                v-on:data="(e) => { form.foods = e; }"
+              )
 
-        .mb-4
-          InputDate(
-            title="Donation expiration date:",
-            placeholder="Select a date",
-            :date="form.expirationDate",
-            required,
-            v-on:data="(e) => { form.expirationDate = e; }"
-          )
+            .mb-4
+              InputDate(
+                title="Expiration date:",
+                placeholder="Select a date",
+                :date="form.expirationDate",
+                required,
+                v-on:data="(e) => { form.expirationDate = e; }"
+              )
 
-        .mb-4
-          InputTextarea(
-            title="Additional information:",
-            placeholder="Insert additional information here",
-            :text="form.additionalInformation",
-            v-on:data="(e) => { form.additionalInformation = e; }"
-          )
+            .mb-4
+              InputTextarea(
+                title="Additional information:",
+                placeholder="Insert additional information here",
+                :text="form.additionalInformation",
+                v-on:data="(e) => { form.additionalInformation = e; }"
+              )
+            hr
+            //- .mb-4
+            //-   p.font-weight-bold.text-center Pick Up periods
+            //-   b-row.mb-1(
+            //-     v-for="(weekDayName, weekDay, idx) in weekDays",
+            //-     :index="idx"
+            //-   )
+            //-     b-col(lg="3" md="3" sm="12")
+            //-       label {{ weekDayName }}
+            //-     b-col(lg="9" md="9" sm="12")
+            //-       b-button-group.d-flex
+            //-         b-button(
+            //-           @click="weekDayButtonClick(weekDay, 'morning')",
+            //-           :variant="computeButtonVariant(weekDay, 'morning')"
+            //-         ) Morning
+            //-         b-button(
+            //-           @click="weekDayButtonClick(weekDay, 'afternoon')",
+            //-           :variant="computeButtonVariant(weekDay, 'afternoon')"
+            //-         ) Afternoon
+            //-         b-button(
+            //-           @click="weekDayButtonClick(weekDay, 'evening')",
+            //-           :variant="computeButtonVariant(weekDay, 'evening')"
+            //-         ) Evening
 
-        .mb-4
-          p.font-weight-bold.text-center Periodo ritiro
-          b-row.mb-1(
-            v-for="(weekDayName, weekDay, idx) in weekDays",
-            :index="idx"
-          )
-            b-col(cols="2")
-              label {{ weekDayName }}
-            b-col(cols="10")
-              b-button-group.d-flex
+            .mb-4
+              p.font-weight-bold.text-center Pick Up periods
+              div.mb-1(
+                v-for="(weekDayName, weekDay, idx) in weekDays",
+                :index="idx"
+              )
+                b-form-group(:label="weekDayName", label-cols-sm="3", label-align-sm="right")
+                  b-button-group.d-flex
+                    b-button(
+                      @click="weekDayButtonClick(weekDay, 'morning')",
+                      :variant="computeButtonVariant(weekDay, 'morning')"
+                    ) Morning
+                    b-button(
+                      @click="weekDayButtonClick(weekDay, 'afternoon')",
+                      :variant="computeButtonVariant(weekDay, 'afternoon')"
+                    ) Afternoon
+                    b-button(
+                      @click="weekDayButtonClick(weekDay, 'evening')",
+                      :variant="computeButtonVariant(weekDay, 'evening')"
+                    ) Evening
+            hr
+            .mb-4
+              InputAddress(
+                title="Location",
+                @onAddressUpdate="onAddressUpdate")
+            hr
+            
+            //- .mb-4
+            //-   InputAddress(
+            //-     title="Location",
+            //-     v-on:data="(e) => { form.address = e; }"
+            //-   )
+
+            b-row
+              b-col
                 b-button(
-                  @click="weekDayButtonClick(weekDay, 'morning')",
-                  :variant="computeButtonVariant(weekDay, 'morning')"
-                ) Morning
-                b-button(
-                  @click="weekDayButtonClick(weekDay, 'afternoon')",
-                  :variant="computeButtonVariant(weekDay, 'afternoon')"
-                ) Afternoon
-                b-button(
-                  @click="weekDayButtonClick(weekDay, 'evening')",
-                  :variant="computeButtonVariant(weekDay, 'evening')"
-                ) Evening
-        .mb-4
-          InputAddress(
-            title="Location",
-            v-on:data="(e) => { form.address = e; }"
-          )
-
-        b-row
-          b-col
-            b-button(
-              block,
-              variant="outline-danger",
-              @click="$router.push({ name: 'Home' })",
-              type="reset"
-            ) Cancel
-          b-col
-            b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+                  block,
+                  variant="outline-danger",
+                  @click="$router.replace({ name: 'Home' })",
+                  type="reset"
+                ) Cancel
+              b-col
+                b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
@@ -138,18 +165,22 @@ export default Vue.extend({
         this.form.foods.push("");
         this.submitLabel = "Edit";
       }
-    } else this.$router.push({ name: "Login" });
+    } else this.$router.replace({ name: "Login" });
   },
   methods: {
     onAddressUpdate(address: Address) {
       this.form.address = address;
+    },
+    onReset() {
+      this.isLocationLoaded = false;
+      this.form.address = null;
     },
     computeButtonVariant(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(
         (wd: { weekDay: string; period: string }) =>
           wd.weekDay == weekDay && wd.period == period
       );
-      return idx != -1 ? "dark" : "outline-secondary";
+      return idx != -1 ? "dark" : "outline-dark";
     },
     weekDayButtonClick(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(
@@ -173,7 +204,7 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then(() => {
-            this.$router.push({ name: "ManagerDonationsList" });
+            this.$router.replace({ name: "ManagerDonationsUserList" });
             this.$root.$bvToast.toast(`Donazione effettuata con successo.`, {
               title: "Donazione",
               autoHideDelay: 5000,
@@ -197,7 +228,6 @@ export default Vue.extend({
     },
     formChecks(): boolean {
       if (!this.form.pickUpPeriod.length) {
-        console.log("ramo1");
         this.$root.$bvToast.toast(
           `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
           {
@@ -210,7 +240,6 @@ export default Vue.extend({
         return false;
       }
       if (!this.form.foods.length) {
-        console.log("ramo1");
         this.$root.$bvToast.toast(
           `Inserire almeno un alimento che vuoi donare.`,
           {
@@ -222,7 +251,6 @@ export default Vue.extend({
         );
         return false;
       }
-      console.log("ramo3");
       return true;
     },
   },

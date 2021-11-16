@@ -1,5 +1,6 @@
 <template lang="pug">
-b-form-group(label="Labels:") 
+
+b-form-group(:label="title" label-cols-sm="3", label-align-sm="right") 
   b-input-group.mb-1(v-for="(label, idx) in labels", :key="idx")
     b-form-input.my-no-right-border(
       type="text",
@@ -9,11 +10,10 @@ b-form-group(label="Labels:")
     )
     b-input-group-append
       b-button.my-no-left-border(
-        variant="danger",
+        :variant="!labels[idx] ? 'outline-danger' : 'danger'",
         @click="labelDeleteClicked(idx)",
         :disabled="labels[idx] == ''"
       ) 
-        span Cancel
         b-icon(icon="x", aria-hidden="true")
 </template>
 
@@ -39,7 +39,7 @@ export default Vue.extend({
     },
   },
   created() {
-    this.labels = this.labelList as Array<string>;
+    this.labels = this.labelList ? this.labelList as Array<string> : new Array<string>() ;
     this.labels.push("");
   },
   methods: {

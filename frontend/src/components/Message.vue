@@ -1,5 +1,6 @@
 <template lang="pug">
-  p(class="message m-1 p-2" :class="{'my-message': isOwner}")
+div 
+  p(v-if="!isEvent" class="message m-1 p-2" :class="{'my-message': isOwner}")
     label(class="font-weight-bolder m-0 p-0") {{ username }}
     span(v-for="(msg, idx) in messages" :index="idx")
       br
@@ -7,6 +8,10 @@
     span()
       br
       label(class="m-0 p-0 font-italic") {{ date }}
+  p(v-else class="font-weight-light message m-1 p-2 text-center")
+    label(class=" m-0 p-0") {{ messages[0] }}
+    br
+    label(class="m-0 p-0") {{ date }}
 </template>
 
 <script lang="ts">
@@ -20,6 +25,7 @@ export default Vue.extend({
     messages: Array,
     date: String,
     isVisualized: Boolean,
+    isEvent: Boolean,
   },
   data: function () {
     return {};

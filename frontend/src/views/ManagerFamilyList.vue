@@ -44,31 +44,36 @@ b-container.justify-content-center.my-5
     b-col(v-if="familyList.length == 0", sm=12, md=6)
       p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-    b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList", :key="idx")
+    b-col(
+      v-else,
+      sm=12,
+      md=6,
+      v-for="(family, idx) in familyList",
+      :key="idx"
+    )
       b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
         b-card-text
-          .px-4.pt-4
+          .p-4
             h5 {{ family.name }}
             b-row
               b-col(cols="auto")
                 div(class="")
-                  p.mb-0 Numero di cellulare:
+                  p.mb-0 Phone number:
                   p.font-weight-bold.mb-2 {{ family.phoneNumber }}
 
                 div(class="")
-                  p.mb-0 Numero elementi della famiglia:
+                  p.mb-0 Family size:
                   p.font-weight-bold.mb-2 {{ family.components }}
-
-                div(class="")
-                  p.mb-0 Indirizzo:
-                  p.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
-              b-col(cols="auto")
-                p.mb-0 Address:
+                
+                div
+                  p.mb-0 Address:
                   b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
-          h5 status:
-            b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-            b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
+              b-col(cols="auto")
+                div
+                  p.mb-0 Status:
+                    b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
+                    b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
 
           b-button.b-card-footer-button(
             block,
@@ -130,8 +135,8 @@ export default Vue.extend({
         .familyList({
           filter: { reporterId: this.$store.state.session.userData._id },
         })
-        .then((r: AxiosResponse<{data: {list: Family[]}}>): void => {
-          this.familyList = r.data.data.list as Family[];
+        .then((r: AxiosResponse): void => {
+          this.familyList = r.data as Family[];
         })
         .catch((): void => {
           this.$root.$bvToast.toast(

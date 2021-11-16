@@ -68,7 +68,7 @@ b-container.justify-content-center.my-5
       b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
         b-card-text
           .px-4.pt-4
-            h5 Offerta effettuata il {{ formatDonation(donation.creationDate) }}
+            h5 Offerta effettuata il {{ formatDonation(donation) }}
             b-row
               b-col(cols="auto")
                 div(class="")
@@ -141,9 +141,9 @@ export default Vue.extend({
     if (this.$store.getters.isUserLogged) {
       donationApi
         .filterUserActiveDonations(this.$store.state.session.userData._id)
-        .then((r: any): void => {
-          this.donations = r.data.data.list as Donation[];
-          this.donationsBackup = r.data.data.list as Donation[];
+        .then((r: AxiosResponse): void => {
+          this.donations = r.data as Donation[];
+          this.donationsBackup = r.data as Donation[];
           this.orderBy(this.orderByMode);
           this.filterBy(this.filterByMode);
         })
