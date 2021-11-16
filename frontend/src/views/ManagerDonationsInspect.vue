@@ -248,14 +248,22 @@ export default Vue.extend({
     deleteDonation() {
       donationApi
         .deleteDonation(this.donation._id)
-        .then(() => {
-          this.$router.push({ name: "ManagerDonationsList" });
-          this.$root.$bvToast.toast(`Donazione eliminata con successo.`, {
-            title: "Donazione",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            this.$store.dispatch("sendMessage", {
+              donationId: this.donation._id,
+              message: "Donation cancelled succesfully.",
+              isEventMessage: true,
+            })
+
+            this.$router.push({ name: "ManagerDonationsList" });
+            this.$root.$bvToast.toast(`Donazione eliminata con successo.`, {
+              title: "Donazione",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            });
+          }
         })
         .catch((e: AxiosError): void => {
           this.$root.$bvToast.toast(
@@ -276,13 +284,6 @@ export default Vue.extend({
         params: { donation: JSON.stringify(this.donation) },
       });
     },
-    test() {
-      this.$store.dispatch("sendMessage", {
-        donationId: this.donation._id,
-        message: "The volunteer in charge cancelled the reservation.",
-        isEventMessage: true,
-      })
-    },
     cancelReservation() {
       this.donation.pickUp = {
         volunteerId: "",
@@ -297,7 +298,7 @@ export default Vue.extend({
             this.$store.dispatch("sendMessage", {
               donationId: this.donation._id,
               message: "The volunteer in charge cancelled the reservation.",
-              isEventMessage: false,
+              isEventMessage: true,
             })
 
             this.$root.$bvToast.toast(

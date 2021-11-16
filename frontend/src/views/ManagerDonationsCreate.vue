@@ -110,7 +110,7 @@ import { Address, DonationCreationPayload } from "../types";
 
 import api from "../api/donation";
 import { CreatedonationView } from "../viewTypes";
-import { AxiosError } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationsCreate",
@@ -203,21 +203,28 @@ export default Vue.extend({
 
       if (this.formChecks()) {
         fun(this.form)
-          .then(() => {
-            this.$router.replace({ name: "ManagerDonationsUserList" });
-            this.$root.$bvToast.toast(`Donazione effettuata con successo.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            });
+          .then((r: AxiosResponse) => {
+            if (r.status == 200) {
+              this.$store.dispatch("sendMessage", {
+                donationId: this.donation._id,
+                message: "Donation modified by the owner.",
+                isEventMessage: true,
+              })
+              this.$router.replace({ name: "ManagerDonationsUserList" });
+              this.$root.$bvToast.toast(`Donation successfully elaborated.`, {
+                title: "Donation",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              });
+            }
           })
           .catch((e: AxiosError): void => {
             console.log(e);
             this.$root.$bvToast.toast(
-              `Impossibile inviare la donazione. Riprova più tardi oppure contattaci se il problema persiste.`,
+              `Unable to send the donation. Retry later or contact us if the problem persists.`,
               {
-                title: "Donazione",
+                title: "Donation",
                 autoHideDelay: 5000,
                 variant: "danger",
                 appendToast: false,
@@ -229,9 +236,9 @@ export default Vue.extend({
     formChecks(): boolean {
       if (!this.form.pickUpPeriod.length) {
         this.$root.$bvToast.toast(
-          `Selezionare almeno un periodo della settimana in cui sei disponibile per il ritiro degli alimenti donati.`,
+          `Select al least one day and period of the day when we can retrive your donation.`,
           {
-            title: "Donazione",
+            title: "Donation",
             autoHideDelay: 5000,
             variant: "warning",
             appendToast: false,
@@ -241,9 +248,9 @@ export default Vue.extend({
       }
       if (!this.form.foods.length) {
         this.$root.$bvToast.toast(
-          `Inserire almeno un alimento che vuoi donare.`,
+          `Add at least one valid food to the donation.`,
           {
-            title: "Donazione",
+            title: "Donation",
             autoHideDelay: 5000,
             variant: "warning",
             appendToast: false,
