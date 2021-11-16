@@ -17,7 +17,7 @@ export interface CreateEventView {
 }
 
 export interface EventListView {
-  events: Array<Event>,
+  events: Array<Event>;
   tableFields: Array<TableField>;
 }
 

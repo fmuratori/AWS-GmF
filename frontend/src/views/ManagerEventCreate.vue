@@ -63,7 +63,7 @@ import InputDate from "../components/input/InputDate.vue";
 import { Address, EventPayload } from "../types";
 import { CreateEventView } from "../viewTypes";
 
-import api from "../api";
+import api from "../api/event";
 
 export default Vue.extend({
   name: "ManagerEventCreate",

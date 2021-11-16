@@ -50,7 +50,7 @@ import FoodView from "../components/FoodView.vue";
 
 import { Family, PackPayload, SelectableFood } from "../types";
 
-import api from "../api";
+import api from "../api/pack";
 import { PackCreateView } from "../viewTypes";
 
 export default Vue.extend({

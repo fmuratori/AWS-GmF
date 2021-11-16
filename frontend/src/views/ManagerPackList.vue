@@ -26,7 +26,7 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api";
+import api from "../api/pack";
 
 import { Pack } from "../types";
 import { PackManagerView } from "../viewTypes";

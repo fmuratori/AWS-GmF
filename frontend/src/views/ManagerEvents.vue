@@ -36,7 +36,7 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api";
+import api from "../api/event";
 
 import { Event } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
@@ -116,7 +116,7 @@ export default Vue.extend({
       api
         .deleteEvent({ id: id })
         .then((): void => {
-          this.events = this.events.filter((e) => e._id != id)
+          this.events = this.events.filter((e) => e._id != id);
           this.$root.$bvToast.toast(`Event successfully deleted.`, {
             title: "Event",
             autoHideDelay: 5000,
@@ -140,5 +140,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

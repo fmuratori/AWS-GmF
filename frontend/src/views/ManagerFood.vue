@@ -69,7 +69,7 @@ import InputList from "../components/input/InputList.vue";
 
 import { Food, FoodPayload, SelectableFood } from "../types";
 
-import api from "../api";
+import api from "../api/food";
 import { FoodManagerView } from "../viewTypes";
 import { AxiosResponse } from "axios";
 
