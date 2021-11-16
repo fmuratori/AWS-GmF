@@ -48,6 +48,8 @@ export interface PackCreateView {
 export interface PackManagerView {
   view: string;
   packList: Array<Pack>;
+  familyDetails?: Family;
+  foodDetails?: Array<Food>;
   tableFields: Array<string>;
 }
 

@@ -10,15 +10,44 @@ b-container
         b-button.btn-all(@click="changeView('all')") All
 
     b-row
-      b-table(
-        hover,
-        striped,
-        responsive,
-        :fields="tableFields",
-        :items="packList"
-      )
-        template(#cell(delete)="{ item }")
-          b-button(variant="danger", @click="deletePack(item._id)") Delete
+      b-col(cols="8")
+        b-table(
+          hover,
+          striped,
+          responsive,
+          :fields="tableFields",
+          :items="packList"
+        )
+          template(#cell(status)="data")
+            b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
+            b-badge(v-if="data.value == 'planned delivery'", variant="warning") {{ data.value }}
+            b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
+
+          template(#cell(details)="row")
+            b-button(size="sm", @click="showDetails(row)") Show details
+
+          template(#cell(delete)="{ item }")
+            b-button(variant="danger", @click="deletePack(item._id)") Delete
+
+      b-col(cols="4")
+        b-card
+          b-row(v-model="familyDetails")
+            b-col(v-if="familyDetails != undefined")
+              h4 Family
+              div
+                b name:
+                span {{ this.familyDetails.name }}
+              div 
+                b components:
+                span {{ this.familyDetails.components }}
+              div
+                b address:
+                span {{ formatAddress(this.familyDetails.address) }}
+          hr.sidebar-hr.my-3
+          b-row(v-model="foodDetails")
+            b-col(v-if="foodDetails != undefined")
+              h4 Food list
+              div(v-for="food in foodDetails") {{ food.number }}x {{ food.name }}
 </template>
 
 <script lang="ts">
@@ -26,9 +55,11 @@ import Vue from "vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api/pack";
+import packApi from "../api/pack";
+import familyApi from "../api/family";
+import foodApi from "../api/food";
 
-import { Pack } from "../types";
+import { Address, Pack } from "../types";
 import { PackManagerView } from "../viewTypes";
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -42,11 +73,13 @@ export default Vue.extend({
     return {
       view: "all",
       packList: new Array<Pack>(),
+      familyDetails: undefined,
+      foodDetails: undefined,
       tableFields: [
         "status",
-        "familyId",
         "deliveryDate",
         "deliveryPeriod",
+        "details",
         "delete",
       ],
     };
@@ -55,7 +88,7 @@ export default Vue.extend({
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      packApi
         .packList({})
         .then((r: AxiosResponse): void => {
           this.packList = r.data as Pack[];
@@ -74,7 +107,7 @@ export default Vue.extend({
       // }
       this.view = view;
 
-      api
+      packApi
         .packList(payload)
         .then((r: AxiosResponse): void => {
           this.packList = r.data as Pack[];
@@ -82,7 +115,7 @@ export default Vue.extend({
         .catch((e: AxiosError): void => console.log(e));
     },
     deletePack(id: string): void {
-      api
+      packApi
         .deletePack({ id: id })
         .then((): void => {
           this.packList = this.packList.filter((e) => e._id != id);
@@ -104,6 +137,36 @@ export default Vue.extend({
             }
           );
         });
+    },
+    showDetails(row: any) {
+      familyApi
+        .familyList({ filter: { _id: row.item.familyId } })
+        .then((r: AxiosResponse) => {
+          this.familyDetails = r.data[0];
+        })
+        .catch(() => {
+          console.log("TODO");
+        });
+
+      const foodMap = new Map();
+      row.item.foodList.forEach((elem) => {
+        foodMap.set(elem.foodId, elem.number);
+      });
+      const foodIdList = Array.from(foodMap.keys());
+      foodApi
+        .foodList({ filter: { _id: foodIdList } })
+        .then((r: AxiosResponse) => {
+          this.foodDetails = r.data;
+          this.foodDetails.forEach(elem => {
+              elem.number = foodMap.get(elem._id)
+          });
+        })
+        .catch(() => {
+          console.log("TODO");
+        });
+    },
+    formatAddress(addr: Address) {
+      return addr.street + " " + addr.civicNumber + ", " + addr.city;
     },
   },
 });

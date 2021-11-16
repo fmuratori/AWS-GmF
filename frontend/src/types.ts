@@ -148,7 +148,7 @@ export interface PackPayload {
 
 export interface Pack {
   _id: string;
-  foodIdList: [string];
+  foodList: [{ foodId: string; number: number }];
   deliveryVolunteerId: string;
   status: string;
   familyId: string;
