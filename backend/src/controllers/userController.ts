@@ -67,6 +67,22 @@ export default class UserController {
 		})
 	})
 
+	//called logged users at page refresh
+	getData = catchAsync(async (req: Request, res: Response) => {
+		const userId = req.headers["x-user-id"]
+		const user = await UserModel.findById(userId)
+
+		if (!user) {
+			res.status(401).json({
+				status: "user-not-found-error",
+				message: "user not found"
+			})
+			return
+		}
+
+		res.status(200).json(user)
+	})
+
 	update = catchAsync(async (req: Request, res: Response) => {
 		var user = await UserModel.findById(req.body.id)
 
