@@ -29,8 +29,6 @@ b-container
               b-input-group-append
                 b-button(variant="success", type="submit") Invia
           
-          b-button(@click="test") test
-
     b-col(lg=6, md=8, cols=11)
       p INFORMAZIONI SUL RITIRO
 

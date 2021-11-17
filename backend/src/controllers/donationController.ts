@@ -60,8 +60,6 @@ export async function addMessageToChat(donationId: string, userId: string, fulln
 	const donation = await DonationModel.findById(donationId)
 		.select("+chat")
 
-	console.log(isEventMessage)
-
 	if (!donation) {
 		console.log("donation not found")
 		return
