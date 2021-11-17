@@ -1,12 +1,10 @@
 import mongoose, { PopulatedDoc } from "mongoose";
 import Family from "./interfaces/family";
-import Food from "./interfaces/food";
 import Pack from "./interfaces/pack";
 import User from "./interfaces/user";
 
 export interface PackDocument extends Document, Pack {
     User?: PopulatedDoc<User & Document>
-    Food?: PopulatedDoc<Food & Document>
     Family?: PopulatedDoc<Family & Document>
 }
 

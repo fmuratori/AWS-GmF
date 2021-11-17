@@ -25,7 +25,10 @@ const foodSchema = new mongoose.Schema({
         // }
     },
     labels: {
-        type: [String],
+        type: [{
+            type: String,
+            enum: ["meat", "fish", "pasta", "vegetable", "fruit", "fresh", "long-life"]
+        }],
         required: false
     }
 })

@@ -120,8 +120,6 @@ import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
-// import bcrypt from "bcrypt"
-
 import userApi from "../api/user";
 import chatApi from "../api/chat";
 import {

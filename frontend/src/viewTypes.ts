@@ -1,5 +1,6 @@
 import {
   DonationCreationPayload,
+  Event,
   EventPayload,
   Family,
   FamilyPayload,
@@ -13,6 +14,11 @@ import {
 export interface CreateEventView {
   form: EventPayload;
   submitLabel: string;
+}
+
+export interface EventListView {
+  events: Array<Event>;
+  tableFields: Array<TableField>;
 }
 
 export interface ReportFamilyView {
@@ -42,6 +48,8 @@ export interface PackCreateView {
 export interface PackManagerView {
   view: string;
   packList: Array<Pack>;
+  familyDetails?: Family;
+  foodDetails?: Array<Food>;
   tableFields: Array<string>;
 }
 

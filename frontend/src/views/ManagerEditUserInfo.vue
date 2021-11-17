@@ -102,7 +102,7 @@ import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 // import bcrypt from "bcrypt"
 
-import userApi from "../api/user";
+import api from "../api/user";
 import { Address, editUserPayload, changePasswordPayload } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -155,7 +155,7 @@ export default Vue.extend({
     },
     editUser(event) {
       event.preventDefault();
-      userApi
+      api
         .editUser(this.editUserForm)
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
@@ -187,7 +187,7 @@ export default Vue.extend({
     },
     changePassword(event) {
       event.preventDefault();
-      userApi
+      api
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {

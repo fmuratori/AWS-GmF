@@ -63,7 +63,7 @@ import { SelectableFood } from "../types";
 import { FoodView } from "../viewTypes";
 import moment from "moment";
 
-import api from "../api";
+import api from "../api/food";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({

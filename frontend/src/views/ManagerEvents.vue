@@ -4,23 +4,30 @@ b-container
     h3 YOUR EVENTS
     b-row
       div(v-if="events.length == 0") No event found for this user
-      b-col(sm=12, md=6, v-for="(event, idx) in events", :key="idx")
-        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-          b-card-text
-            .px-4.pt-4
-              h5 {{ event.eventTitle }}
-              b-row
-                b-col(cols="auto")
-                  .mb-2
-                    p.mb-0 Date:
-                      b {{ formatDate(event) }}
-                b-col(cols="auto")
-                  p.mb-2 {{ event.description }}
-            b-button(
-              block,
-              variant="success",
-              @click="$router.push({ name: 'ManagerEventCreate', params: { event: event } })"
-            ) Edit
+      b-table(v-else, hover, striped, :fields="tableFields", :items="events")
+        template(#cell(show_description)="row")
+          b-button(@click="row.toggleDetails", size="sm") {{ row.detailsShowing ? 'Hide' : 'Show' }} description
+
+        template(#row-details="row")
+          b-card 
+            b-row
+              b-col {{ row.item.description }}
+
+        template(#cell(edit)="{ item }") 
+          b-button(
+            block,
+            variant="success",
+            size="sm",
+            @click="$router.push({ name: 'ManagerEventCreate', params: { event: item } })"
+          ) Edit
+
+        template(#cell(delete)="{ item }") 
+          b-button(
+            block,
+            variant="danger",
+            size="sm",
+            @click="deleteEvent(item._id)"
+          ) Delete
 </template>
 
 <script lang="ts">
@@ -29,10 +36,11 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api";
+import api from "../api/event";
 
 import { Event } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
+import { EventListView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerDonationsList",
@@ -40,9 +48,47 @@ export default Vue.extend({
     Navbar,
     Sidebar,
   },
-  data: () => {
+  data: (): EventListView => {
     return {
       events: new Array<Event>(),
+      tableFields: [
+        {
+          key: "eventTitle",
+          label: "Title",
+          sortable: true,
+        },
+        {
+          key: "address",
+          label: "Address",
+          sortable: false,
+          formatter: (addr) => {
+            return addr.street + " " + addr.civicNumber + ", " + addr.city;
+          },
+        },
+        {
+          key: "date",
+          label: "Date",
+          sortable: true,
+          formatter: (value) => {
+            return moment(value).locale("en").format("LL");
+          },
+        },
+        {
+          key: "show_description",
+          label: "",
+          sortable: false,
+        },
+        {
+          key: "edit",
+          label: "",
+          sortable: false,
+        },
+        {
+          key: "delete",
+          label: "",
+          sortable: false,
+        },
+      ],
     };
   },
   created() {
@@ -66,19 +112,32 @@ export default Vue.extend({
     formatDate(event: Event) {
       return moment(event.date).locale("en").format("LL");
     },
+    deleteEvent(id: string): void {
+      api
+        .deleteEvent({ id: id })
+        .then((): void => {
+          this.events = this.events.filter((e) => e._id != id);
+          this.$root.$bvToast.toast(`Event successfully deleted.`, {
+            title: "Event",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to delete the event. Retry later or contact us if the problem persist.`,
+            {
+              title: "Event",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
+    },
   },
 });
 </script>
 
-<style scoped lang="scss">
-@import "@/assets/style.scss";
-
-.b-card-footer-button {
-  background-color: $color3;
-
-  border: 0px;
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
-</style>
+<style scoped lang="scss"></style>

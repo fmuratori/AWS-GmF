@@ -113,10 +113,18 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/manager/pack/list",
-    name: "ManagerPacks",
+    name: "ManagerPackList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerPacks" */ "../views/ManagerPacks.vue"
+        /* webpackChunkName: "ManagerPackList" */ "../views/ManagerPackList.vue"
+      ),
+  },
+  {
+    path: "/manager/pack/list",
+    name: "ManagerPackDelivery",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerPackDelivery" */ "../views/ManagerPackDelivery.vue"
       ),
   },
 ];

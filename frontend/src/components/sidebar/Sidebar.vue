@@ -45,9 +45,12 @@
 
       hr.sidebar-hr.my-3
 
-    div(v-if="this.$store.state.session.userData.type != 'user'")
+    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+      SidebarCategory(text="Packs", icon="calendar")
       SidebarItem(text="Food manager", route="ManagerFood")
-      //- SidebarItem(text= 'Pack manager', route='ManagerPacks')
+      SidebarItem(text="Pack list", route="ManagerPackList")
+      SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
+
 </template>
 
 <script lang="ts">
