@@ -46,36 +46,39 @@ b-container.justify-content-center.my-5
 
     b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList", :key="idx")
       b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+        template(#header)
+          h5
+            b {{ family.name }}
+            span.float-right
+              b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
+              b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
         b-card-text
-          .px-4.pt-4
-            h5 {{ family.name }}
+          .px-4.pt-4.pb-4
             b-row
               b-col(cols="auto")
                 div(class="")
-                  p.mb-0 Numero di cellulare:
-                  p.font-weight-bold.mb-2 {{ family.phoneNumber }}
+                  span.mb-0 Phone number:
+                  span.font-weight-bold.mb-2 {{ family.phoneNumber }}
 
                 div(class="")
-                  p.mb-0 Numero elementi della famiglia:
-                  p.font-weight-bold.mb-2 {{ family.components }}
+                  span.mb-0 Components:
+                  span.font-weight-bold.mb-2 {{ family.components }}
 
                 div(class="")
-                  p.mb-0 Indirizzo:
-                  p.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
+                  span.mb-0 Address:
+                  span.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
               b-col(cols="auto")
-                p.mb-0 Address:
-                  b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
-          h5 status:
-            b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-            b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
+          b-button-group.d-flex(v-if="family.status == 'pending'")
+            b-button.b-card-footer-button(
+              variant="success",
+              @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
+            ) EDIT
 
-          b-button.b-card-footer-button(
-            block,
-            :disabled="family.status == 'verified'",
-            variant="success",
-            @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
-          ) EDIT
+            b-button.b-card-footer-button(
+              variant="danger",
+              @click="deleteFamily(family._id)"
+            ) DELETE
 
           b-button.b-card-footer-button(
             block,
@@ -87,9 +90,8 @@ b-container.justify-content-center.my-5
 
           b-button.b-card-footer-button(
             block,
-            v-if="userRole != 'user'",
+            v-if="userRole != 'user' && family.status == 'verified'",
             variant="primary",
-            :disabled="family.status != 'verified'",
             @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
           ) PACK
 </template>
@@ -220,6 +222,30 @@ export default Vue.extend({
         default:
           null;
       }
+    },
+    deleteFamily(id: string): void {
+      api
+        .deleteFamily({ id: id })
+        .then((): void => {
+          this.familyList = this.familyList.filter((e) => e._id != id);
+          this.$root.$bvToast.toast(`Family successfully deleted.`, {
+            title: "Family",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to delete family. Retry later or contact us if the problem persist.`,
+            {
+              title: "Family",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     },
   },
 });
