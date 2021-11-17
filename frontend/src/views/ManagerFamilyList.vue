@@ -4,9 +4,10 @@ b-container
     b-col
       hr.sidebar-hr.my-3
       h4.text-center.mb-4
-        b YOUR FAMILY REPORTS
+        b(v-if="this.$store.state.session.userData.type == 'user'") YOUR FAMILY REPORTS
+        b(v-else) FAMILY REPORTS
       hr.sidebar-hr.my-3
-      
+
       b-row.mb-2(no-gutters)
         b-col(cols="2")
           b Report status:
@@ -15,48 +16,64 @@ b-container
             pill,
             variant="secondary",
             size="sm",
-            @click="filterBy('verified')",
-            :class="{ 'my-button-selected': filterByMode == 'verified' }"
+            @click="filterBy('verified', reporterFilter)",
+            :class="{ 'my-button-selected': statusFilter == 'verified' }"
           ) Verified reports
           b-button.ml-2(
             pill,
             variant="secondary",
             size="sm",
-            @click="filterBy('pending')",
-            :class="{ 'my-button-selected': filterByMode == 'pending' }"
+            @click="filterBy('pending', reporterFilter)",
+            :class="{ 'my-button-selected': statusFilter == 'pending' }"
           ) Pending reports
           b-button.ml-2(
             pill,
             variant="secondary",
             size="sm",
-            @click="filterBy('all')",
-            :class="{ 'my-button-selected': filterByMode == 'all' }"
+            @click="filterBy('all', reporterFilter)",
+            :class="{ 'my-button-selected': statusFilter == 'all' }"
           ) All reports
 
-      b-row.mb-2(no-gutters)
+      b-row.mb-2(no-gutters, v-if="this.$store.state.session.userData.type != 'user'")
         b-col(cols="2")
-          b Sort by:
+          b Reporter:
         b-col
           b-button.ml-2(
             pill,
             variant="secondary",
             size="sm",
-            @click="orderBy('creation_date')",
-            :class="{ 'my-button-selected': orderByMode == 'creation_date' }"
-          ) Data creazione
+            @click="filterBy(statusFilter, 'me')",
+            :class="{ 'my-button-selected': reporterFilter == 'me' }"
+          ) Me
+          b-button.ml-2(
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="filterBy(statusFilter, 'all')",
+            :class="{ 'my-button-selected': reporterFilter == 'all' }"
+          ) All
 
       b-row
         b-col(v-if="familyList.length == 0", sm=12, md=6)
           p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-        b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList", :key="idx")
+        b-col(
+          v-else,
+          sm=12,
+          md=6,
+          v-for="(family, idx) in familyList",
+          :key="idx"
+        )
           b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
             template(#header)
               h5
                 b {{ family.name }}
                 span.float-right
                   b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-                  b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
+                  b-badge(
+                    v-if="family.status == 'verified'",
+                    variant="success"
+                  ) {{ family.status }}
             b-card-text
               .px-4.pt-4.pb-4
                 b-row
@@ -120,7 +137,8 @@ export default Vue.extend({
   data: () => {
     return {
       userRole: "",
-      filterByMode: "all",
+      statusFilter: "all",
+      reporterFilter: "me",
       orderByMode: "creation_date",
       familyList: new Array<Family>(),
     };
@@ -186,20 +204,36 @@ export default Vue.extend({
           );
         });
     },
-    filterBy(filterByMode: "verified" | "pending" | "all"): void {
-      if (this.filterByMode == filterByMode) return;
+    filterBy(
+      statusFilter: "verified" | "pending" | "all",
+      reporterFilter: "me" | "all"
+    ): void {
+      if (
+        this.statusFilter == statusFilter &&
+        this.reporterFilter == reporterFilter
+      )
+        return;
+      else if (this.statusFilter != statusFilter)
+        this.statusFilter = statusFilter;
+      else if (this.reporterFilter != reporterFilter)
+        this.reporterFilter = reporterFilter;
+      else return;
 
       var payload = { filter: {} };
 
-      switch (filterByMode) {
+      switch (statusFilter) {
         case "verified":
         case "pending":
-          payload.filter["filterByMode"] = filterByMode;
+          payload.filter["status"] = statusFilter;
           break;
         default:
       }
-
-      this.filterByMode = filterByMode;
+      switch (reporterFilter) {
+        case "me":
+          payload.filter["reporterId"] = this.$store.state.session.userData._id;
+          break;
+        default:
+      }
 
       api
         .familyList(payload)
@@ -217,16 +251,6 @@ export default Vue.extend({
             }
           );
         });
-    },
-    orderBy(mode: string): void {
-      this.orderByMode = mode;
-      switch (mode) {
-        case "creation_date":
-          this.familyList.sort(this.creationDateComparer);
-          break;
-        default:
-          null;
-      }
     },
     deleteFamily(id: string): void {
       api
