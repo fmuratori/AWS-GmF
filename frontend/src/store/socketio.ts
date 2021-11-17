@@ -80,6 +80,13 @@ export default {
       }
     },
 
+    sendMessage({ rootState, rootGetters }, message: {donationId: string, message: string, isEventMessage: boolean}): void {
+      message["userId"] = rootState.session.userData._id;
+      message["fullname"] = rootGetters.userFullName;
+      
+      new Vue().$socket.emit("message_to_server", message);
+    },
+
     getChat({ commit, rootState }, donationId: string): void {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)

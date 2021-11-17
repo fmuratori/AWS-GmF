@@ -35,7 +35,7 @@ io.on("connection", (socket: Socket) => {
 
     console.log("message_to_server: " + obj.message)
 
-    addMessageToChat(obj.donationId, obj.userId, obj.fullname, obj.message)
+    addMessageToChat(obj.donationId, obj.userId, obj.fullname, obj.message, obj.isEventMessage)
     .then(newMessage => {
       // send the new message to all the users involved in the chat (owner and optionally a volunteer)
       getDonationUsers(obj.donationId)

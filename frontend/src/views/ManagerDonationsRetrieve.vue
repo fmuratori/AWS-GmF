@@ -1,7 +1,7 @@
 <template lang="pug">
   div(class="gmapContainer")
     b-row(class="gmapContainer" no-gutters)
-      b-col(class="gmapContainer" cols=9)
+      b-col(class="gmapContainer" cols=10)
         GmapMap(:options="mapsOptions" 
         :center="{lat:44.1396, lng:12.2464}"
         :zoom="14"
@@ -10,30 +10,45 @@
           div
             gmap-custom-marker(v-for="(donation, idx) in selectedDonations" :key="idx" 
               :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-              @click.native="deselectDonation(donation)")
+              @click.native="toggleInfoWindow(donation)")
               h1
                 //truck
                 b-icon(icon="check-circle-fill" variant="success")
           div 
             gmap-custom-marker(v-for="(donation, idx) in donations" :key="idx" 
               :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-              @click.native="selectDonation(donation)")
+              @click.native="toggleInfoWindow(donation)")
               h1
                 b-icon(icon="exclamation-circle-fill" variant="warning")
-
-          //- gmap-info-window(
-          //- v-if="selectedDonation"
-          //- :options="{maxWidth: 300, pixelOffset: { width: 0, height: -35 } }"
-          //- :position="infoWindow.position"
-          //- :opened="infoWindow.open"
-          //- @closeclick="infoWindow.open=false")
-          //-   div(v-html="infoWindow.template")
-          //-     p {{selectedDonation}}
-          //-     b-button(variant="success") select
-
+          gmap-info-window(
+          v-if="selectedDonation"
+          :options="{maxWidth: 300, pixelOffset: { width: 0, height: -55 } }"
+          :position="{'lat': selectedDonation.address.coordinates.x , 'lng': selectedDonation.address.coordinates.y}", 
+          :opened="true"
+          @closeclick="selectedDonation={}")
+            div()
+              p
+                span.mb-2.font-weight-bold Foods:
+                br
+                span.mb-0(v-for="food, idx in selectedDonation.foods") {{food}}
+                  br
+              hr
+              p
+                span.mb-2.font-weight-bold Additional info:
+                br
+                span.mb-0 {{ selectedDonation.additionalInformation ? selectedDonation.additionalInformation : "#" }}
+              hr
+              p
+                span.mb-2.font-weight-bold Expiration date:
+                br
+                span.mb-0 {{ selectedDonation.expirationDate }}
+              b-button(v-if="this.selectedDonations.includes(this.selectedDonation)" variant="danger" block 
+              @click="deselectDonation()") deselect
+              b-button(v-else variant="success" block @click="selectDonation()") Submit
+    
             
       b-col
-        div.py-3.px-1(id="filters")
+        div.py-3.px-2(id="filters")
 
           div(class="b-flex flex-column")
 
@@ -131,7 +146,7 @@ export default Vue.extend({
         "clickableIcons": false },
       donations: new Array<Donation>(),
       selectedDonations: new Array<Donation>(),
-      selectedDonation: {} as Donation,
+      selectedDonation: null,
       pickUpDate: "",
       pickUpPeriod: "",
       isModalOpen: false
@@ -152,14 +167,18 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    selectDonation(donation: Donation) {
-      this.selectedDonation = donation;
-      // this.selectedDonations.push(donation);
-      // this.donations.splice(this.donations.findIndex(e => e._id == donation._id), 1)
+    toggleInfoWindow(donation: Donation) {
+      this.selectedDonation = this.selectedDonation ? null : donation;
     },
-    deselectDonation(donation: Donation) {
-      this.selectedDonations.splice(this.selectedDonations.findIndex(e => e._id == donation._id), 1)
-      this.donations.push(donation)
+    selectDonation() {
+      this.selectedDonations.push(this.selectedDonation);
+      this.donations.splice(this.donations.findIndex((e: Donation) => e._id == this.selectedDonation._id), 1)
+      this.selectedDonation = null;
+    },
+    deselectDonation() {
+      this.selectedDonations.splice(this.selectedDonations.findIndex((e: Donation) => e._id == this.selectedDonation._id), 1)
+      this.donations.push(this.selectedDonation)
+      this.selectedDonation = null;
     },
     filterDonations() {
       this.selectedDonations = [];

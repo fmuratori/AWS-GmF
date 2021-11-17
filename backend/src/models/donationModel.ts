@@ -25,7 +25,11 @@ const donationSchema = new mongoose.Schema({
             visualized: {
                 type: Boolean,
                 default: false
-            }
+            },
+            isEventMessage: {
+                type: Boolean,
+                default: false
+            },
         }],
         default: [],
         select: false,
