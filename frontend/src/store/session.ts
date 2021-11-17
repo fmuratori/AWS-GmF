@@ -33,10 +33,8 @@ const sessionModule = {
     },
     getSessionHeader(state: UserState): SessionHeader {
       return {
-        content: {
-          "x-access-token": state.token,
-          "x-user-id": state.userData._id,
-        },
+        "x-access-token": state.token,
+        "x-user-id": state.userData._id,
       } as SessionHeader;
     },
     userFullName(state: UserState): string {
