@@ -31,7 +31,7 @@ content-type: application/json
 }
 
 ### get data
-POST http://localhost:3000/api/user/get-data
+GET http://localhost:3000/api/user/get-data
 accept: application/json
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThkOWY1YTk3MzNiMDkxZDFkMjQ0NDQiLCJpYXQiOjE2MzcxNjI3NTQsImV4cCI6MTYzNzE3MzU1NH0.8eXH_ZEn5l7buycILNY-lPf8Qnfo3h9-p1BPQ-jZX1c

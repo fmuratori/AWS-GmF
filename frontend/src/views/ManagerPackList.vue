@@ -6,7 +6,7 @@ b-container
       h4.text-center.mb-4
         b AVAILABLE PACKS
       hr.sidebar-hr.my-3
-      
+
       b-row(v-if="this.$store.state.session.userData.type != 'user'")
         b-button-group(size="lg")
           b-button.btn-my(@click="changeView('my')") Only my
@@ -15,7 +15,7 @@ b-container
       hr.sidebar-hr.my-3
 
       b-row
-        b-col(lg="8" md="8" sm="12")
+        b-col(lg="8", md="8", sm="12")
           b-table(
             hover,
             striped,
@@ -25,7 +25,10 @@ b-container
           )
             template(#cell(status)="data")
               b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
-              b-badge(v-if="data.value == 'planned delivery'", variant="warning") {{ data.value }}
+              b-badge(
+                v-if="data.value == 'planned delivery'",
+                variant="warning"
+              ) {{ data.value }}
               b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
 
             template(#cell(details)="row")
@@ -34,7 +37,7 @@ b-container
             template(#cell(delete)="{ item }")
               b-button(variant="danger", @click="deletePack(item._id)") Delete
 
-        b-col(lg="4" md="4" sm="12")
+        b-col(lg="4", md="4", sm="12")
           b-card
             b-row(v-model="familyDetails")
               b-col(v-if="familyDetails != undefined")
@@ -92,6 +95,10 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
+
       // TODO: mostrare uno spinner mentre sono caricati i dati
       packApi
         .packList({})
@@ -162,8 +169,8 @@ export default Vue.extend({
         .foodList({ filter: { _id: foodIdList } })
         .then((r: AxiosResponse) => {
           this.foodDetails = r.data;
-          this.foodDetails.forEach(elem => {
-              elem.number = foodMap.get(elem._id)
+          this.foodDetails.forEach((elem) => {
+            elem.number = foodMap.get(elem._id);
           });
         })
         .catch(() => {

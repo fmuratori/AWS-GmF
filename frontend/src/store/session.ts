@@ -1,4 +1,7 @@
 import { SessionHeader, UserData, UserState } from "../types";
+import { AxiosResponse } from "axios";
+import api from "../api/user";
+import Vue from "vue";
 
 const sessionModule = {
   state: (): UserState => ({
@@ -23,7 +26,21 @@ const sessionModule = {
   }),
   getters: {
     isUserLogged(state: UserState): boolean {
+      console.log("loaggato?")
+      if (Vue.$cookies.get("jwt")) {
+        console.log("si")
+        api.loadData()
+          .then((r: AxiosResponse) => {
+            console.log(r.data)
+            sessionModule.mutations.login(state, {
+              token: Vue.$cookies.get("jwt"),
+              userData: r.data as UserData
+            })
+          })
+        return true;
+      }
       return state.token != "";
+
     },
     isUser(state: UserState): boolean {
       return state.userData.type == "user";
@@ -31,10 +48,10 @@ const sessionModule = {
     isVolunteer(state: UserState): boolean {
       return state.userData.type == "volunteer";
     },
-    getSessionHeader(state: UserState): SessionHeader {
+    getSessionHeader(): SessionHeader {
       return {
-        "x-access-token": state.token,
-        "x-user-id": state.userData._id,
+        "x-access-token": Vue.$cookies.get("jwt"),
+        "x-user-id": Vue.$cookies.get("user-id"),
       } as SessionHeader;
     },
     userFullName(state: UserState): string {
@@ -55,7 +72,7 @@ const sessionModule = {
     logout(state: UserState): void {
       state.token = "";
       state.userData = {} as UserData;
-    },
+    }
   },
   actions: {
     login({ commit }: any, payload: any): void {

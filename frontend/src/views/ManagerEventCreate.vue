@@ -6,7 +6,7 @@ b-container
       h4.text-center.mb-4
         b CREATE AN EVENT
       hr.sidebar-hr.my-3
-      
+
       b-form(@submit="createEvent")
         .mb4
           InputText(
@@ -104,6 +104,10 @@ export default Vue.extend({
 
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
+
       if ("event" in this.$route.params) {
         this.form = this.$route.params.event as unknown as EventPayload;
         this.submitLabel = "Edit";

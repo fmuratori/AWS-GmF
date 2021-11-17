@@ -34,7 +34,10 @@ b-container
             :class="{ 'my-button-selected': statusFilter == 'all' }"
           ) All reports
 
-      b-row.mb-2(no-gutters, v-if="this.$store.state.session.userData.type != 'user'")
+      b-row.mb-2(
+        no-gutters,
+        v-if="this.$store.state.session.userData.type != 'user'"
+      )
         b-col(cols="2")
           b Reporter:
         b-col
@@ -146,7 +149,9 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
 
       this.userRole = this.$store.state.session.userData.type;
 

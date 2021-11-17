@@ -217,6 +217,10 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
+
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) {
         this.donation = this.$route.params.donation as unknown as Donation;

@@ -6,7 +6,7 @@ const userController = new UserController()
 
 router.post('/register', userController.register)
 router.post('/login', userController.login)
-router.post('/get-data', userController.getData)
+router.get('/get-data', userController.getData)
 router.post('/update', userController.update)
 router.post('/upgrade', userController.upgrade)
 router.post('/change-password', userController.changePassword)

@@ -6,7 +6,7 @@ b-container
       h4.text-center.mb-4
         b CREATE A PACK
       hr.sidebar-hr.my-3
-      
+
       b-row
         b-col
           h4 About the family
@@ -37,7 +37,6 @@ b-container
             ) Cancel
           b-col
             b-button(block, variant="success", type="submit") Create
-
 </template>
 
 <script lang="ts">
@@ -71,6 +70,10 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
+
       if ("family" in this.$route.params) {
         this.family = this.$route.params.family as unknown as Family;
         this.form.familyId = this.family._id;

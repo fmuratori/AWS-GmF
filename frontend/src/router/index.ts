@@ -120,7 +120,7 @@ const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/manager/pack/list",
+    path: "/manager/pack/delivery",
     name: "ManagerPackDelivery",
     component: () =>
       import(
