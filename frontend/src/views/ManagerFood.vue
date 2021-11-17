@@ -39,12 +39,12 @@ b-container
                     v-on:data="(e) => { form.expirationDate = e; }"
                   )
 
-                  InputList(
-                    title="Labels:",
-                    placeholder="Insert label here",
-                    :labelList="form.labels",
-                    v-on:data="(e) => { form.labels = e; }"
-                  )
+                  b-form-group(label="Labels:")
+                    b-checkbox-group(
+                      v-model="form.labels",
+                      :options="availableLables",
+                      stacked
+                    )
 
                 b-button.b-card-footer-button(
                   block,
@@ -94,6 +94,15 @@ export default Vue.extend({
       } as FoodPayload,
       foodList: new Array<Food>(),
       tableFields: ["name", "number", "expirationDate", "labels"],
+      availableLables: [
+        { text: "Meat", value: "meat" },
+        { text: "Fish", value: "fish" },
+        { text: "Pasta", value: "pasta" },
+        { text: "Vegetable", value: "vegetable" },
+        { text: "Fruit", value: "fruit" },
+        { text: "Fresh", value: "fresh" },
+        { text: "Long life", value: "long-life" },
+      ],
       reloadIndex: 0,
     };
   },
@@ -176,7 +185,6 @@ export default Vue.extend({
       this.form.name = item.name;
       this.form.number = item.number;
       this.form.expirationDate = item.expirationDate;
-      this.form.labels = item.labels;
       console.log(this.form);
     },
   },
