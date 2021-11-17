@@ -181,11 +181,10 @@ export default Vue.extend({
       return moment(date).locale("en").format("LL");
     },
     load(item: SelectableFood) {
-      console.log(item);
       this.form.name = item.name;
       this.form.number = item.number;
       this.form.expirationDate = item.expirationDate;
-      console.log(this.form);
+      this.form.labels = item.labels
     },
   },
 });
