@@ -1,53 +1,58 @@
 <template lang="pug">
 b-container
-  .justify-content-center.my-5
-    h3 
-      b AVAILABLE PACKS
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b AVAILABLE PACKS
+      hr.sidebar-hr.my-3
+      
+      b-row(v-if="this.$store.state.session.userData.type != 'user'")
+        b-button-group(size="lg")
+          b-button.btn-my(@click="changeView('my')") Only my
+          b-button.btn-all(@click="changeView('all')") All
 
-    b-row(v-if="this.$store.state.session.userData.type != 'user'")
-      b-button-group(size="lg")
-        b-button.btn-my(@click="changeView('my')") Only my
-        b-button.btn-all(@click="changeView('all')") All
+      hr.sidebar-hr.my-3
 
-    b-row
-      b-col(cols="8")
-        b-table(
-          hover,
-          striped,
-          responsive,
-          :fields="tableFields",
-          :items="packList"
-        )
-          template(#cell(status)="data")
-            b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
-            b-badge(v-if="data.value == 'planned delivery'", variant="warning") {{ data.value }}
-            b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
+      b-row
+        b-col(lg="8" md="8" sm="12")
+          b-table(
+            hover,
+            striped,
+            responsive,
+            :fields="tableFields",
+            :items="packList"
+          )
+            template(#cell(status)="data")
+              b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
+              b-badge(v-if="data.value == 'planned delivery'", variant="warning") {{ data.value }}
+              b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
 
-          template(#cell(details)="row")
-            b-button(size="sm", @click="showDetails(row)") Show details
+            template(#cell(details)="row")
+              b-button(size="sm", @click="showDetails(row)") Show details
 
-          template(#cell(delete)="{ item }")
-            b-button(variant="danger", @click="deletePack(item._id)") Delete
+            template(#cell(delete)="{ item }")
+              b-button(variant="danger", @click="deletePack(item._id)") Delete
 
-      b-col(cols="4")
-        b-card
-          b-row(v-model="familyDetails")
-            b-col(v-if="familyDetails != undefined")
-              h4 Family
-              div
-                b name:
-                span {{ this.familyDetails.name }}
-              div 
-                b components:
-                span {{ this.familyDetails.components }}
-              div
-                b address:
-                span {{ formatAddress(this.familyDetails.address) }}
-          hr.sidebar-hr.my-3
-          b-row(v-model="foodDetails")
-            b-col(v-if="foodDetails != undefined")
-              h4 Food list
-              div(v-for="food in foodDetails") {{ food.number }}x {{ food.name }}
+        b-col(lg="4" md="4" sm="12")
+          b-card
+            b-row(v-model="familyDetails")
+              b-col(v-if="familyDetails != undefined")
+                h4 Family
+                div
+                  b name:
+                  span {{ this.familyDetails.name }}
+                div 
+                  b components:
+                  span {{ this.familyDetails.components }}
+                div
+                  b address:
+                  span {{ formatAddress(this.familyDetails.address) }}
+            hr.sidebar-hr.my-3
+            b-row(v-model="foodDetails")
+              b-col(v-if="foodDetails != undefined")
+                h4 Food list
+                div(v-for="food in foodDetails") {{ food.number }}x {{ food.name }}
 </template>
 
 <script lang="ts">

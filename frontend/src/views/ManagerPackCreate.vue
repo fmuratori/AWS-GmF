@@ -1,45 +1,43 @@
 <template lang="pug">
 b-container
   b-row.justify-content-md-center.my-5.no-gutters
-    b-col(lg=8, md=8, sm=12)
-
-    h3 
-      b CREATE A PACK
-    b-row
-      b-col
-        h4 About the family
-        b-row
-          b-col
-            span
-              b Name:
-            span {{ family.name }}
-          b-col
-            span 
-              b Components:
-            span {{ family.components }}
-
-        b-row
-          b-col
-            span
-              b Phone number:
-            span {{ family.phoneNumber }}
-          b-col
-            span
-              b Address:
-            span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
-
-    b-form(@submit="createPack")
-      FoodView(selectableItems, v-on:data="(e) => { this.foodList = e; }")
-
+    b-col
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b CREATE A PACK
+      hr.sidebar-hr.my-3
+      
       b-row
         b-col
-          b-button(
-            block,
-            variant="outline-danger",
-            @click="$router.push({ name: 'ManagerFamilies' })"
-          ) Cancel
-        b-col
-          b-button(block, variant="success", type="submit") Create
+          h4 About the family
+          div
+            b Name:
+            span {{ family.name }}
+          div 
+            b Components:
+            span {{ family.components }}
+          div
+            b Phone number:
+            span {{ family.phoneNumber }}
+          div
+            b Address:
+            span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
+
+      hr.sidebar-hr.my-3
+
+      b-form(@submit="createPack")
+        FoodView(selectableItems, v-on:data="(e) => { this.foodList = e; }")
+
+        b-row
+          b-col
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.push({ name: 'ManagerFamilies' })"
+            ) Cancel
+          b-col
+            b-button(block, variant="success", type="submit") Create
+
 </template>
 
 <script lang="ts">

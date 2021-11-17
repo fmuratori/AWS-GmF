@@ -1,60 +1,64 @@
 <template lang="pug">
 b-container
-  .justify-content-md-center.my-5.no-gutters
-    h3
-      b ADD FOOD
-    b-row
-      b-col(sm=12, md=4)
-        b-form(@submit="addFood")
-          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-            b-card-text
-              b-card-header Add food
-              .px-4.pt-4
-                InputText(
-                  title="Name:",
-                  placeholder="Insert food name here",
-                  :text="form.name",
-                  required,
-                  v-on:data="(e) => { form.name = e; }"
-                )
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b ADD FOOD
+      hr.sidebar-hr.my-3
 
-                InputText(
-                  title="Units: ",
-                  placeholder="Insert food units here",
-                  type="number",
-                  :text="form.number",
-                  required,
-                  v-on:data="(e) => { form.number = e; }"
-                )
+      b-row
+        b-col(sm=12, md=4)
+          b-form(@submit="addFood")
+            b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+              b-card-text
+                b-card-header Add food
+                .px-4.pt-4
+                  InputText(
+                    title="Name:",
+                    placeholder="Insert food name here",
+                    :text="form.name",
+                    required,
+                    v-on:data="(e) => { form.name = e; }"
+                  )
 
-                InputDate(
-                  title="Expiration date:",
-                  placeholder="Select the expiration date",
-                  :date="form.expirationDate",
-                  required,
-                  v-on:data="(e) => { form.expirationDate = e; }"
-                )
+                  InputText(
+                    title="Units: ",
+                    placeholder="Insert food units here",
+                    type="number",
+                    :text="form.number",
+                    required,
+                    v-on:data="(e) => { form.number = e; }"
+                  )
 
-                InputList(
-                  title="Labels:",
-                  placeholder="Insert label here",
-                  :labelList="form.labels",
-                  v-on:data="(e) => { form.labels = e; }"
-                )
+                  InputDate(
+                    title="Expiration date:",
+                    placeholder="Select the expiration date",
+                    :date="form.expirationDate",
+                    required,
+                    v-on:data="(e) => { form.expirationDate = e; }"
+                  )
 
-              b-button.b-card-footer-button(
-                block,
-                type="submit",
-                variant="success"
-              ) Add
+                  InputList(
+                    title="Labels:",
+                    placeholder="Insert label here",
+                    :labelList="form.labels",
+                    v-on:data="(e) => { form.labels = e; }"
+                  )
 
-      b-col(sm=12, md=8)
-        FoodView(
-          :key="reloadIndex",
-          loadableItems,
-          deletableItem,
-          v-on:load="(e) => load(e)"
-        )
+                b-button.b-card-footer-button(
+                  block,
+                  type="submit",
+                  variant="success"
+                ) Add
+
+        b-col(sm=12, md=8)
+          FoodView(
+            :key="reloadIndex",
+            loadableItems,
+            deletableItem,
+            v-on:load="(e) => load(e)"
+          )
 </template>
 
 <script lang="ts">

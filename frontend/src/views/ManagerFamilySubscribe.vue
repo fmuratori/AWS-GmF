@@ -2,9 +2,11 @@
 b-container
   b-row.justify-content-md-center.my-5.no-gutters
     b-col(lg=8, md=10, sm=12)
-      .mb-4
-        h4
-          p REPORT A FAMILY
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b REPORT A FAMILY
+      hr.sidebar-hr.my-3
+      
       b-form(@submit="submit")
         .mb4
           InputText(

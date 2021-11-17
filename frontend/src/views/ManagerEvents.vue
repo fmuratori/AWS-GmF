@@ -1,33 +1,38 @@
 <template lang="pug">
 b-container
-  .justify-content-center.my-5
-    h3 YOUR EVENTS
-    b-row
-      div(v-if="events.length == 0") No event found for this user
-      b-table(v-else, hover, striped, :fields="tableFields", :items="events")
-        template(#cell(show_description)="row")
-          b-button(@click="row.toggleDetails", size="sm") {{ row.detailsShowing ? 'Hide' : 'Show' }} description
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b YOUR EVENTS
+      hr.sidebar-hr.my-3
 
-        template(#row-details="row")
-          b-card 
-            b-row
-              b-col {{ row.item.description }}
+      b-row
+        div(v-if="events.length == 0") No event found for this user
+        b-table(v-else, hover, striped, :fields="tableFields", :items="events")
+          template(#cell(show_description)="row")
+            b-button(@click="row.toggleDetails", size="sm") {{ row.detailsShowing ? 'Hide' : 'Show' }} description
 
-        template(#cell(edit)="{ item }") 
-          b-button(
-            block,
-            variant="success",
-            size="sm",
-            @click="$router.push({ name: 'ManagerEventCreate', params: { event: item } })"
-          ) Edit
+          template(#row-details="row")
+            b-card 
+              b-row
+                b-col {{ row.item.description }}
 
-        template(#cell(delete)="{ item }") 
-          b-button(
-            block,
-            variant="danger",
-            size="sm",
-            @click="deleteEvent(item._id)"
-          ) Delete
+          template(#cell(edit)="{ item }") 
+            b-button(
+              block,
+              variant="success",
+              size="sm",
+              @click="$router.push({ name: 'ManagerEventCreate', params: { event: item } })"
+            ) Edit
+
+          template(#cell(delete)="{ item }") 
+            b-button(
+              block,
+              variant="danger",
+              size="sm",
+              @click="deleteEvent(item._id)"
+            ) Delete
 </template>
 
 <script lang="ts">
