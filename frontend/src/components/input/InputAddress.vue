@@ -6,6 +6,7 @@ b-form-group(:label="title")
       required,
       type="text",
       v-model="address.city"
+      @input="$emit('data', address)"
     )
 
   b-form-group(label="Street", label-cols-sm="3", label-align-sm="right")
@@ -14,6 +15,7 @@ b-form-group(:label="title")
       required,
       type="text",
       v-model="address.street"
+      @input="$emit('data', address)"
     )
 
   b-form-group(label="Civic", label-cols-sm="3", label-align-sm="right")
@@ -22,6 +24,7 @@ b-form-group(:label="title")
       required,
       type="text",
       v-model="address.civicNumber"
+      @input="$emit('data', address)"
     )
 
   .text-center
