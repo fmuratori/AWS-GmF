@@ -237,7 +237,7 @@ export default Vue.extend({
     },
     sendMessage(event) {
       event.preventDefault();
-      this.$store.emit("sendMessage", {
+      this.$store.dispatch("sendMessage", {
         donationId: this.donation._id,
         message: this.chatMessage,
         isEventMessage: false,

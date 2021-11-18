@@ -132,12 +132,12 @@ content-type: application/json
 
 {
     "filter": {
-        "userId": "6183af3dabd629ea28db1cd9",
+        "userId": "618d34246460d3f4899710c8",
         "chat": {
             "$elemMatch": {
                 "visualized": false,
                 "userId": { 
-                    "$ne": "61854d752b246626dc5ff76e" 
+                    "$ne": "618d34246460d3f4899710c8" 
                 }
             }
         }

@@ -3,98 +3,80 @@ b-container
   b-row.justify-content-center.my-5.no-gutters
     b-col(lg=6, md=10, sm=12)
     
-          h4.mb-5.text-center CREATE A DONATION
-          b-form(@submit="submit")
-            .mb-4
-              InputList(
-                title="Foods:",
-                placeholder="Insert foods here",
-                v-on:data="(e) => { form.foods = e; }"
-              )
+      h4.mb-5.text-center CREATE A DONATION
+      b-form(@submit="submit")
+        .mb-4
+          InputList(
+            title="Foods:",
+            placeholder="Insert foods here",
+            :labelList="form.foods",
+            v-on:data="(e) => { form.foods = e; }"
+          )
 
-            .mb-4
-              InputDate(
-                title="Expiration date:",
-                placeholder="Select a date",
-                :date="form.expirationDate",
-                required,
-                v-on:data="(e) => { form.expirationDate = e; }"
-              )
+        .mb-4
+          InputDate(
+            title="Expiration date:",
+            placeholder="Select a date",
+            :date="form.expirationDate",
+            required,
+            v-on:data="(e) => { form.expirationDate = e; }"
+          )
 
-            .mb-4
-              InputTextarea(
-                title="Additional information:",
-                placeholder="Insert additional information here",
-                :text="form.additionalInformation",
-                v-on:data="(e) => { form.additionalInformation = e; }"
-              )
-            hr
-            //- .mb-4
-            //-   p.font-weight-bold.text-center Pick Up periods
-            //-   b-row.mb-1(
-            //-     v-for="(weekDayName, weekDay, idx) in weekDays",
-            //-     :index="idx"
-            //-   )
-            //-     b-col(lg="3" md="3" sm="12")
-            //-       label {{ weekDayName }}
-            //-     b-col(lg="9" md="9" sm="12")
-            //-       b-button-group.d-flex
-            //-         b-button(
-            //-           @click="weekDayButtonClick(weekDay, 'morning')",
-            //-           :variant="computeButtonVariant(weekDay, 'morning')"
-            //-         ) Morning
-            //-         b-button(
-            //-           @click="weekDayButtonClick(weekDay, 'afternoon')",
-            //-           :variant="computeButtonVariant(weekDay, 'afternoon')"
-            //-         ) Afternoon
-            //-         b-button(
-            //-           @click="weekDayButtonClick(weekDay, 'evening')",
-            //-           :variant="computeButtonVariant(weekDay, 'evening')"
-            //-         ) Evening
+        .mb-4
+          InputTextarea(
+            title="Additional information:",
+            placeholder="Insert additional information here",
+            :text="form.additionalInformation",
+            v-on:data="(e) => { form.additionalInformation = e; }"
+          )
+        hr
 
-            .mb-4
-              p.font-weight-bold.text-center Pick Up periods
-              div.mb-1(
-                v-for="(weekDayName, weekDay, idx) in weekDays",
-                :index="idx"
-              )
-                b-form-group(:label="weekDayName", label-cols-sm="3", label-align-sm="right")
-                  b-button-group.d-flex
-                    b-button(
-                      @click="weekDayButtonClick(weekDay, 'morning')",
-                      :variant="computeButtonVariant(weekDay, 'morning')"
-                    ) Morning
-                    b-button(
-                      @click="weekDayButtonClick(weekDay, 'afternoon')",
-                      :variant="computeButtonVariant(weekDay, 'afternoon')"
-                    ) Afternoon
-                    b-button(
-                      @click="weekDayButtonClick(weekDay, 'evening')",
-                      :variant="computeButtonVariant(weekDay, 'evening')"
-                    ) Evening
-            hr
-            .mb-4
-              InputAddress(
-                title="Location",
-                @onAddressUpdate="onAddressUpdate")
-            hr
-            
-            //- .mb-4
-            //-   InputAddress(
-            //-     title="Location",
-            //-     v-on:data="(e) => { form.address = e; }"
-            //-   )
-
-            b-row
-              b-col
+        .mb-4
+          p.font-weight-bold.text-center Pick Up periods
+          div.mb-1(
+            v-for="(weekDayName, weekDay, idx) in weekDays",
+            :index="idx"
+          )
+            b-form-group(:label="weekDayName", label-cols-sm="3", label-align-sm="right")
+              b-button-group.d-flex
                 b-button(
-                  block,
-                  variant="outline-danger",
-                  @click="$router.replace({ name: 'Home' })",
-                  type="reset"
-                ) Cancel
-              b-col
-                b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+                  @click="weekDayButtonClick(weekDay, 'morning')",
+                  :variant="computeButtonVariant(weekDay, 'morning')"
+                ) Morning
+                b-button(
+                  @click="weekDayButtonClick(weekDay, 'afternoon')",
+                  :variant="computeButtonVariant(weekDay, 'afternoon')"
+                ) Afternoon
+                b-button(
+                  @click="weekDayButtonClick(weekDay, 'evening')",
+                  :variant="computeButtonVariant(weekDay, 'evening')"
+                ) Evening
+        hr
+        .mb-4
+          InputAddress(
+            title="Location",
+            :city="form.address.city",
+            :street="form.address.street",
+            :civic="form.address.civicNumber",
+            @onAddressUpdate="onAddressUpdate")
+        hr
+        
+        //- .mb-4
+        //-   InputAddress(
+        //-     title="Location",
+        //-     v-on:data="(e) => { form.address = e; }"
+        //-   )
+
+        b-row
+          b-col
+            b-button(
+              block,
+              variant="outline-danger",
+              @click="$router.push({ name: 'Home' })",
+              type="reset"
+            ) Cancel
+          b-col
+            b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
@@ -106,7 +88,7 @@ import InputList from "../components/input/InputList.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 
-import { Address, DonationCreationPayload } from "../types";
+import { Address, Donation } from "../types";
 
 import api from "../api/donation";
 import { CreatedonationView } from "../viewTypes";
@@ -148,7 +130,7 @@ export default Vue.extend({
         } as Address,
         additionalInformation: "",
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
-      } as DonationCreationPayload,
+      } as Donation,
       submitLabel: "Create",
     };
   },
@@ -159,13 +141,11 @@ export default Vue.extend({
       this.form.address = this.$store.state.session.userData.address;
 
       if ("donation" in this.$route.params) {
-        this.form = this.$route.params
-          .donation as unknown as DonationCreationPayload;
+        this.form = JSON.parse(this.$route.params.donation) as Donation;
         //ccreate an empty textbox
-        this.form.foods.push("");
         this.submitLabel = "Edit";
       }
-    } else this.$router.replace({ name: "Login" });
+    } else this.$router.push({ name: "Login" });
   },
   methods: {
     onAddressUpdate(address: Address) {
@@ -204,20 +184,21 @@ export default Vue.extend({
       if (this.formChecks()) {
         fun(this.form)
           .then((r: AxiosResponse) => {
-            if (r.status == 200) {
+            if (r.status == 200 && "donation" in this.$route.params) {
               this.$store.dispatch("sendMessage", {
-                donationId: this.donation._id,
+                donationId: this.form._id,
                 message: "Donation modified by the owner.",
                 isEventMessage: true,
               })
-              this.$router.replace({ name: "ManagerDonationsUserList" });
-              this.$root.$bvToast.toast(`Donation successfully elaborated.`, {
+            } else {
+              this.$root.$bvToast.toast(`Donation created successfully.`, {
                 title: "Donation",
                 autoHideDelay: 5000,
                 variant: "success",
                 appendToast: false,
               });
             }
+            this.$router.push({ name: "ManagerDonationsUserList" });
           })
           .catch((e: AxiosError): void => {
             console.log(e);
@@ -234,7 +215,7 @@ export default Vue.extend({
       }
     },
     formChecks(): boolean {
-      if (!this.form.pickUpPeriod.length) {
+      if (!this.form.pickUpPeriod.length || !this.form.expirationDate) {
         this.$root.$bvToast.toast(
           `Select al least one day and period of the day when we can retrive your donation.`,
           {

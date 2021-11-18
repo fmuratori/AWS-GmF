@@ -119,14 +119,14 @@ const routes: Array<RouteConfig> = [
         /* webpackChunkName: "ManagerPackList" */ "../views/ManagerPackList.vue"
       ),
   },
-  {
-    path: "/manager/pack/list",
-    name: "ManagerPackDelivery",
-    component: () =>
-      import(
-        /* webpackChunkName: "ManagerPackDelivery" */ "../views/ManagerPackDelivery.vue"
-      ),
-  },
+  // {
+  //   path: "/manager/pack/list",
+  //   name: "ManagerPackDelivery",
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "ManagerPackDelivery" */ "../views/ManagerPackDelivery.vue"
+  //     ),
+  // },
 ];
 
 const router = new VueRouter({

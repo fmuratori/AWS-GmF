@@ -20,7 +20,6 @@ b-form-group(:label="title"  label-class="font-weight-bold pt-0 text-center")
   b-form-group(label="Civic", label-cols-sm="3", label-align-sm="right")
     b-form-input(
       placeholder="Insert civic number here",
-      required,
       type="text",
       v-model="address.civicNumber"
     )
@@ -97,7 +96,6 @@ export default Vue.extend({
             this.address.street
         )
         .then((r:any) => {
-          console.log(r)
           if (r.status == 200) {
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>

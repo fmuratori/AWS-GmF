@@ -11,7 +11,7 @@ b-form-group(:label="title" label-cols-sm="3", label-align-sm="right")
     )
     b-input-group-append
       b-button.my-no-left-border(
-        :variant="!selectedDate ? 'outline-danger' : 'danger'",
+        :variant="!dateModel ? 'outline-danger' : 'danger'",
         @click="onCancel",
         :disabled="dateModel == ''"
       ) 
