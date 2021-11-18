@@ -1,60 +1,64 @@
 <template lang="pug">
 b-container
-  .justify-content-md-center.my-5.no-gutters
-    h3
-      b ADD FOOD
-    b-row
-      b-col(sm=12, md=4)
-        b-form(@submit="addFood")
-          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-            b-card-text
-              b-card-header Add food
-              .px-4.pt-4
-                InputText(
-                  title="Name:",
-                  placeholder="Insert food name here",
-                  :text="form.name",
-                  required,
-                  v-on:data="(e) => { form.name = e; }"
-                )
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b ADD FOOD
+      hr.sidebar-hr.my-3
 
-                InputText(
-                  title="Units: ",
-                  placeholder="Insert food units here",
-                  type="number",
-                  :text="form.number",
-                  required,
-                  v-on:data="(e) => { form.number = e; }"
-                )
+      b-row
+        b-col(sm=12, md=4)
+          b-form(@submit="addFood")
+            b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+              b-card-text
+                b-card-header Add food
+                .px-4.pt-4
+                  InputText(
+                    title="Name:",
+                    placeholder="Insert food name here",
+                    :text="form.name",
+                    required,
+                    v-on:data="(e) => { form.name = e; }"
+                  )
 
-                InputDate(
-                  title="Expiration date:",
-                  placeholder="Select the expiration date",
-                  :date="form.expirationDate",
-                  required,
-                  v-on:data="(e) => { form.expirationDate = e; }"
-                )
+                  InputText(
+                    title="Units: ",
+                    placeholder="Insert food units here",
+                    type="number",
+                    :text="form.number",
+                    required,
+                    v-on:data="(e) => { form.number = e; }"
+                  )
 
-                InputList(
-                  title="Labels:",
-                  placeholder="Insert label here",
-                  :labelList="form.labels",
-                  v-on:data="(e) => { form.labels = e; }"
-                )
+                  InputDate(
+                    title="Expiration date:",
+                    placeholder="Select the expiration date",
+                    :date="form.expirationDate",
+                    required,
+                    v-on:data="(e) => { form.expirationDate = e; }"
+                  )
 
-              b-button.b-card-footer-button(
-                block,
-                type="submit",
-                variant="success"
-              ) Add
+                  b-form-group(label="Labels:")
+                    b-checkbox-group(
+                      v-model="form.labels",
+                      :options="availableLables",
+                      stacked
+                    )
 
-      b-col(sm=12, md=8)
-        FoodView(
-          :key="reloadIndex",
-          loadableItems,
-          deletableItem,
-          v-on:load="(e) => load(e)"
-        )
+                b-button.b-card-footer-button(
+                  block,
+                  type="submit",
+                  variant="success"
+                ) Add
+
+        b-col(sm=12, md=8)
+          FoodView(
+            :key="reloadIndex",
+            loadableItems,
+            deletableItem,
+            v-on:load="(e) => load(e)"
+          )
 </template>
 
 <script lang="ts">
@@ -90,12 +94,25 @@ export default Vue.extend({
       } as FoodPayload,
       foodList: new Array<Food>(),
       tableFields: ["name", "number", "expirationDate", "labels"],
+      availableLables: [
+        { text: "Meat", value: "meat" },
+        { text: "Fish", value: "fish" },
+        { text: "Pasta", value: "pasta" },
+        { text: "Vegetable", value: "vegetable" },
+        { text: "Fruit", value: "fruit" },
+        { text: "Fresh", value: "fresh" },
+        { text: "Long life", value: "long-life" },
+      ],
       reloadIndex: 0,
     };
   },
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
+
       //populate the food list
       api
         .foodList({})
@@ -168,12 +185,10 @@ export default Vue.extend({
       return moment(date).locale("en").format("LL");
     },
     load(item: SelectableFood) {
-      console.log(item);
       this.form.name = item.name;
       this.form.number = item.number;
       this.form.expirationDate = item.expirationDate;
       this.form.labels = item.labels;
-      console.log(this.form);
     },
   },
 });

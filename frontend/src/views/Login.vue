@@ -186,6 +186,9 @@ export default Vue.extend({
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });
 
+              this.$cookies.set("jwt", data.token)
+              this.$cookies.set("user-id", data.user._id)
+
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(
                 "login",

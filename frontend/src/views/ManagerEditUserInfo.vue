@@ -1,10 +1,11 @@
 <template lang="pug">
 b-container
   b-row.justify-content-md-center.my-5.no-gutters
-    b-col(cols="6")
-      .mb-4
-        h4
-          b CHANGE PASSWORD
+    b-col(lg=6, md=10, sm=12)
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b CHANGE PASSWORD
+      hr.sidebar-hr.my-3
 
       .mb-4
         b-form(@submit="changePassword")
@@ -30,11 +31,10 @@ b-container
           b-col
             b-button(block, variant="success", type="submit") Edit
 
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col(cols="6")
-      .mb-4
-        h4
-          b EDIT USER INFO
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b EDIT USER INFO
+      hr.sidebar-hr.my-3
 
       b-form(@submit="editUser")
         .mb-4
@@ -75,8 +75,6 @@ b-container
             :text="editUserForm.phoneNumber",
             v-on:data="(e) => { editUserForm.phoneNumber = e; }"
           )
-
-        hr
 
         .mb-4
           InputAddress(
@@ -142,6 +140,10 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
+
       this.editUserForm = this.$store.state.session.userData;
       this.changePasswordForm.id = this.$store.state.session.userData._id;
     } else this.$router.push({ name: "Login" });

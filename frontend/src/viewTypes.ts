@@ -36,6 +36,7 @@ export interface FoodManagerView {
   form: FoodPayload;
   foodList: Array<Food>;
   tableFields: Array<string>;
+  availableLables: Array<{ text: string, value: string }>;
   reloadIndex: number;
 }
 

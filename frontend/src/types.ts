@@ -24,10 +24,8 @@ export interface LoginPayload {
 }
 
 export interface SessionHeader {
-  content: {
-    "x-access-token": string;
-    "x-user-id": string;
-  };
+  "x-access-token": string;
+  "x-user-id": string;
 }
 
 export interface RegistrationPayload {

@@ -1,102 +1,189 @@
 <template lang="pug">
-b-container.justify-content-center.my-5
-  p TUE SEGNALAZIONI
-
-  b-row.mb-2(no-gutters)
-    b-col(cols="auto")
-      p Stato segnalazioni:
+b-container
+  b-row.justify-content-md-center.my-5.no-gutters
     b-col
-      b-button.ml-2(
-        pill,
-        variant="secondary",
-        size="sm",
-        @click="filterBy('verified')",
-        :class="{ 'my-button-selected': filterByMode == 'verified' }"
-      ) Segnalazioni accettate
-      b-button.ml-2(
-        pill,
-        variant="secondary",
-        size="sm",
-        @click="filterBy('pending')",
-        :class="{ 'my-button-selected': filterByMode == 'pending' }"
-      ) In attesa di accettazione
-      b-button.ml-2(
-        pill,
-        variant="secondary",
-        size="sm",
-        @click="filterBy('all')",
-        :class="{ 'my-button-selected': filterByMode == 'all' }"
-      ) Tutte le segnalazioni
+      //-     b-button.ml-2(
+      //-       pill,
+      //-       variant="secondary",
+      //-       size="sm",
+      //-       @click="orderBy('creation_date')",
+      //-       :class="{ 'my-button-selected': orderByMode == 'creation_date' }"
+      //-     ) Data creazione
 
-  b-row.mb-2(no-gutters)
-    b-col(cols="auto")
-    p Ordina per:
-    b-col
-      b-button.ml-2(
-        pill,
-        variant="secondary",
-        size="sm",
-        @click="orderBy('creation_date')",
-        :class="{ 'my-button-selected': orderByMode == 'creation_date' }"
-      ) Data creazione
+      //- b-row
+      //-   b-col(v-if="familyList.length == 0", sm=12, md=6)
+      //-     p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-  b-row
-    b-col(v-if="familyList.length == 0", sm=12, md=6)
-      p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
+      //-   b-col(
+      //-     v-else,
+      //-     sm=12,
+      //-     md=6,
+      //-     v-for="(family, idx) in familyList",
+      //-     :key="idx"
+      //-   )
+      //-     b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+      //-       b-card-text
+      //-         .p-4
+      //-           h5 {{ family.name }}
+      //-           b-row
+      //-             b-col(cols="auto")
+      //-               div(class="")
+      //-                 p.mb-0 Phone number:
+      //-                 p.font-weight-bold.mb-2 {{ family.phoneNumber }}
 
-    b-col(
-      v-else,
-      sm=12,
-      md=6,
-      v-for="(family, idx) in familyList",
-      :key="idx"
-    )
-      b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-        b-card-text
-          .p-4
-            h5 {{ family.name }}
-            b-row
-              b-col(cols="auto")
-                div(class="")
-                  p.mb-0 Phone number:
-                  p.font-weight-bold.mb-2 {{ family.phoneNumber }}
+      //-               div(class="")
+      //-                 p.mb-0 Family size:
+      //-                 p.font-weight-bold.mb-2 {{ family.components }}
+                    
+      //-               div
+      //-                 p.mb-0 Address:
+      //-                 b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
 
-                div(class="")
-                  p.mb-0 Family size:
-                  p.font-weight-bold.mb-2 {{ family.components }}
-                
-                div
-                  p.mb-0 Address:
-                  b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
+      //-             b-col(cols="auto")
+      //-               div
+      //-                 p.mb-0 Status:
+      //-                   b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
+      //-                   b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
 
-              b-col(cols="auto")
-                div
-                  p.mb-0 Status:
-                    b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-                    b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
+      //-         b-button.b-card-footer-button(
+      //-           block,
+      //-           :disabled="family.status == 'verified'",
+      //-           variant="success",
+      //-           @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
+      //-         ) EDIT
 
-          b-button.b-card-footer-button(
-            block,
-            :disabled="family.status == 'verified'",
-            variant="success",
-            @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
-          ) EDIT
+      //-         b-button.b-card-footer-button(
+      //-           block,
+      //-           v-if="userRole == 'trusted'",
+      //-           :disabled="family.status == 'verified'",
+      //-           variant="warning",
+      //-           @click="verifyFamily(family._id)"
+      //-         ) VERIFY
 
-          b-button.b-card-footer-button(
-            block,
-            v-if="userRole == 'trusted'",
-            :disabled="family.status == 'verified'",
-            variant="warning",
-            @click="verifyFamily(family._id)"
-          ) VERIFY
+      //-         b-button.b-card-footer-button(
+      //-           block,
+      //-           v-if="userRole != 'user'",
+      //-           variant="primary",
+      //-           :disabled="family.status != 'verified'",
+      //-           @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
+      //-         ) PACK
+      hr.sidebar-hr.my-3
+      h4.text-center.mb-4
+        b(v-if="this.$store.state.session.userData.type == 'user'") YOUR FAMILY REPORTS
+        b(v-else) FAMILY REPORTS
+      hr.sidebar-hr.my-3
 
-          b-button.b-card-footer-button(
-            block,
-            v-if="userRole != 'user'",
-            variant="primary",
-            :disabled="family.status != 'verified'",
-            @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
-          ) PACK
+      b-row.mb-2(no-gutters)
+        b-col(cols="2")
+          b Report status:
+        b-col
+          b-button.ml-2(
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="filterBy('verified', reporterFilter)",
+            :class="{ 'my-button-selected': statusFilter == 'verified' }"
+          ) Verified reports
+          b-button.ml-2(
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="filterBy('pending', reporterFilter)",
+            :class="{ 'my-button-selected': statusFilter == 'pending' }"
+          ) Pending reports
+          b-button.ml-2(
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="filterBy('all', reporterFilter)",
+            :class="{ 'my-button-selected': statusFilter == 'all' }"
+          ) All reports
+
+      b-row.mb-2(
+        no-gutters,
+        v-if="this.$store.state.session.userData.type != 'user'"
+      )
+        b-col(cols="2")
+          b Reporter:
+        b-col
+          b-button.ml-2(
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="filterBy(statusFilter, 'me')",
+            :class="{ 'my-button-selected': reporterFilter == 'me' }"
+          ) Me
+          b-button.ml-2(
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="filterBy(statusFilter, 'all')",
+            :class="{ 'my-button-selected': reporterFilter == 'all' }"
+          ) All
+
+      b-row
+        b-col(v-if="familyList.length == 0", sm=12, md=6)
+          p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
+
+        b-col(
+          v-else,
+          sm=12,
+          md=6,
+          v-for="(family, idx) in familyList",
+          :key="idx"
+        )
+          b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+            template(#header)
+              h5
+                b {{ family.name }}
+                span.float-right
+                  b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
+                  b-badge(
+                    v-if="family.status == 'verified'",
+                    variant="success"
+                  ) {{ family.status }}
+            b-card-text
+              .px-4.pt-4.pb-4
+                b-row
+                  b-col(cols="auto")
+                    div(class="")
+                      span.mb-0 Phone number:
+                      span.font-weight-bold.mb-2 {{ family.phoneNumber }}
+
+                    div(class="")
+                      span.mb-0 Components:
+                      span.font-weight-bold.mb-2 {{ family.components }}
+
+                    div(class="")
+                      span.mb-0 Address:
+                      span.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
+                  b-col(cols="auto")
+
+              b-button-group.d-flex(v-if="family.status == 'pending'")
+                b-button.b-card-footer-button(
+                  variant="success",
+                  @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
+                ) EDIT
+
+                b-button.b-card-footer-button(
+                  variant="danger",
+                  @click="deleteFamily(family._id)"
+                ) DELETE
+
+              b-button.b-card-footer-button(
+                block,
+                v-if="userRole == 'trusted'",
+                :disabled="family.status == 'verified'",
+                variant="warning",
+                @click="verifyFamily(family._id)"
+              ) VERIFY
+
+              b-button.b-card-footer-button(
+                block,
+                v-if="userRole != 'user' && family.status == 'verified'",
+                variant="primary",
+                @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
+              ) PACK
 </template>
 
 <script lang="ts">
@@ -118,7 +205,8 @@ export default Vue.extend({
   data: () => {
     return {
       userRole: "",
-      filterByMode: "all",
+      statusFilter: "all",
+      reporterFilter: "me",
       orderByMode: "creation_date",
       familyList: new Array<Family>(),
     };
@@ -126,7 +214,9 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      this.$store.dispatch("showSidebar");
+      if (!this.$store.getters.isMediumScreenWidth) {
+        this.$store.dispatch("showSidebar");
+      }
 
       this.userRole = this.$store.state.session.userData.type;
 
@@ -184,20 +274,36 @@ export default Vue.extend({
           );
         });
     },
-    filterBy(filterByMode: "verified" | "pending" | "all"): void {
-      if (this.filterByMode == filterByMode) return;
+    filterBy(
+      statusFilter: "verified" | "pending" | "all",
+      reporterFilter: "me" | "all"
+    ): void {
+      if (
+        this.statusFilter == statusFilter &&
+        this.reporterFilter == reporterFilter
+      )
+        return;
+      else if (this.statusFilter != statusFilter)
+        this.statusFilter = statusFilter;
+      else if (this.reporterFilter != reporterFilter)
+        this.reporterFilter = reporterFilter;
+      else return;
 
       var payload = { filter: {} };
 
-      switch (filterByMode) {
+      switch (statusFilter) {
         case "verified":
         case "pending":
-          payload.filter["filterByMode"] = filterByMode;
+          payload.filter["status"] = statusFilter;
           break;
         default:
       }
-
-      this.filterByMode = filterByMode;
+      switch (reporterFilter) {
+        case "me":
+          payload.filter["reporterId"] = this.$store.state.session.userData._id;
+          break;
+        default:
+      }
 
       api
         .familyList(payload)
@@ -216,15 +322,29 @@ export default Vue.extend({
           );
         });
     },
-    orderBy(mode: string): void {
-      this.orderByMode = mode;
-      switch (mode) {
-        case "creation_date":
-          this.familyList.sort(this.creationDateComparer);
-          break;
-        default:
-          null;
-      }
+    deleteFamily(id: string): void {
+      api
+        .deleteFamily({ id: id })
+        .then((): void => {
+          this.familyList = this.familyList.filter((e) => e._id != id);
+          this.$root.$bvToast.toast(`Family successfully deleted.`, {
+            title: "Family",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to delete family. Retry later or contact us if the problem persist.`,
+            {
+              title: "Family",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
     },
   },
 });

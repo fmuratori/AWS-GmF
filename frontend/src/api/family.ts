@@ -35,4 +35,12 @@ export default {
       { headers: store.getters.getSessionHeader }
     );
   },
+
+  async deleteFamily(payload: { id: string }): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/family/delete`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
 };

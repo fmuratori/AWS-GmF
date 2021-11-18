@@ -92,9 +92,14 @@ export default Vue.extend({
       this.$store.dispatch("toggleSidebar");
     },
     logout() {
+      this.$cookies.remove("jwt")
+      this.$cookies.remove("user-id")
+
       this.$socket.emit("logout", this.$store.state.session.userData._id);
       this.$store.dispatch("logout");
-      this.changePage("Home");
+      // this.changePage("Home");
+      this.$router.go()
+
       this.$store.dispatch("hideSidebar");
     },
     routeToDonations() {

@@ -23,6 +23,13 @@ export default {
     );
   },
 
+  async loadData(): Promise<AxiosResponse> {
+    return axios.get(
+      `${process.env.VUE_APP_API_URL}/api/user/get-data`,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
+
   async editUser(payload: editUserPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/user/update`,
