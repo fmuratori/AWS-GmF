@@ -26,21 +26,17 @@ const sessionModule = {
   }),
   getters: {
     isUserLogged(state: UserState): boolean {
-      console.log("loaggato?")
       if (Vue.$cookies.get("jwt")) {
-        console.log("si")
         api.loadData()
           .then((r: AxiosResponse) => {
-            console.log(r.data)
             sessionModule.mutations.login(state, {
               token: Vue.$cookies.get("jwt"),
-              userData: r.data as UserData
-            })
-          })
+              userData: r.data as UserData,
+            });
+          });
         return true;
       }
       return state.token != "";
-
     },
     isUser(state: UserState): boolean {
       return state.userData.type == "user";
@@ -72,7 +68,7 @@ const sessionModule = {
     logout(state: UserState): void {
       state.token = "";
       state.userData = {} as UserData;
-    }
+    },
   },
   actions: {
     login({ commit }: any, payload: any): void {

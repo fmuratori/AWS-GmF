@@ -20,8 +20,8 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
-import vueCookies from "vue-cookies"
-Vue.use(vueCookies)
+import vueCookies from "vue-cookies";
+Vue.use(vueCookies);
 
 /* socketio vuejs based implementation */
 import vueSocket from "./socket";
