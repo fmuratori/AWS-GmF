@@ -27,13 +27,12 @@ const sessionModule = {
   getters: {
     isUserLogged(state: UserState): boolean {
       if (Vue.$cookies.get("jwt")) {
-        api.loadData()
-          .then((r: AxiosResponse) => {
-            sessionModule.mutations.login(state, {
-              token: Vue.$cookies.get("jwt"),
-              userData: r.data as UserData,
-            });
+        api.loadData().then((r: AxiosResponse) => {
+          sessionModule.mutations.login(state, {
+            token: Vue.$cookies.get("jwt"),
+            userData: r.data as UserData,
           });
+        });
         return true;
       }
       return state.token != "";

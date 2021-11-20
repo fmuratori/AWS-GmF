@@ -7,10 +7,13 @@ import {
   RegistrationPayload,
   editUserPayload,
   changePasswordPayload,
+  LoginResponse,
 } from "../types";
 
 export default {
-  async loginRequest(payload: LoginPayload): Promise<AxiosResponse> {
+  async loginRequest(
+    payload: LoginPayload
+  ): Promise<AxiosResponse<LoginResponse>> {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/user/login`, payload);
   },
 
@@ -24,15 +27,22 @@ export default {
   },
 
   async loadData(): Promise<AxiosResponse> {
-    return axios.get(
-      `${process.env.VUE_APP_API_URL}/api/user/get-data`,
-      { headers: store.getters.getSessionHeader }
-    );
+    return axios.get(`${process.env.VUE_APP_API_URL}/api/user/get-data`, {
+      headers: store.getters.getSessionHeader,
+    });
   },
 
   async editUser(payload: editUserPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/user/update`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
+
+  async upgradeUser(payload: {email: string}): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/user/upgrade`,
       payload,
       { headers: store.getters.getSessionHeader }
     );

@@ -18,6 +18,6 @@ export default Vue.extend({
 });
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 // @import "@/assets/style.scss";
 </style>

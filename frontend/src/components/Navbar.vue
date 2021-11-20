@@ -97,7 +97,7 @@ export default Vue.extend({
 
       this.$socket.emit("logout", this.$store.state.session.userData._id);
       this.$store.dispatch("logout");
-      this.$router.go();
+      this.$router.go(0);
 
       this.$store.dispatch("hideSidebar");
     },
@@ -116,7 +116,7 @@ export default Vue.extend({
 });
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 @import "@/assets/style.scss";
 
 #navbar {

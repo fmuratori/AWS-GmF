@@ -81,15 +81,15 @@ b-container
               .px-4.pt-4.pb-4
                 b-row
                   b-col(cols="auto")
-                    div(class="")
+                    div
                       span.mb-0 Phone number:
                       span.font-weight-bold.mb-2 {{ family.phoneNumber }}
 
-                    div(class="")
+                    div
                       span.mb-0 Components:
                       span.font-weight-bold.mb-2 {{ family.components }}
 
-                    div(class="")
+                    div
                       span.mb-0 Address:
                       span.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
                   b-col(cols="auto")
@@ -107,8 +107,7 @@ b-container
 
               b-button.b-card-footer-button(
                 block,
-                v-if="userRole == 'trusted'",
-                :disabled="family.status == 'verified'",
+                v-if="userRole == 'trusted' && family.status != 'verified'",
                 variant="warning",
                 @click="verifyFamily(family._id)"
               ) VERIFY
