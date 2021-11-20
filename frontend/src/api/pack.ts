@@ -23,4 +23,12 @@ export default {
       { headers: store.getters.getSessionHeader }
     );
   },
+
+  async advancePackStatus(payload: { id: string }): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/pack/advance`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
 };

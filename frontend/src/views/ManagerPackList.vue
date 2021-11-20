@@ -34,8 +34,20 @@ b-container
             template(#cell(details)="row")
               b-button(size="sm", @click="showDetails(row)") Show details
 
+            template(#cell(advance)="{ item }")
+              b-button(
+                size="sm",
+                variant="primary",
+                @click="advancePackStatus(item._id)",
+                :disabled="item.status != 'planned delivery'"
+              ) Advance
+
             template(#cell(delete)="{ item }")
-              b-button(variant="danger", @click="deletePack(item._id)") Delete
+              b-button(
+                size="sm",
+                variant="danger",
+                @click="deletePack(item._id)"
+              ) Delete
 
         b-col(lg="4", md="4", sm="12")
           b-card
@@ -67,7 +79,7 @@ import packApi from "../api/pack";
 import familyApi from "../api/family";
 import foodApi from "../api/food";
 
-import { Address, Pack } from "../types";
+import { Address, Family, Food, Pack } from "../types";
 import { PackManagerView } from "../viewTypes";
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -89,6 +101,7 @@ export default Vue.extend({
         "deliveryPeriod",
         "details",
         "delete",
+        "advance",
       ],
     };
   },
@@ -150,11 +163,37 @@ export default Vue.extend({
           );
         });
     },
+    advancePackStatus(id: string) {
+      packApi
+        .advancePackStatus({ id: id })
+        .then((r: AxiosResponse): void => {
+          this.packList.forEach((elem, index) => {
+            if (elem._id == id) this.packList[index] = r.data as Pack;
+          });
+          this.$root.$bvToast.toast(`Food successfully created.`, {
+            title: "Food",
+            autoHideDelay: 5000,
+            variant: "success",
+            appendToast: false,
+          });
+        })
+        .catch((): void => {
+          this.$root.$bvToast.toast(
+            `Unable to upgrade pack status. Retry later or contact us if the problem persist.`,
+            {
+              title: "Pack",
+              autoHideDelay: 5000,
+              variant: "danger",
+              appendToast: false,
+            }
+          );
+        });
+    },
     showDetails(row: any) {
       familyApi
         .familyList({ filter: { _id: row.item.familyId } })
         .then((r: AxiosResponse) => {
-          this.familyDetails = r.data[0];
+          this.familyDetails = (r.data as Family)[0];
         })
         .catch(() => {
           console.log("TODO");
@@ -168,7 +207,7 @@ export default Vue.extend({
       foodApi
         .foodList({ filter: { _id: foodIdList } })
         .then((r: AxiosResponse) => {
-          this.foodDetails = r.data;
+          this.foodDetails = r.data as Food[];
           this.foodDetails.forEach((elem) => {
             elem.number = foodMap.get(elem._id);
           });
