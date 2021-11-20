@@ -19,7 +19,7 @@
 
       hr.sidebar-hr.my-3
 
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+    div(v-if="this.$store.state.session.userData.type != 'user'")
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(
         text="Create retrieve assignment",
@@ -29,24 +29,22 @@
 
       hr.sidebar-hr.my-3
 
-    div(
-      v-if="['user', 'volunteer'].includes($store.state.session.userData.type)"
-    )
+    div
       SidebarCategory(text="Families", icon="users")
       SidebarItem(text="Report a family", route="ManagerFamilySubscribe")
       SidebarItem(text="Report list", route="ManagerFamilyList")
 
       hr.sidebar-hr.my-3
 
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
+    div(v-if="this.$store.state.session.userData.type != 'user'")
       SidebarCategory(text="Events", icon="calendar")
       SidebarItem(text="Create an event", route="ManagerEventCreate")
       SidebarItem(text="Your events", route="ManagerEvents")
 
       hr.sidebar-hr.my-3
 
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
-      SidebarCategory(text="Packs", icon="calendar")
+    div(v-if="this.$store.state.session.userData.type != 'user'")
+      SidebarCategory(text="Packs", icon="box")
       SidebarItem(text="Food manager", route="ManagerFood")
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
