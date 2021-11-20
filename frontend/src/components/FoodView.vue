@@ -42,19 +42,30 @@ div
     template(#cell(selected)="{ item }")
       div(:key="index", ref="reload")
         b-button(
-          pill
+          pill,
           @click="removeClick(item)",
           :disabled="!item.selected || item.selected == 0"
         ) -
         b.ml-4.mr-4 {{ item.selected ? item.selected : 0 }}
         b-button(
-          pill
+          pill,
           @click="addClick(item)",
           :disabled="item.selected == item.number"
         ) +
 
     template(#cell(delete)="{ item }")
-      b-button(@click="deleteFood(item._id)", size="sm", variant="danger") Delete
+      b-button(
+        block,
+        size="sm",
+        variant="danger",
+        v-b-modal.modal,
+        @click="deleteFoodId = item._id"
+      ) Delete
+
+  b-modal#modal(title="Confirm?", @ok="deleteFood(deleteFoodId)")
+    div Confirm to delete food
+    template(#modal-cancel) Cancel
+    template(#modal-ok) Confirm
 </template>
 
 <script lang="ts">
@@ -126,6 +137,7 @@ export default Vue.extend({
       sortDesc: false,
       sortDirection: "asc",
       index: 0,
+      deleteFoodId: "",
     };
   },
   created() {

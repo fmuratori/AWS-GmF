@@ -95,14 +95,15 @@ b-container
                   b-col(cols="auto")
 
               b-button-group.d-flex(v-if="family.status == 'pending'")
-                b-button.b-card-footer-button(
+                b-button(
                   variant="success",
                   @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
                 ) EDIT
 
-                b-button.b-card-footer-button(
+                b-button(
                   variant="danger",
-                  @click="deleteFamily(family._id)"
+                  v-b-modal.modal,
+                  @click="deleteFamilyId = family._id"
                 ) DELETE
 
               b-button.b-card-footer-button(
@@ -118,6 +119,11 @@ b-container
                 variant="primary",
                 @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
               ) PACK
+
+        b-modal#modal(title="Confirm?", @ok="deleteFamily(deleteFamilyId)")
+          div Confirm to delete the family
+          template(#modal-cancel) Cancel
+          template(#modal-ok) Confirm
 </template>
 
 <script lang="ts">
@@ -143,6 +149,7 @@ export default Vue.extend({
       reporterFilter: "me",
       orderByMode: "creation_date",
       familyList: new Array<Family>(),
+      deleteFamilyId: "",
     };
   },
   created() {

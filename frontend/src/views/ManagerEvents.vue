@@ -31,8 +31,14 @@ b-container
               block,
               variant="danger",
               size="sm",
-              @click="deleteEvent(item._id)"
+              v-b-modal.modal,
+              @click="deleteEventId = item._id"
             ) Delete
+
+        b-modal#modal(title="Confirm?", @ok="deleteEvent(deleteEventId)")
+          div Confirm to delete the event
+          template(#modal-cancel) Cancel
+          template(#modal-ok) Confirm
 </template>
 
 <script lang="ts">
@@ -94,6 +100,7 @@ export default Vue.extend({
           sortable: false,
         },
       ],
+      deleteEventId: "",
     };
   },
   created() {

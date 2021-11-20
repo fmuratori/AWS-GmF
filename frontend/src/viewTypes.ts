@@ -19,6 +19,7 @@ export interface CreateEventView {
 export interface EventListView {
   events: Array<Event>;
   tableFields: Array<TableField>;
+  deleteEventId: string;
 }
 
 export interface ReportFamilyView {
@@ -52,6 +53,7 @@ export interface PackManagerView {
   familyDetails?: Family;
   foodDetails?: Array<Food>;
   tableFields: Array<string>;
+  deletePackId: string;
 }
 
 interface TableField {
@@ -73,4 +75,5 @@ export interface FoodView {
   sortDesc: false;
   sortDirection: "asc" | "desc";
   index: number;
+  deleteFoodId: string;
 }

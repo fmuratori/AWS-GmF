@@ -46,8 +46,14 @@ b-container
               b-button(
                 size="sm",
                 variant="danger",
-                @click="deletePack(item._id)"
+                v-b-modal.modal,
+                @click="deletePackId = item._id"
               ) Delete
+
+          b-modal#modal(title="Confirm?", @ok="deletePack(deletePackId)")
+            div Confirm to delete pack
+            template(#modal-cancel) Cancel
+            template(#modal-ok) Confirm
 
         b-col(lg="4", md="4", sm="12")
           b-card
@@ -103,6 +109,7 @@ export default Vue.extend({
         "delete",
         "advance",
       ],
+      deletePackId: "",
     };
   },
   created() {
