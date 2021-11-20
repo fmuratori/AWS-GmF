@@ -194,6 +194,14 @@ export interface LoginResponse {
   user: UserData;
 }
 
+export interface ChartDataResponse {
+  meat: number;
+  fish: number;
+  pasta: number;
+  vegetable: number;
+  fruit: number;
+}
+
 // export interface OfferResponse {
 
 // }

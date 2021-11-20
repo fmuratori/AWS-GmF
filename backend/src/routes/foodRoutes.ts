@@ -8,5 +8,6 @@ router.post('/find', foodController.find)
 // router.post('/', foodController.add)
 router.post('/add-or-update', foodController.addOrUpdate)
 router.post('/delete', foodController.delete)
+router.get('/get-chart-data', foodController.getChartData)
 
 export default router

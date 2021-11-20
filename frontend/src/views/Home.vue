@@ -7,21 +7,18 @@ b-container
     HomepageEvents
 
   b-row.justify-content-md-center.my-5.no-gutters
-    PieChart
-  
-  b-form
-    b-form-file
-</template>
+    DoughnutChart
+  </template>
 
 <script lang="ts">
 import Vue from "vue";
-import PieChart from "../components/homepage/PieChart.vue";
+import DoughnutChart from "../components/homepage/DoughnutChart.vue";
 import HomepageEvents from "../components/homepage/HomepageEvents.vue";
 
 export default Vue.extend({
   name: "Home",
   components: {
-    PieChart,
+    DoughnutChart,
     HomepageEvents
   },
   created() {

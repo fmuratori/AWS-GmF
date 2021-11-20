@@ -16,7 +16,7 @@ content-type: application/json
     }
 }
 
-### FOOD: find food with quantity greter than 0
+### FOOD: find food with quantity greater than 0
 POST http://localhost:3000/api/food/find
 accept: application/json 
 content-type: application/json
@@ -62,3 +62,8 @@ content-type: application/json
     //"label": ["label1", "label2", "label3"]
 
 }
+
+### FOOD: find all
+GET http://localhost:3000/api/food/get-chart-data
+accept: application/json 
+content-type: application/json

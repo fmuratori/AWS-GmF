@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import FoodModel, { FoodDocument } from '../models/foodModel';
 import catchAsync from '../utils/catchAsync';
-import ControllerFactory from '../utils/controllerFactory';
+import ControllerFactory from '../utils/controllerFactory'; 
 
 const factory = new ControllerFactory<FoodDocument>()
 
@@ -23,7 +23,7 @@ export default class FoodController {
 		} else {
 			//aggiorno il nodo già esistente
 			if (req.body.number) {
-				elem.number += parseInt(req.body.number) 
+				elem.number += parseInt(req.body.number)
 			}
 			elem = await FoodModel.findByIdAndUpdate(elem._id, elem, { new: true })
 		}
@@ -32,4 +32,21 @@ export default class FoodController {
 
 	})
 
+	getChartData = catchAsync(async (req: Request, res: Response) => {
+		const list = await FoodModel.find();
+
+		const meat = list.filter((e: FoodDocument) => e.labels.indexOf("meat") != -1)
+		const fish = list.filter((e: FoodDocument) => e.labels.indexOf("fish") != -1)
+		const pasta = list.filter((e: FoodDocument) => e.labels.indexOf("pasta") != -1)
+		const vegetable = list.filter((e: FoodDocument) => e.labels.indexOf("vegetable") != -1)
+		const fruit = list.filter((e: FoodDocument) => e.labels.indexOf("fruit") != -1)
+
+		res.status(200).json({
+			meat: meat.length,
+			fish: fish.length,
+			pasta: pasta.length,
+			vegetable: vegetable.length,
+			fruit: fruit.length
+		})
+	})
 }

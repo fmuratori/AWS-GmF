@@ -13,7 +13,7 @@ import { ChartDataResponse } from "../../types";
 Chart.register(...registerables);
 
 export default Vue.extend({
-  name: "PieChart",
+  name: "DoughnutChart",
   mounted() {
     foodApi.getChartData().then((r: AxiosResponse<ChartDataResponse>): void => {
       const ctx = document.getElementById("pie-chart");
