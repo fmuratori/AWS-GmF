@@ -9,17 +9,15 @@
         p {{ this.$store.state.session.userData.type }}
         p.clickable(@click="changePage('ManagerEditUserInfo')") edit
 
-    hr.sidebar-hr.my-3
-
   #sidebar-actions 
     div(v-if="$store.state.session.userData.type == 'user'")
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(text="Make a donation", route="ManagerDonationsCreate")
       SidebarItem(text="Donation list", route="ManagerDonationsUserList")
 
-      hr.sidebar-hr.my-3
-
     div(v-if="this.$store.state.session.userData.type != 'user'")
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(
         text="Create retrieve assignment",
@@ -27,43 +25,44 @@
       )
       SidebarItem(text="Donation list", route="ManagerDonationsVolunteerList")
 
-      hr.sidebar-hr.my-3
 
     div
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Families", icon="users")
       SidebarItem(text="Report a family", route="ManagerFamilySubscribe")
       SidebarItem(text="Report list", route="ManagerFamilyList")
 
-      hr.sidebar-hr.my-3
-
     div(v-if="this.$store.state.session.userData.type != 'user'")
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Events", icon="calendar")
       SidebarItem(text="Create an event", route="ManagerEventCreate")
       SidebarItem(text="Your events", route="ManagerEvents")
 
-      hr.sidebar-hr.my-3
-
     div(v-if="this.$store.state.session.userData.type != 'user'")
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Packs", icon="box")
       SidebarItem(text="Food manager", route="ManagerFood")
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
 
+
+    div(v-if="this.$store.state.session.userData.type == 'trusted'")
+      hr.sidebar-hr.my-3
+      UserUpgradeModal
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import SidebarCategory from "./SidebarCategory.vue";
 import SidebarItem from "./SidebarItem.vue";
+import UserUpgradeModal from "./UserUpgradeModal.vue"
 
 export default Vue.extend({
   name: "Sidebar",
   components: {
     SidebarCategory,
     SidebarItem,
-  },
-  data: function () {
-    return {};
+    UserUpgradeModal,
   },
   computed: {
     userFullname() {
