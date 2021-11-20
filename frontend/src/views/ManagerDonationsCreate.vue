@@ -5,7 +5,7 @@ b-container
       .mb-4
         h4
           p CREATE DONATION
-      b-form(@submit="submit")
+      b-form(@submit.stop.prevent="submit")
         .mb-4
           InputList(
             title="Foods:",
@@ -167,9 +167,7 @@ export default Vue.extend({
         this.form.pickUpPeriod.push({ weekDay, period });
       }
     },
-    submit(event) {
-      event.preventDefault();
-
+    submit() {
       var fun;
       if ("donation" in this.$route.params) fun = api.editDonation;
       else fun = api.addDonation;

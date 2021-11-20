@@ -25,7 +25,7 @@ b-container
 
       hr.sidebar-hr.my-3
 
-      b-form(@submit="createPack")
+      b-form(@submit.stop.prevent="createPack")
         FoodView(selectableItems, v-on:data="(e) => { this.foodList = e; }")
 
         b-row
@@ -81,8 +81,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    createPack(event): void {
-      event.preventDefault();
+    createPack(): void {
       console.log(this.foodList);
 
       this.foodList.forEach((elem) => {

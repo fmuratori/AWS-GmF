@@ -7,7 +7,7 @@ b-container
         b REPORT A FAMILY
       hr.sidebar-hr.my-3
 
-      b-form(@submit="submit")
+      b-form(@submit.stop.prevent="submit")
         .mb4
           InputText(
             title="Family name:",
@@ -114,9 +114,7 @@ export default Vue.extend({
     onAddressUpdate(address: Address): void {
       this.form.address = address;
     },
-    submit(event): void {
-      event.preventDefault();
-
+    submit(): void {
       var fun;
       if ("family" in this.$route.params) fun = api.editFamily;
       else fun = api.addFamily;

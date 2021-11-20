@@ -19,7 +19,7 @@ b-container
 
           //- div(class="")
           //-   label(class="font-italic") Marco stà scrivendo...
-          b-form(@submit="sendMessage")
+          b-form(@submit.stop.prevent="sendMessage")
             b-input-group(class="")
               b-form-input(
                 type="text",
@@ -253,8 +253,7 @@ export default Vue.extend({
         ? "pomeriggio"
         : "sera";
     },
-    sendMessage(event) {
-      event.preventDefault();
+    sendMessage() {
       this.$socket.emit("message_to_server", {
         donationId: this.donation._id,
         userId: this.$store.state.session.userData._id,

@@ -4,7 +4,7 @@ b-container.justify-content-center.my-5
 
   b-row
     b-col(sm=12, md=6)
-      b-form(@submit="submit")
+      b-form(@submit.stop.prevent="submit")
         b-form-group#input-group-2(label="Data ritiro:", label-for="input-2")
           b-input-group
             b-form-datepicker#input-2.my-no-right-border(
@@ -118,8 +118,7 @@ export default Vue.extend({
           });
         });
     },
-    submit(e: any) {
-      e.preventDefault();
+    submit() {
       if (!this.pickUpDate) {
         this.$root.$bvToast.toast(
           `Selezionare il giorno in cui verrà effettuato il ritiro della donazione.`,

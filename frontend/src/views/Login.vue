@@ -20,7 +20,7 @@ b-row.justify-content-center(no-gutters)
           :class="{ 'login-selected-button': !isLoginSelected }"
         ) Sign up
 
-      b-form(@submit="submitForm")
+      b-form(@submit.stop.prevent="submitForm")
         .p-5(v-if="isLoginSelected")
           p.text-danger(v-if="showLoginErrorMessage") Invalid email or password.
           h5.mt-4 Credentials
@@ -169,9 +169,7 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    submitForm(event) {
-      event.preventDefault();
-
+    submitForm() {
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
