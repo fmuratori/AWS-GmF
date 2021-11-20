@@ -107,12 +107,20 @@ export default class UserController {
 
 	//upgrade user to volunteer type
 	upgrade = catchAsync(async (req: Request, res: Response) => {
-		var user = await UserModel.findById(req.body.userId)
+		if(!req.body.email){
+			res.status(401).json({
+				status: "missing-mail-error",
+				message: "Missing email in request body"
+			})
+			return
+		}
+
+		var user = await UserModel.findOne({email: req.body.email})
 
 		if (!user) {
 			res.status(401).json({
 				status: "user-not-found-error",
-				message: "User not found"
+				message: "Cannot find user with email " + req.body.email
 			})
 			return
 		}
@@ -126,8 +134,7 @@ export default class UserController {
 		}
 
 		user.type = "volunteer"
-
-		const upgradedUser = await UserModel.findByIdAndUpdate(user._id, user, { new: true })
+		await UserModel.findByIdAndUpdate(user._id, user, { new: true })
 
 		res.status(200).json({
 			status: "success",
