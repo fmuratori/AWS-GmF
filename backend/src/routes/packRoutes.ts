@@ -8,5 +8,6 @@ router.post('/find', packController.find)
 router.post('/add', packController.add)
 // router.post('/edit', packController.edit)
 router.post('/delete', packController.delete)
+router.post('/advance', packController.advanceStatus)
 
 export default router

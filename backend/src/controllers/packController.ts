@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { ObjectId } from 'mongoose';
 import FoodModel, { FoodDocument } from '../models/foodModel';
 import PackModel, { PackDocument } from '../models/packModel';
 import catchAsync from '../utils/catchAsync';
@@ -94,12 +95,21 @@ export default class PackController {
 	})
 
 	advanceStatus = catchAsync(async (req: Request, res: Response) => {
+		if(!req.body.id){
+			res.status(401).json({
+				status: "missing-id-error",
+				message: "Missing pack id in request body"
+			})
+			return
+
+		}
+
 		const pack = await PackModel.findById(req.body.id)
 
 		if (!pack) {
 			res.status(401).json({
 				status: "no-pack-found-error",
-				message: "No pack found with this id"
+				message: "No pack found with id " + req.body.id
 			})
 			return
 		}
@@ -113,17 +123,15 @@ export default class PackController {
 				break
 			default:
 				res.status(401).json({
-					status: "no-advancable-statu-error",
+					status: "not-advancable-error",
 					message: "Pack isn't in an advancable status"
 				})
 				return
 		}
 
-		await PackModel.findByIdAndUpdate(req.body.id, pack)
+		const updatedPack = await PackModel.findByIdAndUpdate(req.body.id, pack, {new: true})
 
-		res.status(200).json({
-			status: "success",
-		})
+		res.status(200).json(updatedPack)
 
 	})
 
