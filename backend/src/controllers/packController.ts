@@ -129,9 +129,11 @@ export default class PackController {
 				return
 		}
 
-		const updatedPack = await PackModel.findByIdAndUpdate(req.body.id, pack, {new: true})
+		await PackModel.findByIdAndUpdate(req.body.id, pack, {new: true})
 
-		res.status(200).json(updatedPack)
+		res.status(200).json({
+			status: "success"
+		})
 
 	})
 

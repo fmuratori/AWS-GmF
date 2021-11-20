@@ -173,9 +173,12 @@ export default Vue.extend({
     advancePackStatus(id: string) {
       packApi
         .advancePackStatus({ id: id })
-        .then((r: AxiosResponse): void => {
-          this.packList.forEach((elem, index) => {
-            if (elem._id == id) this.packList[index] = r.data as Pack;
+        .then((): void => {
+          this.packList.forEach((elem) => {
+            if (elem._id == id) {
+              elem.status = "delivered"
+              console.log(elem)
+              };
           });
           this.$root.$bvToast.toast(`Food successfully created.`, {
             title: "Food",

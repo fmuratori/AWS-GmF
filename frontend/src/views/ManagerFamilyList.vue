@@ -60,13 +60,7 @@ b-container
         b-col(v-if="familyList.length == 0", sm=12, md=6)
           p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-        b-col(
-          v-else,
-          sm=12,
-          md=6,
-          v-for="(family, idx) in familyList",
-          :key="idx"
-        )
+        b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList")
           b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
             template(#header)
               h5
@@ -189,12 +183,14 @@ export default Vue.extend({
     verifyFamily(familyId: string): void {
       api
         .verifyFamily({ id: familyId })
-        .then((r: AxiosResponse) => {
-          this.familyList.forEach((elem, index) => {
-            if (elem._id == familyId) {
-              this.familyList[index] = r.data as Family;
-            }
-          });
+        .then(() => {
+          if (this.statusFilter == "pending") {
+            this.familyList = this.familyList.filter((e) => e._id != familyId);
+          } else {
+            this.familyList.forEach((elem) => {
+              if (elem._id == familyId) elem.status = "verified";
+            });
+          }
 
           this.$root.$bvToast.toast(`Family verified with success.`, {
             title: "Verify",
