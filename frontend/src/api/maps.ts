@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
+
 export default {
   async getLocationCoordinates(location: string): Promise<AxiosResponse> {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
@@ -12,9 +13,11 @@ export default {
       params: {
         input: query,
         components: "country:it",
-        types: "cities", 
+        types: `(cities)`, 
         key: process.env.VUE_APP_MAPS_API_KEY 
-      }
+      },
+        
+      
     })
   }
 
