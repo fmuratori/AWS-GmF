@@ -38,7 +38,7 @@ b-container
               b-button(
                 size="sm",
                 variant="primary",
-                @click="advancePackStatus(item._id)",
+                @click="setDelivered(item._id)",
                 :disabled="item.status != 'planned delivery'"
               ) Advance
 
@@ -170,9 +170,9 @@ export default Vue.extend({
           );
         });
     },
-    advancePackStatus(id: string) {
+    setDelivered(id: string) {
       packApi
-        .advancePackStatus({ id: id })
+        .setDelivered({ id: id })
         .then((): void => {
           this.packList.forEach((elem) => {
             if (elem._id == id) {

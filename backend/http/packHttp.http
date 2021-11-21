@@ -31,8 +31,8 @@ content-type: application/json
     "familyId": "61868cc55b094054c03880c1"
 }
 
-### PACKS: advance status
-POST http://localhost:3000/api/pack/advance
+### PACKS: set status to delivered
+POST http://localhost:3000/api/pack/delivered
 accept: application/json 
 content-type: application/json
 

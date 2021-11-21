@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { FamilyPayload, FindPayload } from "../types";
+import { Family, FamilyPayload, FindPayload } from "../types";
 
 export default {
-  async addFamily(payload: FamilyPayload): Promise<AxiosResponse> {
+  async addFamily(payload: FamilyPayload): Promise<AxiosResponse<Family[]>> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/family/add`,
       payload,

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { FindPayload, PackPayload } from "../types";
+import { FindPayload, PackDeliveryPayload, PackPayload } from "../types";
 
 export default {
   async createPack(payload: PackPayload): Promise<AxiosResponse> {
@@ -24,9 +24,17 @@ export default {
     );
   },
 
-  async advancePackStatus(payload: { id: string }): Promise<AxiosResponse> {
+  async setDelivered(payload: { id: string }): Promise<AxiosResponse> {
     return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/pack/advance`,
+      `${process.env.VUE_APP_API_URL}/api/pack/delivered`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
+
+  async setPlannedDelivery(payload: PackDeliveryPayload): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/pack/planned-delivery`,
       payload,
       { headers: store.getters.getSessionHeader }
     );

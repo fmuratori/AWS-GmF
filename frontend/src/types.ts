@@ -139,6 +139,13 @@ export interface PackPayload {
   familyId: string;
 }
 
+export interface PackDeliveryPayload {
+  idList: Array<string>;
+  deliveryVolunteerId: string;
+  deliveryDate: Date;
+  deliveryPeriod: "morning" | "afternoon" | "evening";
+}
+
 export interface Pack {
   _id: string;
   foodList: [{ foodId: string; number: number }];
