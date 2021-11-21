@@ -6,9 +6,10 @@
         b-icon-person-circle(font-scale="3")
 
     b-row(no-gutters, align-h="center")
-      b-col.ml-1(cols="auto")
+      b-col.ml-1.text-center(cols="auto")
         p {{ userFullname }}
-        p {{ this.$store.state.session.userData.type }}
+        h5
+          b-badge(variant="primary") {{ this.$store.state.session.userData.type }}
         p.clickable(@click="changePage('ManagerEditUserInfo')") edit
 
   #sidebar-actions 
