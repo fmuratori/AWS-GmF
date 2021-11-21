@@ -6,6 +6,7 @@ import familyRoutes from './routes/familyRoutes'
 import foodRouter from './routes/foodRoutes'
 import packRoutes from './routes/packRoutes'
 import userRoutes from './routes/userRoutes'
+import dataRoutes from './routes/dataRoutes'
 import checkJWT from "./utils/checkJWT"
 
 const app: Application = express()
@@ -23,6 +24,7 @@ app.use('/api/family', familyRoutes)
 app.use('/api/food', foodRouter)
 app.use('/api/pack', packRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/data', dataRoutes)
 
 app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + ' not found' })

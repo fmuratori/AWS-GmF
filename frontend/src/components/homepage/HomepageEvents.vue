@@ -21,11 +21,12 @@ div
 </template>
 
 <script lang="ts">
-import { AxiosResponse } from "axios";
 import Vue from "vue";
-import eventApi from "../../api/event";
+import { AxiosResponse } from "axios";
 import { Address, Event } from "../../types";
 import moment from "moment";
+
+import api from "../../api/data";
 
 export default Vue.extend({
   name: "HomepageEvents",
@@ -37,8 +38,8 @@ export default Vue.extend({
     };
   },
   created() {
-    eventApi
-      .eventList({ sortBy: { date: 1 } })
+    api
+      .getNextEvents()
       .then((r: AxiosResponse): void => {
         this.eventList = r.data as Event[];
       })

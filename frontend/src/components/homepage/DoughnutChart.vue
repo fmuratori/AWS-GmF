@@ -5,17 +5,17 @@ canvas#pie-chart
 <script lang="ts">
 import Vue from "vue";
 import { Chart, ChartItem, registerables } from "chart.js";
-
-import foodApi from "../../api/food";
 import { AxiosResponse } from "axios";
-import { ChartDataResponse } from "../../types";
+import { FoodLabelsResponse } from "../../types";
+
+import api from "../../api/data";
 
 Chart.register(...registerables);
 
 export default Vue.extend({
   name: "DoughnutChart",
   mounted() {
-    foodApi.getChartData().then((r: AxiosResponse<ChartDataResponse>): void => {
+    api.getFoodLabels().then((r: AxiosResponse<FoodLabelsResponse>): void => {
       const ctx = document.getElementById("pie-chart");
       new Chart(ctx as ChartItem, {
         type: "doughnut",

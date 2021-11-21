@@ -62,8 +62,3 @@ content-type: application/json
     //"label": ["label1", "label2", "label3"]
 
 }
-
-### FOOD: find all
-GET http://localhost:3000/api/food/get-chart-data
-accept: application/json 
-content-type: application/json

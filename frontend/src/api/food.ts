@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { ChartDataResponse, FindPayload, FoodPayload } from "../types";
+import { FindPayload, FoodPayload } from "../types";
 
 export default {
   async addFood(payload: FoodPayload): Promise<AxiosResponse> {
@@ -22,13 +22,6 @@ export default {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/food/delete`,
       payload,
-      { headers: store.getters.getSessionHeader }
-    );
-  },
-
-  async getChartData(): Promise<AxiosResponse<ChartDataResponse>> {
-    return axios.get(
-      `${process.env.VUE_APP_API_URL}/api/food/get-chart-data`,
       { headers: store.getters.getSessionHeader }
     );
   },

@@ -1,11 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyToken } from "./tokenHandler";
-const NO_JWT_PATH = [
-    "/api/user/register",
-    "/api/user/login",
-    "/api/food/get-chart-data",
-    "/api/event/find"
-]
 
 export default (req: Request, res: Response, next: NextFunction) => {
     if (process.env.USE_JWT === "false") {
@@ -17,7 +11,11 @@ export default (req: Request, res: Response, next: NextFunction) => {
     const userId = req.headers["x-user-id"]
 
     //se l'utente deve loggarsi/registrarsi non controllo il token
-    if (NO_JWT_PATH.indexOf(req.path) == -1) {
+    //anche le api dei dati dell'homepage non richiedono la verifica del jwt
+    if (req.path.indexOf("/api/data/") == -1
+        && req.path != "/api/user/login"
+        && req.path != "/api/user/register"
+    ) {
 
         //l'utente deve autenticarsi col token se non sta chiamando l'endpoint di login o di registrazione 
         if (!token) {

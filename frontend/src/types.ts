@@ -126,7 +126,7 @@ export interface EventPayload {
   description: string;
   address: Address;
   date: Date;
-  image: string;
+  image: File | null;
 }
 
 export interface Event {
@@ -194,12 +194,18 @@ export interface LoginResponse {
   user: UserData;
 }
 
-export interface ChartDataResponse {
+export interface FoodLabelsResponse {
   meat: number;
   fish: number;
   pasta: number;
   vegetable: number;
   fruit: number;
+}
+
+export interface CountDataResponse {
+  foodCount: number;
+  verifiedFamilies: number;
+  deliveredPacks: number;
 }
 
 // export interface OfferResponse {
