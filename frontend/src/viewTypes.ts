@@ -27,10 +27,11 @@ export interface ReportFamilyView {
   submitLabel: string;
 }
 
-export interface CreatedonationView {
+export interface CreateDonationView {
   weekDays: any;
   form: DonationCreationPayload;
   submitLabel: string;
+  isLocationLoaded: boolean;
 }
 
 export interface FoodManagerView {

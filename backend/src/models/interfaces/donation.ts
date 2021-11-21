@@ -6,7 +6,8 @@ interface ChatNode {
     userFullname: string,
     text: string,
     date: Date,
-    visualized: boolean
+    visualized: boolean,
+    isEventMessage: boolean
 }
 
 interface PickUp {

@@ -1,12 +1,12 @@
 <template lang="pug">
-b-row.pl-3.pr-1.sidebar-item(
+b-row.pl-1.justify-content-md-center.sidebar-item(
   no-gutters,
   align-v="center",
   @click="changePage(route)",
   :class="{ 'sidebar-item-selected': isRouteSelected(route) }"
 )
   b-col
-    label {{ text }}
+    label(class="p-0 m-0") {{ text }}
   b-col(cols="auto")
     b-icon(icon="chevron-right")
 </template>
@@ -42,6 +42,8 @@ export default Vue.extend({
 
 .sidebar-item {
   border-radius: 0.25em;
+  margin: 0px;
+  padding: 0xp;
 }
 
 .sidebar-item:hover {

@@ -1,5 +1,9 @@
-import chatApi from "../api/chat";
+
+import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
+
+import chatApi from "../api/chat";
+import userApi from "../api/user";
 import { ChatMessage } from "../types";
 
 export default {
@@ -42,7 +46,7 @@ export default {
       state.donationId = "";
     },
 
-    updateUnreadMessages(state, messages): void {
+    updateUnreadMessages(state, messages: ChatMessage[]): void {
       state.unreadMessages = messages;
     },
 
@@ -64,33 +68,41 @@ export default {
 
     SOCKET_chat_message({ commit, state, rootState }, stringMessage: string) {
       const message = JSON.parse(stringMessage);
+      
       if (state.donationId == message._id) {
         commit("addMessage", message.message);
 
         // set message as visualized
         if (message.message.userId != rootState.session.userData._id)
           new Vue().$socket.emit("visualize_message", stringMessage);
-      } else {
+      } else if (rootState.session.userData._id != message.message.userId) { 
         // update messages count
         commit("addUnreadMessage", message);
       }
     },
 
-    getChat({ commit, getters, rootState }, donationId: string): void {
+    sendMessage({ rootState, rootGetters }, message: {donationId: string, message: string, isEventMessage: boolean}): void {
+      message["userId"] = rootState.session.userData._id;
+      message["fullname"] = rootGetters.userFullName;
+      
+      new Vue().$socket.emit("message_to_server", message);
+    },
+
+    getChat({ commit, rootState }, donationId: string): void {
       chatApi
         .getDonationChat(donationId, rootState.session.userData._id)
-        .then((r: any) => {
+        .then((r: AxiosResponse): void => {
           commit("getChat", { chat: r.data, donationId: donationId });
           commit("removeDonationUnreadMessages", donationId);
         })
-        .catch((e) => console.log(e));
+        .catch((e: AxiosError) => console.log(e));
     },
 
     resetChat({ commit }): void {
       commit("resetChat");
     },
 
-    updateUnreadMessages({ commit }, messages): void {
+    updateUnreadMessages({ commit }, messages: ChatMessage[]): void {
       commit("updateUnreadMessages", messages);
     },
   },

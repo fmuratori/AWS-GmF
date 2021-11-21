@@ -1,9 +1,11 @@
 <template lang="pug">
 #sidebar.p-3(v-if="isSidebarOpen()")
   #sidebar-user 
-    b-row.p-4(no-gutters, align-h="center") 
+    b-row.mt-3.mb-2(no-gutters, align-h="center") 
       b-col.mr-1(cols="auto")
         b-icon-person-circle(font-scale="3")
+
+    b-row.mb-4(no-gutters, align-h="center")
       b-col.ml-1(cols="auto")
         p {{ userFullname }}
         p {{ this.$store.state.session.userData.type }}

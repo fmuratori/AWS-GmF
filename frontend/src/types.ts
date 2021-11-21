@@ -68,12 +68,7 @@ export interface Donation {
   expirationDate: string;
   address: Address;
   additionalInformation: string;
-  pickUpPeriod: [
-    {
-      weekDay: string;
-      period: string;
-    }
-  ];
+  pickUpPeriod: Array<{ weekDay: string; period: string }>;
   chat: ChatMessage[];
   creationDate: string;
   status: string;

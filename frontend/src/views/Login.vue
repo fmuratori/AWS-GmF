@@ -126,7 +126,9 @@ import {
   LoginPayload,
   RegistrationPayload,
   Address,
-  LoginResponse,
+  LoginResponse, 
+  UserData, 
+  ChatMessage
 } from "../types";
 
 export default Vue.extend({
@@ -173,18 +175,17 @@ export default Vue.extend({
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
-          .then((r: AxiosResponse): void => {
+          .then((r: AxiosResponse<LoginResponse>): void => {
             if (r.status == 200) {
-              const data = r.data as LoginResponse;
               this.$store.dispatch("login", {
-                token: data.token,
-                userData: data.user,
+                token: r.data.token as string,
+                userData: r.data.user as UserData,
               });
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });
 
-              this.$cookies.set("jwt", data.token);
-              this.$cookies.set("user-id", data.user._id);
+              this.$cookies.set("jwt", r.data.token);
+              this.$cookies.set("user-id", r.data.user._id);
 
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(

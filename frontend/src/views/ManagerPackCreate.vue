@@ -41,6 +41,8 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosError } from "axios";
+
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import FoodView from "../components/FoodView.vue";
@@ -101,7 +103,8 @@ export default Vue.extend({
             appendToast: false,
           });
         })
-        .catch((): void => {
+        .catch((e: AxiosError): void => {
+          console.log(e);
           this.$root.$bvToast.toast(
             `Unable to create pack. Retry later or contact us if the problem persist.`,
             {
