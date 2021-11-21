@@ -81,5 +81,5 @@ accept: application/json
 content-type: application/json
 
 {
-    "userId": "6183af3dabd629ea28db1cd9"
+    "email": "luca@gmail.com"
 }

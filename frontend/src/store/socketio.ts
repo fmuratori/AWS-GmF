@@ -68,13 +68,14 @@ export default {
 
     SOCKET_chat_message({ commit, state, rootState }, stringMessage: string) {
       const message = JSON.parse(stringMessage);
+      
       if (state.donationId == message._id) {
         commit("addMessage", message.message);
 
         // set message as visualized
         if (message.message.userId != rootState.session.userData._id)
           new Vue().$socket.emit("visualize_message", stringMessage);
-      } else {
+      } else if (rootState.session.userData._id != message.message.userId) { 
         // update messages count
         commit("addUnreadMessage", message);
       }

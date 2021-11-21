@@ -9,7 +9,7 @@ b-container
 
       b-row
         b-col(sm=12, md=4)
-          b-form(@submit="addFood")
+          b-form(@submit.stop.prevent="addFood")
             b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
               b-card-text
                 b-card-header Add food
@@ -133,9 +133,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    addFood(event): void {
-      event.preventDefault();
-
+    addFood(): void {
       api
         .addFood(this.form)
         .then((): void => {

@@ -1,25 +1,25 @@
 <template lang="pug">
 #sidebar.p-3(v-if="isSidebarOpen()")
   #sidebar-user 
-    b-row.p-4(no-gutters, align-h="center") 
+    b-row.mt-3.mb-2(no-gutters, align-h="center") 
       b-col.mr-1(cols="auto")
         b-icon-person-circle(font-scale="3")
+
+    b-row.mb-4(no-gutters, align-h="center")
       b-col.ml-1(cols="auto")
         p {{ userFullname }}
         p {{ this.$store.state.session.userData.type }}
         p.clickable(@click="changePage('ManagerEditUserInfo')") edit
 
-    hr.sidebar-hr.my-3
-
   #sidebar-actions 
     div(v-if="$store.state.session.userData.type == 'user'")
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(text="Make a donation", route="ManagerDonationsCreate")
       SidebarItem(text="Donation list", route="ManagerDonationsUserList")
 
+    div(v-if="this.$store.state.session.userData.type != 'user'")
       hr.sidebar-hr.my-3
-
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(
         text="Create retrieve assignment",
@@ -27,45 +27,44 @@
       )
       SidebarItem(text="Donation list", route="ManagerDonationsVolunteerList")
 
-      hr.sidebar-hr.my-3
 
-    div(
-      v-if="['user', 'volunteer'].includes($store.state.session.userData.type)"
-    )
+    div
+      hr.sidebar-hr.my-3
       SidebarCategory(text="Families", icon="users")
       SidebarItem(text="Report a family", route="ManagerFamilySubscribe")
       SidebarItem(text="Report list", route="ManagerFamilyList")
 
+    div(v-if="this.$store.state.session.userData.type != 'user'")
       hr.sidebar-hr.my-3
-
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
       SidebarCategory(text="Events", icon="calendar")
       SidebarItem(text="Create an event", route="ManagerEventCreate")
       SidebarItem(text="Your events", route="ManagerEvents")
 
+    div(v-if="this.$store.state.session.userData.type != 'user'")
       hr.sidebar-hr.my-3
-
-    div(v-if="this.$store.state.session.userData.type == 'volunteer'")
-      SidebarCategory(text="Packs", icon="calendar")
+      SidebarCategory(text="Packs", icon="box")
       SidebarItem(text="Food manager", route="ManagerFood")
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
 
+
+    div(v-if="this.$store.state.session.userData.type == 'trusted'")
+      hr.sidebar-hr.my-3
+      UserUpgradeModal
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import SidebarCategory from "./SidebarCategory.vue";
 import SidebarItem from "./SidebarItem.vue";
+import UserUpgradeModal from "./UserUpgradeModal.vue"
 
 export default Vue.extend({
   name: "Sidebar",
   components: {
     SidebarCategory,
     SidebarItem,
-  },
-  data: function () {
-    return {};
+    UserUpgradeModal,
   },
   computed: {
     userFullname() {

@@ -20,7 +20,7 @@ b-row.justify-content-center(no-gutters)
           :class="{ 'login-selected-button': !isLoginSelected }"
         ) Sign up
 
-      b-form(@submit="submitForm")
+      b-form(@submit.stop.prevent="submitForm")
         .p-5(v-if="isLoginSelected")
           p.text-danger(v-if="showLoginErrorMessage") Invalid email or password.
           h5.mt-4 Credentials
@@ -171,23 +171,21 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    submitForm(event) {
-      event.preventDefault();
-
+    submitForm() {
       if (this.isLoginSelected) {
         userApi
           .loginRequest(this.login)
-          .then((r: AxiosResponse<{ data: { user:UserData, token: string}}, any>): void => {
+          .then((r: AxiosResponse<LoginResponse>): void => {
             if (r.status == 200) {
               this.$store.dispatch("login", {
-                token: r.data["token"] as string,
-                userData: r.data["user"] as UserData,
+                token: r.data.token as string,
+                userData: r.data.user as UserData,
               });
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });
 
-              this.$cookies.set("jwt", data.token)
-              this.$cookies.set("user-id", data.user._id)
+              this.$cookies.set("jwt", r.data.token);
+              this.$cookies.set("user-id", r.data.user._id);
 
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(

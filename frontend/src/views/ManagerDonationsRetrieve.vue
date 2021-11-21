@@ -1,97 +1,224 @@
 <template lang="pug">
-  div(class="gmapContainer")
-    b-row(class="gmapContainer" no-gutters)
-      b-col(class="gmapContainer" cols=10)
-        GmapMap(:options="mapsOptions" 
-        :center="{lat:44.1396, lng:12.2464}"
-        :zoom="14"
-        map-type-id="terrain"
-        id="gmap" ref="map")
-          div
-            gmap-custom-marker(v-for="(donation, idx) in selectedDonations" :key="idx" 
-              :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-              @click.native="toggleInfoWindow(donation)")
-              h1
-                //truck
-                b-icon(icon="check-circle-fill" variant="success")
-          div 
-            gmap-custom-marker(v-for="(donation, idx) in donations" :key="idx" 
-              :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-              @click.native="toggleInfoWindow(donation)")
-              h1
-                b-icon(icon="exclamation-circle-fill" variant="warning")
-          gmap-info-window(
-          v-if="selectedDonation"
-          :options="{maxWidth: 300, pixelOffset: { width: 0, height: -55 } }"
-          :position="{'lat': selectedDonation.address.coordinates.x , 'lng': selectedDonation.address.coordinates.y}", 
-          :opened="true"
-          @closeclick="selectedDonation={}")
-            div()
-              p
-                span.mb-2.font-weight-bold Foods:
-                br
-                span.mb-0(v-for="food, idx in selectedDonation.foods") {{food}}
+.gmapContainer
+  b-row.gmapContainer.justify-content-center(no-gutters)
+    b-col.px-5.text-center.gmapContainer.align-middle(
+      v-if="!selectedCity",
+      cols=10,
+      sm=8,
+      md=7,
+      lg=6,
+      align-self="center"
+    )
+      h1.mt-5 
+        b-icon.mr-2(icon="map")
+        span Donations map
+      b-row
+        b-col
+          b-icon(icon="one")
+      p Select a valid city to show all available donations
+
+      vue-google-autocomplete#map(
+        classname="form-control",
+        placeholder="Insert a city name",
+        v-on:placechanged="selectCity",
+        country="it",
+        types="(cities)"
+      )
+
+    b-col.gmapContainer(
+      v-if="selectedCity",
+      cols=10,
+      sm=10,
+      md=10,
+      lg=9,
+      order=2,
+      order-sm=2,
+      order-md=2,
+      order-lg=1
+    ) 
+      GmapMap#gmap(
+        :options="mapsOptions",
+        :center="{ lat: selectedCity.coordinates.x, lng: selectedCity.coordinates.y }",
+        :zoom="14",
+        map-type-id="terrain",
+        ref="map"
+      )
+        div 
+          gmap-custom-marker(
+            v-for="(donation, idx) in donations",
+            :key="idx",
+            :marker="{ lat: donation.address.coordinates.x, lng: donation.address.coordinates.y }",
+            @click.native="toggleInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)"
+          )
+            h1
+              b-icon(icon="exclamation-circle-fill", variant="warning")
+        div
+          gmap-custom-marker(
+            v-for="(donation, idx) in selectedDonations",
+            :key="idx",
+            :marker="{ lat: donation.address.coordinates.x, lng: donation.address.coordinates.y }",
+            @click.native="toggleInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)"
+          )
+            h1
+              //truck
+              b-icon(icon="check-circle-fill", variant="success")
+        gmap-info-window(
+          v-if="windowCoordinates",
+          :options="{ maxWidth: 300 * windowDonations.length, pixelOffset: { width: 0, height: -55 } }",
+          :position="{ lat: windowCoordinates.x, lng: windowCoordinates.y }",
+          :opened="true",
+          @closeclick="windowDonations = []"
+        )
+          table
+            tr
+              td(v-for="(donation, idx) in windowDonations", :key:="idx") 
+                p
+                  span.mb-2.font-weight-bold Foods:
                   br
-              hr
-              p
-                span.mb-2.font-weight-bold Additional info:
-                br
-                span.mb-0 {{ selectedDonation.additionalInformation ? selectedDonation.additionalInformation : "#" }}
-              hr
-              p
-                span.mb-2.font-weight-bold Expiration date:
-                br
-                span.mb-0 {{ selectedDonation.expirationDate }}
-              b-button(v-if="this.selectedDonations.includes(this.selectedDonation)" variant="danger" block 
-              @click="deselectDonation()") deselect
-              b-button(v-else variant="success" block @click="selectDonation()") Submit
-    
-            
-      b-col
-        div.py-3.px-2(id="filters")
+                  span.mb-0(v-for="(food, idx) in donation.foods") {{ food }}
+                    br
+            tr
+              td(v-for="(donation, idx) in windowDonations", :key:="idx") 
+                p
+                  span.mb-2.font-weight-bold Additional info:
+                  br
+                  span.mb-0 {{ donation.additionalInformation ? donation.additionalInformation : '#' }}
+            tr
+              td(v-for="(donation, idx) in windowDonations", :key:="idx")
+                p
+                  span.mb-2.font-weight-bold Expiration date:
+                  br
+                  span.mb-0 {{ moment(donation.expirationDate).format('DD-MM-YYYY') }}
+            tr
+              td(v-for="(donation, idx) in windowDonations", :key:="idx")
+                b-button(
+                  v-if="selectedDonations.includes(donation)",
+                  size="sm",
+                  variant="danger",
+                  block,
+                  @click="deselectDonation(donation)"
+                ) Cancel
+                b-button(
+                  v-else,
+                  variant="success",
+                  size="sm",
+                  block,
+                  @click="selectDonation(donation)"
+                ) Select
 
-          div(class="b-flex flex-column")
-
-            div
-              p FILTRI
-
-            div()
-              b-form(@submit="submit")
-                b-form-group#input-group-2(label="Pick up date:", label-for="input-2")
-                  b-input-group
-                    b-form-datepicker#input-2.my-no-right-border(
-                      required,
-                      v-model="pickUpDate",
-                      reset-button,
-                      close-button,
-                      size="sm"
-                    )
-                    b-input-group-append
-                      b-button.my-no-left-border(
-                        variant="outline-danger",
-                        @click="pickUpDate = null",
-                        :disabled="pickUpDate == null",
-                        size="sm"
-                      )
-                        b-icon(icon="x", aria-hidden="true")
-                
-                b-form-group#input-group-3(
-                  label="Time of day:",
-                  label-for="input-3"
+    b-col#filters.border-left(
+      v-if="selectedCity",
+      cols=10,
+      sm=10,
+      md=10,
+      lg=3,
+      order=1,
+      order-sm=1,
+      order-md=1,
+      order-lg=2
+    )
+      b-form(@submit="submit", style="height: 100%")
+        .py-3.px-2.d-flex.flex-column(style="height: 100%")
+          div
+            h5.mb-3
+              font-awesome-icon.mr-1(icon="filter")
+              span Filters
+          div
+            b-form-group#input-group-2(
+              label="Pick up date:",
+              label-for="input-2"
+            )
+              b-input-group
+                b-form-datepicker#input-2.border-right-0(
+                  required,
+                  v-model="pickUpDate",
+                  reset-button,
+                  close-button,
+                  size="sm"
                 )
-                  b-form-select(
-                    v-model="pickUpPeriod",
-                    :options="['morning', 'afternoon', 'evening']",
-                    required, 
+                b-input-group-append
+                  b-button(
+                    variant="outline-danger",
+                    @click="pickUpDate = null",
+                    :disabled="pickUpDate == null",
                     size="sm"
                   )
+                    b-icon(icon="x", aria-hidden="true")
+            b-form-group#input-group-3(
+              label="Time of day:",
+              label-for="input-3"
+            )
+              b-form-select(
+                v-model="pickUpPeriod",
+                :options="['morning', 'afternoon', 'evening']",
+                required,
+                size="sm"
+              )
+          .mt-auto
+            b-alert(show)
+              p.m-0.p-0.text-center 
+                span Selected donations: {{ selectedDonations.length }}
+                br
+                span &nbsp;
+                a(href="#", @click="showModal") (Inspect)
+            b-button(variant="success", type="submit", size="sm", block) Submit
 
-            div.mt-auto
-              p.m-0.p-0.text-center Selected donations: {{ selectedDonations.length }}
-              p.text-center
-                a(href="#" @click="showSelectedDonations") &nbsp;(Inspect)
-              b-button(variant="success" size="sm" block) Select
+            b-row.no-gutters(align-v="center")
+              b-col.mr-2
+                hr
+              b-col(cols="auto")
+                label or
+              b-col.ml-2
+                hr
+            p.text-center
+              a(href="#", @click="deselectCity") Select another city
 
+  b-modal#modal-1(
+    title="Selected donations",
+    size="lg",
+    scrollable,
+    centered,
+    hide-footer,
+    v-model="isModalOpen"
+  )
+    b-row(style="height: 100%")
+      b-col(cols=10, md=10, lg=3, style="overflow: hidden")
+        b-list-group
+          div(
+            v-if="selectedDonations.length",
+            v-for="(donation, idx) in selectedDonations",
+            :key="idx"
+          )
+            b-list-group-item(:href="'#donation' + idx") Donation # {{ idx }}
+      b-col(cols=10, md=10, lg=9, style="overflow-y: scroll; height: 100%")
+        div(
+          v-if="selectedDonations.length",
+          v-for="(donation, idx) in selectedDonations",
+          :key="idx",
+          :id="'donation' + idx"
+        )
+          hr(v-if="idx != 0")
+          p
+            label Foods:
+            ul
+              li(v-for="(food, fidx) in donation.foods", :key="fidx") {{ food }}
+
+          p Expiration date:
+            label {{ donation.expirationDate }}
+
+          p
+            label Pickup periods:
+              p(
+                v-for="(weekDayName, weekDay, widx) in weekDays",
+                :key="widx",
+                v-if="donation.pickUpPeriod.filter((p) => p.weekDay == weekDay)"
+              )
+                label {{ weekDayName + ':&nbsp;' + donation.pickUpPeriod.filter((p) => p.weekDay == weekDay).map((d) => d.period).join(', ') }}
+
+        div(v-else)
+          i No selected donation found.
+          p Select a donation by clicking on a yellow exclamation mark found in the map.
+          p If you can't find any mark in the map, try to select different filtering options on the right menu.
 </template>
 
 
@@ -108,23 +235,52 @@
 
 #filters {
   height: 100%;
+
+  overflow-y: scroll;
 }
 
+.hidden-md {
+  display: hidden;
+
+  display: visible;
+}
 </style>
 
 
 <script lang="ts">
 import Vue from "vue";
-
-import GmapCustomMarker from 'vue2-gmap-custom-marker';
+import { AxiosResponse } from "axios";
+import GmapCustomMarker from "vue2-gmap-custom-marker";
 
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
-import api from "../api/donation";
-
+import donationsApi from "../api/donation";
 import { Donation } from "../types";
-import { AxiosResponse } from "axios";
+
+//This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+function calcCrow(lat1, lon1, lat2, lon2) {
+  var R = 6371; // km
+  var dLat = toRad(lat2 - lat1);
+  var dLon = toRad(lon2 - lon1);
+  var lat1Rad = toRad(lat1);
+  var lat2Rad = toRad(lat2);
+
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) *
+      Math.sin(dLon / 2) *
+      Math.cos(lat1Rad) *
+      Math.cos(lat2Rad);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d;
+}
+
+// Converts numeric degrees to radians
+function toRad(Value) {
+  return (Value * Math.PI) / 180;
+}
 
 export default Vue.extend({
   name: "ManagerDonationsRetrieve",
@@ -135,21 +291,34 @@ export default Vue.extend({
   },
   data: () => {
     return {
+      weekDays: {
+        //TODO: move to constants file (also in ManagerDonationsInpect and Create??)
+        lun: "Lunedì",
+        mar: "Martedì",
+        mer: "Mercoledì",
+        gio: "Giovedì",
+        ven: "Venerdì",
+        sab: "Sabato",
+        dom: "Domenica",
+      },
       mapsOptions: {
-        "zoomControl": true,
-        "mapTypeControl": false,
-        "scaleControl": false,
-        "streetViewControl": false,
-        "rotateControl": true,
-        "fullscreenControl": true, 
-        "disableDefaultUi": false,
-        "clickableIcons": false },
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: true,
+        fullscreenControl: true,
+        disableDefaultUi: false,
+        clickableIcons: false,
+      },
+      selectedCity: null,
       donations: new Array<Donation>(),
       selectedDonations: new Array<Donation>(),
-      selectedDonation: null,
+      windowDonations: new Array<Donation>(),
+      windowCoordinates: null,
       pickUpDate: "",
       pickUpPeriod: "",
-      isModalOpen: false
+      isModalOpen: false,
     };
   },
   watch: {
@@ -171,27 +340,60 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    toggleInfoWindow(donation: Donation) {
-      this.selectedDonation = this.selectedDonation ? null : donation;
+    selectCity(addressData, placeResultData, id) {
+      this.selectedCity = {
+        name: addressData.location,
+        coordinates: {
+          x: addressData.latitude,
+          y: addressData.longitude,
+        },
+      };
     },
-    selectDonation() {
-      this.selectedDonations.push(this.selectedDonation);
-      this.donations.splice(this.donations.findIndex((e: Donation) => e._id == this.selectedDonation._id), 1)
-      this.selectedDonation = null;
+    deselectCity() {
+      this.selectedCity = null;
+      this.selectedDonations = null;
+      this.windowDonations = null;
+      this.windowCoordinates = null;
     },
-    deselectDonation() {
-      this.selectedDonations.splice(this.selectedDonations.findIndex((e: Donation) => e._id == this.selectedDonation._id), 1)
-      this.donations.push(this.selectedDonation)
-      this.selectedDonation = null;
+    toggleInfoWindow(lat: number, lng: number) {
+      this.windowDonations.splice(0, this.windowDonations.length);
+      this.windowCoordinates = { x: lat, y: lng };
+      for (const donation of this.donations) {
+        const distance = calcCrow(
+          lat,
+          lng,
+          donation.address.coordinates.x,
+          donation.address.coordinates.y
+        );
+        if (distance < 1) {
+          this.windowDonations.push(donation);
+        }
+      }
+    },
+    selectDonation(donation: Donation) {
+      this.selectedDonations.push(donation);
+      this.donations.splice(
+        this.donations.findIndex((e: Donation) => e._id == donation._id),
+        1
+      );
+    },
+    deselectDonation(donation: Donation) {
+      this.selectedDonations.splice(
+        this.selectedDonations.findIndex(
+          (e: Donation) => e._id == donation._id
+        ),
+        1
+      );
+      this.donations.push(donation);
     },
     filterDonations() {
       this.selectedDonations = [];
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
+      donationsApi
         .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
-        .then((r: AxiosResponse<{data: Donation[]}>): void => {
-          this.donations = r.data;
+        .then((r: AxiosResponse): void => {
+          this.donations = r.data as Donation[];
         })
         .catch((): void => {
           this.$root.$bvToast.toast(`Error.`, {
@@ -202,21 +404,28 @@ export default Vue.extend({
           });
         });
     },
-    showSelectedDonations() {
+    showModal() {
       this.isModalOpen = true;
+    },
+    hideModal() {
+      this.isModalOpen = false;
     },
     submit(e: any) {
       e.preventDefault();
       if (!this.pickUpDate) {
-        this.$root.$bvToast.toast(
-          `Selezionare il giorno in cui verrà effettuato il ritiro della donazione.`,
-          {
-            title: "Donazione",
-            autoHideDelay: 5000,
-            variant: "warning",
-            appendToast: false,
-          }
-        );
+        this.$root.$bvToast.toast(`Select a valid pick up day.`, {
+          title: "Donations pickup",
+          autoHideDelay: 5000,
+          variant: "warning",
+          appendToast: false,
+        });
+      } else if (!this.selectedDonations.length) {
+        this.$root.$bvToast.toast(`Select at least one donation.`, {
+          title: "Donations pickup",
+          autoHideDelay: 5000,
+          variant: "warning",
+          appendToast: false,
+        });
       } else {
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedDonations.forEach((element: Donation) => {
@@ -226,7 +435,7 @@ export default Vue.extend({
             period: this.pickUpPeriod,
             date: this.pickUpDate,
           };
-          promises.push(api.editDonation(element));
+          promises.push(donationsApi.editDonation(element));
         });
 
         Promise.all(promises)
@@ -237,6 +446,20 @@ export default Vue.extend({
               autoHideDelay: 5000,
               variant: "success",
               appendToast: false,
+            });
+
+            this.selectedDonations.forEach((element: Donation) => {
+              this.$store.dispatch("sendMessage", {
+                donationId: element._id,
+                message:
+                  "Donation selected by " +
+                  this.$store.getters.userFullName +
+                  " for pickup on " +
+                  element.pickUp.date +
+                  ", " +
+                  element.pickUp.period,
+                isEventMessage: true,
+              });
             });
           })
           .catch((): void => {

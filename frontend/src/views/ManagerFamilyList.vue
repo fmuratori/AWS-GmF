@@ -2,71 +2,6 @@
 b-container
   b-row.justify-content-md-center.my-5.no-gutters
     b-col
-      //-     b-button.ml-2(
-      //-       pill,
-      //-       variant="secondary",
-      //-       size="sm",
-      //-       @click="orderBy('creation_date')",
-      //-       :class="{ 'my-button-selected': orderByMode == 'creation_date' }"
-      //-     ) Data creazione
-
-      //- b-row
-      //-   b-col(v-if="familyList.length == 0", sm=12, md=6)
-      //-     p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
-
-      //-   b-col(
-      //-     v-else,
-      //-     sm=12,
-      //-     md=6,
-      //-     v-for="(family, idx) in familyList",
-      //-     :key="idx"
-      //-   )
-      //-     b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-      //-       b-card-text
-      //-         .p-4
-      //-           h5 {{ family.name }}
-      //-           b-row
-      //-             b-col(cols="auto")
-      //-               div(class="")
-      //-                 p.mb-0 Phone number:
-      //-                 p.font-weight-bold.mb-2 {{ family.phoneNumber }}
-
-      //-               div(class="")
-      //-                 p.mb-0 Family size:
-      //-                 p.font-weight-bold.mb-2 {{ family.components }}
-                    
-      //-               div
-      //-                 p.mb-0 Address:
-      //-                 b {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
-
-      //-             b-col(cols="auto")
-      //-               div
-      //-                 p.mb-0 Status:
-      //-                   b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
-      //-                   b-badge(v-if="family.status == 'verified'", variant="success") {{ family.status }}
-
-      //-         b-button.b-card-footer-button(
-      //-           block,
-      //-           :disabled="family.status == 'verified'",
-      //-           variant="success",
-      //-           @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
-      //-         ) EDIT
-
-      //-         b-button.b-card-footer-button(
-      //-           block,
-      //-           v-if="userRole == 'trusted'",
-      //-           :disabled="family.status == 'verified'",
-      //-           variant="warning",
-      //-           @click="verifyFamily(family._id)"
-      //-         ) VERIFY
-
-      //-         b-button.b-card-footer-button(
-      //-           block,
-      //-           v-if="userRole != 'user'",
-      //-           variant="primary",
-      //-           :disabled="family.status != 'verified'",
-      //-           @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
-      //-         ) PACK
       hr.sidebar-hr.my-3
       h4.text-center.mb-4
         b(v-if="this.$store.state.session.userData.type == 'user'") YOUR FAMILY REPORTS
@@ -125,13 +60,7 @@ b-container
         b-col(v-if="familyList.length == 0", sm=12, md=6)
           p Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-        b-col(
-          v-else,
-          sm=12,
-          md=6,
-          v-for="(family, idx) in familyList",
-          :key="idx"
-        )
+        b-col(v-else, sm=12, md=6, v-for="(family, idx) in familyList")
           b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
             template(#header)
               h5
@@ -146,34 +75,34 @@ b-container
               .px-4.pt-4.pb-4
                 b-row
                   b-col(cols="auto")
-                    div(class="")
+                    div
                       span.mb-0 Phone number:
                       span.font-weight-bold.mb-2 {{ family.phoneNumber }}
 
-                    div(class="")
+                    div
                       span.mb-0 Components:
                       span.font-weight-bold.mb-2 {{ family.components }}
 
-                    div(class="")
+                    div
                       span.mb-0 Address:
                       span.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
                   b-col(cols="auto")
 
               b-button-group.d-flex(v-if="family.status == 'pending'")
-                b-button.b-card-footer-button(
+                b-button(
                   variant="success",
                   @click="$router.push({ name: 'ManagerFamilySubscribe', params: { family: family } })"
                 ) EDIT
 
-                b-button.b-card-footer-button(
+                b-button(
                   variant="danger",
-                  @click="deleteFamily(family._id)"
+                  v-b-modal.modal,
+                  @click="deleteFamilyId = family._id"
                 ) DELETE
 
               b-button.b-card-footer-button(
                 block,
-                v-if="userRole == 'trusted'",
-                :disabled="family.status == 'verified'",
+                v-if="userRole == 'trusted' && family.status != 'verified'",
                 variant="warning",
                 @click="verifyFamily(family._id)"
               ) VERIFY
@@ -184,6 +113,11 @@ b-container
                 variant="primary",
                 @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
               ) PACK
+
+        b-modal#modal(title="Confirm?", @ok="deleteFamily(deleteFamilyId)")
+          div Confirm to delete the family
+          template(#modal-cancel) Cancel
+          template(#modal-ok) Confirm
 </template>
 
 <script lang="ts">
@@ -209,6 +143,7 @@ export default Vue.extend({
       reporterFilter: "me",
       orderByMode: "creation_date",
       familyList: new Array<Family>(),
+      deleteFamilyId: "",
     };
   },
   created() {
@@ -248,12 +183,14 @@ export default Vue.extend({
     verifyFamily(familyId: string): void {
       api
         .verifyFamily({ id: familyId })
-        .then((r: AxiosResponse) => {
-          this.familyList.forEach((elem, index) => {
-            if (elem._id == familyId) {
-              this.familyList[index] = r.data as Family;
-            }
-          });
+        .then(() => {
+          if (this.statusFilter == "pending") {
+            this.familyList = this.familyList.filter((e) => e._id != familyId);
+          } else {
+            this.familyList.forEach((elem) => {
+              if (elem._id == familyId) elem.status = "verified";
+            });
+          }
 
           this.$root.$bvToast.toast(`Family verified with success.`, {
             title: "Verify",

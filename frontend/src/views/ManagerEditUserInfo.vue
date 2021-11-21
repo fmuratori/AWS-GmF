@@ -8,7 +8,7 @@ b-container
       hr.sidebar-hr.my-3
 
       .mb-4
-        b-form(@submit="changePassword")
+        b-form(@submit.stop.prevent="changePassword")
           InputText(
             title="Old password:",
             placeholder="Insert your old password here",
@@ -36,7 +36,7 @@ b-container
         b EDIT USER INFO
       hr.sidebar-hr.my-3
 
-      b-form(@submit="editUser")
+      b-form(@submit.stop.prevent="editUser")
         .mb-4
           b-row
             b-col
@@ -98,8 +98,6 @@ import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
-// import bcrypt from "bcrypt"
-
 import api from "../api/user";
 import { Address, editUserPayload, changePasswordPayload } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
@@ -155,8 +153,7 @@ export default Vue.extend({
         this.changePasswordForm.newPassword != ""
       );
     },
-    editUser(event) {
-      event.preventDefault();
+    editUser() {
       api
         .editUser(this.editUserForm)
         .then((r: AxiosResponse): void => {
@@ -187,8 +184,7 @@ export default Vue.extend({
           );
         });
     },
-    changePassword(event) {
-      event.preventDefault();
+    changePassword() {
       api
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {

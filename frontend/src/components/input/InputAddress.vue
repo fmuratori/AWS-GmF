@@ -22,7 +22,6 @@ b-form-group(:label="title"  label-class="font-weight-bold pt-0 text-center")
   b-form-group(label="Civic", label-cols-sm="3", label-align-sm="right")
     b-form-input(
       placeholder="Insert civic number here",
-      required,
       type="text",
       v-model="address.civicNumber"
       @input="$emit('data', address)"
@@ -40,7 +39,7 @@ b-form-group(:label="title"  label-class="font-weight-bold pt-0 text-center")
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 
 import mapsApi from "../../api/maps";
 import { Address } from "../../types";
@@ -80,11 +79,11 @@ export default Vue.extend({
   methods: {
     reset() {
       this.isLocationLoaded = false;
-      this.address.city = null;
-      this.address.street = null;
-      this.address.civicNumber = null;
-      this.address.coordinates.x = null;
-      this.address.coordinates.y = null;
+      this.address.city = "";
+      this.address.street = "";
+      this.address.civicNumber = "";
+      this.address.coordinates.x = 0;
+      this.address.coordinates.y = 0;
     },
     onLocationChange(x: number, y: number) {
       this.address.coordinates.x = x;
@@ -100,7 +99,6 @@ export default Vue.extend({
             this.address.street
         )
         .then((r:any) => {
-          console.log(r)
           if (r.status == 200) {
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>

@@ -20,8 +20,8 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
-import vueCookies from "vue-cookies"
-Vue.use(vueCookies)
+import vueCookies from "vue-cookies";
+Vue.use(vueCookies);
 
 /* socketio vuejs based implementation */
 import vueSocket from "./socket";
@@ -39,6 +39,10 @@ Vue.use(VueGoogleMaps, {
   installComponents: true,
   autobindAllEvents: false,
 });
+
+import VueGoogleAutocomplete from "vue-google-autocomplete"
+Vue.component("vue-google-autocomplete", VueGoogleAutocomplete);
+
 
 /* enable moment package usage inside html/pug code */
 import moment from "moment";

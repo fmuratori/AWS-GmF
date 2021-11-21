@@ -23,7 +23,7 @@ export default class FoodController {
 		} else {
 			//aggiorno il nodo già esistente
 			if (req.body.number) {
-				elem.number += parseInt(req.body.number) 
+				elem.number += parseInt(req.body.number)
 			}
 			elem = await FoodModel.findByIdAndUpdate(elem._id, elem, { new: true })
 		}
@@ -31,5 +31,4 @@ export default class FoodController {
 		res.status(200).json(elem)
 
 	})
-
 }

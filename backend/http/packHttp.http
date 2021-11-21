@@ -30,3 +30,12 @@ content-type: application/json
     "deliveryVolunteerId": "6183af3dabd629ea28db1cd9",
     "familyId": "61868cc55b094054c03880c1"
 }
+
+### PACKS: advance status
+POST http://localhost:3000/api/pack/advance
+accept: application/json 
+content-type: application/json
+
+{
+    "id": "61929aa5ceece835c6f92e58"
+}

@@ -18,7 +18,9 @@ b-container
               :ref="'scrollTo' + idx"
             )
 
-          b-form(@submit="sendMessage")
+          //- div(class="")
+          //-   label(class="font-italic") Marco stà scrivendo...
+          b-form(@submit.stop.prevent="sendMessage")
             b-input-group(class="")
               b-form-input(
                 type="text",
@@ -241,7 +243,7 @@ export default Vue.extend({
     },
     sendMessage(event) {
       event.preventDefault();
-      this.$store.emit("sendMessage", {
+      this.$store.dispatch("sendMessage", {
         donationId: this.donation._id,
         message: this.chatMessage,
         isEventMessage: false,

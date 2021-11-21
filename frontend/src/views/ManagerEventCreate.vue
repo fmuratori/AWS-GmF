@@ -7,7 +7,7 @@ b-container
         b CREATE AN EVENT
       hr.sidebar-hr.my-3
 
-      b-form(@submit="createEvent")
+      b-form(@submit.stop.prevent="createEvent")
         .mb4
           InputText(
             title="Title:",
@@ -85,7 +85,7 @@ export default Vue.extend({
         ownerVolunteerId: "",
         eventTitle: "",
         description: "",
-        image: "",
+        image: null,
         address: {
           city: "",
           street: "",
@@ -115,9 +115,7 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    createEvent(event): void {
-      event.preventDefault();
-
+    createEvent(): void {
       var fun;
       if ("event" in this.$route.params) fun = api.editEvent;
       else fun = api.createEvent;

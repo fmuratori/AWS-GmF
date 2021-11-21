@@ -4,6 +4,7 @@ b-row.mb-1(no-gutters align-v="center")
     font-awesome-icon(v-if="this.icon == 'users'" icon="users" size="lg")
     font-awesome-icon(v-else-if="this.icon == 'calendar'" icon="calendar" size="lg")
     font-awesome-icon(v-else-if="this.icon == 'map'" icon="map" size="lg")
+    font-awesome-icon(v-else-if="this.icon == 'box'" icon="box" size="lg")
     font-awesome-icon(v-else-if="this.icon == 'drumstick-bite'" icon="drumstick-bite" size="lg")
   b-col.ml-1
     h6.mb-0 {{text}}

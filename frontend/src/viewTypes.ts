@@ -19,6 +19,7 @@ export interface CreateEventView {
 export interface EventListView {
   events: Array<Event>;
   tableFields: Array<TableField>;
+  deleteEventId: string;
 }
 
 export interface ReportFamilyView {
@@ -26,17 +27,18 @@ export interface ReportFamilyView {
   submitLabel: string;
 }
 
-export interface CreatedonationView {
+export interface CreateDonationView {
   weekDays: any;
   form: DonationCreationPayload;
   submitLabel: string;
+  isLocationLoaded: boolean;
 }
 
 export interface FoodManagerView {
   form: FoodPayload;
   foodList: Array<Food>;
   tableFields: Array<string>;
-  availableLables: Array<{ text: string, value: string }>;
+  availableLables: Array<{ text: string; value: string }>;
   reloadIndex: number;
 }
 
@@ -52,6 +54,7 @@ export interface PackManagerView {
   familyDetails?: Family;
   foodDetails?: Array<Food>;
   tableFields: Array<string>;
+  deletePackId: string;
 }
 
 interface TableField {
@@ -73,4 +76,5 @@ export interface FoodView {
   sortDesc: false;
   sortDirection: "asc" | "desc";
   index: number;
+  deleteFoodId: string;
 }

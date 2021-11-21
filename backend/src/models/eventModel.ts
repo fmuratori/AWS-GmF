@@ -2,9 +2,9 @@ import mongoose, { PopulatedDoc } from "mongoose";
 import Event from "./interfaces/event";
 import User from "./interfaces/user";
 
-export interface EventDocument extends Document, Event{
+export interface EventDocument extends Document, Event {
     user?: PopulatedDoc<User & Document>
- }
+}
 
 const eventSchema = new mongoose.Schema({
     eventTitle: {
@@ -28,7 +28,7 @@ const eventSchema = new mongoose.Schema({
         required: [true, "missing required field address"]
     },
     image: {
-        type: String,
+        type: Buffer,
         required: false
     }, // la stringa in base64 potrebbe essere troppo lunga
     date: {

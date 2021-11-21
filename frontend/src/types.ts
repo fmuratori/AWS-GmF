@@ -68,12 +68,7 @@ export interface Donation {
   expirationDate: string;
   address: Address;
   additionalInformation: string;
-  pickUpPeriod: [
-    {
-      weekDay: string;
-      period: string;
-    }
-  ];
+  pickUpPeriod: Array<{ weekDay: string; period: string }>;
   chat: ChatMessage[];
   creationDate: string;
   status: string;
@@ -126,7 +121,7 @@ export interface EventPayload {
   description: string;
   address: Address;
   date: Date;
-  image: string;
+  image: File | null;
 }
 
 export interface Event {
@@ -192,6 +187,20 @@ export interface NavigationState {
 export interface LoginResponse {
   token: string;
   user: UserData;
+}
+
+export interface FoodLabelsResponse {
+  meat: number;
+  fish: number;
+  pasta: number;
+  vegetable: number;
+  fruit: number;
+}
+
+export interface CountDataResponse {
+  foodCount: number;
+  verifiedFamilies: number;
+  deliveredPacks: number;
 }
 
 // export interface OfferResponse {

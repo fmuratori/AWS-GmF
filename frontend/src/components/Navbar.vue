@@ -92,13 +92,12 @@ export default Vue.extend({
       this.$store.dispatch("toggleSidebar");
     },
     logout() {
-      this.$cookies.remove("jwt")
-      this.$cookies.remove("user-id")
+      this.$cookies.remove("jwt");
+      this.$cookies.remove("user-id");
 
       this.$socket.emit("logout", this.$store.state.session.userData._id);
       this.$store.dispatch("logout");
-      // this.changePage("Home");
-      this.$router.go()
+      this.$router.go(0);
 
       this.$store.dispatch("hideSidebar");
     },
@@ -117,7 +116,7 @@ export default Vue.extend({
 });
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 @import "@/assets/style.scss";
 
 #navbar {
