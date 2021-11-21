@@ -202,7 +202,7 @@ export default Vue.extend({
                 appendToast: false,
               });
             }
-            this.$router.push({ name: "ManagerDonationsUserList" });
+            this.$router.push({ name: "ManagerDonationsList" });
           })
           .catch((e: AxiosError): void => {
             console.log(e);

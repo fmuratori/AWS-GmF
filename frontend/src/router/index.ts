@@ -34,19 +34,11 @@ const routes: Array<RouteConfig> = [
       ),
   },
   {
-    path: "/manager/donations/user-list",
-    name: "ManagerDonationsUserList",
+    path: "/manager/donations/list",
+    name: "ManagerDonationsList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerDonationsUserList" */ "../views/ManagerDonationsUserList.vue"
-      ),
-  },
-  {
-    path: "/manager/donations/volunteer-list",
-    name: "ManagerDonationsVolunteerList",
-    component: () =>
-      import(
-        /* webpackChunkName: "ManagerDonationsVolunteerList" */ "../views/ManagerDonationsVolunteerList.vue"
+        /* webpackChunkName: "ManagerDonationsList" */ "../views/ManagerDonationsList.vue"
       ),
   },
   {

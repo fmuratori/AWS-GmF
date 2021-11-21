@@ -110,10 +110,7 @@ export default Vue.extend({
       this.$store.dispatch("hideSidebar");
     },
     routeToDonations() {
-      if (this.$store.getters.isUser)
-        this.$router.push({ name: "ManagerDonationsUserList" });
-      else if (this.$store.getters.isVolunteer)
-        this.$router.push({ name: "ManagerDonationsVolunteerList" });
+      this.$router.push({ name: "ManagerDonationsList" });
     },
     changePage(pageName: string) {
       if (this.$router.currentRoute.name != pageName) {

@@ -97,7 +97,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.push({ name: 'ManagerDonationsUserList' })",
+          @click="$router.push({ name: 'ManagerDonationsList' })",
           type="reset"
         ) Indietro
 
@@ -111,7 +111,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.push({ name: 'ManagerDonationsVolunteerList' })",
+          @click="$router.push({ name: 'ManagerDonationsList' })",
           type="reset"
         ) Indietro
 </template>
@@ -314,7 +314,7 @@ export default Vue.extend({
                 appendToast: false,
               }
             );
-            this.$router.push({ name: "ManagerDonationsVolunteerList" });
+            this.$router.push({ name: "ManagerDonationsList" });
           }
         })
         .catch((e: AxiosError): void => {

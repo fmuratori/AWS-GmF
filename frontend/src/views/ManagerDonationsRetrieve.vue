@@ -440,7 +440,7 @@ export default Vue.extend({
 
         Promise.all(promises)
           .then((): void => {
-            this.$router.push({ name: "ManagerDonationsVolunteerList" });
+            this.$router.push({ name: "ManagerDonationsList" });
             this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
               title: "Donazioni",
               autoHideDelay: 5000,

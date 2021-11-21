@@ -12,23 +12,22 @@
           b-badge(variant="primary") {{ this.$store.state.session.userData.type }}
         p.clickable(@click="changePage('ManagerEditUserInfo')") Edit User
 
-        
   #sidebar-actions 
-    div(v-if="$store.state.session.userData.type == 'user'")
-      hr.sidebar-hr.my-3
-      SidebarCategory(text="Donations", icon="map")
-      SidebarItem(text="Make a donation", route="ManagerDonationsCreate")
-      SidebarItem(text="Donation list", route="ManagerDonationsUserList")
-
-    div(v-if="this.$store.state.session.userData.type != 'user'")
+    div
       hr.sidebar-hr.my-3
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(
+        v-if="this.$store.state.session.userData.type != 'user'",
         text="Create retrieve assignment",
         route="ManagerDonationsRetrieve"
       )
-      SidebarItem(text="Donation list", route="ManagerDonationsVolunteerList")
+      SidebarItem(
+        v-if="this.$store.state.session.userData.type == 'user'",
+        text="Make a donation",
+        route="ManagerDonationsCreate"
+      )
 
+      SidebarItem(text="Donation list", route="ManagerDonationsList")
 
     div
       hr.sidebar-hr.my-3
