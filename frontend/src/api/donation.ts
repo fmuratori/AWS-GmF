@@ -49,6 +49,7 @@ export default {
   },
 
   async filterUnpickedDonations(
+    city : string,
     pickUpDate: string,
     pickUpPeriod: string
   ): Promise<AxiosResponse> {
@@ -62,6 +63,10 @@ export default {
         },
       ],
     } as FindPayload;
+
+    if (city) {
+      filter["$and"].push({ "address.city": city })
+    }
 
     const pickUpFilter = {};
     if (pickUpDate) {

@@ -1,8 +1,8 @@
 <template lang="pug">
-  div(class="gmapContainer")
-    b-row(class="gmapContainer justify-content-center" no-gutters)
+  div(class="fullheight")
+    b-row(class="fullheight justify-content-center" no-gutters)
 
-      b-col(v-if="!selectedCity" cols=10 sm=8 md=7 lg=6 class="px-5 text-center gmapContainer align-middle" align-self="center")
+      b-col(v-if="!selectedCity" cols=10 sm=8 md=7 lg=6 class="px-5 text-center fullheight align-middle" align-self="center")
         h1.mt-5 
           b-icon.mr-2(icon="map")
           span Donations map
@@ -19,22 +19,22 @@
         country="it"
         types="(cities)")
 
-      b-col(v-if="selectedCity" class="gmapContainer" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
+      b-col(v-if="selectedCity" class="fullheight" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
         GmapMap(:options="mapsOptions" 
         :center="{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}"
         :zoom="14"
         map-type-id="terrain"
-        id="gmap" ref="map")
+        class="fullheight")
           div 
             gmap-custom-marker(v-for="(donation, idx) in donations" :key="idx" 
               :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-              @click.native="toggleInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)")
+              @click.native="openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)")
               h1
                 b-icon(icon="exclamation-circle-fill" variant="warning")
           div
             gmap-custom-marker(v-for="(donation, idx) in selectedDonations" :key="idx" 
               :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}"
-              @click.native="toggleInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)")
+              @click.native="openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)")
               h1
                 //truck
                 b-icon(icon="check-circle-fill" variant="success")
@@ -43,7 +43,7 @@
           :options="{maxWidth: 300*windowDonations.length, pixelOffset: { width: 0, height: -55 } }"
           :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}", 
           :opened="true"
-          @closeclick="windowDonations=[]")
+          @closeclick="closeInfoWindow")
 
             table
               tr
@@ -71,11 +71,9 @@
                   @click="deselectDonation(donation)") Cancel
                   b-button(v-else variant="success" size="sm" block @click="selectDonation(donation)") Select
 
-
-
-      b-col(v-if="selectedCity" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="border-left" id="filters")
-        b-form(@submit="submit" style="height: 100%")
-          div.py-3.px-2(class="d-flex flex-column" style="height: 100%")
+      b-col(v-if="selectedCity" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
+        b-form(@submit="submit" class="fullheight")
+          div.py-3.px-lg-2(class="d-flex flex-column" class="fullheight")
             div()
               h5.mb-3
                 font-awesome-icon.mr-1(icon="filter")
@@ -88,7 +86,8 @@
                     v-model="pickUpDate",
                     reset-button,
                     close-button,
-                    size="sm"
+                    size="sm",
+                    :min="new Date()"
                   )
                   b-input-group-append
                     b-button(
@@ -108,7 +107,7 @@
                   required, 
                   size="sm"
                 )
-            div.mt-auto()
+            div.mt-auto.d-none.d-lg-block.d-xl-block()
               b-alert(show)
                 p.m-0.p-0.text-center 
                   span Selected donations: {{ selectedDonations.length }}
@@ -116,16 +115,17 @@
                   span &nbsp;
                   a(href="#" @click="showModal") (Inspect)
               b-button(variant="success" type="submit" size="sm" block) Submit
+              b-button(variant="danger" type="submit" size="sm" block @click="deselectCity") Select another city
 
-              b-row.no-gutters(align-v="center")
-                b-col.mr-2
-                  hr
-                b-col(cols="auto")
-                  label or
-                b-col.ml-2
-                  hr
-              p.text-center
-                a(href="#" @click="deselectCity") Select another city
+      b-col(v-if="selectedCity" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
+        b-alert.mt-3(show)
+          p.m-0.p-0.text-center 
+            span Selected donations: {{ selectedDonations.length }}
+            br
+            span &nbsp;
+            a(href="#" @click="showModal") (Inspect)
+        b-button(variant="success" type="submit" size="sm" block) Submit
+        b-button(variant="danger" type="submit" size="sm" block @click="deselectCity") Select another city
 
     b-modal(id="modal-1" title="Selected donations" size="lg" scrollable centered hide-footer v-model="isModalOpen")
       b-row(style="height: 100%;")
@@ -135,7 +135,9 @@
               b-list-group-item(:href="'#donation' + idx") Donation # {{ idx }}
         b-col(cols=10 md=10 lg=9 style="overflow-y: scroll; height: 100%;")
           div(v-if="selectedDonations.length" v-for="(donation, idx) in selectedDonations" :key="idx" :id="'donation' + idx")
-            hr(v-if="idx != 0")
+            
+            hr
+            h4 Donation # {{idx}}
             p
               label Foods:
               ul
@@ -164,13 +166,6 @@
 <style scoped lang="scss">
 @import "@/assets/style.scss";
 
-.gmapContainer {
-  height: 100%;
-}
-
-#gmap {
-  height: 100%;
-}
 
 #filters {
   height: 100%;
@@ -178,10 +173,32 @@
   overflow-y: scroll;
 }
 
-.hidden-md {
-  display :hidden;
+.fullheight {
+  height: 100%;
+}
 
-  display: visible;
+.fullheight-lg {
+  
+  @include md {
+    height: auto;
+  }
+
+  @include lg {
+    height: 100%;
+  }
+}
+
+.scrollable-lg {  
+  
+  @include md {
+    width: auto;
+    overflow-y: auto;
+  }
+
+  @include lg {
+    width: 100%;
+    overflow-y: scroll;
+  }
 }
 
 </style>
@@ -191,6 +208,7 @@
 import Vue from "vue";
 import { AxiosResponse } from "axios";
 import GmapCustomMarker from "vue2-gmap-custom-marker";
+import moment from "moment";
 
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
@@ -251,8 +269,8 @@ export default Vue.extend({
       selectedDonations: new Array<Donation>(),
       windowDonations: [],
       windowCoordinates: null,
-      pickUpDate: "",
-      pickUpPeriod: "",
+      pickUpDate: moment().format("YYYY-MM-DD"),
+      pickUpPeriod: "morning",
       isModalOpen: false,
     };
   },
@@ -266,19 +284,19 @@ export default Vue.extend({
   },
   created() {
     // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      this.filterDonations();
-    } else this.$router.push({ name: "Login" });
+    if (!this.$store.getters.isUserLogged) 
+      this.$router.push({ name: "Login" });
   },
   methods: {
     selectCity(addressData, placeResultData, id) {
       this.selectedCity = {
-        name: addressData.location,
+        name: addressData.locality,
         coordinates: {
           x: addressData.latitude,
           y: addressData.longitude,
         }
       }
+      this.filterDonations();
     },
     deselectCity() {
       this.selectedCity = null;
@@ -286,8 +304,10 @@ export default Vue.extend({
       this.windowDonations = null;
       this.windowCoordinates = null;
     },
-    toggleInfoWindow(lat: number , lng: number) {
+    openInfoWindow(lat: number , lng: number) {
       this.windowDonations.splice(0, this.windowDonations.length);
+
+      // find coordinates near to the clicked marked
       this.windowCoordinates = {x: lat, y: lng};
       for (const donation of this.donations) {
         const distance = calcCrow(lat, lng, donation.address.coordinates.x, donation.address.coordinates.y)
@@ -295,6 +315,10 @@ export default Vue.extend({
           this.windowDonations.push(donation);
         }
       }
+    },
+    closeInfoWindow() {
+      this.windowDonations.splice(0, this.windowDonations.length);
+      this.windowCoordinates = null;
     },
     selectDonation(donation: Donation) {
       this.selectedDonations.push(donation);
@@ -309,7 +333,7 @@ export default Vue.extend({
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
       donationsApi
-        .filterUnpickedDonations(this.pickUpDate, this.pickUpPeriod)
+        .filterUnpickedDonations(this.selectedCity.name, this.pickUpDate, this.pickUpPeriod)
         .then((r: AxiosResponse<{data: Donation[]}>): void => {
           this.donations = r.data;
         })
