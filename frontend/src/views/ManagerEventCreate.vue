@@ -85,7 +85,7 @@ export default Vue.extend({
         ownerVolunteerId: "",
         eventTitle: "",
         description: "",
-        image: "",
+        image: null,
         address: {
           city: "",
           street: "",
