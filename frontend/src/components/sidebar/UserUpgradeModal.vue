@@ -1,6 +1,10 @@
 <template lang="pug">
 div
-  b-button(block, variant="outline-primary", v-b-modal.updateUserModal) Update user
+  //- b-button(block, variant="outline-primary", v-b-modal.updateUserModal) Update user
+  b-nav-item.my-auto.navbar-link.text-center(
+    href="#",
+    v-b-modal.updateUserModal
+  ) Upgrade a user
 
   b-modal#updateUserModal(
     title="Upgrade a user to volunteer role",
@@ -70,4 +74,9 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/style.scss";
+
+.navbar-link > * {
+  color: $greyscaleE !important;
+}
 </style>

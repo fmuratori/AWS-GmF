@@ -10,8 +10,9 @@
         p {{ userFullname }}
         h5
           b-badge(variant="primary") {{ this.$store.state.session.userData.type }}
-        p.clickable(@click="changePage('ManagerEditUserInfo')") edit
+        p.clickable(@click="changePage('ManagerEditUserInfo')") Edit User
 
+        
   #sidebar-actions 
     div(v-if="$store.state.session.userData.type == 'user'")
       hr.sidebar-hr.my-3
@@ -47,25 +48,18 @@
       SidebarItem(text="Food manager", route="ManagerFood")
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
-
-
-    div(v-if="this.$store.state.session.userData.type == 'trusted'")
-      hr.sidebar-hr.my-3
-      UserUpgradeModal
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import SidebarCategory from "./SidebarCategory.vue";
 import SidebarItem from "./SidebarItem.vue";
-import UserUpgradeModal from "./UserUpgradeModal.vue"
 
 export default Vue.extend({
   name: "Sidebar",
   components: {
     SidebarCategory,
     SidebarItem,
-    UserUpgradeModal,
   },
   computed: {
     userFullname() {
