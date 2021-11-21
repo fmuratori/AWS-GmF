@@ -50,10 +50,6 @@ export default Vue.extend({
             legend: {
               position: "bottom",
             },
-            title: {
-              display: true,
-              text: "Food donated by category",
-            },
           },
         },
       });

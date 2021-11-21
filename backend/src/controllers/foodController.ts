@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import FoodModel, { FoodDocument } from '../models/foodModel';
 import catchAsync from '../utils/catchAsync';
-import ControllerFactory from '../utils/controllerFactory'; 
+import ControllerFactory from '../utils/controllerFactory';
 
 const factory = new ControllerFactory<FoodDocument>()
 
@@ -33,20 +33,27 @@ export default class FoodController {
 	})
 
 	getChartData = catchAsync(async (req: Request, res: Response) => {
-		const list = await FoodModel.find();
+		const foodList = await FoodModel.find();
+		var meatCount = 0
+		var fishCount = 0
+		var pastaCount = 0
+		var vegetableCount = 0
+		var fruitCount = 0
 
-		const meat = list.filter((e: FoodDocument) => e.labels.indexOf("meat") != -1)
-		const fish = list.filter((e: FoodDocument) => e.labels.indexOf("fish") != -1)
-		const pasta = list.filter((e: FoodDocument) => e.labels.indexOf("pasta") != -1)
-		const vegetable = list.filter((e: FoodDocument) => e.labels.indexOf("vegetable") != -1)
-		const fruit = list.filter((e: FoodDocument) => e.labels.indexOf("fruit") != -1)
+		foodList.forEach((elem: FoodDocument) => {
+			if (elem.labels.indexOf("meat") != -1) meatCount += elem.number
+			if (elem.labels.indexOf("fish") != -1) fishCount += elem.number
+			if (elem.labels.indexOf("pasta") != -1) pastaCount += elem.number
+			if (elem.labels.indexOf("vegetable") != -1) vegetableCount += elem.number
+			if (elem.labels.indexOf("fruit") != -1) fruitCount += elem.number
+		});
 
 		res.status(200).json({
-			meat: meat.length,
-			fish: fish.length,
-			pasta: pasta.length,
-			vegetable: vegetable.length,
-			fruit: fruit.length
+			meat: meatCount,
+			fish: fishCount,
+			pasta: pastaCount,
+			vegetable: vegetableCount,
+			fruit: fruitCount
 		})
 	})
 }

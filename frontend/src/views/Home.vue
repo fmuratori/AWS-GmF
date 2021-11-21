@@ -4,11 +4,19 @@ b-container
     h4 What is BringMeFood?
 
   b-row.justify-content-md-center.my-5.no-gutters
-    HomepageEvents
+    h2.text-center
+      b Food donated by category
 
   b-row.justify-content-md-center.my-5.no-gutters
     DoughnutChart
-  </template>
+
+  b-row.justify-content-md-center.my-5.no-gutters
+    h2.text-center
+      b Next events
+
+  b-row.justify-content-md-center.my-5.no-gutters
+    HomepageEvents
+</template>
 
 <script lang="ts">
 import Vue from "vue";
