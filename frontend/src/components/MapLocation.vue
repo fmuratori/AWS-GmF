@@ -51,8 +51,7 @@ export default Vue.extend({
         function () {
           this.xCoord = map.getCenter().lat();
           this.yCoord = map.getCenter().lng();
-
-          this.$emit("locationChange", this.x, this.y);
+          this.$emit("locationChange", map.getCenter().lat(), map.getCenter().lng());
         }.bind(this)
       );
     });

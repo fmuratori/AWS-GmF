@@ -81,6 +81,7 @@ b-row.justify-content-center(no-gutters)
           InputAddress(
             title="Location",
             v-on:data="(e) => { registration.address = e; }"
+            @addressUpdate = "onAddressUpdate"
           )
 
           InputPasswordSelect(
@@ -171,6 +172,9 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
+    onAddressUpdate(address) {
+      this.registration.address = address;
+    },
     submitForm() {
       if (this.isLoginSelected) {
         userApi

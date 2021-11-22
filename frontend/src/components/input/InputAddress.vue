@@ -88,6 +88,7 @@ export default Vue.extend({
     onLocationChange(x: number, y: number) {
       this.address.coordinates.x = x;
       this.address.coordinates.y = y;
+      this.$emit("addressUpdate", this.address);
     },
     find() {
       mapsApi
