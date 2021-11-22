@@ -82,6 +82,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import InputDate from "../components/input/InputDate.vue";
@@ -195,52 +196,23 @@ export default Vue.extend({
                 isEventMessage: true,
               })
             } else {
-              this.$root.$bvToast.toast(`Donation created successfully.`, {
-                title: "Donation",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              });
+              eventbus.$emit("successMessage", "Donation", "Donation created successfully.");
             }
             this.$router.push({ name: "ManagerDonationsUserList" });
           })
           .catch((e: AxiosError): void => {
             console.log(e);
-            this.$root.$bvToast.toast(
-              `Unable to send the donation. Retry later or contact us if the problem persists.`,
-              {
-                title: "Donation",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
+            eventbus.$emit("errorMessage", "Donation", "Unable to send the donation. Retry later or contact us if the problem persists.");
           });
       }
     },
     formChecks(): boolean {
       if (!this.form.pickUpPeriod.length || !this.form.expirationDate) {
-        this.$root.$bvToast.toast(
-          `Select al least one day and period of the day when we can retrive your donation.`,
-          {
-            title: "Donation",
-            autoHideDelay: 5000,
-            variant: "warning",
-            appendToast: false,
-          }
-        );
+        eventbus.$emit("warningMessage", "Donation", "Select al least one day and period of the day when we can retrive your donation.");
         return false;
       }
       if (!this.form.foods.length) {
-        this.$root.$bvToast.toast(
-          `Add at least one valid food to the donation.`,
-          {
-            title: "Donation",
-            autoHideDelay: 5000,
-            variant: "warning",
-            appendToast: false,
-          }
-        );
+        eventbus.$emit("warningMessage", "Donation", "Add at least one valid food to the donation.");
         return false;
       }
       return true;

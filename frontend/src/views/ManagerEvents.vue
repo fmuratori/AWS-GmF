@@ -43,6 +43,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
@@ -132,23 +133,10 @@ export default Vue.extend({
         .deleteEvent({ id: id })
         .then((): void => {
           this.events = this.events.filter((e) => e._id != id);
-          this.$root.$bvToast.toast(`Event successfully deleted.`, {
-            title: "Event",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Events", "Event successfully deleted.");
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to delete the event. Retry later or contact us if the problem persist.`,
-            {
-              title: "Event",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Events", "Unable to delete the event. Retry later or contact us if the problem persists.");
         });
     },
   },

@@ -78,6 +78,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
@@ -151,23 +152,10 @@ export default Vue.extend({
         .deletePack({ id: id })
         .then((): void => {
           this.packList = this.packList.filter((e) => e._id != id);
-          this.$root.$bvToast.toast(`Food successfully created.`, {
-            title: "Food",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to add food. Retry later or contact us if the problem persist.`,
-            {
-              title: "Food",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Foods", "Unable to add food. Retry later or contact us if the problem persists.");
         });
     },
     advancePackStatus(id: string) {
@@ -180,23 +168,10 @@ export default Vue.extend({
               console.log(elem)
               };
           });
-          this.$root.$bvToast.toast(`Food successfully created.`, {
-            title: "Food",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to upgrade pack status. Retry later or contact us if the problem persist.`,
-            {
-              title: "Pack",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Foods", "Unable to upgrade pack status. Retry later or contact us if the problem persists.");
         });
     },
     showDetails(row: any) {

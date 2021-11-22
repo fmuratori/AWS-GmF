@@ -58,6 +58,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import InputText from "../components/input/InputText.vue";
@@ -122,23 +123,10 @@ export default Vue.extend({
       fun(this.form)
         .then((): void => {
           this.$router.push({ name: "ManagerFamilyList" });
-          this.$root.$bvToast.toast(`Familgia segnalata con successo.`, {
-            title: "Famiglia",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Events", "Family registration request received succesfully. In a later date we will validate your request.");
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Impossibile segnalare la famiglia. Riprova più tardi oppure contattaci se il problema persiste.`,
-            {
-              title: "Famiglia",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Events", "Unable to submit the family registration request. Retry later or contact us if the problem persists.");
         });
     },
   },

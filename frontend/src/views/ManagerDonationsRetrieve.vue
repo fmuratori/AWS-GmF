@@ -135,7 +135,7 @@
         b-col(v-if="selectedDonations.length" cols=10 md=10 lg=9 style="overflow-y: scroll; height: 100%;")
           div(v-for="(donation, idx) in selectedDonations" :key="idx" :id="'donation' + idx")
             
-            hr
+            hr.mt-0.pt-0
             h4 Donation # {{idx}}
             p
               label Foods:
@@ -203,6 +203,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import { AxiosResponse } from "axios";
 import GmapCustomMarker from "vue2-gmap-custom-marker";
 import moment from "moment";
@@ -359,12 +360,7 @@ export default Vue.extend({
           this.donations = r.data;
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(`Error.`, {
-            title: "Donazioni",
-            autoHideDelay: 5000,
-            variant: "danger",
-            appendToast: false,
-          });
+          eventbus.$emit("errorMessage", "Donation", "Donation search with filtering options failed. Retry later or contact us if the problem persists.");
         });
     },
     showModal() {
@@ -376,19 +372,9 @@ export default Vue.extend({
     submit(e: any) {
       e.preventDefault();
       if (!this.pickUpDate) {
-        this.$root.$bvToast.toast(`Select a valid pick up day.`, {
-          title: "Donations pickup",
-          autoHideDelay: 5000,
-          variant: "warning",
-          appendToast: false,
-        });
+        eventbus.$emit("warningMessage", "Donations", "Unable to perform the requested operation. Select a valid pickup day.");
       } else if (!this.selectedDonations.length) {
-        this.$root.$bvToast.toast(`Select at least one donation.`, {
-          title: "Donations pickup",
-          autoHideDelay: 5000,
-          variant: "warning",
-          appendToast: false,
-        });
+        eventbus.$emit("warningMessage", "Donations", "Unable to perform the requested operation. Select at least one donation available for pick up.");
       } else {
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedDonations.forEach((element: Donation) => {
@@ -404,13 +390,7 @@ export default Vue.extend({
         Promise.all(promises)
           .then((): void => {
             this.$router.push({ name: "ManagerDonationsVolunteerList" });
-            this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
-              title: "Donazioni",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            });
-
+            eventbus.$emit("successMessage", "Donations", "Donation reservation submitted succesfully.");
             this.selectedDonations.forEach((element: Donation) => {
               this.$store.dispatch("sendMessage", {
                 donationId: element._id,
@@ -426,15 +406,7 @@ export default Vue.extend({
             });
           })
           .catch((): void => {
-            this.$root.$bvToast.toast(
-              `Impossibile prenotare le donazioni selezionate.`,
-              {
-                title: "Donazioni",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
+            eventbus.$emit("errorMessage", "Donations", "Donation reservation submission for pick up failed. Retry later or contact us if the problem persists.");
           });
       }
     },

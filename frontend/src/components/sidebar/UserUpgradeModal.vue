@@ -22,6 +22,7 @@ div
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../../eventbus"
 import InputText from "../input/InputText.vue";
 
 import api from "../../api/user";
@@ -43,26 +44,13 @@ export default Vue.extend({
       api
         .upgradeUser({ email: this.userEmail })
         .then(() => {
-          this.$root.$bvToast.toast(`User successfully upgraded.`, {
-            title: "User",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "User", "User upgraded successfully.");
           this.$nextTick(() => {
             this.$bvModal.hide("updateUserModal");
           });
         })
         .catch(() => {
-          this.$root.$bvToast.toast(
-            `Unable to upgrade user. Retry later or contact us if the problem persist.`,
-            {
-              title: "User",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "User", "Unable to upgrade user. Retry later or contact us if the problem persist.");
         });
     },
   },

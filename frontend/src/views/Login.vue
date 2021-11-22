@@ -116,6 +116,8 @@ b-row.justify-content-center(no-gutters)
 <script lang="ts">
 import Vue from "vue";
 import { AxiosError, AxiosResponse } from "axios";
+import eventbus from "../eventbus";
+
 import InputText from "../components/input/InputText.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
@@ -214,27 +216,11 @@ export default Vue.extend({
           .registrationRequest(this.registration)
           .then(() => {
             this.isLoginSelected = true;
-            this.$root.$bvToast.toast(
-              `Operazione avvenuta con successo. Effettua il login per accedere.`,
-              {
-                title: "Registrazione",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
+            eventbus.$emit("successMessage", "Registration", "Registration completed successfully.");
           })
           .catch((e) => {
             console.log(e);
-            this.$root.$bvToast.toast(
-              `Errore durante la fase di registrazione, riprova.`,
-              {
-                title: "Registrazione",
-                autoHideDelay: 5000,
-                variant: "danger",
-                appendToast: false,
-              }
-            );
+            eventbus.$emit("errorMessage", "Registration", "An unexpected error occurred during your registration. Retry later or contact us if the problem persists.");
           });
       }
     },

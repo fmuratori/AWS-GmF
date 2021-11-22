@@ -70,6 +70,7 @@ div
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import { SelectableFood } from "../types";
 import { FoodView } from "../viewTypes";
 import moment from "moment";
@@ -189,23 +190,10 @@ export default Vue.extend({
         .deleteFood({ id: id })
         .then((): void => {
           this.foodList = this.foodList.filter((e) => e._id != id);
-          this.$root.$bvToast.toast(`Food deleted.`, {
-            title: "Food",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Foods", "Food deleted successfully.");
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to delete food. Retry later or contact us if the problem persist.`,
-            {
-              title: "Food",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Foods", "Unable to delete selected foods. Retry later or contact us if the problem persists.");
         });
     },
   },

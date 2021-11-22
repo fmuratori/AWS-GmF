@@ -118,6 +118,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import Message from "../components/Message.vue";
@@ -261,24 +262,11 @@ export default Vue.extend({
             })
 
             this.$router.push({ name: "ManagerDonationsList" });
-            this.$root.$bvToast.toast(`Donazione eliminata con successo.`, {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            });
+            eventbus.$emit("successMessage", "Donation", "Donation deleted successfully.");
           }
         })
         .catch((e: AxiosError): void => {
-          this.$root.$bvToast.toast(
-            `Impossibile eliminare la donazione. Riprova tra qualche minuto.`,
-            {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("dangerMessage", "Donation", "Donation deletion failed. Retry later or contact us if the problem persists.");
           console.log(e);
         });
     },
@@ -304,29 +292,13 @@ export default Vue.extend({
               message: "The volunteer in charge cancelled the reservation.",
               isEventMessage: true,
             })
-
-            this.$root.$bvToast.toast(
-              `Ritiro della donazione annulato con successo.`,
-              {
-                title: "Donazione",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
+            
+            eventbus.$emit("successMessage", "Donation", "Donation reservation for pickup deleted succesfully.");
             this.$router.push({ name: "ManagerDonationsVolunteerList" });
           }
         })
         .catch((e: AxiosError): void => {
-          this.$root.$bvToast.toast(
-            `Impossibile cancellare la prenotazione della donazione. Riprova tra qualche minuto.`,
-            {
-              title: "Donazione",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Donation", "Donation reservation cancellation failed. Retry later or contact us if the problem persists.");
           console.log(e);
         });
     },

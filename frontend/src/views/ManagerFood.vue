@@ -63,6 +63,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
@@ -120,15 +121,7 @@ export default Vue.extend({
           this.foodList = r.data as Food[];
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
-            {
-              title: "Food",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Foods", "Unable to retrieve food list. Retry later or contact us if the problem persists.");
         });
     } else this.$router.push({ name: "Login" });
   },
@@ -137,12 +130,7 @@ export default Vue.extend({
       api
         .addFood(this.form)
         .then((): void => {
-          this.$root.$bvToast.toast(`Food successfully created.`, {
-            title: "Food",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
 
           this.updateFoodList();
 
@@ -150,15 +138,7 @@ export default Vue.extend({
           this.reloadIndex += 1;
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to add food. Retry later or contact us if the problem persist.`,
-            {
-              title: "Food",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Foods", "Unable to add food. Retry later or contact us if the problem persists.");
         });
     },
     updateFoodList(): void {
@@ -168,15 +148,7 @@ export default Vue.extend({
           this.foodList = r.data as Food[];
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
-            {
-              title: "Food",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Foods", "Unable to retrieve food list. Retry later or contact us if the problem persists.");
         });
     },
     formatDate(date: Date): string {

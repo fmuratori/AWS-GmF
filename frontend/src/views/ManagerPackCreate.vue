@@ -41,6 +41,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import { AxiosError } from "axios";
 
 import Navbar from "../components/Navbar.vue";
@@ -96,24 +97,11 @@ export default Vue.extend({
         .createPack(this.form)
         .then((): void => {
           this.$router.push({ name: "ManagerPackList" });
-          this.$root.$bvToast.toast(`Pack successfully created.`, {
-            title: "Pack",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Food packs", "Pack successfully created.");
         })
         .catch((e: AxiosError): void => {
           console.log(e);
-          this.$root.$bvToast.toast(
-            `Unable to create pack. Retry later or contact us if the problem persist.`,
-            {
-              title: "Pack",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Food packs", "Unable to create a food pack. Retry later or contact us if the problem persists.");
         });
     },
   },

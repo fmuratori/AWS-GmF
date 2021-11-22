@@ -122,6 +122,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
@@ -164,15 +165,7 @@ export default Vue.extend({
           this.familyList = r.data as Family[];
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to verify the family. Retry later or contact us.`,
-            {
-              title: "Verify",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Family", "Unable to verify the selected family. Retry later or contact us if the problem persists.");
         });
     } else this.$router.push({ name: "Login" });
   },
@@ -192,23 +185,10 @@ export default Vue.extend({
             });
           }
 
-          this.$root.$bvToast.toast(`Family verified with success.`, {
-            title: "Verify",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
+          eventbus.$emit("successMessage", "Family", "Family verified succesfully. Retry later or contact us if the problem persists.");
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to verify the family. Retry later or contact us.`,
-            {
-              title: "Verify",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("successMessage", "Family", "Unable to verify the selected family. Retry later or contact us if the problem persists.");
         });
     },
     filterBy(
@@ -248,39 +228,18 @@ export default Vue.extend({
           this.familyList = r.data as Family[];
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to retrieve food list. Retry later or contact us if the problem persist.`,
-            {
-              title: "Family",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Family", "Unable to retrieve food list. Retry later or contact us if the problem persists.");
         });
     },
     deleteFamily(id: string): void {
       api
         .deleteFamily({ id: id })
         .then((): void => {
+          eventbus.$emit("successMessage", "Family", "Family successfully deleted.");
           this.familyList = this.familyList.filter((e) => e._id != id);
-          this.$root.$bvToast.toast(`Family successfully deleted.`, {
-            title: "Family",
-            autoHideDelay: 5000,
-            variant: "success",
-            appendToast: false,
-          });
         })
         .catch((): void => {
-          this.$root.$bvToast.toast(
-            `Unable to delete family. Retry later or contact us if the problem persist.`,
-            {
-              title: "Family",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "Family", "`Unable to delete the selected family. Retry later or contact us if the problem persists.");
         });
     },
   },

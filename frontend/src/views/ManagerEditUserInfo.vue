@@ -94,6 +94,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
@@ -158,30 +159,14 @@ export default Vue.extend({
         .editUser(this.editUserForm)
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
-            (this.$store.state.session.userData = r.data),
-              this.$router.push({ name: "Home" });
-            this.$root.$bvToast.toast(
-              `Account information successfully edited.`,
-              {
-                title: "User info",
-                autoHideDelay: 5000,
-                variant: "success",
-                appendToast: false,
-              }
-            );
+            this.$store.state.session.userData = r.data;
+            this.$router.push({ name: "Home" });
+            eventbus.$emit("successMessage", "User data", "Account information successfully edited.");
           }
         })
         .catch((e: AxiosError) => {
           console.log(e);
-          this.$root.$bvToast.toast(
-            `Unable to change the user info. Contact us if the problem persists.`,
-            {
-              title: "User info",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "User data", "Unable to change the user info. Retry later or contact us if the problem persists.");
         });
     },
     changePassword() {
@@ -190,25 +175,12 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
             this.$router.push({ name: "Home" });
-            this.$root.$bvToast.toast(`Password successfully changed.`, {
-              title: "Password change",
-              autoHideDelay: 5000,
-              variant: "success",
-              appendToast: false,
-            });
+            eventbus.$emit("successMessage", "User data", "Password successfully changed.");
           }
         })
         .catch((e: AxiosError): void => {
           console.log(e);
-          this.$root.$bvToast.toast(
-            `Unable to change the user password. Contact us if the problem persists.`,
-            {
-              title: "Password change",
-              autoHideDelay: 5000,
-              variant: "danger",
-              appendToast: false,
-            }
-          );
+          eventbus.$emit("errorMessage", "User data", "Unable to change the user password. Retry later or contact us if the problem persists.");
         });
     },
   },
