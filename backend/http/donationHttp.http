@@ -26,6 +26,9 @@ content-type: application/json
                 }
             },
             {
+                "address.city": "Cesena"
+            },
+            {
                 "status":{
                     "$ne":"selected"
                 }
