@@ -1,5 +1,7 @@
 <template lang="pug">
   div(id="app")
+    Messages
+
     Navbar
     div(id="body")
       Sidebar(id="sidebar")
@@ -12,12 +14,14 @@ import Vue from "vue";
 
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
+import Messages from "./components/Messages.vue";
 
 export default Vue.extend({
   name: "Home",
   components: {
     Navbar,
     Sidebar,
+    Messages,
   },
   created() {
     this.$store.dispatch("updateScreenWidth", window.innerWidth);

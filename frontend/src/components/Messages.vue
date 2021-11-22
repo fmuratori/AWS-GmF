@@ -1,17 +1,9 @@
-<template lang="pug">
-
-</template>
-
-<style scoped lang="scss">
-
-</style>
-
 <script lang="ts">
-  import EventBus from "../eventbus"
+  import eventbus from "../eventbus"
   
   export default {
-    mounted() {
-      EventBus.$on("successMessage", (title, message) => {
+    created() {
+      eventbus.$on("successMessage", (title: string, message: string) => {
         this.$root.$bvToast.toast(
           message,
           {
@@ -21,8 +13,8 @@
             appendToast: false,
           }
         );
-      }),
-      EventBus.$on("warningMessage", (title, message) => {
+      });
+      eventbus.$on("warningMessage", (title: string, message: string) => {
         this.$root.$bvToast.toast(
           message,
           {
@@ -32,8 +24,8 @@
             appendToast: false,
           }
         );
-      }),
-      EventBus.$on("errorMessage", (title, message) => {
+      });
+      eventbus.$on("errorMessage", (title: string, message: string) => {
         this.$root.$bvToast.toast(
           message,
           {
@@ -43,7 +35,7 @@
             appendToast: false,
           }
         );
-      }),
+      });
     },
   }
 </script>

@@ -131,7 +131,6 @@ import {
   Address,
   LoginResponse, 
   UserData, 
-  ChatMessage
 } from "../types";
 
 export default Vue.extend({
