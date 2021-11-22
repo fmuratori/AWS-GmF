@@ -389,8 +389,19 @@ export default Vue.extend({
 
         Promise.all(promises)
           .then((): void => {
+<<<<<<< HEAD
             this.$router.push({ name: "ManagerDonationsVolunteerList" });
             eventbus.$emit("successMessage", "Donations", "Donation reservation submitted succesfully.");
+=======
+            this.$router.push({ name: "ManagerDonationsList" });
+            this.$root.$bvToast.toast(`Donazioni prenotate con successo.`, {
+              title: "Donazioni",
+              autoHideDelay: 5000,
+              variant: "success",
+              appendToast: false,
+            });
+
+>>>>>>> e1e210e4eb444164ca02271a13c7011c68638e99
             this.selectedDonations.forEach((element: Donation) => {
               this.$store.dispatch("sendMessage", {
                 donationId: element._id,

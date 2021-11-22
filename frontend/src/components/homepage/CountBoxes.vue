@@ -1,10 +1,9 @@
 <template lang="pug">
 b-row.text-center
-  b-col.m-4(v-for="elem in [food, verifiedFamilies, deliveredPacks]")
+  b-col.m-4.p-4.card(v-for="elem in [food, verifiedFamilies, deliveredPacks]")
     h1 
       b {{ elem.count }}
-    h3.pre-formatted {{elem.message}}
-
+    h3.pre-formatted {{ elem.message }}
 </template>
 
 <script lang="ts">
@@ -43,7 +42,13 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/style.scss";
+
 .pre-formatted {
   white-space: pre;
+}
+
+.card {
+  background-color: $color2;
 }
 </style>

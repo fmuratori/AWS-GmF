@@ -36,53 +36,38 @@ export default class DataController {
 	})
 
 	getNextEvents = catchAsync(async (req: Request, res: Response) => {
-		const nextEvents = await EventModel.find({date: {$gte: new Date}})
+		const nextEvents = await EventModel.find({ date: { $gte: new Date } })
 
 		res.status(200).json(nextEvents)
 	})
 
 	getCountsData = catchAsync(async (req: Request, res: Response) => {
-		const foodCount = await FoodModel.aggregate([
-			{
-				$group: {
-					_id: "all",
-					count: { $sum: "$number" }
-				}
-			}
+		const foodAggregate = await FoodModel.aggregate([
+			{ $group: { _id: "all", count: { $sum: "$number" } } }
 		])
 
-		const familyCount = await FamilyModel.aggregate([
+		const familyAggregate = await FamilyModel.aggregate([
 			// select only verified families
-			{
-				$match: { status: "verified" },
-			},
+			{ $match: { status: "verified" } },
 			// merge families and count them
-			{
-				$group: {
-					_id: "all",
-					count: { $sum: 1 }
-				}
-			}
+			{ $group: { _id: "all", count: { $sum: 1 } } }
 		])
 
-		const packCount = await PackModel.aggregate([
+		const packAggregate = await PackModel.aggregate([
 			// select only delivered packs
-			{
-				$match: { status: "delivered" },
-			},
+			{ $match: { status: "delivered" } },
 			// merge packs and count them
-			{
-				$group: {
-					_id: "all",
-					count: { $sum: 1 }
-				}
-			}
+			{ $group: { _id: "all", count: { $sum: 1 } } }
 		])
+
+		const foodCount = (foodAggregate.length == 0) ? 0 : foodAggregate[0].count
+		const familyCount = (familyAggregate.length == 0) ? 0 : familyAggregate[0].count
+		const packCount = (packAggregate.length == 0) ? 0 : packAggregate[0].count
 
 		res.status(200).json({
-			foodCount: foodCount[0].count,
-			verifiedFamilies: familyCount[0].count,
-			deliveredPacks: packCount[0].count
+			foodCount: foodCount,
+			verifiedFamilies: familyCount,
+			deliveredPacks: packCount
 		})
 	})
 }

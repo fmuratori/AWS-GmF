@@ -198,7 +198,7 @@ export default Vue.extend({
             } else {
               eventbus.$emit("successMessage", "Donation", "Donation created successfully.");
             }
-            this.$router.push({ name: "ManagerDonationsUserList" });
+            this.$router.push({ name: "ManagerDonationsList" });
           })
           .catch((e: AxiosError): void => {
             console.log(e);

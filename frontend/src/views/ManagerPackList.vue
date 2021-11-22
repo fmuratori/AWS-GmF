@@ -38,7 +38,7 @@ b-container
               b-button(
                 size="sm",
                 variant="primary",
-                @click="advancePackStatus(item._id)",
+                @click="setDelivered(item._id)",
                 :disabled="item.status != 'planned delivery'"
               ) Advance
 
@@ -158,9 +158,9 @@ export default Vue.extend({
           eventbus.$emit("errorMessage", "Foods", "Unable to add food. Retry later or contact us if the problem persists.");
         });
     },
-    advancePackStatus(id: string) {
+    setDelivered(id: string) {
       packApi
-        .advancePackStatus({ id: id })
+        .setDelivered({ id: id })
         .then((): void => {
           this.packList.forEach((elem) => {
             if (elem._id == id) {

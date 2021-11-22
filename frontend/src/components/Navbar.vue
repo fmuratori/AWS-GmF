@@ -42,9 +42,13 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
         @click="changePage('Home')"
       ) Home
 
-      b-nav-item.my-auto.navbar-link.text-center(href="#") Eventi
+      b-nav-item.my-auto.navbar-link.text-center(
+        href="#",
+        v-if="this.$store.state.session.userData.type == 'trusted'"
+      )
+        UserUpgradeModal
 
-      b-nav-item.my-auto.navbar-link.text-center(href="#") Domande
+      b-nav-item.my-auto.navbar-link.text-center(href="#") Contact us
 
       b-nav-item.my-auto.text-center(
         href="#",
@@ -56,7 +60,7 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
           type="submit",
           variant="danger"
         )
-          span.mr-1 Messaggi
+          span.mr-1 Messages
           b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
 
       b-nav-item.my-auto.navbar-link.text-center(
@@ -64,7 +68,7 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
         v-if="$store.getters.isUserLogged",
         @click="logout()"
       ) 
-        span.mr-1 Disconnetti
+        span.mr-1 Logout
         font-awesome-icon(icon="sign-out-alt")
 
       b-nav-item.my-auto.navbar-link.text-center(
@@ -73,15 +77,19 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
         v-if="!$store.getters.isUserLogged"
       ) 
         b-button.my-2.my-sm-0(type="submit", variant="light")
-          span.mr-1 Connetti
+          span.mr-1 Login
           font-awesome-icon(icon="sign-in-alt")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
 
 export default Vue.extend({
   name: "Navbar",
+  components: {
+    UserUpgradeModal,
+  },
   data: function () {
     return {
       isOpen: false,
@@ -102,10 +110,7 @@ export default Vue.extend({
       this.$store.dispatch("hideSidebar");
     },
     routeToDonations() {
-      if (this.$store.getters.isUser)
-        this.$router.push({ name: "ManagerDonationsUserList" });
-      else if (this.$store.getters.isVolunteer)
-        this.$router.push({ name: "ManagerDonationsVolunteerList" });
+      this.$router.push({ name: "ManagerDonationsList" });
     },
     changePage(pageName: string) {
       if (this.$router.currentRoute.name != pageName) {

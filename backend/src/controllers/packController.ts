@@ -94,14 +94,13 @@ export default class PackController {
 
 	})
 
-	advanceStatus = catchAsync(async (req: Request, res: Response) => {
-		if(!req.body.id){
+	setDelivered = catchAsync(async (req: Request, res: Response) => {
+		if (!req.body.id) {
 			res.status(401).json({
 				status: "missing-id-error",
 				message: "Missing pack id in request body"
 			})
 			return
-
 		}
 
 		const pack = await PackModel.findById(req.body.id)
@@ -114,22 +113,16 @@ export default class PackController {
 			return
 		}
 
-		switch (pack.status) {
-			case "ready":
-				pack.status = "planned delivery"
-				break
-			case "planned delivery":
-				pack.status = "delivered"
-				break
-			default:
-				res.status(401).json({
-					status: "not-advancable-error",
-					message: "Pack isn't in an advancable status"
-				})
-				return
+		if (pack.status != "planned delivery") {
+			res.status(401).json({
+				status: "not-advancable-error",
+				message: "Cannot change status from " + pack.status + " to delivered"
+			})
+			return
 		}
 
-		await PackModel.findByIdAndUpdate(req.body.id, pack, {new: true})
+		pack.status = "delivered"
+		await PackModel.findByIdAndUpdate(req.body.id, pack, { new: true })
 
 		res.status(200).json({
 			status: "success"
@@ -137,4 +130,29 @@ export default class PackController {
 
 	})
 
+	setPlannedDelivery = catchAsync(async (req: Request, res: Response) => {
+		if (!req.body.idList
+			|| !req.body.deliveryVolunteerId
+			|| !req.body.deliveryDate
+			|| !req.body.deliveryPeriod) {
+			res.status(401).json({
+				status: "missing-id-error",
+				message: "Missing pack id list in request body"
+			})
+			return
+		}
+
+		var packList = await PackModel.find({ filter: { _id: req.body.idList } })
+		packList.forEach((elem: PackDocument) => {
+			elem.deliveryVolunteerId = req.body.volunteerId
+			elem.deliveryDate = req.body.deliveryDate
+			elem.deliveryPeriod = req.body.deliveryPeriod
+			elem.status = "planned delivery"
+		})
+		await PackModel.updateMany(packList)
+
+		res.status(200).json({
+			status: "success"
+		})
+	})
 }

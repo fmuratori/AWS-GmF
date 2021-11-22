@@ -97,7 +97,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.push({ name: 'ManagerDonationsUserList' })",
+          @click="$router.push({ name: 'ManagerDonationsList' })",
           type="reset"
         ) Indietro
 
@@ -111,7 +111,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.push({ name: 'ManagerDonationsVolunteerList' })",
+          @click="$router.push({ name: 'ManagerDonationsList' })",
           type="reset"
         ) Indietro
 </template>
@@ -292,9 +292,23 @@ export default Vue.extend({
               message: "The volunteer in charge cancelled the reservation.",
               isEventMessage: true,
             })
+<<<<<<< HEAD
             
             eventbus.$emit("successMessage", "Donation", "Donation reservation for pickup deleted succesfully.");
             this.$router.push({ name: "ManagerDonationsVolunteerList" });
+=======
+
+            this.$root.$bvToast.toast(
+              `Ritiro della donazione annulato con successo.`,
+              {
+                title: "Donazione",
+                autoHideDelay: 5000,
+                variant: "success",
+                appendToast: false,
+              }
+            );
+            this.$router.push({ name: "ManagerDonationsList" });
+>>>>>>> e1e210e4eb444164ca02271a13c7011c68638e99
           }
         })
         .catch((e: AxiosError): void => {
