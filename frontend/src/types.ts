@@ -155,6 +155,7 @@ export interface Pack {
   familyId: string;
   deliveryDate: Date;
   deliveryPeriod: string;
+  expirationDate: Date;
 }
 
 export interface FoodPayload {

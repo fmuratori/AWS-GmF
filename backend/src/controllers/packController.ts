@@ -10,6 +10,7 @@ const factory = new ControllerFactory<PackDocument>()
 export default class PackController {
 
 	find = factory.findMany(PackModel)
+	edit = factory.edit(PackModel)
 
 	filterPacks = catchAsync(async (req: Request, res: Response) => {
 		// db.packs.aggregate([{
@@ -44,8 +45,6 @@ export default class PackController {
 				'_id': { $in: foodsId }
 			}
 		);
-
-		console.log(foods)
 
 		res.status(200).json({"packs": packs, "foods": foods})
 

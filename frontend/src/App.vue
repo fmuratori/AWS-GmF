@@ -1,6 +1,6 @@
 <template lang="pug">
   div(id="app")
-
+    Messages
     Navbar
     div(id="body")
       Sidebar(id="sidebar")

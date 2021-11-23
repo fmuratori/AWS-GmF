@@ -1,87 +1,92 @@
 <template lang="pug">
   div(class="fullheight")
-    b-row(class="fullheight justify-content-center" no-gutters)
+    b-form(@submit="submit" class="fullheight")
+      b-row(class="fullheight justify-content-center" no-gutters)
 
-      b-col(v-if="!selectedCity" cols=10 sm=8 md=7 lg=6 class="px-5 text-center fullheight align-middle" align-self="center")
-        h1.mt-5 
-          b-icon.mr-2(icon="map")
-          span Packs map
-        b-row
-          b-col
-            b-icon(icon="one")
-        p Select a valid city to show all available packs
+        b-col(v-if="!selectedCity" cols=10 sm=8 md=7 lg=6 class="px-5 text-center fullheight align-middle" align-self="center")
+          h1.mt-5 
+            b-icon.mr-2(icon="map")
+            span Packs map
+          b-row
+            b-col
+              b-icon(icon="one")
+          p Select a valid city to show all available packs
 
-        vue-google-autocomplete(
-        id="map"
-        classname="form-control"
-        placeholder="Insert a city name"
-        v-on:placechanged="selectCity"
-        country="it"
-        types="(cities)")
+          vue-google-autocomplete(
+          id="map"
+          classname="form-control"
+          placeholder="Insert a city name"
+          v-on:placechanged="selectCity"
+          country="it"
+          types="(cities)")
 
-      b-col(v-if="selectedCity" class="fullheight" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
-        GmapMap(:options="mapsOptions" 
-        :center="{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}"
-        :zoom="14"
-        map-type-id="terrain"
-        class="fullheight")
-          div 
-            gmap-custom-marker(v-for="(pack, idx) in unselectedPacks" :key="idx" 
-              :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}"
-              @click.native="openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)")
-              h1
-                b-icon(icon="exclamation-circle-fill" variant="warning")
-          div
-            gmap-custom-marker(v-for="(pack, idx) in selectedPacks" :key="idx" 
-              :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}"
-              @click.native="openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)")
-              h1
-                //truck
-                b-icon(icon="check-circle-fill" variant="success")
-          gmap-info-window(
-          v-if="windowCoordinates"
-          :options="{maxWidth: 300*windowPacks.length, pixelOffset: { width: 0, height: -55 } }"
-          :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}", 
-          :opened="true"
-          @closeclick="closeInfoWindow")
+        b-col(v-if="selectedCity" class="fullheight" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
+          GmapMap(:options="mapsOptions" 
+          :center="{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}"
+          :zoom="14"
+          map-type-id="terrain"
+          class="fullheight")
+            div 
+              gmap-custom-marker(v-for="(pack, idx) in unselectedPacks" :key="idx" 
+                :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}"
+                @click.native="openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)")
+                h1
+                  b-icon(icon="exclamation-circle-fill" variant="warning")
+            div
+              gmap-custom-marker(v-for="(pack, idx) in selectedPacks" :key="idx" 
+                :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}"
+                @click.native="openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)")
+                h1
+                  //truck
+                  b-icon(icon="check-circle-fill" animation="fade" variant="success")
+            gmap-info-window(
+            v-if="windowCoordinates"
+            :options="{maxWidth: 300*windowPacks.length, pixelOffset: { width: 0, height: -55 } }"
+            :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}", 
+            :opened="true"
+            @closeclick="closeInfoWindow")
 
-            table
-              tr
-                td(v-for="(pack, idx) in windowPacks" :key:="idx") 
-                  p
-                    span.mb-2.font-weight-bold Family:
-                    br
-                    span.mb-0() {{ pack.family[0].name }}
+              table
+                tr
+                  td(v-for="(pack, idx) in windowPacks" :key:="idx") 
+                    p
+                      span.mb-2.font-weight-bold Family:
                       br
-              tr
-                td(v-for="(pack, idx) in windowPacks" :key:="idx") 
-                  p
-                    span.mb-2.font-weight-bold Phone:
-                    br
-                    span.mb-0() {{ pack.family[0].phoneNumber }}
+                      span.mb-0() {{ pack.family[0].name }}
+                        br
+                tr
+                  td(v-for="(pack, idx) in windowPacks" :key:="idx") 
+                    p
+                      span.mb-2.font-weight-bold Phone:
                       br
-              tr
-                td(v-for="(pack, idx) in windowPacks" :key:="idx") 
-                  p
-                    span.mb-2.font-weight-bold Components:
-                    br
-                    span.mb-0() {{ pack.family[0].components }}
+                      span.mb-0() {{ pack.family[0].phoneNumber }}
+                        br
+                tr
+                  td(v-for="(pack, idx) in windowPacks" :key:="idx") 
+                    p
+                      span.mb-2.font-weight-bold Components:
                       br
-              tr
-                td(v-for="(pack, idx) in windowPacks" :key:="idx")
-                  b-button(v-if="!selectedPacks.includes(pack)"  variant="success" size="sm" block @click="selectPack(pack)") Select
-                  b-button(v-else size="sm" variant="danger" block 
-                  @click="deselectPack(pack)") Cancel
+                      span.mb-0() {{ pack.family[0].components }}
+                        br
+                tr
+                  td(v-for="(pack, idx) in windowPacks" :key:="idx")
+                    b-button(v-if="!selectedPacks.includes(pack)"  variant="success" size="sm" block @click="selectPack(pack)") Select
+                    b-button(v-else size="sm" variant="danger" block 
+                    @click="deselectPack(pack)") Cancel
 
-      b-col(v-if="selectedCity" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
-        b-form(@submit="submit" class="fullheight")
+        b-col(v-if="selectedCity" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
           div.py-3.px-lg-2(class="d-flex flex-column" class="fullheight")
             div()
-              h5.mb-3
+              h5
                 font-awesome-icon.mr-1(icon="filter")
                 span Filters
+            div().mb-2
+              b-button(pill variant="secondary" size="sm" @click="updateFilter('expired')") Expired packs
+              b-button(pill variant="secondary" size="sm" @click="updateFilter('expiring_today')") Expiring today
+              b-button(pill variant="secondary" size="sm" @click="updateFilter('expiring_tomorrow')") Expiring tomorrow
+
             div()
-              b-form-group#input-group-2(label="Pick up date:", label-for="input-2")
+              b-form-group#input-group-2(label="Delivery date:", label-for="input-2")
                 b-input-group
                   b-form-datepicker#input-2.border-right-0(
                     required,
@@ -90,6 +95,7 @@
                     close-button,
                     size="sm",
                     :min="new Date()"
+                    @input="updateFilter"
                   )
                     b-icon(icon="x", aria-hidden="true")
             b-form-group#input-group-3(
@@ -118,15 +124,15 @@
               b-button(variant="success" type="submit" size="sm" block) Submit
               b-button(variant="danger" type="submit" size="sm" block @click="deselectCity") Select another city
 
-      b-col(v-if="selectedCity" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
-        b-alert.mt-3(show)
-          p.m-0.p-0.text-center 
-            span Selected packs: {{ selectedPacks.length }}
-            br
-            span &nbsp;
-            a(href="#" @click="showModal") (Inspect)
-        b-button(variant="success" type="submit" size="sm" block) Submit
-        b-button(variant="danger" type="submit" size="sm" block @click="deselectCity") Select another city
+        b-col(v-if="selectedCity" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
+          b-alert.mt-3(show)
+            p.m-0.p-0.text-center 
+              span Selected packs: {{ selectedPacks.length }}
+              br
+              span &nbsp;
+              a(href="#" @click="showModal") (Inspect)
+          b-button(variant="success" type="submit" size="sm" block) Submit
+          b-button(variant="danger" type="submit" size="sm" block @click="deselectCity") Select another city
 
     b-modal(id="modal-1" title="Selected packs" size="lg" scrollable centered hide-footer v-model="isModalOpen")
       b-row(style="height: 100%;")
@@ -140,20 +146,19 @@
             hr.mt-0.pt-0
             h4 Pack # {{idx}}
             
-            p Family name:
+            p.mb-0 Family name:&nbsp;
               label {{ pack.family[0].name }}
             
-            p Components:
+            p.mb-0 Components:&nbsp;
               label {{ pack.family[0].components }}
             
-            p
+            p.mb-0
               label Foods:
               ul
                 li(v-for="(food, fidx) in packFoods(pack)" :key="fidx")
-                  p 
-                    label {{ food.name }}
-                    br
-                    label {{ food.labels }}
+                  p.mb-0 
+                    label {{ food.name }}&nbsp;
+                      b-badge(v-for="(label, lidx) in food.labels" :key="lidx" variant="info") {{ label }}
                     br
                     label {{ moment(food.expirationDate).calendar() }}
 
@@ -281,29 +286,17 @@ export default Vue.extend({
         clickableIcons: false,
       },
       selectedCity: null,
+      daysToExpiration: 0,
       packs: new Array<Pack>(),
       foods: new Array<Food>(),
       selectedPacks: new Array<Pack>(),
+      unselectedPacks: new Array<Pack>(),
       windowPacks: new Array<Pack>(),
       windowCoordinates: null,
       deliveryDate: moment().format("YYYY-MM-DD"),
-      deliveryPeriod: "morning",
+      deliveryPeriod: null,
       isModalOpen: false,
     };
-  },
-  computed: {
-    unselectedPacks() {
-      const selectedPacksIds = this.selectedPacks.map(d => d._id);
-      return this.packs.filter(d => !selectedPacksIds.includes(d._id))
-    }
-  },
-  watch: {
-    deliveryDate: function (): void {
-      this.filterPacks();
-    },
-    deliveryPeriod: function (): void {
-      this.filterPacks();
-    },
   },
   created() {
     // check if user is logged in
@@ -323,7 +316,7 @@ export default Vue.extend({
           y: addressData.longitude,
         }
       }
-      this.filterPacks();
+      this.getPacks();
     },
     deselectCity() {
       this.selectedCity = null;
@@ -336,7 +329,7 @@ export default Vue.extend({
 
       // find coordinates near to the clicked marked
       this.windowCoordinates = {x: lat, y: lng};
-      for (const pack of this.packs) {
+      for (const pack of this.unselectedPacks.concat(this.selectedPacks)) {
         const distance = calcCrow(
           lat,
           lng,
@@ -349,11 +342,11 @@ export default Vue.extend({
       }
     },
     closeInfoWindow() {
-      this.windowPacks.splice(0, this.windowPacks.length);
       this.windowCoordinates = null;
     },
     selectPack(pack: Pack) {
       this.selectedPacks.push(pack);
+      this.unselectedPacks.splice(this.unselectedPacks.findIndex((p: Pack) => p._id == pack._id), 1);
     },
     deselectPack(pack: Pack) {
       this.selectedPacks.splice(
@@ -362,10 +355,40 @@ export default Vue.extend({
         ),
         1
       );
-      // this.packs.push(pack);
+      this.unselectedPacks.push(pack);
     },
-    filterPacks() {
+    updateFilter(mode: null | string) {
       this.selectedPacks = [];
+
+      switch(mode) {
+        case "expired": {
+          this.unselectedPacks = this.packs
+            .filter((p: Pack) => moment(p.expirationDate) < moment());
+          this.deliveryDate = null;
+          break;
+        }
+        case "expiring_today": {
+          this.unselectedPacks = this.packs
+            .filter((p: Pack) => moment(p.expirationDate).toDate() == moment().toDate());
+          this.deliveryDate = moment().format("YYYY-MM-DD");
+          break;
+        }
+        case "expiring_tomorrow": {
+          this.unselectedPacks = this.packs
+            .filter((p: Pack) => moment(p.expirationDate).toDate() == moment().add(1, "days").toDate());
+          this.deliveryDate = moment().add(1, "days").format("YYYY-MM-DD");
+          break;
+        }
+        default: {
+          this.unselectedPacks = this.packs
+            .filter((p: Pack) => moment(p.expirationDate) <= moment(this.expirationDate));
+          break;
+        }
+      }
+    },
+    getPacks() {
+      this.selectedPacks = [];
+      this.unselectedPacks = [];
 
       const payload = {
         lookup: {
@@ -386,6 +409,9 @@ export default Vue.extend({
           if (r.status == 200) {
             this.packs = r.data.packs;
             this.foods = r.data.foods;
+
+            this.unselectedPacks = this.packs;
+            this.updateFilter();
           }
         })
         .catch((): void => {
@@ -401,19 +427,17 @@ export default Vue.extend({
     submit(e: any) {
       e.preventDefault();
       if (!this.deliveryDate) {
-        eventbus.$emit("warningMessage", "Packs", "Unable to perform the requested operation. Select a valid pickup day.");
+        eventbus.$emit("warningMessage", "Packs", "Unable to perform the requested operation. Select a valid delivery day.");
       } else if (!this.selectedPacks.length) {
         eventbus.$emit("warningMessage", "Packs", "Unable to perform the requested operation. Select at least one pack available for delivery.");
       } else {
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedPacks.forEach((element: Pack) => {
           element.status = "selected";
-          // element.delivery = {
-          //   volunteerId: this.$store.state.session.userData._id,
-          //   period: this.deliveryPeriod,
-          //   date: this.deliveryDate,
-          // };
-          // promises.push(packsApi.editPack(element));
+          element.deliveryDate = this.deliveryDate;
+          element.deliveryPeriod = this.deliveryPeriod;
+          element.deliveryVolunteerId = this.$store.state.session.userData._id;
+          promises.push(packsApi.editPack(element));
         });
 
         Promise.all(promises)

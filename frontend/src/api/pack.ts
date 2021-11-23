@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { FindPayload, PackDeliveryPayload, PackPayload } from "../types";
+import { FindPayload, PackDeliveryPayload, PackPayload, Pack } from "../types";
 
 export default {
   async createPack(payload: PackPayload): Promise<AxiosResponse> {
@@ -20,6 +20,14 @@ export default {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/filter`, payload, {
       headers: store.getters.getSessionHeader,
     });
+  },
+
+  async editPack(payload: Pack): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/pack/edit`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
   },
 
   async deletePack(payload: { id: string }): Promise<AxiosResponse> {
