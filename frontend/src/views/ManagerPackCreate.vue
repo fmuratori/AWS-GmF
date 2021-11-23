@@ -43,6 +43,7 @@ b-container
 import Vue from "vue";
 import eventbus from "../eventbus";
 import { AxiosError } from "axios";
+import moment from "moment";
 
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
@@ -67,6 +68,7 @@ export default Vue.extend({
       form: {
         foodList: new Array<{ foodId: string; number: number }>(),
         familyId: "",
+        expirationDate: null,
       } as PackPayload,
     };
   },
@@ -85,14 +87,19 @@ export default Vue.extend({
   },
   methods: {
     createPack(): void {
-      console.log(this.foodList);
-
       this.foodList.forEach((elem) => {
         if (elem.selected) {
           this.form.foodList.push({ foodId: elem._id, number: elem.selected });
         }
       });
 
+      this.form.expirationDate = moment(
+        new Date(Math.max.apply(null, 
+          this.foodList
+            .filter(f => f.selected)
+            .map(f => new Date(f.expirationDate)))))
+        .format("YYYY-MM-DD")
+      
       api
         .createPack(this.form)
         .then((): void => {

@@ -309,7 +309,7 @@ export default Vue.extend({
     },
     deselectCity() {
       this.selectedCity = null;
-      this.selectedDonations = null;
+      this.selectedDonations = [];
       this.windowDonations = null;
       this.windowCoordinates = null;
     },

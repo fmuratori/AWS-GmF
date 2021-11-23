@@ -11,6 +11,46 @@ export default class PackController {
 
 	find = factory.findMany(PackModel)
 
+	filterPacks = catchAsync(async (req: Request, res: Response) => {
+		// db.packs.aggregate([{
+		// 	$lookup: {
+		// 		from: "families",
+		// 		localField: "familyId",
+		// 		foreignField: "_id",
+		// 		as: "family",
+		// 	}
+		// },
+		// {
+		// 	"$match": {
+		// 		"family.address.city": "Cesena"
+		// 	}
+		// }
+		// ])
+		const packs = await PackModel.aggregate([
+			{ $lookup: req.body.lookup },
+			{ $match: req.body.filter.$match } ]);
+
+		// const packFoodsIds = packs.forEach(p => p.foodList.forEach( (f:any) => f._id ))
+
+		const foodsId = [];
+		for (const pack of packs) {
+			for (const food of pack.foodList) {
+				foodsId.push(food.foodId.toString())
+			}
+		}
+		
+		const foods = await FoodModel.find(
+			{
+				'_id': { $in: foodsId }
+			}
+		);
+
+		console.log(foods)
+
+		res.status(200).json({"packs": packs, "foods": foods})
+
+	})
+
 	// add = factory.add(PackModel)
 	add = catchAsync(async (req: Request, res: Response) => {
 		if (!req.body.foodList) {

@@ -22,19 +22,23 @@ const packSchema = new mongoose.Schema({
         }],
         required: [true, "missing required field foods"]
     },
-    deliveryVolunteerId: {
-        type: mongoose.Types.ObjectId,
-        ref: "User"
-    },
     status: {
         type: String,
         default: "ready",
         enum: ["ready", "planned delivery", "delivered"]
     },
+    expirationDate: {
+        type: Date,
+        required: [true, "missing required field expirationDate"],
+    },
     familyId: {
         type: mongoose.Types.ObjectId,
         required: [true, "missing required field familyId"],
         ref: "Family"
+    },
+    deliveryVolunteerId: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     },
     deliveryDate: {
         type: Date,

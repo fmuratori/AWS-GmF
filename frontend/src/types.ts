@@ -137,6 +137,7 @@ export interface Event {
 export interface PackPayload {
   foodList: [{ foodId: string; number: number }];
   familyId: string;
+  expirationDate: Date;
 }
 
 export interface PackDeliveryPayload {
@@ -177,6 +178,7 @@ export interface SelectableFood extends Food {
 export interface FindPayload {
   filter?: any;
   sortBy?: any;
+  lookup?: any;
   pageSize?: number;
   page?: number;
 }

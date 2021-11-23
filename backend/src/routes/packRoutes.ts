@@ -11,4 +11,6 @@ router.post('/delete', packController.delete)
 router.post('/delivered', packController.setDelivered)
 router.post('/planned-delivery', packController.setPlannedDelivery)
 
+router.post('/filter', packController.filterPacks)
+
 export default router
