@@ -8,8 +8,6 @@ const factory = new ControllerFactory<FoodDocument>()
 export default class FoodController {
 
 	find = factory.findMany(FoodModel)
-	add = factory.add(FoodModel)
-	delete = factory.delete(FoodModel)
 
 	addOrUpdate = catchAsync(async (req: Request, res: Response) => {
 		var elem = await FoodModel.findOne({
@@ -30,5 +28,35 @@ export default class FoodController {
 
 		res.status(200).json(elem)
 
+	})
+
+	/**
+	 * set the number of food to 0
+	 */
+	delete = catchAsync(async (req: Request, res: Response) => {
+		if (!req.body.id) {
+			res.status(400).json({
+				status: "missing-id-error",
+				message: "Missing id of food to delete"
+			})
+			return
+		}
+
+		const elem = await FoodModel.findById(req.body.id)
+
+		if (!elem) {
+			res.status(400).json({
+				status: "no-food-found-error",
+				message: "No food found with id " + req.body.id
+			})
+			return
+		}
+
+		elem.number = 0
+		await FoodModel.findByIdAndUpdate(req.body.id, elem)
+
+		res.status(200).json({
+			status: "success"
+		})
 	})
 }
