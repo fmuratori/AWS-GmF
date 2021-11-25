@@ -50,12 +50,12 @@ b-container
       
       div
         h3 Pack # {{ form._id }}
-        b-row
-          b-col(cols="auto")
-            QrcodeVue(value="{a: 'ASD', b: [{c:'asd'}]}" size="300" level="H")
+        b-row().no-gutters
+          b-col.mx-3(cols="auto") 
+            QrcodeVue(:value="form._id" size="200" level="L").my-3
           b-col
             p {{ form }}
-      
+
       
       b-card()
         vue-html2pdf(
@@ -67,17 +67,17 @@ b-container
         :filename="'donation_'+form._id"
         :pdf-quality="2"
         :manual-pagination="false"
-        pdf-format="a4"
+        pdf-format="a5"
         pdf-orientation="landscape"
         pdf-content-width="800px"
         ref="printableData")
 
           section(slot="pdf-content")
-            div
+            div.p-3
               h3 Pack # {{ form._id }}
-              b-row
-                b-col(cols="auto")
-                  QrcodeVue(value="{a: 'ASD', b: [{c:'asd'}]}" size="300" level="H")
+              b-row().no-gutters
+                b-col.mx-3(cols="auto") 
+                  QrcodeVue(:value="form._id" size="200" level="L").my-3
                 b-col
                   p {{ form }}
 
@@ -85,7 +85,7 @@ b-container
         b-button(v-if="isPrinted" block variant="success" @click="print()") 
           b-icon(icon="check")
           span Pack info printed
-        b-button(block @click="$router.push({ name: 'ManagerPackCreate' });") Create another pack
+        b-button(block @click="$router.push({ name: 'ManagerFamilyList' });") Create another pack
         b-button(block @click="$router.push({ name: 'ManagerPackDelivery' });") Reserve a pack
 
 

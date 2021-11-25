@@ -112,6 +112,14 @@ const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/manager/pack/scan",
+    name: "ManagerPackScan",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerPackScan" */ "../views/ManagerPackScan.vue"
+      ),
+  },
+  {
     path: "/manager/pack/delivery",
     name: "ManagerPackDelivery",
     component: () =>

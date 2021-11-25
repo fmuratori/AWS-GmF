@@ -81,7 +81,9 @@
                 font-awesome-icon.mr-1(icon="filter")
                 span Filters
             div().mb-2
-              b-button(pill variant="secondary" size="sm" @click="updateFilter('expired')") Expired packs
+              //- b-button(pill variant="secondary" size="sm" @click="updateFilter('expired')") Expired packs
+              b-button(pill variant="secondary" size="sm" @click="updateFilter('expired')") All packs
+              
               b-button(pill variant="secondary" size="sm" @click="updateFilter('expiring_today')") Expiring today
               b-button(pill variant="secondary" size="sm" @click="updateFilter('expiring_tomorrow')") Expiring tomorrow
 
