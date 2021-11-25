@@ -92,12 +92,11 @@ export default class PackController {
 		})
 
 		//creo il pacco
-		await PackModel.create(req.body)
-
-		// await FoodModel.findById
-		res.status(200).json({
-			status: "success",
+		await PackModel.create(req.body).then(r => {
+			res.status(200).json(r);
 		})
+
+		
 	})
 
 	delete = catchAsync(async (req: Request, res: Response) => {
