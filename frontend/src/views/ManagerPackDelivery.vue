@@ -433,7 +433,7 @@ export default Vue.extend({
       } else {
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedPacks.forEach((element: Pack) => {
-          element.status = "selected";
+          element.status = "planned delivery";
           element.deliveryDate = this.deliveryDate;
           element.deliveryPeriod = this.deliveryPeriod;
           element.deliveryVolunteerId = this.$store.state.session.userData._id;

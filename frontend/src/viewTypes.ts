@@ -43,6 +43,8 @@ export interface FoodManagerView {
 }
 
 export interface PackCreateView {
+  showScreen: string;
+  isPrinted: boolean;
   foodList: Array<SelectableFood>;
   family: Family;
   form: PackPayload;
