@@ -45,6 +45,7 @@
       hr.sidebar-hr.my-3
       SidebarCategory(text="Packs", icon="box")
       SidebarItem(text="Food manager", route="ManagerFood")
+      SidebarItem(text="Create Pack", route="ManagerPackCreate")
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
 </template>

@@ -107,13 +107,6 @@ b-container
                 @click="verifyFamily(family._id)"
               ) VERIFY
 
-              b-button.b-card-footer-button(
-                block,
-                v-if="userRole != 'user' && family.status == 'verified'",
-                variant="primary",
-                @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
-              ) PACK
-
         b-modal#modal(title="Confirm?", @ok="deleteFamily(deleteFamilyId)")
           div Confirm to delete the family
           template(#modal-cancel) Cancel
