@@ -48,8 +48,8 @@ export default Vue.extend({
           sortable: false,
         },
         {
-          key: "component",
-          label: "Component",
+          key: "components",
+          label: "Components",
           sortable: true,
         },
         {
