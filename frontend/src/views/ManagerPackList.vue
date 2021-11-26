@@ -8,9 +8,10 @@ b-container
       hr.sidebar-hr.my-3
 
       b-row(v-if="this.$store.state.session.userData.type != 'user'")
-        b-button-group(size="lg")
-          b-button.btn-my(@click="changeView('my')") Only my
-          b-button.btn-all(@click="changeView('all')") All
+        FilterButtons(
+          label="Pack status"
+          :filters="['ready','planned delivery','delivered','all']"
+          v-on:click="(filter) => filterBy(filter)")
 
       hr.sidebar-hr.my-3
 
@@ -31,24 +32,21 @@ b-container
               ) {{ data.value }}
               b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
 
-            template(#cell(details)="row")
-              b-button(size="sm", @click="showDetails(row)") Show details
-
-            template(#cell(advance)="{ item }")
-              b-button(
-                size="sm",
-                variant="primary",
-                @click="setDelivered(item._id)",
-                :disabled="item.status != 'planned delivery'"
-              ) Advance
-
-            template(#cell(delete)="{ item }")
-              b-button(
-                size="sm",
-                variant="danger",
-                v-b-modal.modal,
-                @click="deletePackId = item._id"
-              ) Delete
+            template(#cell(buttons)="{ item }")
+              b-button-group
+                b-button(size="sm", @click="showDetails(item)") Details
+                b-button(
+                  size="sm",
+                  variant="primary",
+                  @click="setDelivered(item._id)",
+                  :disabled="item.status != 'planned delivery'"
+                ) Advance
+                b-button(
+                  size="sm",
+                  variant="danger",
+                  v-b-modal.modal,
+                  @click="deletePackId = item._id"
+                ) Delete
 
           b-modal#modal(title="Confirm?", @ok="deletePack(deletePackId)")
             div Confirm to delete pack
@@ -78,9 +76,11 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
+import moment from "moment";
 import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
+import FilterButtons from "../components/FilterButtons.vue"
 
 import packApi from "../api/pack";
 import familyApi from "../api/family";
@@ -95,20 +95,46 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    FilterButtons
   },
   data: (): PackManagerView => {
     return {
-      view: "all",
+      statusFilter: "all",
       packList: new Array<Pack>(),
       familyDetails: undefined,
       foodDetails: undefined,
       tableFields: [
-        "status",
-        "deliveryDate",
-        "deliveryPeriod",
-        "details",
-        "delete",
-        "advance",
+        {
+          key: "status",
+          label: "Status",
+          sortable: false,
+        },
+        {
+          key: "expirationDate",
+          label: "Expiration Date",
+          sortable: true,
+          formatter: (date: Date) => {
+            if (date) return moment(date).locale("en").format("LL");
+          },
+        },
+        {
+          key: "deliveryDate",
+          label: "Delivery Date",
+          sortable: true,
+          formatter: (date: Date) => {
+            if (date) return moment(date).locale("en").format("LL");
+          },
+        },
+        {
+          key: "deliveryPeriod",
+          label: "Delivery Period",
+          sortable: false,
+        },
+        {
+          key: "buttons",
+          label: "",
+          sortable: false,
+        },
       ],
       deletePackId: "",
     };
@@ -130,15 +156,13 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    changeView(view: "my" | "all"): void {
-      var payload = {};
+    filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
+      if (this.statusFilter == status) return;
 
-      // if (view == "my") {
-      //   payload = {
-      //     filter: { reporterId: this.$store.state.session.userData._id },
-      //   };
-      // }
-      this.view = view;
+      var payload;
+      if (status != "all") payload = { filter: { status: status } };
+      else payload = null;
+      this.statusFilter = status;
 
       packApi
         .packList(payload)
@@ -152,10 +176,18 @@ export default Vue.extend({
         .deletePack({ id: id })
         .then((): void => {
           this.packList = this.packList.filter((e) => e._id != id);
-          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "successMessage",
+            "Foods",
+            "Food successfully created. Retry later or contact us if the problem persists."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Foods", "Unable to add food. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Foods",
+            "Unable to add food. Retry later or contact us if the problem persists."
+          );
         });
     },
     setDelivered(id: string) {
@@ -164,19 +196,27 @@ export default Vue.extend({
         .then((): void => {
           this.packList.forEach((elem) => {
             if (elem._id == id) {
-              elem.status = "delivered"
-              console.log(elem)
-              };
+              elem.status = "delivered";
+              console.log(elem);
+            }
           });
-          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "successMessage",
+            "Foods",
+            "Food successfully created. Retry later or contact us if the problem persists."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Foods", "Unable to upgrade pack status. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Foods",
+            "Unable to upgrade pack status. Retry later or contact us if the problem persists."
+          );
         });
     },
-    showDetails(row: any) {
+    showDetails(pack: Pack) {
       familyApi
-        .familyList({ filter: { _id: row.item.familyId } })
+        .familyList({ filter: { _id: pack.familyId } })
         .then((r: AxiosResponse) => {
           this.familyDetails = (r.data as Family)[0];
         })
@@ -185,7 +225,7 @@ export default Vue.extend({
         });
 
       const foodMap = new Map();
-      row.item.foodList.forEach((elem) => {
+      pack.foodList.forEach((elem) => {
         foodMap.set(elem.foodId, elem.number);
       });
       const foodIdList = Array.from(foodMap.keys());

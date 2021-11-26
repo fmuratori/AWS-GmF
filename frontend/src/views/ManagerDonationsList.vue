@@ -9,37 +9,17 @@ b-container
       hr.sidebar-hr.my-3
 
       b-row.mb-2(no-gutters)
-        b-col(cols="2")
-          p Donation status:
-        b-col
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('waiting')",
-            :class="{ 'my-button-selected': filterByMode == 'waiting' }"
-          ) Waiting
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('selected')",
-            :class="{ 'my-button-selected': filterByMode == 'selected' }"
-          ) Selected
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('withdrawn')",
-            :class="{ 'my-button-selected': filterByMode == 'withdrawn' }"
-          ) Withdrawn
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('all')",
-            :class="{ 'my-button-selected': filterByMode == 'all' }"
-          ) All
+        FilterButtons(
+          label="Donation status"
+          :filters="['waiting','selected','withdrawn','all']"
+          v-on:click="(filter) => filterBy(filter)"
+        )
+      b-row.mb-2(no-gutters)
+        FilterButtons(
+          label="Sort by"
+          :filters="['creationDate','unreadMessages','expirationDate']"
+          v-on:click="(filter) => orderBy(filter)"
+        )
 
       b-row.mb-2(no-gutters)
         b-col(cols="2")
@@ -130,6 +110,7 @@ import Vue from "vue";
 import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
+import FilterButtons from "../components/FilterButtons.vue"
 
 import api from "../api/donation";
 
@@ -141,6 +122,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    FilterButtons
   },
   data: () => {
     return {
