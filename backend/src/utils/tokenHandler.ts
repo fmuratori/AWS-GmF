@@ -10,12 +10,15 @@ const createToken = (userId: String) => {
 }
 
 const verifyToken = (token: String, uid: String) => {
-    const decodedToken = jwt.verify("" + token, process.env.JWT_SECRET_KEY || "missing secret token")
-    const {userId} = (decodedToken as jwt.JwtPayload)
+    try {
+        const decodedToken = jwt
+            .verify("" + token, process.env.JWT_SECRET_KEY || "missing secret token")
+        const { userId } = (decodedToken as jwt.JwtPayload)
 
-    if (uid === userId) return true
-    
-    return false
+        if (uid === userId) return true
+        return false
+
+    } catch (e) { return false }
 }
 
 export { verifyToken, createToken }
