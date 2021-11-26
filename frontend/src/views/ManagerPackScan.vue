@@ -1,52 +1,52 @@
 <template lang="pug">
+
+
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col(cols=4)
+  b-row.justify-content-md-center.my-5.no-gutters()
+    b-col(lg=8, md=10, sm=12)
       hr.sidebar-hr.my-3
       h4.text-center.mb-4
-        b PACK SCANNER
+        b SCAN QR CODE
       hr.sidebar-hr.my-3
 
-      div(v-if="showScreen='scan'")
-        qrcode-stream(@decode="onDecode" @init="onInit" :camera="cameraState" v-if="scannerState == 'scanning'")
+      div(v-if="showScreen=='scan'")
           
-          div(class="buttons")
-            b-button(variant="light" @click="toggleFullScreen()" 
-            v-if="scannerState=='scanning'"
-            ref="compressButton") 
-              b-icon(icon="arrows-angle-contract")
-            
-            b-button(variant="light" @click="toggleFullScreen()" 
-            v-if="scannerState=='scanning'"
-            ref="expandButton") 
-              b-icon(icon="arrows-angle-expand")
+        b-card(bg-variant="light" class="text-center")
+          h3.mb-3
+            font-awesome-icon.mr-2(icon="qrcode")
+            span Qr code scanner
 
-            b-button(variant="light" @click="stopCamera()" v-if="scannerState=='scanning'") Disattiva camera
+          div(v-if="scannerState == 'ready'")
+            b-button.m-5(variant="info" @click="startCamera()") Attiva camera
+
+          div(v-if="scannerState == 'scanning'")
+            qrcode-stream(@decode="onDecode" @init="onInit" :camera="cameraState" )
+            b-button(block variant="danger" @click="stopCamera()" v-if="scannerState=='scanning'") Disattiva camera
+
+          div(v-if="scannerState == 'error'")
+            font-awesome-icon(icon="fas fa-qrcode fa-3x")
+            p(v-if="!isMobile") Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
+            p(v-else) Devi autorizzare l&apos;utilizzo della fotocamera per scansionare il codice QR
+
+          div(v-if="scannerState=='validating'")
+            p Validation...
+
+          div(v-if="scannerState=='valid_success'")
+            p() Pack identified succesfully.
+
+          div(v-if="scannerState=='valid_error'")
+            p() Pack unidentified.
           
-        div(v-if="scannerState == 'ready'")
-          b-button(variant="light" @click="startCamera()" v-if="scannerState=='ready'") Attiva camera
-
-        div(v-if="scannerState == 'error'")
-          font-awesome-icon(icon="fas fa-qrcode fa-3x")
-          p(v-if="!isMobile") Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
-          p(v-else) Devi autorizzare l&apos;utilizzo della fotocamera per scansionare il codice QR
-        div(class="is-flex is-flex-direction-column is-align-items-center" v-if="scannerState=='validating'")
-          div(class="mb-3 my-loader loader is-loading")
-          p Validazione...
-
-        div(v-if="scannerState=='valid_success'")
-          span(class="icon has-text-success is-large")
-            i(class="fas fa-check fa-3x")
-          p(class="block has-text-success") Acquisizione del pacco avvenuta con successo.
-
-        div(v-if="scannerState=='valid_error'")
-          span(class="icon has-text-danger is-large")
-            i(class="fas fa-times fa-3x")
-          p(class="block has-text-danger") Il pacco è inesistente o inaccessibile.
-          
-          button(class="button " @click="reloadScanner()" v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
+            b-button(@click="reloadScanner()" v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
 
       div(v-if="showScreen=='pack'")
+        p {{ pack }}
+
+        b-button(block @click="deliverPack()") Set as delivered
+        b-button(block @click="deletePack()") Delete pack
+        b-button(block @click="resetView()") Scan another code
+        b-button(block @click="$router.replace({ name: 'Home' })") Cancel
+
 
 </template>
 
@@ -59,6 +59,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
 import packApi from "../api/pack";
+import { Pack } from "../types";
 
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -77,7 +78,10 @@ export default Vue.extend({
       isMobile: false,
       cameraState: "auto",
       scannerState: "ready",
-      isScannerFullscreen: false
+      isScannerFullscreen: false,
+      pack: {
+
+      } as Pack
     };
   },
   created() {
@@ -96,21 +100,7 @@ export default Vue.extend({
       this.scannerState = "scanning"
     },
     stopCamera() {
-      if (this.isScannerFullscreen)
-        this.toggleFullScreen()
       this.scannerState = "ready"
-    },
-
-    toggleFullScreen() {
-      this.isScannerFullscreen = !this.isScannerFullscreen
-
-      if(!this.isScannerFullscreen) {
-        this.$refs.expandButton.style.display="block"
-        this.$refs.compressButton.style.display="none"
-      } else {
-        this.$refs.expandButton.style.display="none"
-        this.$refs.compressButton.style.display="block"  
-      }
     },
 
     onDecode(result) {
@@ -119,42 +109,18 @@ export default Vue.extend({
         this.result = result;
 
         this.scannerState = "validating"
-        if (this.isScannerFullscreen)
-          this.toggleFullScreen()
-        
-        const payload = {
-          filter: {
-            "_id": result
-          }
-        }
-        packApi.packList(result).then((r: AxiosResponse) => {
-          console.log(r)
+
+        packApi.getPackInfo(result).then((r: AxiosResponse) => {
           if (r.status == 200) {
             this.scannerState = "valid_success";
-            // this.showScreen = "pack";
+            this.showScreen = "pack";
+            this.pack = r.data;
           }
         })
         .catch((e: AxiosError) => {
           console.log(e)
           this.scannerState = "valid_error";
         });
-        // var params = {
-        //   key: result.split(":")[1],
-        //   language: "it",
-        //   data: result.split(":")[2],
-        //   tags: []
-        // }
-        // api.retrieveForm(params).then(response => {
-        //   if (response.status == 200) {
-        //     this.$router.replace({name: "questionnaire-info", 
-        //       params: { data: response.data }})
-        //     this.scannerState = "valid_success"
-        //   } else {
-        //     this.scannerState = "valid_error"
-        //   }
-        // }).catch(() => {
-        //   this.scannerState = "valid_error"
-        // })
       }
     },
 
@@ -165,10 +131,8 @@ export default Vue.extend({
     async onInit(promise) {
       this.$refs.expandButton.style.display="block"
       this.$refs.compressButton.style.display="none"
-      promise.then(() => {
-        console.log("intiialized")
-
-      })
+      promise
+      // .then(() => { })
       .catch((error) => {
         this.scannerState = "error";
 
@@ -195,8 +159,40 @@ export default Vue.extend({
         }
         eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
       })
-    }
-  }
+    },
+    deliverPack() {
+      packApi.setDelivered({ id: this.pack._id }).then((r:AxiosResponse) => {
+        if (r.status == 200) {
+          eventbus.$emit("successMessage", "PACK DELIVERY", "Pack delivered succesfully.") ;
+          this.resetView();
+        } else {
+          eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists.");
+        }
+      }).catch((e:AxiosError) => {
+        console.log(e)
+        eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists.");
+      })
+    },
+    deletePack() {
+      packApi.deletePack({ id: this.pack._id }).then((r:AxiosResponse) => {
+        if (r.status == 200) {
+          eventbus.$emit("successMessage", "PACK DELIVERY", "Pack deleted succesfully.") ;
+          this.resetView();
+        } else {
+          eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to delete the specified pack. Retry later or contact us if the problem persists.");
+        }
+      }).catch((e:AxiosError) => {
+        console.log(e)
+        eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to delete the specified pack. Retry later or contact us if the problem persists.");
+      })
+      this.resetView();
+    },
+    resetView() {
+      this.scannerState = "ready";
+      this.showScreen = "scan";
+      this.pack = {} as Pack;
+    },
+   }
 });
 </script>
 
