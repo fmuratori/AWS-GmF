@@ -158,7 +158,11 @@ export default Vue.extend({
           this.familyList = r.data as Family[];
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Family", "Unable to verify the selected family. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Family",
+            "Unable to verify the selected family. Retry later or contact us if the problem persists."
+          );
         });
     } else this.$router.push({ name: "Login" });
   },
@@ -178,10 +182,18 @@ export default Vue.extend({
             });
           }
 
-          eventbus.$emit("successMessage", "Family", "Family verified succesfully. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "successMessage",
+            "Family",
+            "Family verified succesfully. Retry later or contact us if the problem persists."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("successMessage", "Family", "Unable to verify the selected family. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "successMessage",
+            "Family",
+            "Unable to verify the selected family. Retry later or contact us if the problem persists."
+          );
         });
     },
     filterBy(
@@ -221,18 +233,30 @@ export default Vue.extend({
           this.familyList = r.data as Family[];
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Family", "Unable to retrieve food list. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Family",
+            "Unable to retrieve food list. Retry later or contact us if the problem persists."
+          );
         });
     },
     deleteFamily(id: string): void {
       api
         .deleteFamily({ id: id })
         .then((): void => {
-          eventbus.$emit("successMessage", "Family", "Family successfully deleted.");
+          eventbus.$emit(
+            "successMessage",
+            "Family",
+            "Family successfully deleted."
+          );
           this.familyList = this.familyList.filter((e) => e._id != id);
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Family", "`Unable to delete the selected family. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Family",
+            "`Unable to delete the selected family. Retry later or contact us if the problem persists."
+          );
         });
     },
   },

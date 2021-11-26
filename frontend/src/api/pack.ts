@@ -17,17 +17,19 @@ export default {
   },
 
   async filterPackList(payload: FindPayload): Promise<AxiosResponse> {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/filter`, payload, {
-      headers: store.getters.getSessionHeader,
-    });
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/pack/filter`,
+      payload,
+      {
+        headers: store.getters.getSessionHeader,
+      }
+    );
   },
 
   async editPack(payload: Pack): Promise<AxiosResponse> {
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/pack/edit`,
-      payload,
-      { headers: store.getters.getSessionHeader }
-    );
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/edit`, payload, {
+      headers: store.getters.getSessionHeader,
+    });
   },
 
   async deletePack(payload: { id: string }): Promise<AxiosResponse> {
@@ -46,7 +48,9 @@ export default {
     );
   },
 
-  async setPlannedDelivery(payload: PackDeliveryPayload): Promise<AxiosResponse> {
+  async setPlannedDelivery(
+    payload: PackDeliveryPayload
+  ): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/planned-delivery`,
       payload,

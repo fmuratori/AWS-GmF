@@ -134,7 +134,7 @@ export default Vue.extend({
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
       } as Donation,
       submitLabel: "Create",
-      isLocationLoaded: false
+      isLocationLoaded: false,
     };
   },
   created() {
@@ -194,25 +194,41 @@ export default Vue.extend({
                 donationId: this.form._id,
                 message: "Donation modified by the owner.",
                 isEventMessage: true,
-              })
+              });
             } else {
-              eventbus.$emit("successMessage", "Donation", "Donation created successfully.");
+              eventbus.$emit(
+                "successMessage",
+                "Donation",
+                "Donation created successfully."
+              );
             }
             this.$router.push({ name: "ManagerDonationsList" });
           })
           .catch((e: AxiosError): void => {
             console.log(e);
-            eventbus.$emit("errorMessage", "Donation", "Unable to send the donation. Retry later or contact us if the problem persists.");
+            eventbus.$emit(
+              "errorMessage",
+              "Donation",
+              "Unable to send the donation. Retry later or contact us if the problem persists."
+            );
           });
       }
     },
     formChecks(): boolean {
       if (!this.form.pickUpPeriod.length || !this.form.expirationDate) {
-        eventbus.$emit("warningMessage", "Donation", "Select al least one day and period of the day when we can retrive your donation.");
+        eventbus.$emit(
+          "warningMessage",
+          "Donation",
+          "Select al least one day and period of the day when we can retrive your donation."
+        );
         return false;
       }
       if (!this.form.foods.length) {
-        eventbus.$emit("warningMessage", "Donation", "Add at least one valid food to the donation.");
+        eventbus.$emit(
+          "warningMessage",
+          "Donation",
+          "Add at least one valid food to the donation."
+        );
         return false;
       }
       return true;

@@ -34,8 +34,7 @@ const sessionModule = {
           });
         });
         return true;
-      }
-      return state.token != "";
+      } else return true;
     },
     isUser(state: UserState): boolean {
       return state.userData.type == "user";
@@ -52,12 +51,6 @@ const sessionModule = {
     userFullName(state: UserState): string {
       return state.userData.name + " " + state.userData.surname;
     },
-    // isVolunteer(state: any) {
-    //   return state.type != null;
-    // },
-    // isPrivilegedVolunteer(state: any) {
-    //   return state.type != null;
-    // },
   },
   mutations: {
     login(state: UserState, payload: UserState): void {

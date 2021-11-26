@@ -248,7 +248,7 @@ export default Vue.extend({
         donationId: this.donation._id,
         message: this.chatMessage,
         isEventMessage: false,
-      })
+      });
     },
     deleteDonation() {
       donationApi
@@ -259,14 +259,22 @@ export default Vue.extend({
               donationId: this.donation._id,
               message: "Donation cancelled succesfully.",
               isEventMessage: true,
-            })
+            });
 
             this.$router.push({ name: "ManagerDonationsList" });
-            eventbus.$emit("successMessage", "Donation", "Donation deleted successfully.");
+            eventbus.$emit(
+              "successMessage",
+              "Donation",
+              "Donation deleted successfully."
+            );
           }
         })
         .catch((e: AxiosError): void => {
-          eventbus.$emit("dangerMessage", "Donation", "Donation deletion failed. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "dangerMessage",
+            "Donation",
+            "Donation deletion failed. Retry later or contact us if the problem persists."
+          );
           console.log(e);
         });
     },
@@ -291,14 +299,22 @@ export default Vue.extend({
               donationId: this.donation._id,
               message: "The volunteer in charge cancelled the reservation.",
               isEventMessage: true,
-            })
-            
-            eventbus.$emit("successMessage", "Donation", "Donation reservation for pickup deleted succesfully.");
+            });
+
+            eventbus.$emit(
+              "successMessage",
+              "Donation",
+              "Donation reservation for pickup deleted succesfully."
+            );
             this.$router.push({ name: "ManagerDonationsList" });
           }
         })
         .catch((e: AxiosError): void => {
-          eventbus.$emit("errorMessage", "Donation", "Donation reservation cancellation failed. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Donation",
+            "Donation reservation cancellation failed. Retry later or contact us if the problem persists."
+          );
           console.log(e);
         });
     },

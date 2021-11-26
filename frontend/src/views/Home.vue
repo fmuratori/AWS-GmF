@@ -40,7 +40,7 @@ export default Vue.extend({
   components: {
     DoughnutChart,
     HomepageEvents,
-    CountBoxes
+    CountBoxes,
   },
   created() {
     // check if user is logged in

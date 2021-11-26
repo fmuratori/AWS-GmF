@@ -190,10 +190,18 @@ export default Vue.extend({
         .deleteFood({ id: id })
         .then((): void => {
           this.foodList = this.foodList.filter((e) => e._id != id);
-          eventbus.$emit("successMessage", "Foods", "Food deleted successfully.");
+          eventbus.$emit(
+            "successMessage",
+            "Foods",
+            "Food deleted successfully."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Foods", "Unable to delete selected foods. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Foods",
+            "Unable to delete selected foods. Retry later or contact us if the problem persists."
+          );
         });
     },
   },

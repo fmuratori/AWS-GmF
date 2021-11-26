@@ -47,8 +47,8 @@ import MapLocation from "../MapLocation.vue";
 
 export default Vue.extend({
   name: "InputAddress",
-  components: { 
-    MapLocation 
+  components: {
+    MapLocation,
   },
   props: {
     title: String,
@@ -99,26 +99,30 @@ export default Vue.extend({
             " " +
             this.address.street
         )
-        .then((r:any) => {
+        .then((r: any) => {
           if (r.status == 200) {
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>
               c.types.includes("administrative_area_level_3")
             )?.long_name;
-            this.address.street = r.data.results[0].address_components.find((c) =>
-              c.types.includes("route")
+            this.address.street = r.data.results[0].address_components.find(
+              (c) => c.types.includes("route")
             )?.long_name;
-            this.address.civicNumber = r.data.results[0].address_components.find(
-              (c) => c.types.includes("street_number")
-            )?.long_name;
-            this.address.coordinates.x = r.data.results[0].geometry.location.lat;
-            this.address.coordinates.y = r.data.results[0].geometry.location.lng;
+            this.address.civicNumber =
+              r.data.results[0].address_components.find((c) =>
+                c.types.includes("street_number")
+              )?.long_name;
+            this.address.coordinates.x =
+              r.data.results[0].geometry.location.lat;
+            this.address.coordinates.y =
+              r.data.results[0].geometry.location.lng;
 
             this.$emit("onAddressUpdate", this.address);
           } else {
             this.isLocationLoaded = false;
           }
-        }).catch((e: AxiosError) => {
+        })
+        .catch((e: AxiosError) => {
           console.log(e);
         });
     },
@@ -127,7 +131,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-
 #gmap {
   height: 300px;
   width: 300px;

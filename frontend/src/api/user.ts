@@ -40,7 +40,7 @@ export default {
     );
   },
 
-  async upgradeUser(payload: {email: string}): Promise<AxiosResponse> {
+  async upgradeUser(payload: { email: string }): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/user/upgrade`,
       payload,

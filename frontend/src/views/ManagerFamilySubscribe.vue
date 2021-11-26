@@ -123,10 +123,18 @@ export default Vue.extend({
       fun(this.form)
         .then((): void => {
           this.$router.push({ name: "ManagerFamilyList" });
-          eventbus.$emit("successMessage", "Events", "Family registration request received succesfully. In a later date we will validate your request.");
+          eventbus.$emit(
+            "successMessage",
+            "Events",
+            "Family registration request received succesfully. In a later date we will validate your request."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Events", "Unable to submit the family registration request. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Events",
+            "Unable to submit the family registration request. Retry later or contact us if the problem persists."
+          );
         });
     },
   },

@@ -21,32 +21,6 @@ b-container
           v-on:click="(filter) => orderBy(filter)"
         )
 
-      b-row.mb-2(no-gutters)
-        b-col(cols="2")
-          p Sort by:
-        b-col
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="orderBy('creationDate')",
-            :class="{ 'my-button-selected': orderByMode == 'creationDate' }"
-          ) Creation date
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="orderBy('unreadMessages')",
-            :class="{ 'my-button-selected': orderByMode == 'unreadMessages' }"
-          ) Unread messages
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="orderBy('expirationDate')",
-            :class="{ 'my-button-selected': orderByMode == 'expirationDate' }"
-          ) Expiration date
-
       b-row
         b-col(sm=12, md=6, v-if="donations.length == 0") 
           p No donations found. Change filters or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationsCreate' })") here] for insert a donation.
@@ -110,7 +84,7 @@ import Vue from "vue";
 import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
-import FilterButtons from "../components/FilterButtons.vue"
+import FilterButtons from "../components/FilterButtons.vue";
 
 import api from "../api/donation";
 
@@ -122,7 +96,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
-    FilterButtons
+    FilterButtons,
   },
   data: () => {
     return {
@@ -142,7 +116,7 @@ export default Vue.extend({
       var filter = {};
       if (this.$store.state.session.userData.type == "user")
         filter = { userId: this.$store.state.session.userData._id };
-      
+
       api
         .filterDonations(filter)
         .then((r: AxiosResponse): void => {

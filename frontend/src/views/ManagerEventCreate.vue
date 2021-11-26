@@ -124,10 +124,18 @@ export default Vue.extend({
       fun(this.form)
         .then((): void => {
           this.$router.push({ name: "ManagerEvents" });
-          eventbus.$emit("successMessage", "Events", "Event created succesfully.");
+          eventbus.$emit(
+            "successMessage",
+            "Events",
+            "Event created succesfully."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Events", "Unable to create the event. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Events",
+            "Unable to create the event. Retry later or contact us if the problem persists."
+          );
         });
     },
   },

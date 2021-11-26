@@ -160,10 +160,8 @@
           p If you can't find any mark in the map, try to select different filtering options on the right menu.
 </template>
 
-
 <style scoped lang="scss">
 @import "@/assets/style.scss";
-
 
 #filters {
   height: 100%;
@@ -176,7 +174,6 @@
 }
 
 .fullheight-lg {
-  
   @include md {
     height: auto;
   }
@@ -186,8 +183,7 @@
   }
 }
 
-.scrollable-lg {  
-  
+.scrollable-lg {
   @include md {
     width: auto;
     overflow-y: auto;
@@ -199,7 +195,6 @@
   }
 }
 </style>
-
 
 <script lang="ts">
 import Vue from "vue";
@@ -279,9 +274,11 @@ export default Vue.extend({
   },
   computed: {
     unselectedDonations() {
-      const selectedDonationsIds = this.selectedDonations.map(d => d._id);
-      return this.donations.filter(d => !selectedDonationsIds.includes(d._id))
-    }
+      const selectedDonationsIds = this.selectedDonations.map((d) => d._id);
+      return this.donations.filter(
+        (d) => !selectedDonationsIds.includes(d._id)
+      );
+    },
   },
   watch: {
     pickUpDate: function (): void {
@@ -293,8 +290,7 @@ export default Vue.extend({
   },
   created() {
     // check if user is logged in
-    if (!this.$store.getters.isUserLogged) 
-      this.$router.push({ name: "Login" });
+    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
   },
   methods: {
     selectCity(addressData, placeResultData, id) {
@@ -303,8 +299,8 @@ export default Vue.extend({
         coordinates: {
           x: addressData.latitude,
           y: addressData.longitude,
-        }
-      }
+        },
+      };
       this.filterDonations();
     },
     deselectCity() {
@@ -313,11 +309,11 @@ export default Vue.extend({
       this.windowDonations = null;
       this.windowCoordinates = null;
     },
-    openInfoWindow(lat: number , lng: number) {
+    openInfoWindow(lat: number, lng: number) {
       this.windowDonations.splice(0, this.windowDonations.length);
 
       // find coordinates near to the clicked marked
-      this.windowCoordinates = {x: lat, y: lng};
+      this.windowCoordinates = { x: lat, y: lng };
       for (const donation of this.donations) {
         const distance = calcCrow(
           lat,
@@ -355,12 +351,20 @@ export default Vue.extend({
 
       // TODO: mostrare uno spinner mentre sono caricati i dati
       donationsApi
-        .filterUnpickedDonations(this.selectedCity.name, this.pickUpDate, this.pickUpPeriod)
-        .then((r: AxiosResponse<{data: Donation[]}>): void => {
+        .filterUnpickedDonations(
+          this.selectedCity.name,
+          this.pickUpDate,
+          this.pickUpPeriod
+        )
+        .then((r: AxiosResponse<{ data: Donation[] }>): void => {
           this.donations = r.data;
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Donation", "Donation search with filtering options failed. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Donation",
+            "Donation search with filtering options failed. Retry later or contact us if the problem persists."
+          );
         });
     },
     showModal() {
@@ -372,9 +376,17 @@ export default Vue.extend({
     submit(e: any) {
       e.preventDefault();
       if (!this.pickUpDate) {
-        eventbus.$emit("warningMessage", "Donations", "Unable to perform the requested operation. Select a valid pickup day.");
+        eventbus.$emit(
+          "warningMessage",
+          "Donations",
+          "Unable to perform the requested operation. Select a valid pickup day."
+        );
       } else if (!this.selectedDonations.length) {
-        eventbus.$emit("warningMessage", "Donations", "Unable to perform the requested operation. Select at least one donation available for pick up.");
+        eventbus.$emit(
+          "warningMessage",
+          "Donations",
+          "Unable to perform the requested operation. Select at least one donation available for pick up."
+        );
       } else {
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedDonations.forEach((element: Donation) => {
@@ -390,7 +402,11 @@ export default Vue.extend({
         Promise.all(promises)
           .then((): void => {
             this.$router.push({ name: "ManagerDonationsList" });
-            eventbus.$emit("successMessage", "Donations", "Donation reservation submitted succesfully.");
+            eventbus.$emit(
+              "successMessage",
+              "Donations",
+              "Donation reservation submitted succesfully."
+            );
             this.selectedDonations.forEach((element: Donation) => {
               this.$store.dispatch("sendMessage", {
                 donationId: element._id,
@@ -406,7 +422,11 @@ export default Vue.extend({
             });
           })
           .catch((): void => {
-            eventbus.$emit("errorMessage", "Donations", "Donation reservation submission for pick up failed. Retry later or contact us if the problem persists.");
+            eventbus.$emit(
+              "errorMessage",
+              "Donations",
+              "Donation reservation submission for pick up failed. Retry later or contact us if the problem persists."
+            );
           });
       }
     },

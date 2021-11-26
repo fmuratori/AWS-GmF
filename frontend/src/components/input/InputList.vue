@@ -29,11 +29,11 @@ export default Vue.extend({
   },
   data: () => {
     return {
-      labels: new Array<string>()
+      labels: new Array<string>(),
     };
   },
   created() {
-    this.labels = this.labelList as Array<string>
+    this.labels = this.labelList as Array<string>;
     this.labels.push("");
   },
   methods: {

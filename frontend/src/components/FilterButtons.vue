@@ -30,11 +30,11 @@ export default Vue.extend({
     this.selectedFilter = this.filters[0];
   },
   methods: {
-    onClick(filter: String): void {
+    onClick(filter: string): void {
       this.selectedFilter = filter;
       this.$emit("click", filter);
     },
-    formatLabel(label: String) {
+    formatLabel(label: string) {
       return label[0].toUpperCase() + label.slice(1);
     },
   },

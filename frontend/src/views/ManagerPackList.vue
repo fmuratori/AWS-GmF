@@ -80,7 +80,7 @@ import moment from "moment";
 import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
-import FilterButtons from "../components/FilterButtons.vue"
+import FilterButtons from "../components/FilterButtons.vue";
 
 import packApi from "../api/pack";
 import familyApi from "../api/family";
@@ -95,7 +95,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
-    FilterButtons
+    FilterButtons,
   },
   data: (): PackManagerView => {
     return {

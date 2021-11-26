@@ -80,8 +80,8 @@ b-row.justify-content-center(no-gutters)
 
           InputAddress(
             title="Location",
-            v-on:data="(e) => { registration.address = e; }"
-            @addressUpdate = "onAddressUpdate"
+            v-on:data="(e) => { registration.address = e; }",
+            @addressUpdate="onAddressUpdate"
           )
 
           InputPasswordSelect(
@@ -129,8 +129,8 @@ import {
   LoginPayload,
   RegistrationPayload,
   Address,
-  LoginResponse, 
-  UserData, 
+  LoginResponse,
+  UserData,
 } from "../types";
 
 export default Vue.extend({
@@ -182,15 +182,15 @@ export default Vue.extend({
           .loginRequest(this.login)
           .then((r: AxiosResponse<LoginResponse>): void => {
             if (r.status == 200) {
+              this.$cookies.set("jwt", r.data.token);
+              this.$cookies.set("user-id", r.data.user._id);
+
               this.$store.dispatch("login", {
                 token: r.data.token as string,
                 userData: r.data.user as UserData,
               });
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });
-
-              this.$cookies.set("jwt", r.data.token);
-              this.$cookies.set("user-id", r.data.user._id);
 
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(
@@ -215,11 +215,19 @@ export default Vue.extend({
           .registrationRequest(this.registration)
           .then(() => {
             this.isLoginSelected = true;
-            eventbus.$emit("successMessage", "Registration", "Registration completed successfully.");
+            eventbus.$emit(
+              "successMessage",
+              "Registration",
+              "Registration completed successfully."
+            );
           })
           .catch((e) => {
             console.log(e);
-            eventbus.$emit("errorMessage", "Registration", "An unexpected error occurred during your registration. Retry later or contact us if the problem persists.");
+            eventbus.$emit(
+              "errorMessage",
+              "Registration",
+              "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
+            );
           });
       }
     },
