@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import FoodModel, { FoodDocument } from '../models/foodModel';
 import PackModel, { PackDocument } from '../models/packModel';
 import catchAsync from '../utils/catchAsync';
@@ -9,10 +9,75 @@ const factory = new ControllerFactory<PackDocument>()
 
 export default class PackController {
 
-	find = factory.findMany(PackModel)
+	find = catchAsync(async (req: Request, res: Response) => {
+		
+		const pack = await PackModel.aggregate([
+			{
+				$unwind: "$foodList"
+			},
+			{
+				$addFields: {"foodId": {"$toObjectId": "$foodList.foodId"}}
+			},
+			{
+				$lookup: {
+					"from": "foods",
+					"localField": "foodId",
+					"foreignField": "_id",
+					"as": "food"
+					}
+				},
+				{
+				$unwind: "$food"
+			},
+			{
+				$group: {
+					_id: "$_id",
+					"foodList": {"$push": "$food"},
+				}
+			},
+			
+			{
+				$lookup: {
+					"from": "packs",
+					"localField": "_id",
+					"foreignField": "_id",
+					"as": "pack"
+				}
+			},
+			{
+				$unwind: "$pack"
+			},
+			
+			{
+				$lookup: {
+					"from": "families",
+					"localField": "pack.familyId",
+					"foreignField": "_id",
+					"as": "family"
+				}
+			},
+			{
+				$unwind: "$family"
+			},
+			{
+				$project: {
+					"pack.foodList": 0,
+					"pack.familyId": 0
+				}
+			},
+			{
+				$match: {
+					"pack._id": new mongoose.Types.ObjectId((req.body.id))
+				}
+			}
+		])
+
+		res.status(200).json(pack[0]);
+	})
+
 	edit = factory.edit(PackModel)
 
-	filterPacks = catchAsync(async (req: Request, res: Response) => {
+	filter = catchAsync(async (req: Request, res: Response) => {
 		// db.packs.aggregate([{
 		// 	$lookup: {
 		// 		from: "families",
