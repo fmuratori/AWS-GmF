@@ -9,52 +9,20 @@ b-container
       hr.sidebar-hr.my-3
 
       b-row.mb-2(no-gutters)
-        b-col(cols="2")
-          b Report status:
-        b-col
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('verified', reporterFilter)",
-            :class="{ 'my-button-selected': statusFilter == 'verified' }"
-          ) Verified reports
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('pending', reporterFilter)",
-            :class="{ 'my-button-selected': statusFilter == 'pending' }"
-          ) Pending reports
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('all', reporterFilter)",
-            :class="{ 'my-button-selected': statusFilter == 'all' }"
-          ) All reports
-
+        FilterButtons(
+          label="Report status",
+          :filters="['verified', 'pending', 'all']",
+          v-on:click="(filter) => filterBy(filter, reporterFilter)"
+        )
       b-row.mb-2(
         no-gutters,
         v-if="this.$store.state.session.userData.type != 'user'"
       )
-        b-col(cols="2")
-          b Reporter:
-        b-col
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy(statusFilter, 'me')",
-            :class="{ 'my-button-selected': reporterFilter == 'me' }"
-          ) Me
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy(statusFilter, 'all')",
-            :class="{ 'my-button-selected': reporterFilter == 'all' }"
-          ) All
+        FilterButtons(
+          label="Reporter",
+          :filters="['me', 'all']",
+          v-on:click="(filter) => filterBy(statusFilter, filter)"
+        )
 
       b-row
         b-col(v-if="familyList.length == 0", sm=12, md=6)
@@ -118,6 +86,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
+import FilterButtons from "../components/FilterButtons.vue";
 
 import api from "../api/family";
 
@@ -129,6 +98,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    FilterButtons,
   },
   data: () => {
     return {
@@ -137,6 +107,7 @@ export default Vue.extend({
       reporterFilter: "me",
       orderByMode: "creation_date",
       familyList: new Array<Family>(),
+      familyListBackup: new Array<Family>(),
       deleteFamilyId: "",
     };
   },
@@ -149,13 +120,20 @@ export default Vue.extend({
 
       this.userRole = this.$store.state.session.userData.type;
 
-      // TODO: mostrare uno spinner mentre sono caricati i dati
-      api
-        .familyList({
+      var payload = {};
+      if (this.userRole == "user")
+        payload = {
           filter: { reporterId: this.$store.state.session.userData._id },
-        })
+        };
+
+      api
+        .familyList(payload)
         .then((r: AxiosResponse): void => {
-          this.familyList = r.data as Family[];
+          this.familyListBackup = r.data as Family[];
+          //il filtro di default è per id del reporter
+          this.familyList = this.familyListBackup.filter(
+            (f: Family) => f._id == this.$store.state.session.userData._id
+          );
         })
         .catch((): void => {
           eventbus.$emit(
@@ -211,34 +189,24 @@ export default Vue.extend({
         this.reporterFilter = reporterFilter;
       else return;
 
-      var payload = { filter: {} };
-
+      this.familyList = this.familyListBackup;
       switch (statusFilter) {
         case "verified":
         case "pending":
-          payload.filter["status"] = statusFilter;
+          this.familyList = this.familyList.filter(
+            (f: Family) => f.status == statusFilter
+          );
           break;
         default:
       }
       switch (reporterFilter) {
         case "me":
-          payload.filter["reporterId"] = this.$store.state.session.userData._id;
+          this.familyList = this.familyList.filter(
+            (f: Family) => f._id == this.$store.state.session.userData._id
+          );
           break;
         default:
       }
-
-      api
-        .familyList(payload)
-        .then((r: AxiosResponse): void => {
-          this.familyList = r.data as Family[];
-        })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Family",
-            "Unable to retrieve food list. Retry later or contact us if the problem persists."
-          );
-        });
     },
     deleteFamily(id: string): void {
       api
@@ -263,11 +231,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-@import "@/assets/style.scss";
-
-.my-button-selected {
-  background-color: $color1;
-  border-color: $color1;
-}
-</style>
+<style scoped lang="scss"></style>
