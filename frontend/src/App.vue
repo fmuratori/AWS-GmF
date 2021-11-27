@@ -70,6 +70,5 @@ export default Vue.extend({
 #content {
   flex-grow: 1;
   overflow: auto;
-
 }
 </style>

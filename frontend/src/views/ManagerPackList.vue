@@ -152,10 +152,18 @@ export default Vue.extend({
         .deletePack({ id: id })
         .then((): void => {
           this.packList = this.packList.filter((e) => e._id != id);
-          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "successMessage",
+            "Foods",
+            "Food successfully created. Retry later or contact us if the problem persists."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Foods", "Unable to add food. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Foods",
+            "Unable to add food. Retry later or contact us if the problem persists."
+          );
         });
     },
     setDelivered(id: string) {
@@ -164,14 +172,22 @@ export default Vue.extend({
         .then((): void => {
           this.packList.forEach((elem) => {
             if (elem._id == id) {
-              elem.status = "delivered"
-              console.log(elem)
-              };
+              elem.status = "delivered";
+              console.log(elem);
+            }
           });
-          eventbus.$emit("successMessage", "Foods", "Food successfully created. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "successMessage",
+            "Foods",
+            "Food successfully created. Retry later or contact us if the problem persists."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Foods", "Unable to upgrade pack status. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Foods",
+            "Unable to upgrade pack status. Retry later or contact us if the problem persists."
+          );
         });
     },
     showDetails(row: any) {

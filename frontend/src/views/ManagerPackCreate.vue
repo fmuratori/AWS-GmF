@@ -114,8 +114,8 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 import { AxiosResponse, AxiosError } from "axios";
 import moment from "moment";
-import QrcodeVue from "qrcode.vue"
-import VueHtml2pdf from "vue-html2pdf"
+import QrcodeVue from "qrcode.vue";
+import VueHtml2pdf from "vue-html2pdf";
 
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
@@ -165,7 +165,7 @@ export default Vue.extend({
     print() {
       this.isPrinted = true;
 
-      this.$refs.printableData.generatePdf()
+      this.$refs.printableData.generatePdf();
     },
     createPack(): void {
       this.foodList.forEach((elem) => {
@@ -175,34 +175,53 @@ export default Vue.extend({
       });
 
       this.form.expirationDate = moment(
-        new Date(Math.max.apply(null, 
-          this.foodList
-            .filter(f => f.selected)
-            .map(f => new Date(f.expirationDate)))))
-        .format("YYYY-MM-DD")
-      
-      this.showScreen = "loading";
-      packApi.createPack(this.form).then((r: AxiosResponse<Pack>): void => {
-        if (r.status == 200) {
-          eventbus.$emit("successMessage", "Food packs", "Pack successfully created.");
-      
-          packApi.getPackInfo(r.data._id).then((r2: AxiosResponse<Pack>): void => {
-            if (r2.status == 200) {
-              this.form = r2.data;
-              this.showScreen = "printable_info";
-            }
-          })
-          .catch((e2: AxiosError): void => {
-            console.log(e2);
-            eventbus.$emit("errorMessage", "Food packs", "Unable to find the specified pack. Retry later or contact us if the problem persists.");
-          });
+        new Date(
+          Math.max.apply(
+            null,
+            this.foodList
+              .filter((f) => f.selected)
+              .map((f) => new Date(f.expirationDate))
+          )
+        )
+      ).format("YYYY-MM-DD");
 
-        }
-      })
-      .catch((e: AxiosError): void => {
-        console.log(e);
-        eventbus.$emit("errorMessage", "Food packs", "Unable to create a food pack. Retry later or contact us if the problem persists.");
-      });
+      this.showScreen = "loading";
+      packApi
+        .createPack(this.form)
+        .then((r: AxiosResponse<Pack>): void => {
+          if (r.status == 200) {
+            eventbus.$emit(
+              "successMessage",
+              "Food packs",
+              "Pack successfully created."
+            );
+
+            packApi
+              .getPackInfo(r.data._id)
+              .then((r2: AxiosResponse<Pack>): void => {
+                if (r2.status == 200) {
+                  this.form = r2.data;
+                  this.showScreen = "printable_info";
+                }
+              })
+              .catch((e2: AxiosError): void => {
+                console.log(e2);
+                eventbus.$emit(
+                  "errorMessage",
+                  "Food packs",
+                  "Unable to find the specified pack. Retry later or contact us if the problem persists."
+                );
+              });
+          }
+        })
+        .catch((e: AxiosError): void => {
+          console.log(e);
+          eventbus.$emit(
+            "errorMessage",
+            "Food packs",
+            "Unable to create a food pack. Retry later or contact us if the problem persists."
+          );
+        });
     },
   },
 });

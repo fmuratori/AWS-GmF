@@ -133,10 +133,18 @@ export default Vue.extend({
         .deleteEvent({ id: id })
         .then((): void => {
           this.events = this.events.filter((e) => e._id != id);
-          eventbus.$emit("successMessage", "Events", "Event successfully deleted.");
+          eventbus.$emit(
+            "successMessage",
+            "Events",
+            "Event successfully deleted."
+          );
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Events", "Unable to delete the event. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Events",
+            "Unable to delete the event. Retry later or contact us if the problem persists."
+          );
         });
     },
   },

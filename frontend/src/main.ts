@@ -40,9 +40,8 @@ Vue.use(VueGoogleMaps, {
   autobindAllEvents: false,
 });
 
-import VueGoogleAutocomplete from "vue-google-autocomplete"
+import VueGoogleAutocomplete from "vue-google-autocomplete";
 Vue.component("vue-google-autocomplete", VueGoogleAutocomplete);
-
 
 /* enable moment package usage inside html/pug code */
 import moment from "moment";

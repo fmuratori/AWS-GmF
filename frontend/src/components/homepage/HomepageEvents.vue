@@ -60,10 +60,9 @@ export default Vue.extend({
     formatAddress(addr: Address): string {
       return addr.street + " " + addr.civicNumber + ", " + addr.city;
     },
-        formatDate(date) {
+    formatDate(date) {
       return moment(date).locale("it").format("DD-MM-YYYY");
     },
-
   },
 });
 </script>

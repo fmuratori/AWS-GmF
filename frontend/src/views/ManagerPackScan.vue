@@ -52,7 +52,7 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
-import {QrcodeStream} from "vue-qrcode-reader"
+import { QrcodeStream } from "vue-qrcode-reader";
 
 import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
@@ -77,11 +77,11 @@ export default Vue.extend({
       isMobile: false,
       cameraState: "auto",
       scannerState: "ready",
-      isScannerFullscreen: false
+      isScannerFullscreen: false,
     };
   },
   created() {
-    this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)      
+    this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (this.$store.getters.isUserLogged) {
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
@@ -89,27 +89,26 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   mounted() {
-    this.startCamera()
+    this.startCamera();
   },
   methods: {
     startCamera() {
-      this.scannerState = "scanning"
+      this.scannerState = "scanning";
     },
     stopCamera() {
-      if (this.isScannerFullscreen)
-        this.toggleFullScreen()
-      this.scannerState = "ready"
+      if (this.isScannerFullscreen) this.toggleFullScreen();
+      this.scannerState = "ready";
     },
 
     toggleFullScreen() {
-      this.isScannerFullscreen = !this.isScannerFullscreen
+      this.isScannerFullscreen = !this.isScannerFullscreen;
 
-      if(!this.isScannerFullscreen) {
-        this.$refs.expandButton.style.display="block"
-        this.$refs.compressButton.style.display="none"
+      if (!this.isScannerFullscreen) {
+        this.$refs.expandButton.style.display = "block";
+        this.$refs.compressButton.style.display = "none";
       } else {
-        this.$refs.expandButton.style.display="none"
-        this.$refs.compressButton.style.display="block"  
+        this.$refs.expandButton.style.display = "none";
+        this.$refs.compressButton.style.display = "block";
       }
     },
 
@@ -118,26 +117,27 @@ export default Vue.extend({
       if (result != "") {
         this.result = result;
 
-        this.scannerState = "validating"
-        if (this.isScannerFullscreen)
-          this.toggleFullScreen()
-        
+        this.scannerState = "validating";
+        if (this.isScannerFullscreen) this.toggleFullScreen();
+
         const payload = {
           filter: {
-            "_id": result
-          }
-        }
-        packApi.packList(result).then((r: AxiosResponse) => {
-          console.log(r)
-          if (r.status == 200) {
-            this.scannerState = "valid_success";
-            // this.showScreen = "pack";
-          }
-        })
-        .catch((e: AxiosError) => {
-          console.log(e)
-          this.scannerState = "valid_error";
-        });
+            _id: result,
+          },
+        };
+        packApi
+          .packList(result)
+          .then((r: AxiosResponse) => {
+            console.log(r);
+            if (r.status == 200) {
+              this.scannerState = "valid_success";
+              // this.showScreen = "pack";
+            }
+          })
+          .catch((e: AxiosError) => {
+            console.log(e);
+            this.scannerState = "valid_error";
+          });
         // var params = {
         //   key: result.split(":")[1],
         //   language: "it",
@@ -146,7 +146,7 @@ export default Vue.extend({
         // }
         // api.retrieveForm(params).then(response => {
         //   if (response.status == 200) {
-        //     this.$router.replace({name: "questionnaire-info", 
+        //     this.$router.replace({name: "questionnaire-info",
         //       params: { data: response.data }})
         //     this.scannerState = "valid_success"
         //   } else {
@@ -163,40 +163,42 @@ export default Vue.extend({
     },
 
     async onInit(promise) {
-      this.$refs.expandButton.style.display="block"
-      this.$refs.compressButton.style.display="none"
-      promise.then(() => {
-        console.log("intiialized")
+      this.$refs.expandButton.style.display = "block";
+      this.$refs.compressButton.style.display = "none";
+      promise
+        .then(() => {
+          console.log("intiialized");
+        })
+        .catch((error) => {
+          this.scannerState = "error";
 
-      })
-      .catch((error) => {
-        this.scannerState = "error";
-
-        var errorMessage = ""
-        switch(error.name) {
-          case "NotAllowedError": 
-            errorMessage = "ERROR: you need to grant camera access permisson";
-            break;
-          case "NotFoundError": 
-            errorMessage = "ERROR: no camera on this device";
-            break;
-          case "NotSupportedError": 
-            errorMessage = "ERROR: secure context required (HTTPS, localhost)";
-            break;
-          case "NotReadableError": 
-            errorMessage = "ERROR: is the camera already in use?";
-            break;
-          case "OverconstrainedError": 
-            errorMessage = "ERROR: installed cameras are not suitable";
-            break;
-          case "StreamApiNotSupportedError": 
-            errorMessage = "ERROR: Stream API is not supported in this browser";
-            break;
-        }
-        eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
-      })
-    }
-  }
+          var errorMessage = "";
+          switch (error.name) {
+            case "NotAllowedError":
+              errorMessage = "ERROR: you need to grant camera access permisson";
+              break;
+            case "NotFoundError":
+              errorMessage = "ERROR: no camera on this device";
+              break;
+            case "NotSupportedError":
+              errorMessage =
+                "ERROR: secure context required (HTTPS, localhost)";
+              break;
+            case "NotReadableError":
+              errorMessage = "ERROR: is the camera already in use?";
+              break;
+            case "OverconstrainedError":
+              errorMessage = "ERROR: installed cameras are not suitable";
+              break;
+            case "StreamApiNotSupportedError":
+              errorMessage =
+                "ERROR: Stream API is not supported in this browser";
+              break;
+          }
+          eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
+        });
+    },
+  },
 });
 </script>
 

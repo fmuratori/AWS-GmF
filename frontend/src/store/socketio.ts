@@ -1,4 +1,3 @@
-
 import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
 
@@ -68,23 +67,26 @@ export default {
 
     SOCKET_chat_message({ commit, state, rootState }, stringMessage: string) {
       const message = JSON.parse(stringMessage);
-      
+
       if (state.donationId == message._id) {
         commit("addMessage", message.message);
 
         // set message as visualized
         if (message.message.userId != rootState.session.userData._id)
           new Vue().$socket.emit("visualize_message", stringMessage);
-      } else if (rootState.session.userData._id != message.message.userId) { 
+      } else if (rootState.session.userData._id != message.message.userId) {
         // update messages count
         commit("addUnreadMessage", message);
       }
     },
 
-    sendMessage({ rootState, rootGetters }, message: {donationId: string, message: string, isEventMessage: boolean}): void {
+    sendMessage(
+      { rootState, rootGetters },
+      message: { donationId: string; message: string; isEventMessage: boolean }
+    ): void {
       message["userId"] = rootState.session.userData._id;
       message["fullname"] = rootGetters.userFullName;
-      
+
       new Vue().$socket.emit("message_to_server", message);
     },
 

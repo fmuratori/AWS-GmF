@@ -180,10 +180,8 @@
           p If you can't find any mark in the map, try to select different filtering options on the right menu.
 </template>
 
-
 <style scoped lang="scss">
 @import "@/assets/style.scss";
-
 
 #filters {
   height: 100%;
@@ -196,7 +194,6 @@
 }
 
 .fullheight-lg {
-  
   @include md {
     height: auto;
   }
@@ -206,8 +203,7 @@
   }
 }
 
-.scrollable-lg {  
-  
+.scrollable-lg {
   @include md {
     width: auto;
     overflow-y: auto;
@@ -219,7 +215,6 @@
   }
 }
 </style>
-
 
 <script lang="ts">
 import Vue from "vue";
@@ -302,22 +297,22 @@ export default Vue.extend({
   },
   created() {
     // check if user is logged in
-    if (!this.$store.getters.isUserLogged) 
-      this.$router.push({ name: "Login" });
+    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
   },
   methods: {
     packFoods(pack: Pack) {
-      const packFoodsIds = pack.foodList.map(f => f.foodId);
-      return this.foods.filter(f => packFoodsIds.includes(f._id))
+      const packFoodsIds = pack.foodList.map((f) => f.foodId);
+      return this.foods.filter((f) => packFoodsIds.includes(f._id));
     },
-    selectCity(addressData) { //, placeResultData, id
+    selectCity(addressData) {
+      //, placeResultData, id
       this.selectedCity = {
         name: addressData.locality,
         coordinates: {
           x: addressData.latitude,
           y: addressData.longitude,
-        }
-      }
+        },
+      };
       this.getPacks();
     },
     deselectCity() {
@@ -326,11 +321,11 @@ export default Vue.extend({
       this.windowPacks = null;
       this.windowCoordinates = null;
     },
-    openInfoWindow(lat: number , lng: number) {
+    openInfoWindow(lat: number, lng: number) {
       this.windowPacks.splice(0, this.windowPacks.length);
 
       // find coordinates near to the clicked marked
-      this.windowCoordinates = {x: lat, y: lng};
+      this.windowCoordinates = { x: lat, y: lng };
       for (const pack of this.unselectedPacks.concat(this.selectedPacks)) {
         const distance = calcCrow(
           lat,
@@ -348,13 +343,14 @@ export default Vue.extend({
     },
     selectPack(pack: Pack) {
       this.selectedPacks.push(pack);
-      this.unselectedPacks.splice(this.unselectedPacks.findIndex((p: Pack) => p._id == pack._id), 1);
+      this.unselectedPacks.splice(
+        this.unselectedPacks.findIndex((p: Pack) => p._id == pack._id),
+        1
+      );
     },
     deselectPack(pack: Pack) {
       this.selectedPacks.splice(
-        this.selectedPacks.findIndex(
-          (e: Pack) => e._id == pack._id
-        ),
+        this.selectedPacks.findIndex((e: Pack) => e._id == pack._id),
         1
       );
       this.unselectedPacks.push(pack);
@@ -362,28 +358,34 @@ export default Vue.extend({
     updateFilter(mode: null | string) {
       this.selectedPacks = [];
 
-      switch(mode) {
+      switch (mode) {
         case "expired": {
-          this.unselectedPacks = this.packs
-            .filter((p: Pack) => moment(p.expirationDate) < moment());
+          this.unselectedPacks = this.packs.filter(
+            (p: Pack) => moment(p.expirationDate) < moment()
+          );
           this.deliveryDate = null;
           break;
         }
         case "expiring_today": {
-          this.unselectedPacks = this.packs
-            .filter((p: Pack) => moment(p.expirationDate).toDate() == moment().toDate());
+          this.unselectedPacks = this.packs.filter(
+            (p: Pack) => moment(p.expirationDate).toDate() == moment().toDate()
+          );
           this.deliveryDate = moment().format("YYYY-MM-DD");
           break;
         }
         case "expiring_tomorrow": {
-          this.unselectedPacks = this.packs
-            .filter((p: Pack) => moment(p.expirationDate).toDate() == moment().add(1, "days").toDate());
+          this.unselectedPacks = this.packs.filter(
+            (p: Pack) =>
+              moment(p.expirationDate).toDate() ==
+              moment().add(1, "days").toDate()
+          );
           this.deliveryDate = moment().add(1, "days").format("YYYY-MM-DD");
           break;
         }
         default: {
-          this.unselectedPacks = this.packs
-            .filter((p: Pack) => moment(p.expirationDate) <= moment(this.expirationDate));
+          this.unselectedPacks = this.packs.filter(
+            (p: Pack) => moment(p.expirationDate) <= moment(this.expirationDate)
+          );
           break;
         }
       }
@@ -400,14 +402,14 @@ export default Vue.extend({
           as: "family",
         },
         filter: {
-          "$match": {
-				    "family.address.city": this.selectedCity.name,
-			    }
-        }
+          $match: {
+            "family.address.city": this.selectedCity.name,
+          },
+        },
       } as FindPayload;
       packsApi
         .filterPackList(payload)
-        .then((r: AxiosResponse<{packs: Pack, foods: Food}>): void => {
+        .then((r: AxiosResponse<{ packs: Pack; foods: Food }>): void => {
           if (r.status == 200) {
             this.packs = r.data.packs;
             this.foods = r.data.foods;
@@ -417,7 +419,11 @@ export default Vue.extend({
           }
         })
         .catch((): void => {
-          eventbus.$emit("errorMessage", "Pack", "Pack search with filtering options failed. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "Pack",
+            "Pack search with filtering options failed. Retry later or contact us if the problem persists."
+          );
         });
     },
     showModal() {
@@ -429,9 +435,17 @@ export default Vue.extend({
     submit(e: any) {
       e.preventDefault();
       if (!this.deliveryDate) {
-        eventbus.$emit("warningMessage", "Packs", "Unable to perform the requested operation. Select a valid delivery day.");
+        eventbus.$emit(
+          "warningMessage",
+          "Packs",
+          "Unable to perform the requested operation. Select a valid delivery day."
+        );
       } else if (!this.selectedPacks.length) {
-        eventbus.$emit("warningMessage", "Packs", "Unable to perform the requested operation. Select at least one pack available for delivery.");
+        eventbus.$emit(
+          "warningMessage",
+          "Packs",
+          "Unable to perform the requested operation. Select at least one pack available for delivery."
+        );
       } else {
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedPacks.forEach((element: Pack) => {
@@ -445,12 +459,20 @@ export default Vue.extend({
         Promise.all(promises)
           .then((): void => {
             this.$router.push({ name: "ManagerPacksList" });
-            eventbus.$emit("successMessage", "Packs", "Pack reservation submitted succesfully.");
+            eventbus.$emit(
+              "successMessage",
+              "Packs",
+              "Pack reservation submitted succesfully."
+            );
             // this.selectedPacks.forEach((element: Pack) => {
             // });
           })
           .catch((): void => {
-            eventbus.$emit("errorMessage", "Packs", "Pack reservation submission for pick up failed. Retry later or contact us if the problem persists.");
+            eventbus.$emit(
+              "errorMessage",
+              "Packs",
+              "Pack reservation submission for pick up failed. Retry later or contact us if the problem persists."
+            );
           });
       }
     },

@@ -3,7 +3,6 @@ import axios, { AxiosResponse } from "axios";
 import store from "../store";
 
 export default {
-
   async unreadMessages(userId: string): Promise<AxiosResponse> {
     const payload = {
       userId: userId,

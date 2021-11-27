@@ -160,7 +160,7 @@ export default Vue.extend({
       var filter = {};
       if (this.$store.state.session.userData.type == "user")
         filter = { userId: this.$store.state.session.userData._id };
-      
+
       api
         .filterDonations(filter)
         .then((r: AxiosResponse): void => {

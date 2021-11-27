@@ -129,8 +129,8 @@ import {
   LoginPayload,
   RegistrationPayload,
   Address,
-  LoginResponse, 
-  UserData, 
+  LoginResponse,
+  UserData,
 } from "../types";
 
 export default Vue.extend({
@@ -215,11 +215,19 @@ export default Vue.extend({
           .registrationRequest(this.registration)
           .then(() => {
             this.isLoginSelected = true;
-            eventbus.$emit("successMessage", "Registration", "Registration completed successfully.");
+            eventbus.$emit(
+              "successMessage",
+              "Registration",
+              "Registration completed successfully."
+            );
           })
           .catch((e) => {
             console.log(e);
-            eventbus.$emit("errorMessage", "Registration", "An unexpected error occurred during your registration. Retry later or contact us if the problem persists.");
+            eventbus.$emit(
+              "errorMessage",
+              "Registration",
+              "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
+            );
           });
       }
     },

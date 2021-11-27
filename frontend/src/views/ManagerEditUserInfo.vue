@@ -161,12 +161,20 @@ export default Vue.extend({
           if (r.status == 200) {
             this.$store.state.session.userData = r.data;
             this.$router.push({ name: "Home" });
-            eventbus.$emit("successMessage", "User data", "Account information successfully edited.");
+            eventbus.$emit(
+              "successMessage",
+              "User data",
+              "Account information successfully edited."
+            );
           }
         })
         .catch((e: AxiosError) => {
           console.log(e);
-          eventbus.$emit("errorMessage", "User data", "Unable to change the user info. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "User data",
+            "Unable to change the user info. Retry later or contact us if the problem persists."
+          );
         });
     },
     changePassword() {
@@ -175,12 +183,20 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
             this.$router.push({ name: "Home" });
-            eventbus.$emit("successMessage", "User data", "Password successfully changed.");
+            eventbus.$emit(
+              "successMessage",
+              "User data",
+              "Password successfully changed."
+            );
           }
         })
         .catch((e: AxiosError): void => {
           console.log(e);
-          eventbus.$emit("errorMessage", "User data", "Unable to change the user password. Retry later or contact us if the problem persists.");
+          eventbus.$emit(
+            "errorMessage",
+            "User data",
+            "Unable to change the user password. Retry later or contact us if the problem persists."
+          );
         });
     },
   },
