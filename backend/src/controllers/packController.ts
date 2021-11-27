@@ -9,7 +9,10 @@ const factory = new ControllerFactory<PackDocument>()
 
 export default class PackController {
 
-	find = catchAsync(async (req: Request, res: Response) => {
+	find = factory.findMany(PackModel)
+	edit = factory.edit(PackModel)
+
+	findExpanded = catchAsync(async (req: Request, res: Response) => {
 		
 		const pack = await PackModel.aggregate([
 			{
@@ -74,8 +77,6 @@ export default class PackController {
 
 		res.status(200).json(pack[0]);
 	})
-
-	edit = factory.edit(PackModel)
 
 	filter = catchAsync(async (req: Request, res: Response) => {
 		// db.packs.aggregate([{

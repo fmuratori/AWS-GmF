@@ -36,7 +36,7 @@ b-container
         b-form(@submit.stop.prevent="createPack")
           FoodView(
             selectableItems,
-            v-on:data="(e) => { this.familyList = e; }"
+            v-on:data="(e) => { this.foodList = e; }"
           )
 
           b-row
@@ -44,7 +44,7 @@ b-container
               b-button(
                 block,
                 variant="outline-danger",
-                @click="$router.push({ name: 'ManagerFamilies' })"
+                @click="$router.push({ name: 'ManagerFamilyList' })"
               ) Cancel
             b-col
               b-button(block, variant="success", type="submit") Create
@@ -106,10 +106,7 @@ b-container
           ) 
             b-icon(icon="check")
             span Pack info printed
-          b-button(
-            block,
-            @click="$router.push({ name: 'ManagerFamilyList' })"
-          ) Create another pack
+          b-button(block, @click="$router.push({ name: 'ManagerFamilyList' })") Create another pack
           b-button(
             block,
             @click="$router.push({ name: 'ManagerPackDelivery' })"
@@ -167,6 +164,7 @@ import { Family, SelectableFood, Pack, Address } from "../types";
 import api from "../api/pack";
 import { PackCreateView } from "../viewTypes";
 import { AxiosResponse } from "axios";
+import { filter } from "vue/types/umd";
 
 export default Vue.extend({
   name: "ManagerPackCreate",
@@ -221,13 +219,7 @@ export default Vue.extend({
         }
       });
 
-      this.form.foodList = this.form.foodList.sort(
-        (a, b) => a.expirationDate - b.expirationDate
-      );
-
-      console.log(
-        Math.max(this.form.foodList.map((f) => new Date(f.expirationDate)))
-      );
+      console.log(this.foodList)
 
       this.form.familyId = this.selectedFamily._id;
       this.form.expirationDate = moment(
@@ -241,11 +233,12 @@ export default Vue.extend({
         )
       ).format("YYYY-MM-DD");
 
-      this.step = "loading";
       api
         .createPack(this.form)
         .then((r: AxiosResponse<Pack>): void => {
           if (r.status == 200) {
+
+                  this.step = "loading";
             eventbus.$emit(
               "successMessage",
               "Food packs",
@@ -253,11 +246,11 @@ export default Vue.extend({
             );
 
             api
-              .getPackInfo(r.data._id)
+              .packList({ filter: { _id: r.data._id } })
               .then((r2: AxiosResponse<Pack>): void => {
                 if (r2.status == 200) {
                   this.form = r2.data;
-                  this.showScreen = "printable_info";
+                  this.step = "printableInfo";
                 }
               })
               .catch((): void => {
@@ -267,8 +260,6 @@ export default Vue.extend({
                   "Unable to find the specified pack. Retry later or contact us if the problem persists."
                 );
               });
-
-            this.step = "printableInfo";
           }
         })
         .catch((): void => {

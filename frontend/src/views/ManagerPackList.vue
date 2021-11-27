@@ -9,9 +9,10 @@ b-container
 
       b-row(v-if="this.$store.state.session.userData.type != 'user'")
         FilterButtons(
-          label="Pack status"
-          :filters="['ready','planned delivery','delivered','all']"
-          v-on:click="(filter) => filterBy(filter)")
+          label="Pack status",
+          :filters="['all', 'ready', 'planned delivery', 'delivered']",
+          v-on:click="(filter) => filterBy(filter)"
+        )
 
       hr.sidebar-hr.my-3
 
@@ -101,6 +102,7 @@ export default Vue.extend({
     return {
       statusFilter: "all",
       packList: new Array<Pack>(),
+      packListBackup: new Array<Pack>(),
       familyDetails: undefined,
       foodDetails: undefined,
       tableFields: [
@@ -150,7 +152,8 @@ export default Vue.extend({
       packApi
         .packList({})
         .then((r: AxiosResponse): void => {
-          this.packList = r.data as Pack[];
+          this.packListBackup = r.data as Pack[];
+          this.packList = this.packListBackup
         })
         .catch((e: AxiosError): void => console.log(e));
     } else this.$router.push({ name: "Login" });
@@ -159,17 +162,12 @@ export default Vue.extend({
     filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
       if (this.statusFilter == status) return;
 
-      var payload;
-      if (status != "all") payload = { filter: { status: status } };
-      else payload = null;
       this.statusFilter = status;
-
-      packApi
-        .packList(payload)
-        .then((r: AxiosResponse): void => {
-          this.packList = r.data as Pack[];
-        })
-        .catch((e: AxiosError): void => console.log(e));
+      if (status != "all") {
+        this.packList = this.packListBackup.filter((p: Pack) => {
+          p.status == status;
+        });
+      } else this.packList = this.packListBackup;
     },
     deletePack(id: string): void {
       packApi

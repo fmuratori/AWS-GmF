@@ -54,6 +54,7 @@ export interface PackCreateView {
 export interface PackManagerView {
   statusFilter: "ready" | "planned delivery" | "delivered" | "all";
   packList: Array<Pack>;
+  packListBackup: Array<Pack>;
   familyDetails?: Family;
   foodDetails?: Array<Food>;
   tableFields: Array<TableField>;

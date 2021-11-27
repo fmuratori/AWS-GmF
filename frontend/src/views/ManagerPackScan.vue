@@ -127,7 +127,7 @@ export default Vue.extend({
             "_id": result
           }
         }
-        packApi.packList(result).then((r: AxiosResponse) => {
+        packApi.packListExpanded(result).then((r: AxiosResponse) => {
           console.log(r)
           if (r.status == 200) {
             this.scannerState = "valid_success";

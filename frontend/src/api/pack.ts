@@ -5,15 +5,24 @@ import { FindPayload, PackDeliveryPayload, PackPayload, Pack } from "../types";
 
 export default {
   async createPack(payload: PackPayload): Promise<AxiosResponse> {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/add`, payload, {
-      headers: store.getters.getSessionHeader,
-    });
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/add`,
+      payload,
+      { headers: store.getters.getSessionHeader, }
+    );
   },
 
   async packList(payload: FindPayload): Promise<AxiosResponse> {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/find`, payload, {
-      headers: store.getters.getSessionHeader,
-    });
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/find`,
+      payload,
+      { headers: store.getters.getSessionHeader, }
+    );
+  },
+
+  async packListExpanded(payload: FindPayload): Promise<AxiosResponse> {
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/find-expanded`,
+      payload,
+      { headers: store.getters.getSessionHeader, }
+    );
   },
 
   async filterPackList(payload: FindPayload): Promise<AxiosResponse> {
@@ -27,9 +36,10 @@ export default {
   },
 
   async editPack(payload: Pack): Promise<AxiosResponse> {
-    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/edit`, payload, {
-      headers: store.getters.getSessionHeader,
-    });
+    return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/edit`,
+      payload,
+      { headers: store.getters.getSessionHeader, }
+    );
   },
 
   async deletePack(payload: { id: string }): Promise<AxiosResponse> {
