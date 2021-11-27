@@ -79,7 +79,7 @@ export default Vue.extend({
       cameraState: "auto",
       scannerState: "ready",
       isScannerFullscreen: false,
-      pack: {} as Pack
+      pack: {} as Pack,
     };
   },
   created() {
@@ -98,7 +98,7 @@ export default Vue.extend({
       this.scannerState = "scanning";
     },
     stopCamera() {
-      this.scannerState = "ready"
+      this.scannerState = "ready";
     },
 
     onDecode(result) {
@@ -106,19 +106,21 @@ export default Vue.extend({
       if (result != "") {
         this.result = result;
 
-        this.scannerState = "validating"
+        this.scannerState = "validating";
 
-        packApi.getPackInfo(result).then((r: AxiosResponse) => {
-          if (r.status == 200) {
-            this.scannerState = "valid_success";
-            this.showScreen = "pack";
-            this.pack = r.data;
-          }
-        })
-        .catch((e: AxiosError) => {
-          console.log(e)
-          this.scannerState = "valid_error";
-        });
+        packApi
+          .getPackInfo(result)
+          .then((r: AxiosResponse) => {
+            if (r.status == 200) {
+              this.scannerState = "valid_success";
+              this.showScreen = "pack";
+              this.pack = r.data;
+            }
+          })
+          .catch((e: AxiosError) => {
+            console.log(e);
+            this.scannerState = "valid_error";
+          });
       }
     },
 
@@ -127,62 +129,94 @@ export default Vue.extend({
     },
 
     async onInit(promise) {
-      this.$refs.expandButton.style.display="block"
-      this.$refs.compressButton.style.display="none"
+      this.$refs.expandButton.style.display = "block";
+      this.$refs.compressButton.style.display = "none";
       promise
-      // .then(() => { })
-      .catch((error) => {
-        this.scannerState = "error";
+        // .then(() => { })
+        .catch((error) => {
+          this.scannerState = "error";
 
-        var errorMessage = ""
-        switch(error.name) {
-          case "NotAllowedError": 
-            errorMessage = "ERROR: you need to grant camera access permisson";
-            break;
-          case "NotFoundError": 
-            errorMessage = "ERROR: no camera on this device";
-            break;
-          case "NotSupportedError": 
-            errorMessage = "ERROR: secure context required (HTTPS, localhost)";
-            break;
-          case "NotReadableError": 
-            errorMessage = "ERROR: is the camera already in use?";
-            break;
-          case "OverconstrainedError": 
-            errorMessage = "ERROR: installed cameras are not suitable";
-            break;
-          case "StreamApiNotSupportedError": 
-            errorMessage = "ERROR: Stream API is not supported in this browser";
-            break;
-        }
-        eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
-      })
+          var errorMessage = "";
+          switch (error.name) {
+            case "NotAllowedError":
+              errorMessage = "ERROR: you need to grant camera access permisson";
+              break;
+            case "NotFoundError":
+              errorMessage = "ERROR: no camera on this device";
+              break;
+            case "NotSupportedError":
+              errorMessage =
+                "ERROR: secure context required (HTTPS, localhost)";
+              break;
+            case "NotReadableError":
+              errorMessage = "ERROR: is the camera already in use?";
+              break;
+            case "OverconstrainedError":
+              errorMessage = "ERROR: installed cameras are not suitable";
+              break;
+            case "StreamApiNotSupportedError":
+              errorMessage =
+                "ERROR: Stream API is not supported in this browser";
+              break;
+          }
+          eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
+        });
     },
     deliverPack() {
-      packApi.setDelivered({ id: this.pack._id }).then((r:AxiosResponse) => {
-        if (r.status == 200) {
-          eventbus.$emit("successMessage", "PACK DELIVERY", "Pack delivered succesfully.") ;
-          this.resetView();
-        } else {
-          eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists.");
-        }
-      }).catch((e:AxiosError) => {
-        console.log(e)
-        eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists.");
-      })
+      packApi
+        .setDelivered({ id: this.pack._id })
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            eventbus.$emit(
+              "successMessage",
+              "PACK DELIVERY",
+              "Pack delivered succesfully."
+            );
+            this.resetView();
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "PACK DELIVERY",
+              "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists."
+            );
+          }
+        })
+        .catch((e: AxiosError) => {
+          console.log(e);
+          eventbus.$emit(
+            "errorMessage",
+            "PACK DELIVERY",
+            "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists."
+          );
+        });
     },
     deletePack() {
-      packApi.deletePack({ id: this.pack._id }).then((r:AxiosResponse) => {
-        if (r.status == 200) {
-          eventbus.$emit("successMessage", "PACK DELIVERY", "Pack deleted succesfully.") ;
-          this.resetView();
-        } else {
-          eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to delete the specified pack. Retry later or contact us if the problem persists.");
-        }
-      }).catch((e:AxiosError) => {
-        console.log(e)
-        eventbus.$emit("errorMessage", "PACK DELIVERY", "Unable to delete the specified pack. Retry later or contact us if the problem persists.");
-      })
+      packApi
+        .deletePack({ id: this.pack._id })
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            eventbus.$emit(
+              "successMessage",
+              "PACK DELIVERY",
+              "Pack deleted succesfully."
+            );
+            this.resetView();
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "PACK DELIVERY",
+              "Unable to delete the specified pack. Retry later or contact us if the problem persists."
+            );
+          }
+        })
+        .catch((e: AxiosError) => {
+          console.log(e);
+          eventbus.$emit(
+            "errorMessage",
+            "PACK DELIVERY",
+            "Unable to delete the specified pack. Retry later or contact us if the problem persists."
+          );
+        });
       this.resetView();
     },
     resetView() {
@@ -190,7 +224,7 @@ export default Vue.extend({
       this.showScreen = "scan";
       this.pack = {} as Pack;
     },
-   }
+  },
 });
 </script>
 

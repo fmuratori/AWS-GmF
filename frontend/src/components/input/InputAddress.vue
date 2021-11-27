@@ -1,6 +1,5 @@
 <template lang="pug">
-
-b-form-group(:label="title"  label-class="font-weight-bold pt-0 text-center")
+div
   b-form-group(label="City", label-cols-sm="3", label-align-sm="right")
     b-form-input(
       placeholder="Insert city here",
@@ -27,14 +26,24 @@ b-form-group(:label="title"  label-class="font-weight-bold pt-0 text-center")
       @input="$emit('data', address)"
     )
 
-  .text-center
-    b-button(variant="outline-dark", size="sm" @click="find") Find in google maps
-    label &nbsp;or&nbsp;
-    b-button(variant="outline-dark", size="sm" @click="reset") Reset
+  b-row(align-h="center")
+    b-col(cols=10 md=8 lg=8)
+      b-button(block variant="outline-danger", size="sm" @click="resetMap" v-if="isLocationLoaded")
+        span.mr-2 Reset location
 
-    
-  MapLocation.mx-auto.mt-3(:x="address.coordinates.x" :y="address.coordinates.y" v-if="isLocationLoaded" @locationChange="onLocationChange")
-  
+      div.mapContainer(v-if="!isLocationLoaded").text-center
+        h1.pt-5
+          b-icon(icon="map").mr
+        h3
+          span  Google Maps 
+          br 
+          span Navigator
+
+       
+        b-button.mt-5(variant="outline-dark", size="sm" @click="find" v-if="!isLocationLoaded") Find in the map
+
+      MapLocation(v-else :x="address.coordinates.x" :y="address.coordinates.y" @locationChange="onLocationChange")
+      
 </template>
 
 <script lang="ts">
@@ -51,7 +60,6 @@ export default Vue.extend({
     MapLocation,
   },
   props: {
-    title: String,
     required: Boolean,
     city: String,
     street: String,
@@ -77,6 +85,10 @@ export default Vue.extend({
     this.address.civicNumber = this.civic;
   },
   methods: {
+    resetMap() {
+      this.address.coordinates = { x: 0, y: 0 };
+      this.isLocationLoaded = false;
+    },
     reset() {
       this.isLocationLoaded = false;
       this.address.city = "";

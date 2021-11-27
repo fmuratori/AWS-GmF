@@ -1,6 +1,5 @@
 <template lang="pug">
-
-b-form-group(:label="title" label-cols-sm="3", label-align-sm="right") 
+b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :description="description") 
   b-input-group.mb-1(v-for="(label, idx) in labels", :key="idx")
     b-form-input.my-no-right-border(
       type="text",
@@ -24,6 +23,7 @@ export default Vue.extend({
   name: "InputList",
   props: {
     title: String,
+    description: String,
     placeholder: String,
     labelList: Array,
   },

@@ -13,7 +13,7 @@ import Vue from "vue";
 
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
-import Messages from "./components/Messages.vue";
+import Messages from "./components/ToastsManager.vue";
 
 export default Vue.extend({
   name: "Home",
@@ -60,15 +60,11 @@ export default Vue.extend({
   overflow: hidden;
 }
 
-#sidebar {
+#body > * {
   overflow: auto;
-
-  @include lg {
-  }
 }
 
 #content {
   flex-grow: 1;
-  overflow: auto;
 }
 </style>

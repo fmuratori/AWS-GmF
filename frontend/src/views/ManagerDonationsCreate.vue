@@ -1,40 +1,71 @@
 <template lang="pug">
+
 b-container
-  b-row.justify-content-center.my-5.no-gutters
-    b-col(lg=8, md=10, sm=12)
-      .mb-4
-        h4
-          p CREATE DONATION
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(lg=6, md=8, sm=10)
+      div.mb-5
+        hr.shaded
+        h4.text-center
+          b CREATE A DONATION
+        hr.shaded
+      b-alert(show).mb-5
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 Donate food to needing families. Follow 3 simple steps to gift a meal. Bring Me Food will retrieve your offer, handle the foods donated and provide food packs to registered families. 
+
+      hr
+
       b-form(@submit.stop.prevent="submit")
-        .mb-4
-          InputList(
-            title="Foods:",
-            placeholder="Insert foods here",
-            :labelList="form.foods",
-            v-on:data="(e) => { form.foods = e; }"
-          )
+        b-alert(show)
+          b-row(align-v="center")
+            b-col(cols="auto")
+                h1 
+                  b-badge(variant="light") 1
+            b-col 
+              p.m-0 Insert in the following forms the foods that you want to donate. We will pick it up and make good use of it. 
 
-        .mb-4
-          InputDate(
-            title="Expiration date:",
-            placeholder="Select a date",
-            :date="form.expirationDate",
-            required,
-            v-on:data="(e) => { form.expirationDate = e; }"
-          )
+      
+        InputList(
+          title="Food list:",
+          placeholder="Fusilli DeCecco, 4 packs, 250gg per pack",
+          description="Do not worry too much about the format of the text you insert."
+          :labelList="form.foods",
+          v-on:data="(e) => { form.foods = e; }"
+        )
 
-        .mb-4
-          InputTextarea(
-            title="Additional information:",
-            placeholder="Insert additional information here",
-            :text="form.additionalInformation",
-            v-on:data="(e) => { form.additionalInformation = e; }"
-          )
+      
+        InputDate(
+          title="Expiration date:",
+          placeholder="Select a date",
+          description="If you are donationg many goods, select a date matching the most deperishable food expiration date. Our volunteers will be sure to pick your donation in time."
+          :date="form.expirationDate",
+          required,
+          v-on:data="(e) => { form.expirationDate = e; }"
+        )
+
+      
+        InputTextarea(
+          title="Additional information:",
+          placeholder="Insert additional information here",
+          :text="form.additionalInformation",
+          v-on:data="(e) => { form.additionalInformation = e; }"
+        )
         hr
 
         .mb-4
-          p.font-weight-bold.text-center Pick Up periods
-          div.mb-1(
+
+          b-alert(show)
+            b-row(align-v="center")
+              b-col(cols="auto")
+                h1 
+                  b-badge(variant="light") 2
+              b-col 
+                p.m-0 Select periods of the week when we can reach you to retrieve your donation. Our volunteers will be sure to pick your donation as soon as possible.
+
+          div(
             v-for="(weekDayName, weekDay, idx) in weekDays",
             :index="idx"
           )
@@ -53,20 +84,22 @@ b-container
                   :variant="computeButtonVariant(weekDay, 'evening')"
                 ) Evening
         hr
-        .mb-4
-          InputAddress(
-            title="Location",
-            :city="form.address.city",
-            :street="form.address.street",
-            :civic="form.address.civicNumber",
-            @onAddressUpdate="onAddressUpdate")
-        hr
         
-        //- .mb-4
-        //-   InputAddress(
-        //-     title="Location",
-        //-     v-on:data="(e) => { form.address = e; }"
-        //-   )
+        b-alert(show)
+          b-row(align-v="center")
+            b-col(cols="auto")
+              h1 
+                b-badge(variant="light") 3
+            b-col 
+              p.m-0 Tell us where we can pick up your donation. Then, click on the button "Find in the map" found below to set a more precise location given the inserted address, this action will help us find you faster.
+
+        InputAddress(
+          :city="form.address.city",
+          :street="form.address.street",
+          :civic="form.address.civicNumber",
+          @onAddressUpdate="onAddressUpdate")
+
+        hr
 
         b-row
           b-col

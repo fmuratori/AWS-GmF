@@ -102,17 +102,19 @@ export default Vue.extend({
 #sidebar {
   background-color: $greyscale2;
   color: $greyscaleE;
+
   // overflow: hidden !important;
 
   display: flex;
   flex-direction: column;
 
   width: 100%;
+  height: 100%;
   position: absolute;
   z-index: 5;
 
   @include lg {
-    width: auto;
+    width: 15em;
     position: relative;
     z-index: 0;
   }

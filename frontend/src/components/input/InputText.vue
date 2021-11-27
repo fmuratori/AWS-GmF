@@ -1,6 +1,6 @@
 <template lang="pug">
-b-form-group(:label="title")
-  b-input-group
+b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :description="description")
+  b-input-group()
     b-input-group-prepend(v-if="icon")
       b-input-group-text
         b-icon(:icon="icon")
@@ -22,6 +22,7 @@ export default Vue.extend({
     title: String,
     placeholder: String,
     text: [String, Number],
+    description: String,
     icon: String,
     type: {
       type: String,

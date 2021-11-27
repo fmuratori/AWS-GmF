@@ -34,8 +34,9 @@ export default Vue.extend({
 <style scoped lang="scss">
 // @import "@/assets/style.scss";
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
@@ -74,9 +75,9 @@ export default Vue.extend({
   font-size: 10px;
   position: relative;
   text-indent: -9999em;
-  border-top: 1.1em solid rgba(89,89,89, 0.2);
-  border-right: 1.1em solid rgba(89,89,89, 0.2);
-  border-bottom: 1.1em solid rgba(89,89,89, 0.2);
+  border-top: 1.1em solid rgba(89, 89, 89, 0.2);
+  border-right: 1.1em solid rgba(89, 89, 89, 0.2);
+  border-bottom: 1.1em solid rgba(89, 89, 89, 0.2);
   border-left: 1.1em solid #595959;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
@@ -104,6 +105,4 @@ export default Vue.extend({
     transform: rotate(360deg);
   }
 }
-
-
 </style>

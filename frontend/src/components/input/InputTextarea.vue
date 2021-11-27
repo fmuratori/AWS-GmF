@@ -1,5 +1,5 @@
 <template lang="pug">
-b-form-group(:label="title")
+b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :description="description")
   b-form-textarea(
     :required="required",
     :value="text",

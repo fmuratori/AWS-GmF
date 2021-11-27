@@ -1,15 +1,33 @@
 <template lang="pug">
 b-container
   b-row.justify-content-md-center.my-5.no-gutters
-    b-col(lg=8, md=10, sm=12)
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b REPORT A FAMILY
-      hr.sidebar-hr.my-3
+    b-col(lg=6, md=8, sm=10)
+      div.mb-5
+        hr.shaded
+        h4.text-center
+          b REPORT A FAMILY
+        hr.shaded
+      b-alert(show).mb-5
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 Help us find families in need. We will verify your report and convert donors donations into food packs to deliver.    
+
+      hr
 
       b-form(@submit.stop.prevent="submit")
-        .mb4
-          InputText(
+
+        b-alert(show)
+          b-row(align-v="center")
+            b-col(cols="auto")
+              h1 
+                b-badge(variant="light") 1
+            b-col 
+              p.m-0 Tell us as much as possible about a family you think may be in need of help. Your informations will be validated by trusted volunteers. 
+
+        InputText(
             title="Family name:",
             placeholder="Insert family name here",
             :text="form.name",
@@ -17,8 +35,7 @@ b-container
             v-on:data="(e) => { form.name = e; }"
           )
 
-        .mb4
-          InputText(
+        InputText(
             title="Phone number:",
             placeholder="Insert a phone number for the verification",
             :text="form.phoneNumber",
@@ -26,8 +43,7 @@ b-container
             v-on:data="(e) => { form.phoneNumber = e; }"
           )
 
-        .mb4
-          InputText(
+        InputText(
             title="Components:",
             placeholder="Insert number of family components",
             type="number",
@@ -36,15 +52,28 @@ b-container
             v-on:data="(e) => { form.components = e; }"
           )
 
-        .mb-4
-          InputAddress(
-            title="Location",
-            :city="form.address.city",
-            :civic="form.address.civicNumber",
-            :street="form.address.street",
-            v-on:data="(e) => { form.address = e; }"
-          )
+        hr 
 
+        b-alert(show)
+          b-row(align-v="center")
+            b-col(cols="auto")
+              h1 
+                b-badge(variant="light") 2
+            b-col 
+              p.m-0 
+                b [Optional] 
+                span Tell us where we can find the family. All the food packs we make with your and other people donations will be delivered here. Do not worry if the position is not correct, we will verifiy it directly.
+
+        
+        InputAddress(
+          :city="form.address.city",
+          :civic="form.address.civicNumber",
+          :street="form.address.street",
+          v-on:data="(e) => { form.address = e; }"
+        )
+
+        hr 
+        
         b-row
           b-col
             b-button(

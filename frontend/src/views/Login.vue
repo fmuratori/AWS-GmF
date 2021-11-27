@@ -187,59 +187,63 @@ export default Vue.extend({
     },
     submitForm() {
       this.isLoading = true;
-      // if (this.isLoginSelected) {
-      //   userApi
-      //     .loginRequest(this.login)
-      //     .then((r: AxiosResponse<LoginResponse>): void => {
-      //       if (r.status == 200) {
-      //         this.$store.dispatch("login", {
-      //           token: r.data.token as string,
-      //           userData: r.data.user as UserData,
-      //         });
-      //         this.showLoginErrorMessage = false;
-      //         this.$router.push({ name: "Home" });
+      if (this.isLoginSelected) {
+        userApi
+          .loginRequest(this.login)
+          .then((r: AxiosResponse<LoginResponse>): void => {
+            if (r.status == 200) {
+              this.$store.dispatch("login", {
+                token: r.data.token as string,
+                userData: r.data.user as UserData,
+              });
 
-      //         this.$cookies.set("jwt", r.data.token);
-      //         this.$cookies.set("user-id", r.data.user._id);
+              this.showLoginErrorMessage = false;
+              this.$router.push({ name: "Home" });
 
-      //         // initialize a socket session (let the server know that a new logged user is active)
-      //         this.$socket.emit(
-      //           "login",
-      //           this.$store.state.session.userData._id
-      //         );
+              this.$cookies.set("jwt", r.data.token);
+              this.$cookies.set("user-id", r.data.user._id);
 
-      //         chatApi
-      //           .unreadMessages(this.$store.state.session.userData._id)
-      //           .then((r: AxiosResponse): void => {
-      //             this.$store.dispatch("updateUnreadMessages", r.data);
-      //           })
-      //           .catch((e: AxiosError): void => console.log(e));
-      //       }
-      //     })
-      //     .catch((e: AxiosError): void => {
-      //       console.log(e);
-      //       this.showLoginErrorMessage = true;
-      //     });
-      // } else {
-      //   userApi
-      //     .registrationRequest(this.registration)
-      //     .then(() => {
-      //       this.isLoginSelected = true;
-      //       eventbus.$emit(
-      //         "successMessage",
-      //         "Registration",
-      //         "Registration completed successfully."
-      //       );
-      //     })
-      //     .catch((e) => {
-      //       console.log(e);
-      //       eventbus.$emit(
-      //         "errorMessage",
-      //         "Registration",
-      //         "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
-      //       );
-      //     });
-      // }
+              // initialize a socket session (let the server know that a new logged user is active)
+              this.$socket.emit(
+                "login",
+                this.$store.state.session.userData._id
+              );
+
+              chatApi
+                .unreadMessages(this.$store.state.session.userData._id)
+                .then((r: AxiosResponse): void => {
+                  this.$store.dispatch("updateUnreadMessages", r.data);
+                })
+                .catch((e: AxiosError): void => console.log(e));
+            }
+          })
+          .catch((e: AxiosError): void => {
+            console.log(e);
+            this.showLoginErrorMessage = true;
+          })
+          .then(() => {
+            this.isLoading = false;
+          });
+      } else {
+        userApi
+          .registrationRequest(this.registration)
+          .then(() => {
+            this.isLoginSelected = true;
+            eventbus.$emit(
+              "successMessage",
+              "Registration",
+              "Registration completed successfully."
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+            eventbus.$emit(
+              "errorMessage",
+              "Registration",
+              "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
+            );
+          });
+      }
     },
   },
 });

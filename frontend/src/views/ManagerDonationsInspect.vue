@@ -121,7 +121,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
-import Message from "../components/Message.vue";
+import Message from "../components/ChatMessage.vue";
 import moment from "moment";
 
 import { Donation, Address, ChatMessage } from "../types";
