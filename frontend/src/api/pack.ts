@@ -40,14 +40,6 @@ export default {
     );
   },
 
-  async getPackInfo(id: string): Promise<AxiosResponse> {
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/pack/find`,
-      {"id": id},
-      { headers: store.getters.getSessionHeader }
-    );
-  },
-
   async setDelivered(payload: { id: string }): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/delivered`,
