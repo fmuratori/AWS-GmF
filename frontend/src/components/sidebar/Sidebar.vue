@@ -48,6 +48,7 @@
       SidebarItem(text="Create Pack", route="ManagerPackCreate")
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
+      SidebarItem(text="Scan a pack", route="ManagerPackScan")
 </template>
 
 <script lang="ts">
