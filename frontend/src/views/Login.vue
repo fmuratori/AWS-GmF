@@ -104,13 +104,19 @@ b-row.justify-content-center(no-gutters)
           b-form-checkbox#checkbox-2.mt-2(name="checkbox-2")
             i I want to receive marketing information (optional)
 
-        b-button.login-button(block, size="lg", type="submit")
+        b-button.login-button(v-if="!isLoading" block, size="lg", type="submit")
           span(v-if="isLoginSelected") SIGN IN
           span(v-else) SIGN UP
           b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
 
+        b-button.login-button(v-else block, size="lg", type="submit")
+          b-icon(icon="arrow-clockwise" animation="spin", aria-hidden="true", font-scale="1")
+
       button(@click="login.email = 'user@user.com'") Utente
       button(@click="login.email = 'volunteer@volunteer.com'") Volontario
+
+  
+  Loading(:active="isLoading")
 </template>
 
 <script lang="ts">
@@ -122,6 +128,7 @@ import InputText from "../components/input/InputText.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
+import Loading from "../components/Loading.vue";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
@@ -140,6 +147,7 @@ export default Vue.extend({
     InputTextarea,
     InputAddress,
     InputPasswordSelect,
+    Loading,
   },
   data: function () {
     return {
@@ -147,6 +155,7 @@ export default Vue.extend({
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
+      isLoading: false,
       login: {
         email: "volunteer@gmail.com",
         password: "Password2021!",
@@ -177,59 +186,60 @@ export default Vue.extend({
       this.registration.address = address;
     },
     submitForm() {
-      if (this.isLoginSelected) {
-        userApi
-          .loginRequest(this.login)
-          .then((r: AxiosResponse<LoginResponse>): void => {
-            if (r.status == 200) {
-              this.$store.dispatch("login", {
-                token: r.data.token as string,
-                userData: r.data.user as UserData,
-              });
-              this.showLoginErrorMessage = false;
-              this.$router.push({ name: "Home" });
+      this.isLoading = true;
+      // if (this.isLoginSelected) {
+      //   userApi
+      //     .loginRequest(this.login)
+      //     .then((r: AxiosResponse<LoginResponse>): void => {
+      //       if (r.status == 200) {
+      //         this.$store.dispatch("login", {
+      //           token: r.data.token as string,
+      //           userData: r.data.user as UserData,
+      //         });
+      //         this.showLoginErrorMessage = false;
+      //         this.$router.push({ name: "Home" });
 
-              this.$cookies.set("jwt", r.data.token);
-              this.$cookies.set("user-id", r.data.user._id);
+      //         this.$cookies.set("jwt", r.data.token);
+      //         this.$cookies.set("user-id", r.data.user._id);
 
-              // initialize a socket session (let the server know that a new logged user is active)
-              this.$socket.emit(
-                "login",
-                this.$store.state.session.userData._id
-              );
+      //         // initialize a socket session (let the server know that a new logged user is active)
+      //         this.$socket.emit(
+      //           "login",
+      //           this.$store.state.session.userData._id
+      //         );
 
-              chatApi
-                .unreadMessages(this.$store.state.session.userData._id)
-                .then((r: AxiosResponse): void => {
-                  this.$store.dispatch("updateUnreadMessages", r.data);
-                })
-                .catch((e: AxiosError): void => console.log(e));
-            }
-          })
-          .catch((e: AxiosError): void => {
-            console.log(e);
-            this.showLoginErrorMessage = true;
-          });
-      } else {
-        userApi
-          .registrationRequest(this.registration)
-          .then(() => {
-            this.isLoginSelected = true;
-            eventbus.$emit(
-              "successMessage",
-              "Registration",
-              "Registration completed successfully."
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            eventbus.$emit(
-              "errorMessage",
-              "Registration",
-              "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
-            );
-          });
-      }
+      //         chatApi
+      //           .unreadMessages(this.$store.state.session.userData._id)
+      //           .then((r: AxiosResponse): void => {
+      //             this.$store.dispatch("updateUnreadMessages", r.data);
+      //           })
+      //           .catch((e: AxiosError): void => console.log(e));
+      //       }
+      //     })
+      //     .catch((e: AxiosError): void => {
+      //       console.log(e);
+      //       this.showLoginErrorMessage = true;
+      //     });
+      // } else {
+      //   userApi
+      //     .registrationRequest(this.registration)
+      //     .then(() => {
+      //       this.isLoginSelected = true;
+      //       eventbus.$emit(
+      //         "successMessage",
+      //         "Registration",
+      //         "Registration completed successfully."
+      //       );
+      //     })
+      //     .catch((e) => {
+      //       console.log(e);
+      //       eventbus.$emit(
+      //         "errorMessage",
+      //         "Registration",
+      //         "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
+      //       );
+      //     });
+      // }
     },
   },
 });
