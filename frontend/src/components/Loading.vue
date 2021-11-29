@@ -1,12 +1,12 @@
 <template lang="pug">
 transition(name="fade")
-  div(id="loading" v-if="active")
+  div(id="loading" v-if="isActive")
     div(id="background")
     b-row(align-v="center" align-h="center" class="text-center").mt-5
       b-col(cols=10 md=8 lg=4 )
         b-card
           h1 
-            snap Loading...
+            span Loading...
             div(class="loader") 
           p
             label(v-if="message") {{ message }}
@@ -17,17 +17,27 @@ transition(name="fade")
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
 
 export default Vue.extend({
-  name: "Message",
-  props: {
-    active: Boolean,
-    message: String,
+  name: "Loading",
+  data: () => {
+    return {
+      isActive: false,
+      message: "",
+    };
   },
-  data: function () {
-    return {};
+  created() {
+    eventbus.$on("startLoading", (message: string) => {
+      console.log(message);
+      this.isActive = true;
+      this.message = message;
+    });
+    eventbus.$on("stopLoading", () => {
+      this.isActive = false;
+      this.message = "";
+    });
   },
-  methods: {},
 });
 </script>
 

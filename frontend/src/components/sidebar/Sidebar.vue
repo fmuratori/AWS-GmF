@@ -9,10 +9,9 @@
       b-col.ml-1.text-center(cols="auto")
         p {{ userFullname }}
         h5
-          b-badge(variant="primary") {{ this.$store.state.session.userData.type }}
-        p.clickable(@click="changePage('ManagerEditUserInfo')") Edit User
+          b-badge.color1() {{ this.$store.state.session.userData.type }}
 
-  #sidebar-actions 
+  #sidebar-actions.mb-3
     div
       hr.sidebar-hr.my-3
       SidebarCategory(text="Donations", icon="map")
@@ -48,12 +47,19 @@
       SidebarItem(text="Pack list", route="ManagerPackList")
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
       SidebarItem(text="Scan a pack", route="ManagerPackScan")
+
+  
+  b-dropdown(text="Your profile" variant="light" dropup menu-class="w-100")
+    b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'password')") Change password
+    b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'address')") Change address
+    b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'user_info')") Change profile info
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import SidebarCategory from "./SidebarCategory.vue";
 import SidebarItem from "./SidebarItem.vue";
+import eventbus from "../../eventbus";
 
 export default Vue.extend({
   name: "Sidebar",
@@ -74,13 +80,15 @@ export default Vue.extend({
     },
   },
   methods: {
-    changePage(pageName: string) {
+    changePage(pageName: string, mode: string) {
       if (this.$router.currentRoute.name != pageName) {
-        this.$router.push({ name: pageName });
+        this.$router.push({ name: pageName, params: { mode: mode } });
 
         if (this.$store.getters.isMediumScreenWidth) {
           this.$store.dispatch("hideSidebar");
         }
+      } else {
+        eventbus.$emit("userInfoModeChange", mode);
       }
     },
     isSidebarOpen() {

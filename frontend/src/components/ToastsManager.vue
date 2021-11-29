@@ -1,3 +1,6 @@
+<template lang="pug">
+</template>
+
 <script lang="ts">
 import eventbus from "../eventbus";
 

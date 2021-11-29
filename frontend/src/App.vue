@@ -1,6 +1,7 @@
 <template lang="pug">
   div(id="app")
-    Messages
+    ToastsManager
+    Loading
     Navbar
     div(id="body")
       Sidebar(id="sidebar")
@@ -13,14 +14,16 @@ import Vue from "vue";
 
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
-import Messages from "./components/ToastsManager.vue";
+import ToastsManager from "./components/ToastsManager.vue";
+import Loading from "./components/Loading.vue";
 
 export default Vue.extend({
   name: "Home",
   components: {
     Navbar,
     Sidebar,
-    Messages,
+    ToastsManager,
+    Loading,
   },
   created() {
     this.$store.dispatch("updateScreenWidth", window.innerWidth);

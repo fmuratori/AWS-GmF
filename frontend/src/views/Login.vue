@@ -1,6 +1,6 @@
 <template lang="pug">
 b-row.justify-content-center(no-gutters)
-  b-col(md="auto", xs=12)
+  b-col(:lg="isLoginSelected ? 3 : 5", md=8, cols=10)
     b-card#login.shadow-lg.mt-5.mb-5(no-body)
       #login-header.px-5.py-4
         b-row(align-h="center")
@@ -23,7 +23,7 @@ b-row.justify-content-center(no-gutters)
       b-form(@submit.stop.prevent="submitForm")
         .p-5(v-if="isLoginSelected")
           p.text-danger(v-if="showLoginErrorMessage") Invalid email or password.
-          h5.mt-4 Credentials
+          h5.text-center.mt-4 Credentials
 
           InputText(
             placeholder="Insert your email",
@@ -47,7 +47,7 @@ b-row.justify-content-center(no-gutters)
             a(href="#") Forgot password?
 
         .p-3(v-else)
-          h5.mt-4 Personal information
+          h5.text-center.mt-4 Personal information
 
           InputText(
             title="Name: ",
@@ -78,8 +78,9 @@ b-row.justify-content-center(no-gutters)
             v-on:data="(e) => { registration.phoneNumber = e; }"
           )
 
+          hr
+
           InputAddress(
-            title="Location",
             v-on:data="(e) => { registration.address = e; }"
             @addressUpdate = "onAddressUpdate"
           )
@@ -104,19 +105,15 @@ b-row.justify-content-center(no-gutters)
           b-form-checkbox#checkbox-2.mt-2(name="checkbox-2")
             i I want to receive marketing information (optional)
 
-        b-button.login-button(v-if="!isLoading" block, size="lg", type="submit")
+        b-button.footerCardButton.color3(block, size="lg", type="submit")
           span(v-if="isLoginSelected") SIGN IN
           span(v-else) SIGN UP
           b-icon(icon="chevron-right", aria-hidden="true", font-scale="1")
 
-        b-button.login-button(v-else block, size="lg", type="submit")
-          b-icon(icon="arrow-clockwise" animation="spin", aria-hidden="true", font-scale="1")
-
       button(@click="login.email = 'user@user.com'") Utente
       button(@click="login.email = 'volunteer@volunteer.com'") Volontario
+      button(@click="login.email = 'trusted@trusted.com'") Trusted
 
-  
-  Loading(:active="isLoading")
 </template>
 
 <script lang="ts">
@@ -128,7 +125,6 @@ import InputText from "../components/input/InputText.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
-import Loading from "../components/Loading.vue";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
@@ -147,7 +143,6 @@ export default Vue.extend({
     InputTextarea,
     InputAddress,
     InputPasswordSelect,
-    Loading,
   },
   data: function () {
     return {
@@ -155,7 +150,6 @@ export default Vue.extend({
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
-      isLoading: false,
       login: {
         email: "volunteer@gmail.com",
         password: "Password2021!",
@@ -186,8 +180,8 @@ export default Vue.extend({
       this.registration.address = address;
     },
     submitForm() {
-      this.isLoading = true;
       if (this.isLoginSelected) {
+        eventbus.$emit("startLoading", "Checking your log in credentials");
         userApi
           .loginRequest(this.login)
           .then((r: AxiosResponse<LoginResponse>): void => {
@@ -222,9 +216,10 @@ export default Vue.extend({
             this.showLoginErrorMessage = true;
           })
           .then(() => {
-            this.isLoading = false;
+            eventbus.$emit("stopLoading");
           });
       } else {
+        eventbus.$emit("startLoading", "Adding your data to our systems");
         userApi
           .registrationRequest(this.registration)
           .then(() => {
@@ -242,6 +237,9 @@ export default Vue.extend({
               "Registration",
               "An unexpected error occurred during your registration. Retry later or contact us if the problem persists."
             );
+          })
+          .then(() => {
+            eventbus.$emit("stopLoading");
           });
       }
     },
@@ -267,14 +265,5 @@ export default Vue.extend({
 
 .login-selected-button {
   border-bottom: 1px solid $greyscaleD;
-}
-
-.login-button {
-  background-color: $color3;
-
-  border: 0px;
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
 }
 </style>

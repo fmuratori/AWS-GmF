@@ -1,6 +1,6 @@
 import moment from "moment";
 
-moment.locale("it");
+moment;
 
 export default {
   formatDate(date: string): string {
@@ -8,7 +8,7 @@ export default {
   },
 
   formatDatetime(date) {
-    return moment(new Date(date)).calendar();
+    return moment(date).calendar();
   },
 
   daysTillDate(date) {

@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
+  b-row.justify-content-center.my-5
     b-col(lg=6, md=8, sm=10)
       div.mb-5
         hr.shaded
@@ -61,7 +61,6 @@ b-container
                 b-badge(variant="light") 2
             b-col 
               p.m-0 
-                b [Optional] 
                 span Tell us where we can find the family. All the food packs we make with your and other people donations will be delivered here. Do not worry if the position is not correct, we will verifiy it directly.
 
         
@@ -78,11 +77,11 @@ b-container
           b-col
             b-button(
               block,
-              variant="outline-danger",
+              variant="secondary",
               @click="$router.push({ name: 'ManagerFamilyList' })"
             ) Cancel
           b-col
-            b-button(block, variant="outline-success", type="submit") {{ submitLabel }}
+            b-button.color3(block, type="submit") {{ submitLabel }}
 </template>
 
 <script lang="ts">
@@ -145,9 +144,14 @@ export default Vue.extend({
       this.form.address = address;
     },
     submit(): void {
-      var fun;
-      if ("family" in this.$route.params) fun = api.editFamily;
-      else fun = api.addFamily;
+      var fun = "family" in this.$route.params ? api.editFamily : api.addFamily;
+
+      eventbus.$emit(
+        "startLoading",
+        "family" in this.$route.params
+          ? "Updating family data"
+          : "Adding new family to our database"
+      );
 
       fun(this.form)
         .then((): void => {
@@ -164,6 +168,9 @@ export default Vue.extend({
             "Events",
             "Unable to submit the family registration request. Retry later or contact us if the problem persists."
           );
+        })
+        .then(() => {
+          eventbus.$emit("stopLoading");
         });
     },
   },

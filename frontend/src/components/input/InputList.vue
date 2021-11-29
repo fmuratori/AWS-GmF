@@ -35,8 +35,16 @@ export default Vue.extend({
   created() {
     this.labels = this.labelList as Array<string>;
     this.labels.push("");
+
+    this.emitNewValues();
   },
   methods: {
+    emitNewValues() {
+      this.$emit(
+        "data",
+        this.labels.filter((l) => l != "")
+      );
+    },
     labelValueChange(inputIdx: number) {
       if (inputIdx == this.labels.length - 1) {
         this.labels.push("");
@@ -44,14 +52,12 @@ export default Vue.extend({
         this.labelDeleteClicked(inputIdx);
       }
 
-      //evito di emettere [""], su db conta come label vuota
-      this.$emit(
-        "data",
-        this.labels.filter((l) => l != "")
-      );
+      this.emitNewValues();
     },
     labelDeleteClicked(inputIdx: number) {
       this.labels.splice(inputIdx, 1);
+
+      this.emitNewValues();
     },
   },
 });

@@ -38,7 +38,7 @@ export interface RegistrationPayload {
 }
 
 export interface editUserPayload {
-  id: string;
+  _id: string;
   name: string;
   surname: string;
   email: string;

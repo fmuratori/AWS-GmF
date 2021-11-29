@@ -1,12 +1,12 @@
 <template lang="pug">
-b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :description="description")
+b-form-group(:label="title" label-cols-sm="3", label-align-sm="right")
   b-form-textarea(
     :required="required",
     :value="text",
     rows="3",
     max-rows="6",
     @input="$emit('data', $event)",
-    placeholder="Insert description here"
+    :placeholder="placeholder"
   )
 </template>
 

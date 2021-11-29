@@ -1,7 +1,7 @@
 <template lang="pug">
 
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
+  b-row.justify-content-center.my-5
     b-col(lg=6, md=8, sm=10)
       div.mb-5
         hr.shaded
@@ -35,7 +35,6 @@ b-container
           :labelList="form.foods",
           v-on:data="(e) => { form.foods = e; }"
         )
-
       
         InputDate(
           title="Expiration date:",
@@ -45,7 +44,6 @@ b-container
           required,
           v-on:data="(e) => { form.expirationDate = e; }"
         )
-
       
         InputTextarea(
           title="Additional information:",
@@ -66,7 +64,7 @@ b-container
                 p.m-0 Select periods of the week when we can reach you to retrieve your donation. Our volunteers will be sure to pick your donation as soon as possible.
 
           div(
-            v-for="(weekDayName, weekDay, idx) in weekDays",
+            v-for="(weekDayName, weekDay, idx) in constants.weekDays",
             :index="idx"
           )
             b-form-group(:label="weekDayName", label-cols-sm="3", label-align-sm="right")
@@ -97,7 +95,9 @@ b-container
           :city="form.address.city",
           :street="form.address.street",
           :civic="form.address.civicNumber",
-          @onAddressUpdate="onAddressUpdate")
+          :x="form.address.coordinates.x",
+          :y="form.address.coordinates.y",
+          @data="onAddressUpdate")
 
         hr
 
@@ -105,12 +105,13 @@ b-container
           b-col
             b-button(
               block,
-              variant="outline-danger",
+              variant="secondary",
               @click="$router.push({ name: 'Home' })",
               type="reset"
             ) Cancel
           b-col
-            b-button(block, variant="outline-success", type="submit") {{ this.submitLabel }}
+            b-button.color3(block, type="submit") {{ this.submitLabel }}
+
 </template>
 
 <script lang="ts">
@@ -122,6 +123,7 @@ import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
+import Loading from "../components/Loading.vue";
 
 import { Address, Donation } from "../types";
 
@@ -138,18 +140,10 @@ export default Vue.extend({
     InputList,
     InputAddress,
     InputTextarea,
+    Loading,
   },
   data: (): CreateDonationView => {
     return {
-      weekDays: {
-        lun: "Monday",
-        mar: "Tuesday",
-        mer: "Wednesday",
-        gio: "Thursday",
-        ven: "Friday",
-        sab: "Saturday",
-        dom: "Sunday",
-      },
       form: {
         userId: "",
         foods: new Array<string>(),
@@ -215,11 +209,17 @@ export default Vue.extend({
       }
     },
     submit() {
-      var fun;
-      if ("donation" in this.$route.params) fun = api.editDonation;
-      else fun = api.addDonation;
+      var fun =
+        "donation" in this.$route.params ? api.editDonation : api.addDonation;
 
       if (this.formChecks()) {
+        eventbus.$emit(
+          "startLoading",
+          "donation" in this.$route.params
+            ? "Creating a new donation"
+            : "Updating your donation"
+        );
+
         fun(this.form)
           .then((r: AxiosResponse) => {
             if (r.status == 200 && "donation" in this.$route.params) {
@@ -244,23 +244,34 @@ export default Vue.extend({
               "Donation",
               "Unable to send the donation. Retry later or contact us if the problem persists."
             );
+          })
+          .then(() => {
+            eventbus.$emit("stopLoading");
           });
       }
     },
     formChecks(): boolean {
-      if (!this.form.pickUpPeriod.length || !this.form.expirationDate) {
-        eventbus.$emit(
-          "warningMessage",
-          "Donation",
-          "Select al least one day and period of the day when we can retrive your donation."
-        );
-        return false;
-      }
       if (!this.form.foods.length) {
         eventbus.$emit(
           "warningMessage",
           "Donation",
           "Add at least one valid food to the donation."
+        );
+        return false;
+      }
+      if (!this.form.expirationDate) {
+        eventbus.$emit(
+          "warningMessage",
+          "Donation",
+          "Select a valid expiration date. Our volunteers will surely pick your donation in time."
+        );
+        return false;
+      }
+      if (!this.form.pickUpPeriod.length) {
+        eventbus.$emit(
+          "warningMessage",
+          "Donation",
+          "Select al least one period of the day when we can retrive your donation."
         );
         return false;
       }

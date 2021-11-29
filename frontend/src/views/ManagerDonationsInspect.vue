@@ -1,9 +1,14 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-center.my-5
-    b-col.ml-2(lg=4, md=8, cols=11)
-      p CHAT
-      b-card.mb-2(bg-variant="light", no-body)
+  b-row.justify-content-center
+    b-col(lg=10, md=8, cols=10)
+      hr.shaded
+      h4.text-center
+        b YOUR DONATION
+      hr.shaded
+
+    b-col(lg=4, md=8, cols=10)
+      b-card(bg-variant="light", no-body)
         b-card-text.m-2
           #messages-area.mb-1(ref="messagesArea")
             Message(
@@ -15,7 +20,6 @@ b-container
               :isVisualized="message.visualized",
               :isEvent="message.isEventMessage"
               :messages="message.messages",
-              :ref="'scrollTo' + idx"
             )
 
           //- div(class="")
@@ -24,82 +28,92 @@ b-container
             b-input-group(class="")
               b-form-input(
                 type="text",
-                placeholder="Scrivi qui il tuo messaggio.",
+                placeholder="Insert here your message",
                 v-model="chatMessage",
                 required
               )
               b-input-group-append
-                b-button(variant="success", type="submit") Invia
+                b-button(variant="success", type="submit") Send
           
-    b-col(lg=6, md=8, cols=11)
-      p INFORMAZIONI SUL RITIRO
+    b-col(lg=6, md=8, cols=10).mb-5
+      b-card(bg-variant="light", no-body).mb-2
+        b-card-text.p-3 
+          b-row.mb-3
+            b-col(md=3)
+              label Status:
+            b-col
+              // TODO change badge color 
+              b-badge {{ donation.status }}
 
-      b-card.mb-2(bg-variant="light")
-        b-card-text
-          .mb-2
-            label.mb-0 Stato donazione:
-            p.font-weight-bold {{ donation.status }}
-          .mb-2
-            label.mb-0 Data ritiro:
-            p.font-weight-bold {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
+          
+          b-row.mb-3(v-if="donation.status == 'selected'")
+            b-col(md=3)
+              label Pick up date: 
+            b-col
+              label.font-weight-bold {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
 
-      p INFORMAZIONI DONAZIONE
+          b-row.mb-3
+            b-col(md=3)
+              label Creation date:
+            b-col
+              label.font-weight-bold {{ dates.formatDatetime(donation.creationDate) }}
 
-      b-card.mb-2(bg-variant="light")
-        b-card-text
-          .mb-2
-            label.mb-0 Alimenti:
-            p.mb-0(v-for="(value, idx) in donation.foods", :key="idx")
-              label.font-weight-bold {{ value }}
+          b-row.mb-3
+            b-col(md=3)
+              label Expiration date:
+            b-col
+              label.font-weight-bold {{ dates.formatDatetime(donation.expirationDate) }}
 
-          .mb-2
-            label.mb-0 La donazione scade tra:
-            p.font-weight-bold {{ expirationDays }} giorni
+          b-row.mb-3
+            b-col(md=3)
+              label Expires in:
+            b-col
+              label.font-weight-bold {{ dates.daysTillDate(donation.expirationDate) }} days
 
-          .mb-2
-            label.mb-0 Data creazione donazione:
-            p.font-weight-bold {{ formatDatetime(donation.creationDate) }}
+          b-row.mb-3
+            b-col(md=3)
+              label Food list:
+            b-col
+              p.mb-0.font-weight-bold(v-for="(value, idx) in donation.foods", :key="idx") {{ value }}
 
-          .mb-2
-            label.mb-0 Data scadenza donazione:
-            p.font-weight-bold {{ formatDatetime(donation.expirationDate) }}
+          b-row.mb-3
+            b-col(md=3)
+              label Address:
+            b-col
+              label.font-weight-bold {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
 
-          .mb-2
-            label.mb-0 Luogo ritiro:
-            p.font-weight-bold {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
+          b-row.mb-3(v-if="donation.additionalInformation != null")
+            b-col(md=3)
+              label Additiona info:
+            b-col
+              label.font-weight-bold {{ donation.additionalInformation }}
 
-          .mb-2(v-if="donation.additionalInformation != null")
-            label.mb-0 Informazioni aggiuntive:
-            p.font-weight-bold {{ donation.additionalInformation }}
-
-          div(class="")
-            label.mb-0 Periodi di ritiro:
-            p.mb-1(
-              v-for="(weekDayName, weekDay, idx) in weekDays",
-              :key="idx",
-              v-if="weekDayDonations(weekDay).length > 0"
-            )
-              label.font-weight-bold {{ weekDayName + ':&nbsp;' + weekDayDonations(weekDay).map((d) => d.period).join(', ') }}
+          b-row.mb-3
+            b-col(md=3)
+              label Pickup week days:
+            b-col
+              p.mb-0.font-weight-bold(
+                v-for="(weekDayName, weekDay, idx) in constants.weekDays",
+                :key="idx",
+                v-if="weekDayDonations(weekDay).length > 0"
+              ) {{ weekDayName + ':&nbsp;' + weekDayDonations(weekDay).map((d) => d.period).join(', ') }}
 
       div(v-if="$store.getters.isUser") 
-        b-button(
+        b-button.color3(
           block,
-          variant="outline-danger",
           type="submit",
           @click="modifyDonation"
-        ) Modifica
-        b-button(
+        ) Edit
+        b-button.color3(
           block,
-          variant="outline-danger",
-          type="submit",
-          @click="deleteDonation"
-        ) Cancella
-        b-button(
+          v-b-modal.modal,
+        ) Delete
+        b-button.color4(
           block,
-          variant="outline-secondary",
+          variant="secondary",
           @click="$router.push({ name: 'ManagerDonationsList' })",
           type="reset"
-        ) Indietro
+        ) Cancel
 
       div(v-if="$store.getters.isVolunteer")
         b-button(
@@ -114,6 +128,13 @@ b-container
           @click="$router.push({ name: 'ManagerDonationsList' })",
           type="reset"
         ) Indietro
+
+  b-modal#modal(title="Delete your donation?", @ok="deleteDonation()")
+    div This donation offer will be deleted permanently.
+    
+    template(#modal-footer="{ ok, cancel }")
+      b-button(variant='secondary' @click='cancel()') Cancel
+      b-button.color3(@click='ok()') Confirm
 </template>
 
 <script lang="ts">
@@ -138,15 +159,6 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      weekDays: {
-        lun: "Lunedì",
-        mar: "Martedì",
-        mer: "Mercoledì",
-        gio: "Giovedì",
-        ven: "Venerdì",
-        sab: "Sabato",
-        dom: "Domenica",
-      },
       donation: {
         _id: "",
         userId: "",
@@ -198,10 +210,6 @@ export default Vue.extend({
       }
       return newChat;
     },
-
-    expirationDays(): number {
-      return moment(this.donation.expirationDate).diff(moment.now(), "days");
-    },
   },
   created() {
     // check if user is logged in
@@ -223,11 +231,11 @@ export default Vue.extend({
   },
   methods: {
     formatDatetime(date) {
-      return moment(new Date(date)).locale("it").calendar();
+      return moment(new Date(date)).calendar();
     },
 
     formatDate(date) {
-      return moment(date).locale("it").format("DD-MM-YYYY");
+      return moment(date).format("DD-MM-YYYY");
     },
 
     weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
@@ -243,12 +251,12 @@ export default Vue.extend({
         : "Evening";
     },
     sendMessage(event) {
-      event.preventDefault();
       this.$store.dispatch("sendMessage", {
         donationId: this.donation._id,
         message: this.chatMessage,
         isEventMessage: false,
       });
+      this.chatMessage = "";
     },
     deleteDonation() {
       donationApi

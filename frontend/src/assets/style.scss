@@ -2,16 +2,19 @@
 
 $color1: #4056a1;
 $color2: #c5cbe3;
+
 $color3: #f13c20;
-$color4: #d79922;
-$color5: #efe2ba;
+$color4: #a92816;
+
+// $color4: #d79922;
+// $color5: #efe2ba;
 
 $myMessageColor: #eeeeee;
 $othersMessageColor: #c5cbe3;
 
 // #d79922
 // #efe2ba
-// #f13c20
+// #f13c20 
 // #4056a1
 // #c5cbe3
 
@@ -92,4 +95,30 @@ hr.shaded {
   height: 0;
   padding-bottom: 100%;
   background-color: $greyscaleD;
+}
+
+
+.color1 {
+  background-color: $color1;
+}
+
+.color2 {
+  background-color: $color2;
+}
+
+.color3 {
+  background-color: $color3;
+  border: 1px solid $color3;
+}
+
+.color3:hover {
+  background-color: #a92816;
+  border: 1px solid #a92816;
+}
+
+.footerCardButton {
+  border-width: 1px;
+
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }

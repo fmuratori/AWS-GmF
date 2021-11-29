@@ -1,15 +1,17 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col(lg=6, md=10, sm=12)
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b CHANGE PASSWORD
-      hr.sidebar-hr.my-3
-
+  b-row.justify-content-md-center.no-gutters
+    b-col.mb-5(lg=6, md=8, sm=10)
       .mb-4
-        b-form(@submit.stop.prevent="changePassword")
-          InputText(
+        b-form(v-if="mode == 'password'" @submit.stop.prevent="changePassword")
+          
+          div.my-5
+            hr.shaded
+            h4.text-center
+              b CHANGE PASSWORD
+            hr.shaded
+
+          InputText.mb-5(
             title="Old password:",
             placeholder="Insert your old password here",
             type="password",
@@ -18,78 +20,79 @@ b-container
             v-on:data="(e) => { changePasswordForm.oldPassword = e; }"
           )
 
-        .mb-4
           InputPasswordSelect(
             title1="New password: ",
-            title2="Confirm password: ",
+            title2="Confirm new password: ",
             placeholder1="Insert your password here",
             placeholder2="Repeat your password here",
             v-on:data="(e) => { changePasswordForm.newPassword = e; }"
           )
 
-        b-row
-          b-col
-            b-button(block, variant="success", type="submit") Edit
+          b-button.color3(block, type="submit") Edit
+          b-button(block, variant="secondary") Cancel
 
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b EDIT USER INFO
-      hr.sidebar-hr.my-3
+      b-form(v-if="mode == 'user_info'" @submit.stop.prevent="editUser")
 
-      b-form(@submit.stop.prevent="editUser")
-        .mb-4
-          b-row
-            b-col
-              InputText(
-                title="Name: ",
-                placeholder="Insert name here",
-                required,
-                :text="editUserForm.name",
-                v-on:data="(e) => { editUserForm.name = e; }"
-              )
+        div.my-5
+          hr.shaded
+          h4.text-center
+            b USER INFO
+          hr.shaded
 
-            b-col
-              InputText(
-                title="Surname: ",
-                placeholder="Insert surname here",
-                required,
-                :text="editUserForm.surname",
-                v-on:data="(e) => { editUserForm.surname = e; }"
-              )
+        InputText(
+          title="Name: ",
+          placeholder="Insert name here",
+          required,
+          :text="editUserForm.name",
+          v-on:data="(e) => { editUserForm.name = e; }"
+        )
 
-        .mb-4
-          InputText(
-            title="Email: ",
-            placeholder="Insert your email here",
-            type="email",
-            required,
-            :text="editUserForm.email",
-            v-on:data="(e) => { editUserForm.email = e; }"
-          )
+        InputText(
+          title="Surname: ",
+          placeholder="Insert surname here",
+          required,
+          :text="editUserForm.surname",
+          v-on:data="(e) => { editUserForm.surname = e; }"
+        )
+        
+        InputText(
+          title="Email: ",
+          placeholder="Insert your email here",
+          type="email",
+          required,
+          :text="editUserForm.email",
+          v-on:data="(e) => { editUserForm.email = e; }"
+        )
 
-        .mb-4
-          InputText(
-            title="Phone number: ",
-            placeholder="Insert your phone number here",
-            required,
-            :text="editUserForm.phoneNumber",
-            v-on:data="(e) => { editUserForm.phoneNumber = e; }"
-          )
+      
+        InputText(
+          title="Phone number: ",
+          placeholder="Insert your phone number here",
+          required,
+          :text="editUserForm.phoneNumber",
+          v-on:data="(e) => { editUserForm.phoneNumber = e; }"
+        )
 
-        .mb-4
-          InputAddress(
-            title="Location",
-            :city="editUserForm.address.city",
-            :civic="editUserForm.address.civicNumber",
-            :street="editUserForm.address.street",
-            v-on:data="(e) => { editUserForm.address = e; }"
-          )
+        b-button.color3(block, type="submit") Edit
+        b-button(block, variant="secondary", @click="$router.go(-1)") Cancel
+      
+      b-form(v-if="mode == 'address'" @submit.stop.prevent="editUser")
+        div.my-5
+          hr.shaded
+          h4.text-center
+            b ADDRESS
+          hr.shaded
 
-      b-row
-        b-col
-          b-button(block, variant="outline-danger", @click="$router.go(-1)") Cancel
-        b-col
-          b-button(block, variant="success", type="submit") Edit
+        InputAddress(
+          :city="editUserForm.address.city",
+          :civic="editUserForm.address.civicNumber",
+          :street="editUserForm.address.street",
+          v-on:data="(e) => { editUserForm.address = e; }"
+        )
+
+        b-button.color3(block, type="submit") Edit
+        b-button(block, variant="secondary", @click="$router.go(-1)") Cancel
+  
 </template>
 
 <script lang="ts">
@@ -100,7 +103,7 @@ import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import api from "../api/user";
-import { Address, editUserPayload, changePasswordPayload } from "../types";
+import { Address, UserData, changePasswordPayload } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
@@ -110,11 +113,11 @@ export default Vue.extend({
     InputPasswordSelect,
     InputAddress,
   },
-  data: function () {
+  data: () => {
     return {
       regRepeatPassword: "",
       editUserForm: {
-        id: "",
+        _id: "",
         name: "",
         surname: "",
         email: "",
@@ -128,19 +131,30 @@ export default Vue.extend({
             y: 0,
           },
         } as Address,
-      } as editUserPayload,
+      } as UserData,
       changePasswordForm: {
         id: "",
         oldPassword: "",
         newPassword: "",
       } as changePasswordPayload,
+      mode: "",
     };
   },
   created() {
+    eventbus.$on("userInfoModeChange", (mode: string) => {
+      this.mode = mode;
+    });
+
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
+      }
+
+      if (!("mode" in this.$route.params)) {
+        this.$router.push({ name: "Home" });
+      } else {
+        this.mode = this.$route.params.mode;
       }
 
       this.editUserForm = this.$store.state.session.userData;
@@ -155,6 +169,7 @@ export default Vue.extend({
       );
     },
     editUser() {
+      eventbus.$emit("startLoading", "Updating your account data");
       api
         .editUser(this.editUserForm)
         .then((r: AxiosResponse): void => {
@@ -175,9 +190,13 @@ export default Vue.extend({
             "User data",
             "Unable to change the user info. Retry later or contact us if the problem persists."
           );
+        })
+        .then(() => {
+          eventbus.$emit("stopLoading");
         });
     },
     changePassword() {
+      eventbus.$emit("startLoading", "Updating your account data");
       api
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {
@@ -197,6 +216,9 @@ export default Vue.extend({
             "User data",
             "Unable to change the user password. Retry later or contact us if the problem persists."
           );
+        })
+        .then(() => {
+          eventbus.$emit("stopLoading");
         });
     },
   },

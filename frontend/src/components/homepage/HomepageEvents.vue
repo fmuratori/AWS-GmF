@@ -61,7 +61,7 @@ export default Vue.extend({
       return addr.street + " " + addr.civicNumber + ", " + addr.city;
     },
     formatDate(date) {
-      return moment(date).locale("it").format("DD-MM-YYYY");
+      return moment(date).format("DD-MM-YYYY");
     },
   },
 });

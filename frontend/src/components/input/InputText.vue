@@ -1,5 +1,5 @@
 <template lang="pug">
-b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :description="description")
+b-form-group(:label="title" :label-cols-sm="title ? 3 : 0", label-align-sm="right" :description="description")
   b-input-group()
     b-input-group-prepend(v-if="icon")
       b-input-group-text

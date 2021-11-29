@@ -1,11 +1,11 @@
 export default {
   weekDays: {
-    lun: "Lunedì",
-    mar: "Martedì",
-    mer: "Mercoledì",
-    gio: "Giovedì",
-    ven: "Venerdì",
-    sab: "Sabato",
-    dom: "Domenica",
+    lun: "Monday",
+    mar: "Thuesday",
+    mer: "Wednesday",
+    gio: "Thursday",
+    ven: "Friday",
+    sab: "Saturday",
+    dom: "Sunday",
   },
 };

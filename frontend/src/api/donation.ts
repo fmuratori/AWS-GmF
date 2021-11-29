@@ -70,10 +70,7 @@ export default {
 
     const pickUpFilter = {};
     if (pickUpDate) {
-      const dayName = moment(pickUpDate)
-        .locale("it")
-        .format("dddd")
-        .substring(0, 3);
+      const dayName = moment(pickUpDate).format("dddd").substring(0, 3);
       pickUpFilter["weekDay"] = dayName;
       filter["$and"].push({
         expirationDate: { $gte: moment(pickUpDate).format("YYYY-MM-DD") },

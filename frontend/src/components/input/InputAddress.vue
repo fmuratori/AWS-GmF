@@ -31,14 +31,13 @@ div
       b-button(block variant="outline-danger", size="sm" @click="resetMap" v-if="isLocationLoaded")
         span.mr-2 Reset location
 
-      div.mapContainer(v-if="!isLocationLoaded").text-center
-        h1.pt-5
+      div.mapContainer(v-if="!isLocationLoaded").text-center.mb-4
+        h1.pt-4
           b-icon(icon="map").mr
         h3
           span  Google Maps 
           br 
           span Navigator
-
        
         b-button.mt-5(variant="outline-dark", size="sm" @click="find" v-if="!isLocationLoaded") Find in the map
 
@@ -64,6 +63,8 @@ export default Vue.extend({
     city: String,
     street: String,
     civic: String,
+    x: Number,
+    y: Number,
   },
   data: () => {
     return {
@@ -83,6 +84,12 @@ export default Vue.extend({
     this.address.city = this.city;
     this.address.street = this.street;
     this.address.civicNumber = this.civic;
+
+    if (this.x && this.y) {
+      this.isLocationLoaded = true;
+      this.address.coordinates.x = this.x;
+      this.address.coordinates.y = this.y;
+    }
   },
   methods: {
     resetMap() {
@@ -100,7 +107,7 @@ export default Vue.extend({
     onLocationChange(x: number, y: number) {
       this.address.coordinates.x = x;
       this.address.coordinates.y = y;
-      this.$emit("addressUpdate", this.address);
+      this.$emit("data", this.address);
     },
     find() {
       mapsApi
@@ -129,7 +136,7 @@ export default Vue.extend({
             this.address.coordinates.y =
               r.data.results[0].geometry.location.lng;
 
-            this.$emit("onAddressUpdate", this.address);
+            this.$emit("data", this.address);
           } else {
             this.isLocationLoaded = false;
           }

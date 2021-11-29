@@ -28,7 +28,6 @@ export interface ReportFamilyView {
 }
 
 export interface CreateDonationView {
-  weekDays: any;
   form: DonationCreationPayload;
   submitLabel: string;
   isLocationLoaded: boolean;

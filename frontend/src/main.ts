@@ -43,9 +43,15 @@ Vue.use(VueGoogleMaps, {
 import VueGoogleAutocomplete from "vue-google-autocomplete";
 Vue.component("vue-google-autocomplete", VueGoogleAutocomplete);
 
-/* enable moment package usage inside html/pug code */
+/* enable misc functionalities use inside html/pug code */
 import moment from "moment";
 Vue.prototype.moment = moment;
+
+import dates from "./misc/dates";
+Vue.prototype.dates = dates;
+
+import constants from "./misc/constants";
+Vue.prototype.constants = constants;
 
 /* local style sheet */
 import "./assets/style.scss";

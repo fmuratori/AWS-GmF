@@ -1,5 +1,5 @@
 <template lang="pug">
-b-row.pl-1.justify-content-md-center.sidebar-item(
+b-row.p-1.justify-content-md-center.sidebar-item(
   no-gutters,
   align-v="center",
   @click="changePage(route)",

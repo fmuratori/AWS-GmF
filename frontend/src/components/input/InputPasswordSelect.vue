@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  b-form-group(:label="title1")
+  b-form-group(:label="title1" :label-cols-sm="title1 ? 3 : 0", label-align-sm="right")
     b-input-group
       b-input-group-prepend(v-if="icon")
         b-input-group-text
@@ -13,7 +13,7 @@ div
         @input="$emit('data', $event)"
       )
 
-  b-form-group(:label="title2")
+  b-form-group(:label="title2" :label-cols-sm="title2 ? 3 : 0", label-align-sm="right")
     b-input-group
       b-input-group-prepend(v-if="icon")
         b-input-group-text
