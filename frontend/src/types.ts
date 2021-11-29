@@ -112,7 +112,6 @@ export interface EventPayload {
   description: string;
   address: Address;
   date: Date;
-  image: File | null;
 }
 
 export interface Event {

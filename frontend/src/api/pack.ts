@@ -16,6 +16,14 @@ export default {
     });
   },
 
+  async packListExpanded(payload: FindPayload): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/pack/find-expanded`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
+
   async filterPackList(payload: FindPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/filter`,
@@ -36,14 +44,6 @@ export default {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/delete`,
       payload,
-      { headers: store.getters.getSessionHeader }
-    );
-  },
-
-  async getPackInfo(id: string): Promise<AxiosResponse> {
-    return axios.post(
-      `${process.env.VUE_APP_API_URL}/api/pack/find`,
-      { id: id },
       { headers: store.getters.getSessionHeader }
     );
   },

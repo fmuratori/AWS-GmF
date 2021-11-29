@@ -1,7 +1,5 @@
 import moment from "moment";
 
-moment;
-
 export default {
   formatDate(date: string): string {
     return moment(date).format("DD-MM-YYYY");

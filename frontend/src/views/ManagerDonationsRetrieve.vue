@@ -291,7 +291,6 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
-
   },
   methods: {
     selectCity(addressData, placeResultData, id) {

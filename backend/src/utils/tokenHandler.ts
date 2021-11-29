@@ -1,23 +1,24 @@
-import jwt, {TokenExpiredError} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 const createToken = (userId: String) => {
     const token = jwt.sign(
         { userId: userId },
         process.env.JWT_SECRET_KEY || "missing secret token",
-        { expiresIn: process.env.JWT_EXPIRES_IN || "3h" }
+        { expiresIn: process.env.JWT_EXPIRES_IN || "12h" }
     )
     return token
 }
 
 const verifyToken = (token: String, uid: String) => {
-    // const decodedToken = jwt.verify("" + token, process.env.JWT_SECRET_KEY || "missing secret token")
-    // const {userId} = (decodedToken as jwt.JwtPayload)
+    try {
+        const decodedToken = jwt
+            .verify("" + token, process.env.JWT_SECRET_KEY || "missing secret token")
+        const { userId } = (decodedToken as jwt.JwtPayload)
 
-    // if (uid === userId) return true
-    
-    // return false
+        if (uid === userId) return true
+        return false
 
-    return true
+    } catch (e) { return false }
 }
 
 export { verifyToken, createToken }

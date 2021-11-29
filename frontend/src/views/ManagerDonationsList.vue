@@ -187,6 +187,7 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import eventbus from "../eventbus";
+import FilterButtons from "../components/FilterButtons.vue";
 import api from "../api/donation";
 
 import { Donation } from "../types";
@@ -197,6 +198,7 @@ export default Vue.extend({
   components: {
     Navbar,
     Sidebar,
+    FilterButtons,
   },
   data: () => {
     return {
@@ -216,8 +218,13 @@ export default Vue.extend({
       var filter = {};
       if (this.$store.getters.isUser)
         filter = { userId: this.$store.state.session.userData._id };
-      if (this.$store.getters.isVolunteer || this.$store.getters.isTrustedVolunteer)
-        filter = { "pickUp.volunteerId": this.$store.state.session.userData._id };
+      if (
+        this.$store.getters.isVolunteer ||
+        this.$store.getters.isTrustedVolunteer
+      )
+        filter = {
+          "pickUp.volunteerId": this.$store.state.session.userData._id,
+        };
 
       eventbus.$emit("startLoading", "Filtering all your active donations.");
 

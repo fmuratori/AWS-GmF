@@ -186,6 +186,9 @@ export default Vue.extend({
           .loginRequest(this.login)
           .then((r: AxiosResponse<LoginResponse>): void => {
             if (r.status == 200) {
+              this.$cookies.set("jwt", r.data.token);
+              this.$cookies.set("user-id", r.data.user._id);
+
               this.$store.dispatch("login", {
                 token: r.data.token as string,
                 userData: r.data.user as UserData,
@@ -193,9 +196,6 @@ export default Vue.extend({
 
               this.showLoginErrorMessage = false;
               this.$router.push({ name: "Home" });
-
-              this.$cookies.set("jwt", r.data.token);
-              this.$cookies.set("user-id", r.data.user._id);
 
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(

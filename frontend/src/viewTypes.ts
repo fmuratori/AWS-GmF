@@ -42,19 +42,21 @@ export interface FoodManagerView {
 }
 
 export interface PackCreateView {
-  showScreen: string;
+  step: "selectFamily" | "selectFoods" | "loading" | "printableInfo";
   isPrinted: boolean;
   foodList: Array<SelectableFood>;
-  family: Family;
+  familyList: Array<Family>;
+  selectedFamily: Family | null;
   form: PackPayload;
 }
 
 export interface PackManagerView {
-  view: string;
+  statusFilter: "ready" | "planned delivery" | "delivered" | "all";
   packList: Array<Pack>;
+  packListBackup: Array<Pack>;
   familyDetails?: Family;
   foodDetails?: Array<Food>;
-  tableFields: Array<string>;
+  tableFields: Array<TableField>;
   deletePackId: string;
 }
 

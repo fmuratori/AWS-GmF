@@ -1,118 +1,154 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters(v-if="showScreen=='pack'")
+  b-row.justify-content-md-center.my-5.no-gutters
     b-col
       hr.sidebar-hr.my-3
       h4.text-center.mb-4
         b CREATE A PACK
       hr.sidebar-hr.my-3
 
-      b-row
-        b-col
-          h4 About the family
-          div
-            b Name:
-            span {{ family.name }}
-          div 
-            b Components:
-            span {{ family.components }}
-          div
-            b Phone number:
-            span {{ family.phoneNumber }}
-          div
-            b Address:
-            span {{ family.address.street }} {{ family.address.civicNumber }} - {{ family.address.city }}
-
-      hr.sidebar-hr.my-3
-
-      b-form(@submit.stop.prevent="createPack")
-        FoodView(selectableItems, v-on:data="(e) => { this.foodList = e; }")
-
+      div(v-if="step == 'selectFamily'")
         b-row
           b-col
-            b-button(
-              block,
-              variant="outline-danger",
-              @click="$router.push({ name: 'ManagerFamilies' })"
-            ) Cancel
+            FamilyView(v-on:select="(family) => selectFamily(family)")
+
+      div(v-if="step == 'selectFoods'")
+        b-row
           b-col
-            b-button(block, variant="success", type="submit") Create
-  b-row(v-if="showScreen=='loading'")
-    b-col()
-      h3 Loading data
-      p We are loading all the printable data...
-  b-row.justify-content-md-center.my-5.no-gutters(v-if="showScreen=='printable_info'")
-    b-col(lg=8, md=10, sm=12)
+            h4 About the family
+            div
+              b Name:
+              span {{ selectedFamily.name }}
+            div 
+          div 
+            div 
+              b Components:
+              span {{ selectedFamily.components }}
+            div
+              b Phone number:
+              span {{ selectedFamily.phoneNumber }}
+            div
+              b Address:
+              span {{ formatAddress(selectedFamily.address) }}
+
+        hr.sidebar-hr.my-3
+
+        b-form(@submit.stop.prevent="createPack")
+          FoodView(
+            selectableItems,
+            v-on:data="(e) => { this.foodList = e; }"
+          )
+
+          b-row
+            b-col
+              b-button(
+                block,
+                variant="outline-danger",
+                @click="$router.push({ name: 'ManagerFamilyList' })"
+              ) Cancel
+            b-col
+              b-button(block, variant="success", type="submit") Create
+
+      div(v-if="step == 'loading'")
+        b-row
+          b-col
+            h3 Loading data
+            p We are loading all the printable data...
+
+    div(v-if="step == 'printableInfo'")
       hr.sidebar-hr.my-3
       h4.text-center.mb-4
         b PACK INFO
       hr.sidebar-hr.my-3
-      
-      b-card()
+
+      div
         h3 Pack # {{ form._id }}
-        b-row(align-v="center" align-h="center").my-3
-          b-col(cols="auto") 
-            QrcodeVue(:value="form._id" size="200" level="L")
-          b-col(md=10 lg="auto")
-            div
-              h4.mb-0 Family
-              p.mb-0 Name: {{ form.family.name}}
-              p.mb-0 Address: {{ form.family.address.city }}, {{ form.family.address.street }} - {{ form.family.address.civicNumber }} 
-            hr
+        b-row
+          b-col(cols="auto")
+            QrcodeVue(
+              value="{a: 'ASD', b: [{c:'asd'}]}",
+              size="300",
+              level="H"
+            )
+          b-col
+            p {{ form }}
+
+      b-card
+        vue-html2pdf(
+          :show-layout="true",
+          :float-layout="false",
+          :enable-download="false",
+          :preview-modal="true",
+          :paginate-elements-by-height="1400",
+          :filename="'donation_' + form._id",
+          :pdf-quality="2",
+          :manual-pagination="false",
+          pdf-format="a4",
+          pdf-orientation="landscape",
+          pdf-content-width="800px",
+          ref="printableData"
+        )
+          section(slot="pdf-content")
             div
               h4.mb-0 Foods
-              div.mb-2(v-for="(food, idx) in form.foodList" :key="idx")
-                p.mb-0 Name: {{ food.name}}
-                p.mb-0 Quantity: {{ food.number}}
-                p.mb-0 Expiration date: {{ food.expirationDate}}
-              
+              .mb-2(v-for="(food, idx) in form.foodList", :key="idx")
+                p.mb-0 Name: {{ food.name }}
+                p.mb-0 Quantity: {{ food.number }}
+                p.mb-0 Expiration date: {{ food.expirationDate }}
+
         div
-          b-button(v-if="!isPrinted" block @click="print()") Print pack info
-          b-button(v-if="isPrinted" block variant="success" @click="print()") 
+          b-button(v-if="!isPrinted", block, @click="print()") Print pack info
+          b-button(
+            v-if="isPrinted",
+            block,
+            variant="success",
+            @click="print()"
+          ) 
             b-icon(icon="check")
             span Pack info printed
-          b-button(block @click="$router.push({ name: 'ManagerFamilyList' });") Create another pack
-          b-button(block @click="$router.push({ name: 'ManagerPackDelivery' });") Reserve a pack
-
+          b-button(block, @click="$router.push({ name: 'ManagerFamilyList' })") Create another pack
+          b-button(
+            block,
+            @click="$router.push({ name: 'ManagerPackDelivery' })"
+          ) Reserve a pack
 
       vue-html2pdf(
-      :show-layout="false"
-      :float-layout="true"
-      :enable-download="true"
-      :preview-modal="false"
-      :paginate-elements-by-height="1400"
-      :filename="'donation_'+form._id"
-      :pdf-quality="2"
-      :manual-pagination="false"
-      pdf-format="a5"
-      pdf-orientation="landscape"
-      pdf-content-width="800px"
-      ref="printableData")
-
+        :show-layout="false",
+        :float-layout="true",
+        :enable-download="true",
+        :preview-modal="false",
+        :paginate-elements-by-height="1400",
+        :filename="'donation_' + form._id",
+        :pdf-quality="2",
+        :manual-pagination="false",
+        pdf-format="a5",
+        pdf-orientation="landscape",
+        pdf-content-width="800px",
+        ref="printableData"
+      )
         section(slot="pdf-content")
-          div.p-3
-              h3 Pack # {{ form._id }}
-              b-row(align-v="center")
-                b-col(cols="auto") 
-                  QrcodeVue(:value="form._id" size="200" level="L").ml-4.mx-3
-                b-col
-                  div
-                    h4.mb-0 Family
-                    p.mb-0 Name: {{ form.family.name}}
-                    p.mb-0 Address: {{ form.family.address.city }}, {{ form.family.address.street }} - {{ form.family.address.civicNumber }} 
-                  hr
-                  div
-                    h4.mb-0 Foods
-                    div.mb-2(v-for="(food, idx) in form.foodList" :key="idx")
-                      p.mb-0 Name: {{ food.name}}
-                      p.mb-0 Quantity: {{ food.number}}
-                      p.mb-0 Expiration date: {{ food.expirationDate}}
+          .p-3
+            h3 Pack # {{ form._id }}
+            b-row
+              b-col(cols="auto")
+                QrcodeVue(
+                  value="{a: 'ASD', b: [{c:'asd'}]}",
+                  size="300",
+                  level="H"
+                )
+              b-col
+                p {{ form }}
+
+        b-button(v-if="!isPrinted", block, @click="print()") Print pack info
+        b-button(v-if="isPrinted", block, variant="success", @click="print()") 
+          b-icon(icon="check")
+          span Pack info printed
+        b-button(block, @click="$router.push({ name: 'ManagerPackCreate' })") Create another pack
+        b-button(block, @click="$router.push({ name: 'ManagerPackDelivery' })") Reserve a pack
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import eventbus from "../eventbus";
-import { AxiosResponse, AxiosError } from "axios";
 import moment from "moment";
 import QrcodeVue from "qrcode.vue";
 import VueHtml2pdf from "vue-html2pdf";
@@ -120,11 +156,14 @@ import VueHtml2pdf from "vue-html2pdf";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import FoodView from "../components/FoodView.vue";
+import FamilyView from "../components/FamilyPicker.vue";
+import eventbus from "../eventbus";
 
-import { Family, PackPayload, SelectableFood, Pack } from "../types";
+import { Family, SelectableFood, Pack, Address } from "../types";
 
 import packApi from "../api/pack";
 import { PackCreateView } from "../viewTypes";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerPackCreate",
@@ -132,14 +171,16 @@ export default Vue.extend({
     Navbar,
     Sidebar,
     FoodView,
+    FamilyView,
     QrcodeVue,
     VueHtml2pdf,
   },
   data: (): PackCreateView => {
     return {
-      showScreen: "pack",
+      step: "selectFamily",
       foodList: new Array<SelectableFood>(),
-      family: {} as Family,
+      familyList: new Array<Family>(),
+      selectedFamily: null,
       form: {
         foodList: new Array<{ foodId: string; number: number }>(),
         familyId: "",
@@ -154,14 +195,17 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
-
-      if ("family" in this.$route.params) {
-        this.family = this.$route.params.family as unknown as Family;
-        this.form.familyId = this.family._id;
-      }
     } else this.$router.push({ name: "Login" });
   },
   methods: {
+    formatAddress(addr: Address): string {
+      return addr.street + " " + addr.civicNumber + ", " + addr.city;
+    },
+    selectFamily(family: Family): void {
+      this.selectedFamily = family;
+      this.step = "selectFoods";
+    },
+
     print() {
       this.isPrinted = true;
 
@@ -174,6 +218,9 @@ export default Vue.extend({
         }
       });
 
+      console.log(this.foodList);
+
+      this.form.familyId = this.selectedFamily._id;
       this.form.expirationDate = moment(
         new Date(
           Math.max.apply(
@@ -190,6 +237,7 @@ export default Vue.extend({
         .createPack(this.form)
         .then((r: AxiosResponse<Pack>): void => {
           if (r.status == 200) {
+            this.step = "loading";
             eventbus.$emit(
               "successMessage",
               "Food packs",
@@ -201,7 +249,7 @@ export default Vue.extend({
               .then((r2: AxiosResponse<Pack>): void => {
                 if (r2.status == 200) {
                   this.form = r2.data;
-                  this.showScreen = "printable_info";
+                  this.step = "printableInfo";
                 }
               })
               .catch((e2: AxiosError): void => {

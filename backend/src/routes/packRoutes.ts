@@ -4,8 +4,10 @@ import PackController from '../controllers/packController'
 const router: Router = express.Router()
 const packController = new PackController()
 
-// find one pack gives his id
 router.post('/find', packController.find)
+
+// find one pack gives his id
+router.post('/find-expanded', packController.findExpanded)
 
 // filter many packs
 router.post('/filter', packController.filter)

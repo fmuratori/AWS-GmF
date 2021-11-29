@@ -2,7 +2,6 @@ import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
 
 import chatApi from "../api/chat";
-import userApi from "../api/user";
 import { ChatMessage } from "../types";
 
 export default {
