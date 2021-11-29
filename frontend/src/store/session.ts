@@ -43,6 +43,9 @@ const sessionModule = {
     isVolunteer(state: UserState): boolean {
       return state.userData.type == "volunteer";
     },
+    isTrustedVolunteer(state: any) {
+      return state.userData.type == "trusted";
+    },
     getSessionHeader(): SessionHeader {
       return {
         "x-access-token": Vue.$cookies.get("jwt"),
@@ -52,12 +55,6 @@ const sessionModule = {
     userFullName(state: UserState): string {
       return state.userData.name + " " + state.userData.surname;
     },
-    // isVolunteer(state: any) {
-    //   return state.type != null;
-    // },
-    // isPrivilegedVolunteer(state: any) {
-    //   return state.type != null;
-    // },
   },
   mutations: {
     login(state: UserState, payload: UserState): void {

@@ -63,7 +63,7 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
           span.mr-1 Messages
           b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
 
-      b-nav-item.my-auto.navbar-link.text-center(
+      b-nav-item.my-auto.navbar-link.text-center(:key=""
         href="#",
         v-if="$store.getters.isUserLogged",
         @click="logout()"
@@ -105,9 +105,10 @@ export default Vue.extend({
 
       this.$socket.emit("logout", this.$store.state.session.userData._id);
       this.$store.dispatch("logout");
-      this.$router.go(0);
+      this.$router.push({ name : "Home" });
 
       this.$store.dispatch("hideSidebar");
+      this.$forceUpdate();
     },
     routeToDonations() {
       this.$router.push({ name: "ManagerDonationsList" });

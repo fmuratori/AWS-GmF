@@ -17,7 +17,7 @@
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(
         v-if="this.$store.state.session.userData.type != 'user'",
-        text="Create retrieve assignment",
+        text="Retrieve donations",
         route="ManagerDonationsRetrieve"
       )
       SidebarItem(
@@ -26,7 +26,7 @@
         route="ManagerDonationsCreate"
       )
 
-      SidebarItem(text="Donation list", route="ManagerDonationsList")
+      SidebarItem(text="Donations list", route="ManagerDonationsList")
 
     div
       hr.sidebar-hr.my-3

@@ -166,7 +166,7 @@ export default Vue.extend({
   },
   created() {
     // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
+    if (this.$store.getters.isUserLogged && this.$store.getters.isUser) {
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
@@ -179,7 +179,7 @@ export default Vue.extend({
         //ccreate an empty textbox
         this.submitLabel = "Edit";
       }
-    } else this.$router.push({ name: "Login" });
+    } else this.$router.push({ name: "Home" });
   },
   methods: {
     onAddressUpdate(address: Address) {

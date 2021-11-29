@@ -27,7 +27,7 @@ b-container
             p.m-0 To make things easier, filter your donations by status or sort them.
 
     b-col(lg=6, md=8, cols=11 order-md=2 order-lg=1)
-      b-row.mb-2(no-gutters)
+      b-row.mb-2(no-gutters v-if="$store.getters.isUser")
         b-col(cols="3")
           p Donation status:
         b-col
@@ -46,13 +46,7 @@ b-container
             @click="filterBy('selected')",
             :class="{ 'color1': filterByMode == 'selected' }"
           ) Selected
-          //- b-button.ml-2(
-          //-   pill,
-          //-   variant="secondary",
-          //-   size="sm",
-          //-   @click="filterBy('withdrawn')",
-          //-   :class="{ 'color1': filterByMode == 'withdrawn' }"
-          //- ) Withdrawn
+
           b-button.ml-2(
             pill,
             variant="secondary",
@@ -75,7 +69,7 @@ b-container
           ) 
             span Unread messages
 
-          b-button.ml-2.mb-2(
+          b-button.ml-2.mb-2(v-if="$store.getters.isUser"
             pill,
             variant="secondary",
             size="sm",
@@ -85,7 +79,7 @@ b-container
             span.mr-1 Creation date
             b-icon(icon="sort-down")
 
-          b-button.ml-2.mb-2(
+          b-button.ml-2.mb-2(v-if="$store.getters.isUser"
             pill,
             variant="secondary",
             size="sm",
@@ -115,7 +109,30 @@ b-container
             span Expiration date
             b-icon(icon="sort-down-alt")
 
-      p(v-if="donations.length == 0") No donations found. Change filters or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationsCreate' })") here] for insert a donation.
+          b-button.ml-2.mb-2(v-if="$store.getters.isVolunteer || $store.getters.isTrustedVolunteer"
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="sortBy('pickUpDateDescending')",
+            :class="{ 'color1': sortByMode == 'pickUpDateDescending' }"
+          ) 
+            span Pick up date
+            b-icon(icon="sort-down")
+
+          b-button.ml-2.mb-2(v-if="$store.getters.isVolunteer || $store.getters.isTrustedVolunteer"
+            pill,
+            variant="secondary",
+            size="sm",
+            @click="sortBy('pickUpDateAscending')",
+            :class="{ 'color1': sortByMode == 'pickUpDateAscending' }"
+          ) 
+            span Pick up date
+            b-icon(icon="sort-down-alt")
+
+      p(v-if="donations.length == 0") 
+        span No donations found. Be sure to select valid filters 
+        span(v-if="$store.getters.isUser") or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationsCreate' })") here] to insert a donation
+        span .
 
       b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(donation, idx) in donations", :key="idx")
         template(#header)
@@ -186,7 +203,7 @@ export default Vue.extend({
       donations: new Array<Donation>(),
       donationsBackup: new Array<Donation>(),
       sortByMode: "expirationDateAscending",
-      filterByMode: "selected",
+      filterByMode: "all",
     };
   },
   created() {
@@ -197,10 +214,13 @@ export default Vue.extend({
       }
 
       var filter = {};
-      if (this.$store.state.session.userData.type == "user")
+      if (this.$store.getters.isUser)
         filter = { userId: this.$store.state.session.userData._id };
+      if (this.$store.getters.isVolunteer || this.$store.getters.isTrustedVolunteer)
+        filter = { "pickUp.volunteerId": this.$store.state.session.userData._id };
 
       eventbus.$emit("startLoading", "Filtering all your active donations.");
+
       api
         .filterDonations(filter)
         .then((r: AxiosResponse): void => {
@@ -218,6 +238,9 @@ export default Vue.extend({
   methods: {
     creationDateComparer(a: Donation, b: Donation) {
       return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
+    },
+    pickUpDateComparer(a: Donation, b: Donation) {
+      return new Date(a.pickUp.date) < new Date(a.pickUp.date) ? -1 : 1;
     },
     unreadMessagesComparer(a: Donation, b: Donation) {
       return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id)
@@ -247,6 +270,14 @@ export default Vue.extend({
         case "expirationDateDescending":
           this.donations = this.donations
             .sort(this.expirationDateComparer)
+            .reverse();
+          break;
+        case "pickUpDateAscending":
+          this.donations = this.donations.sort(this.pickUpDateComparer);
+          break;
+        case "pickUpDateDescending":
+          this.donations = this.donations
+            .sort(this.pickUpDateComparer)
             .reverse();
           break;
         default:

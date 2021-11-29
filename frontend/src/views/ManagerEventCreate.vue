@@ -1,12 +1,13 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col(lg=8, md=10, sm=12)
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b CREATE AN EVENT
-      hr.sidebar-hr.my-3
-
+  b-row.justify-content-center.my-5
+    b-col(lg=6, md=8, sm=10)
+      div.mb-5
+        hr.shaded
+        h4.text-center
+          b CREATE AN EVENT
+        hr.shaded
+      
       b-form(@submit.stop.prevent="createEvent")
         .mb4
           InputText(
@@ -34,6 +35,8 @@ b-container
             v-on:data="(e) => { form.date = e; }"
           )
 
+        hr
+        
         .mb-4
           InputAddress(
             title="Location:",

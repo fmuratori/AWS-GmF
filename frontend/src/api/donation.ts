@@ -59,7 +59,7 @@ export default {
           status: "waiting",
         },
         {
-          expirationDate: { $gte: moment().format("YYYY-MM-DD") },
+          expirationDate: { $gte: moment().toDate() },
         },
       ],
     } as FindPayload;
@@ -73,7 +73,7 @@ export default {
       const dayName = moment(pickUpDate).format("dddd").substring(0, 3);
       pickUpFilter["weekDay"] = dayName;
       filter["$and"].push({
-        expirationDate: { $gte: moment(pickUpDate).format("YYYY-MM-DD") },
+        expirationDate: { $gte: moment(pickUpDate).toDate() },
       });
     }
 
@@ -84,6 +84,8 @@ export default {
         $elemMatch: pickUpFilter,
       },
     });
+
+    console.log(JSON.stringify(filter))
     return this.filterDonations(filter);
   },
 

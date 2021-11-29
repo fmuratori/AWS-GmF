@@ -100,8 +100,9 @@ b-container
             :class="{ 'my-button-selected': reporterFilter == 'all' }"
           ) All
 
-      p(v-if="familyList.length == 0") Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
-
+      p(v-if="familyList.length == 0") 
+        span We found no reports. Be sure to select your filters and status selectors correctly. Click #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") here] to add a new family.
+        
       b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(family, idx) in familyList" :key="idx")
         template(#header)
           h5.mb-0
