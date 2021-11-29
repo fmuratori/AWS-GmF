@@ -105,9 +105,10 @@ export default Vue.extend({
 
       this.$socket.emit("logout", this.$store.state.session.userData._id);
       this.$store.dispatch("logout");
-      this.$router.push({ name : "Home" });
+      this.$router.go(0);
 
       this.$store.dispatch("hideSidebar");
+
       this.$forceUpdate();
     },
     routeToDonations() {

@@ -11,6 +11,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosResponse } from "axios";
+import api from "./api/user";
+import { UserData } from "./types";
 
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
@@ -28,6 +31,18 @@ export default Vue.extend({
   created() {
     this.$store.dispatch("updateScreenWidth", window.innerWidth);
     window.addEventListener("resize", this.resizeEventHandler);
+
+    //
+    if (this.$cookies.get("jwt")) {
+      api.loadData().then((r: AxiosResponse) => {
+        this.$store.dispatch("showSidebar");
+        this.$store.dispatch("login", {
+          token: this.$cookies.get("jwt"),
+          userData: r.data as UserData,
+        });
+      });
+      return true;
+    }
   },
   destroyed() {
     window.removeEventListener("resize", this.resizeEventHandler);
