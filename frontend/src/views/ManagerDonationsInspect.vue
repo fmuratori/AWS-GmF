@@ -1,12 +1,13 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-center
-    b-col(lg=10, md=8, cols=10)
+  b-row.justify-content-center.my-5
+    b-col(lg=6, md=8, cols=11)
       hr.shaded
       h4.text-center
         b YOUR DONATION
       hr.shaded
-
+  
+  b-row.justify-content-center
     b-col(lg=4, md=8, cols=10)
       b-card(bg-variant="light", no-body)
         b-card-text.m-2
@@ -16,7 +17,7 @@ b-container
               :key="idx",
               :username="message.userFullname",
               :isOwner="message.userId == $store.state.session.userData._id",
-              :date="formatDatetime(message.date)",
+              :date="dates.formatDatetime(message.date)",
               :isVisualized="message.visualized",
               :isEvent="message.isEventMessage"
               :messages="message.messages",
@@ -42,33 +43,42 @@ b-container
             b-col(md=3)
               label Status:
             b-col
-              // TODO change badge color 
-              b-badge {{ donation.status }}
+              h5
+                b-badge(
+                  v-if="donation.status == 'waiting'",
+                  variant="warning"
+                ) {{donation.status}}
+                b-badge(
+                  v-if="donation.status == 'selected'",
+                  variant="success"
+                ) {{donation.status}}
+                b-badge(
+                  v-if="donation.status == 'withdrawn'",
+                  variant="secondary"
+                ) {{donation.status}}
 
           
           b-row.mb-3(v-if="donation.status == 'selected'")
             b-col(md=3)
               label Pick up date: 
             b-col
-              label.font-weight-bold {{ formatDate(donation.pickUp.date) }} - {{ donation.pickUp.period }}
+              label.font-weight-bold {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
 
           b-row.mb-3
             b-col(md=3)
               label Creation date:
             b-col
-              label.font-weight-bold {{ dates.formatDatetime(donation.creationDate) }}
+              label.font-weight-bold {{ dates.formatDate(donation.creationDate) }}
 
           b-row.mb-3
             b-col(md=3)
               label Expiration date:
             b-col
-              label.font-weight-bold {{ dates.formatDatetime(donation.expirationDate) }}
-
-          b-row.mb-3
-            b-col(md=3)
-              label Expires in:
-            b-col
-              label.font-weight-bold {{ dates.daysTillDate(donation.expirationDate) }} days
+              label 
+                span.font-weight-bold {{ dates.formatDatetime(donation.expirationDate) }}
+                span &nbsp;(expires in&nbsp;
+                span.font-weight-bold {{ dates.daysTillDate(donation.expirationDate) }} days
+                span )
 
           b-row.mb-3
             b-col(md=3)
@@ -82,11 +92,11 @@ b-container
             b-col
               label.font-weight-bold {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
 
-          b-row.mb-3(v-if="donation.additionalInformation != null")
+          b-row.mb-3(v-if="donation.additionalInformations != null")
             b-col(md=3)
               label Additiona info:
             b-col
-              label.font-weight-bold {{ donation.additionalInformation }}
+              label.font-weight-bold {{ donation.additionalInformations }}
 
           b-row.mb-3
             b-col(md=3)
@@ -173,7 +183,7 @@ export default Vue.extend({
             y: 0,
           },
         } as Address,
-        additionalInformation: "",
+        additionalInformations: "",
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
         creationDate: "",
         pickUp: {
@@ -230,14 +240,6 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    formatDatetime(date) {
-      return moment(new Date(date)).calendar();
-    },
-
-    formatDate(date) {
-      return moment(date).format("DD-MM-YYYY");
-    },
-
     weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {
       return this.donation.pickUpPeriod.filter(
         (p: { weekDay: string; period: string }) => p.weekDay == weekDay

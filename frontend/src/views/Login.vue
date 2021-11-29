@@ -9,12 +9,12 @@ b-row.justify-content-center(no-gutters)
           h2 Bring me Food
 
       b-button-group(block)
-        b-button.login-select-button(
+        b-button.login-section-button(
           variant="light",
           @click="isLoginSelected = true",
           :class="{ 'login-selected-button': isLoginSelected }"
         ) Sign in
-        b-button.login-select-button(
+        b-button.login-section-button(
           variant="light",
           @click="isLoginSelected = false",
           :class="{ 'login-selected-button': !isLoginSelected }"
@@ -258,12 +258,16 @@ export default Vue.extend({
   border-top-right-radius: 4px;
 }
 
+.login-section-button {
+  border-radius: 0px;
+}
+
 .login-select-button:focus {
   outline: none;
   box-shadow: none;
 }
 
 .login-selected-button {
-  border-bottom: 1px solid $greyscaleD;
+  border-bottom: 2px solid $greyscaleD;
 }
 </style>

@@ -48,8 +48,8 @@ b-container
         InputTextarea(
           title="Additional information:",
           placeholder="Insert additional information here",
-          :text="form.additionalInformation",
-          v-on:data="(e) => { form.additionalInformation = e; }"
+          :text="form.additionalInformations",
+          v-on:data="(e) => { form.additionalInformations = e; }"
         )
         hr
 
@@ -157,7 +157,7 @@ export default Vue.extend({
             y: 0,
           },
         } as Address,
-        additionalInformation: "",
+        additionalInformations: "",
         pickUpPeriod: new Array<{ weekDay: string; period: string }>(),
       } as Donation,
       submitLabel: "Create",

@@ -1,14 +1,32 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, sm=10)
-      div.mb-5
-        hr.shaded
-        h4.text-center
-          b(v-if="this.$store.state.session.userData.type == 'user'") YOUR FAMILY REPORTS
-          b(v-else) FAMILY REPORTS
-        hr.shaded
+    b-col(lg=6, md=8, cols=11)
+      hr.shaded
+      h4.text-center
+        b(v-if="this.$store.state.session.userData.type == 'user'") YOUR FAMILY REPORTS
+        b(v-else) FAMILY REPORTS
+      hr.shaded
 
+  b-row.justify-content-center
+    b-col(lg=4, md=8, cols=11 order-md=1 order-lg=2)
+      b-alert(show)
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 Here are listed all your submissions for needing families. Our trusted volunteers will validate your requests and add those families to our food packs distribution system. 
+      
+      b-alert(show).mb-5
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 To make things easier, filter your submissions by status or sort them.
+
+    b-col(lg=6, md=8, cols=11 order-md=2 order-lg=1)
       b-row.mb-2(no-gutters)
         b-col(cols="3")
           p Report status:
@@ -47,7 +65,7 @@ b-container
             @click="sortBy('creationDateDescending')",
             :class="{ 'color1': sortByMode == 'creationDateDescending' }"
           ) 
-            span.mr-1 Creation date
+            span.mr-1 Submission date
             b-icon(icon="sort-down" )
 
           b-button.ml-2.mb-2(
@@ -57,7 +75,7 @@ b-container
             @click="sortBy('creationDateAscending')",
             :class="{ 'color1': sortByMode == 'creationDateAscending' }"
           ) 
-            span.mr-1 Creation date
+            span.mr-1 Submission date
             b-icon(icon="sort-down-alt" )
 
       b-row.mb-2(
@@ -84,9 +102,9 @@ b-container
 
       p(v-if="familyList.length == 0") Non hai mai effettuato segnalazioni. Premi #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") qui] per segnalare una famiglia bisognosa.
 
-      b-card.mb-2(bg-variant="light", text-variant="dark", no-body v-for="(family, idx) in familyList" :key="idx")
+      b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(family, idx) in familyList" :key="idx")
         template(#header)
-          h5
+          h5.mb-0
             b {{ family.name }}
             span.float-right
               b-badge(v-if="family.status == 'pending'", variant="warning") {{ family.status }}
@@ -95,21 +113,19 @@ b-container
                 variant="success"
               ) {{ family.status }}
         b-card-text
-          .px-4.pt-4.pb-4
-            b-row
-              b-col(cols="auto")
-                div
-                  span.mb-0 Phone number:
-                  span.font-weight-bold.mb-2 {{ family.phoneNumber }}
-
-                div
-                  span.mb-0 Components:
-                  span.font-weight-bold.mb-2 {{ family.components }}
-
-                div
-                  span.mb-0 Address:
-                  span.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
-              b-col(cols="auto")
+          .px-4.py-3
+            div
+              span.mb-0 Phone number:&nbsp;
+              span.font-weight-bold.mb-2 {{ family.phoneNumber }}
+            div
+              span.mb-0 Address:&nbsp;
+              span.font-weight-bold {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
+            div
+                span.mb-0 Submission date:&nbsp;
+                span.font-weight-bold {{ dates.formatDate(family.creationDate) }}
+            div
+              span.mb-0 Family size:&nbsp;
+              span.font-weight-bold.mb-2 {{ family.components }}
 
           b-button-group.d-flex(v-if="family.status == 'pending'")
             b-button.footerCardButton.color3(
@@ -164,9 +180,9 @@ export default Vue.extend({
   data: () => {
     return {
       userRole: "",
-      statusFilter: "all",
+      statusFilter: "pending",
       reporterFilter: "me",
-      sortByMode: "creationDateDescending",
+      sortByMode: "creationDateAscending",
       familyList: new Array<Family>(),
       deleteFamilyId: "",
     };
@@ -179,8 +195,6 @@ export default Vue.extend({
       }
 
       this.userRole = this.$store.state.session.userData.type;
-
-      this.sortBy(this.sortByMode);
       eventbus.$emit("startLoading", "Filtering all your active requests.");
       api
         .familyList({
@@ -188,6 +202,8 @@ export default Vue.extend({
         })
         .then((r: AxiosResponse): void => {
           this.familyList = r.data as Family[];
+          this.filterBy("pending", this.reporterFilter);
+          this.sortBy(this.sortByMode);
         })
         .catch((): void => {
           eventbus.$emit(
@@ -250,16 +266,8 @@ export default Vue.extend({
       statusFilter: "verified" | "pending" | "all",
       reporterFilter: "me" | "all"
     ): void {
-      if (
-        this.statusFilter == statusFilter &&
-        this.reporterFilter == reporterFilter
-      )
-        return;
-      else if (this.statusFilter != statusFilter)
-        this.statusFilter = statusFilter;
-      else if (this.reporterFilter != reporterFilter)
-        this.reporterFilter = reporterFilter;
-      else return;
+      this.statusFilter = statusFilter;
+      this.reporterFilter = reporterFilter;
 
       var payload = { filter: {} };
 

@@ -29,7 +29,6 @@ export default Vue.extend({
   },
   created() {
     eventbus.$on("startLoading", (message: string) => {
-      console.log(message);
       this.isActive = true;
       this.message = message;
     });

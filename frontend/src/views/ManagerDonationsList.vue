@@ -2,14 +2,31 @@
 b-container
   b-row.justify-content-center.my-5
     b-col(lg=6, md=8, cols=11)
-    
-      div.mb-5
-        hr.shaded
-        h4.text-center
-          b(v-if="this.$store.state.session.userData.type == 'user'") YOUR DONATIONS
-          b(v-else) DONATIONS
-        hr.shaded
+      hr.shaded
+      h4.text-center
+        b(v-if="this.$store.state.session.userData.type == 'user'") YOUR DONATIONS
+        b(v-else) DONATIONS
+      hr.shaded
 
+  b-row.justify-content-center
+    b-col(lg=4, md=8, cols=11 order-md=1 order-lg=2)
+      b-alert(show)
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 Here are listed all your active donations. You can inspect, modify, delete them in any moment or directly chat with a volunteer. 
+      
+      b-alert(show).mb-5
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 To make things easier, filter your donations by status or sort them.
+
+    b-col(lg=6, md=8, cols=11 order-md=2 order-lg=1)
       b-row.mb-2(no-gutters)
         b-col(cols="3")
           p Donation status:
@@ -96,14 +113,29 @@ b-container
             :class="{ 'color1': sortByMode == 'expirationDateAscending' }"
           ) 
             span Expiration date
-            b-icon(icon="sort-down")
+            b-icon(icon="sort-down-alt")
 
       p(v-if="donations.length == 0") No donations found. Change filters or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationsCreate' })") here] for insert a donation.
 
       b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(donation, idx) in donations", :key="idx")
         template(#header)
-          h5.mb-0 
-            b Donated in {{ formatDonation(donation) }}
+          h5.mb-0
+            b Donated in {{ dates.formatDate(donation.creationDate) }}
+            span.float-right
+                b-badge(
+                  v-if="donation.status == 'waiting'",
+                  variant="warning"
+                ) {{donation.status}}
+                b-badge(
+                  v-if="donation.status == 'selected'",
+                  variant="success"
+                ) {{donation.status}}
+                b-badge(
+                  v-if="donation.status == 'withdrawn'",
+                  variant="secondary"
+                ) {{donation.status}}
+          //- h5.mb-0 
+          //-   b Donated in {{ dates.formatDate(donation) }}
 
         b-card-text
           .px-4.pt-3
@@ -122,21 +154,6 @@ b-container
                   p.mb-0 Location:
                   p.font-weight-bold {{ donation.address.street + ' ' + donation.address.civicNumber + ', ' + donation.address.city }}
               b-col(cols="auto")
-                .mb-2
-                  p.mb-0 Status:
-                  h5
-                    b-badge(
-                      v-if="donation.status == 'waiting'",
-                      variant="warning"
-                    ) {{donation.status}}
-                    b-badge(
-                      v-if="donation.status == 'selected'",
-                      variant="success"
-                    ) {{donation.status}}
-                    b-badge(
-                      v-if="donation.status == 'withdrawn'",
-                      variant="secondary"
-                    ) {{donation.status}}
                 .mb-2(v-if="hasUnreadMessages(donation._id)")
                   a(href="#") {{ unreadMessagesCount(donation._id) }} unread messages
           b-button.footerCardButton.color3(
@@ -168,8 +185,8 @@ export default Vue.extend({
     return {
       donations: new Array<Donation>(),
       donationsBackup: new Array<Donation>(),
-      sortByMode: "unreadMessages",
-      filterByMode: "all",
+      sortByMode: "expirationDateAscending",
+      filterByMode: "selected",
     };
   },
   created() {
@@ -254,9 +271,6 @@ export default Vue.extend({
       return moment(donation.expirationDate)
         .locale("en")
         .diff(moment.now(), "days");
-    },
-    formatDonation(donation: Donation) {
-      return moment(donation.creationDate).format("LL");
     },
     inspectDonation(donation: Donation) {
       this.$router.push({

@@ -52,22 +52,13 @@ export interface changePasswordPayload {
   newPassword: string;
 }
 
-export interface DonationCreationPayload {
-  userId: string;
-  foods: Array<string>;
-  expirationDate: string;
-  address: Address;
-  additionalInformation: string;
-  pickUpPeriod: Array<{ weekDay: string; period: string }>;
-}
-
 export interface Donation {
   _id: string;
   userId: string;
   foods: [string];
   expirationDate: string;
   address: Address;
-  additionalInformation: string;
+  additionalInformations: string;
   pickUpPeriod: Array<{ weekDay: string; period: string }>;
   chat: ChatMessage[];
   creationDate: string;

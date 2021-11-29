@@ -58,7 +58,7 @@
                   p
                     span.mb-2.font-weight-bold Additional info:
                     br
-                    span.mb-0 {{ donation.additionalInformation ? donation.additionalInformation : "#" }}
+                    span.mb-0 {{ donation.additionalInformations ? donation.additionalInformations : "#" }}
               tr
                 td(v-for="(donation, idx) in windowDonations" :key:="idx")
                   p

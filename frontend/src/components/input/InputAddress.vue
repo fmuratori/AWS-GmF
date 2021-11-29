@@ -28,7 +28,7 @@ div
 
   b-row(align-h="center")
     b-col(cols=10 md=8 lg=8)
-      b-button(block variant="outline-danger", size="sm" @click="resetMap" v-if="isLocationLoaded")
+      b-button.color3(block, size="sm" @click="resetMap" v-if="isLocationLoaded")
         span.mr-2 Reset location
 
       div.mapContainer(v-if="!isLocationLoaded").text-center.mb-4
