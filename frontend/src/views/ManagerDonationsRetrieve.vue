@@ -291,6 +291,7 @@ export default Vue.extend({
   created() {
     // check if user is logged in
     if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
+
   },
   methods: {
     selectCity(addressData, placeResultData, id) {
@@ -332,10 +333,6 @@ export default Vue.extend({
     },
     selectDonation(donation: Donation) {
       this.selectedDonations.push(donation);
-      // this.donations.splice(
-      //   this.donations.findIndex((e: Donation) => e._id == donation._id),
-      //   1
-      // );
     },
     deselectDonation(donation: Donation) {
       this.selectedDonations.splice(
@@ -344,7 +341,6 @@ export default Vue.extend({
         ),
         1
       );
-      // this.donations.push(donation);
     },
     filterDonations() {
       this.selectedDonations = [];

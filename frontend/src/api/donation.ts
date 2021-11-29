@@ -33,7 +33,7 @@ export default {
   async filterDonations(filter: FindPayload): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/find`,
-      { filter: filter },
+      filter,
       { headers: store.getters.getSessionHeader }
     );
   },
@@ -59,7 +59,7 @@ export default {
           status: "waiting",
         },
         {
-          expirationDate: { $gte: moment().toDate() },
+          expirationDate: { $gte: moment().format("YYYY-MM-DD") },
         },
       ],
     } as FindPayload;
@@ -70,10 +70,10 @@ export default {
 
     const pickUpFilter = {};
     if (pickUpDate) {
-      const dayName = moment(pickUpDate).format("dddd").substring(0, 3);
+      const dayName = moment(pickUpDate).locale("it").format("dddd").substring(0, 3);
       pickUpFilter["weekDay"] = dayName;
       filter["$and"].push({
-        expirationDate: { $gte: moment(pickUpDate).toDate() },
+        expirationDate: { $gte: moment(pickUpDate).format("YYYY-MM-DD") },
       });
     }
 
@@ -85,7 +85,6 @@ export default {
       },
     });
 
-    console.log(JSON.stringify(filter))
     return this.filterDonations(filter);
   },
 

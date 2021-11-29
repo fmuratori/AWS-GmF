@@ -84,7 +84,7 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
 <script lang="ts">
 import Vue from "vue";
 import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
-
+import eventbus from "../eventbus";
 export default Vue.extend({
   name: "Navbar",
   components: {
@@ -100,6 +100,8 @@ export default Vue.extend({
       this.$store.dispatch("toggleSidebar");
     },
     logout() {
+      eventbus.$emit("startLoading");
+
       this.$cookies.remove("jwt");
       this.$cookies.remove("user-id");
 

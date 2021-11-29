@@ -152,6 +152,42 @@ content-type: application/json
     }
 }
 
+### DONATION filter
+POST http://localhost:3000/api/donation/find
+accept: application/json 
+content-type: application/json
+
+{
+    "filter": {
+        "$and":[
+            {
+                "status":"waiting"
+            },
+            {
+                "expirationDate":{
+                    "$gte":"2021-11-29"
+                }
+            },
+            {
+                "address.city":"Cesena"
+            },
+            {
+                "expirationDate":{
+                    "$gte":"2021-12-30"
+                }
+            },
+            {
+                "pickUpPeriod":{
+                    "$elemMatch":{
+                    "weekDay":"gio",
+                    "period":"morning"
+                    }
+                }
+            }
+        ]
+    }
+}
+
 # {
 #     "filter": {
 #         "userId": "61854d752b246626dc5ff76e",
