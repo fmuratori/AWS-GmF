@@ -27,10 +27,6 @@ const eventSchema = new mongoose.Schema({
         },
         required: [true, "missing required field address"]
     },
-    image: {
-        type: Buffer,
-        required: false
-    }, // la stringa in base64 potrebbe essere troppo lunga
     date: {
         type: Date,
         required: [true, "missing required field date"],
