@@ -16,12 +16,12 @@
       hr.sidebar-hr.my-3
       SidebarCategory(text="Donations", icon="map")
       SidebarItem(
-        v-if="this.$store.state.session.userData.type != 'user'",
+        v-if="!$store.getters.isUser",
         text="Retrieve donations",
         route="ManagerDonationRetrieve"
       )
       SidebarItem(
-        v-if="this.$store.state.session.userData.type == 'user'",
+        v-if="$store.getters.isUser",
         text="Make a donation",
         route="ManagerDonationCreate"
       )
@@ -33,15 +33,17 @@
       SidebarCategory(text="Families", icon="users")
       SidebarItem(text="Report a family", route="ManagerFamilySubscribe")
       SidebarItem(text="Your reports", route="ManagerFamilyList")
-      SidebarItem(text="Check reports", route="ManagerFamilyCheck")
 
-    div(v-if="this.$store.state.session.userData.type != 'user'")
+      SidebarItem(text="Check reports", route="ManagerFamilyCheck" 
+      v-if="$store.getters.isTrustedVolunteer")
+
+    div(v-if="!$store.getters.isUser")
       hr.sidebar-hr.my-3
       SidebarCategory(text="Events", icon="calendar")
       SidebarItem(text="Create an event", route="ManagerEventCreate")
       SidebarItem(text="Your events", route="ManagerEventList")
 
-    div(v-if="this.$store.state.session.userData.type != 'user'")
+    div(v-if="!$store.getters.isUser")
       hr.sidebar-hr.my-3
       SidebarCategory(text="Packs", icon="box")
       SidebarItem(text="Food manager", route="ManagerFood")
@@ -50,7 +52,6 @@
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
       SidebarItem(text="Scan a pack", route="ManagerPackScan")
 
-  
   b-dropdown(text="Your profile" variant="light" dropup menu-class="w-100")
     b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'password')") Change password
     b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'address')") Change address

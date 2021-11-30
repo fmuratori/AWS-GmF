@@ -1,188 +1,116 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b CREATE A PACK
-      hr.sidebar-hr.my-3
-
-      div(v-if="step == 'selectFamily'")
-        b-row
-          b-col
-            FamilyView(v-on:select="(family) => selectFamily(family)")
-
-      div(v-if="step == 'selectFoods'")
-        b-row
-          b-col
-            h4 About the family
-            div
-              b Name:
-              span {{ selectedFamily.name }}
-            div 
-          div 
-            div 
-              b Components:
-              span {{ selectedFamily.components }}
-            div
-              b Phone number:
-              span {{ selectedFamily.phoneNumber }}
-            div
-              b Address:
-              span {{ formatAddress(selectedFamily.address) }}
-
-        hr.sidebar-hr.my-3
-
-        b-form(@submit.stop.prevent="createPack")
-          FoodView(
-            selectableItems,
-            v-on:data="(e) => { this.foodList = e; }"
-          )
-
-          b-row
-            b-col
-              b-button(
-                block,
-                variant="outline-danger",
-                @click="$router.push({ name: 'ManagerFamilyList' })"
-              ) Cancel
-            b-col
-              b-button(block, variant="success", type="submit") Create
-
-      div(v-if="step == 'loading'")
-        b-row
-          b-col
-            h3 Loading data
-            p We are loading all the printable data...
-
-    div(v-if="step == 'printableInfo'")
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b PACK INFO
-      hr.sidebar-hr.my-3
-
+  b-row.justify-content-center.my-5
+    b-col(lg=6, md=8, sm=10)
       div
-        h3 Pack # {{ form._id }}
-        b-row
-          b-col(cols="auto")
-            QrcodeVue(
-              value="{a: 'ASD', b: [{c:'asd'}]}",
-              size="300",
-              level="H"
-            )
-          b-col
-            p {{ form }}
+        hr.shaded
+        h4.text-center
+          b FAMILIES
+        hr.shaded
 
-      b-card
-        vue-html2pdf(
-          :show-layout="true",
-          :float-layout="false",
-          :enable-download="false",
-          :preview-modal="true",
-          :paginate-elements-by-height="1400",
-          :filename="'donation_' + form._id",
-          :pdf-quality="2",
-          :manual-pagination="false",
-          pdf-format="a4",
-          pdf-orientation="landscape",
-          pdf-content-width="800px",
-          ref="printableData"
-        )
-          section(slot="pdf-content")
-            div
-              h4.mb-0 Foods
-              .mb-2(v-for="(food, idx) in form.foodList", :key="idx")
-                p.mb-0 Name: {{ food.name }}
-                p.mb-0 Quantity: {{ food.number }}
-                p.mb-0 Expiration date: {{ food.expirationDate }}
-
-        div
-          b-button(v-if="!isPrinted", block, @click="print()") Print pack info
-          b-button(
-            v-if="isPrinted",
-            block,
-            variant="success",
-            @click="print()"
-          ) 
+  b-row.mb-0
+    b-col(lg=6, md=8, sm=10)
+      b-form-group(label="" label-for="filter-input" label-size="sm")
+        b-input-group(size="sm")
+          b-form-input#filter-input(v-model="filterQuery" type="text" placeholder="Type to Search")
+          b-input-group-append
+            b-button.color3(:disabled="!filterQuery" @click="filterQuery = ''") Clear
+      
+  b-row.justify-content-center
+    b-col(lg=12, md=12, sm=10)
+      b-table(striped hover 
+      :items="familyList" 
+      :fields="tableFields"
+      :current-page="currentPage"
+      :filter="filterQuery"
+      :filter-included-fields="filterOn" 
+      :per-page="perPage")
+        template(#cell(creationDate)="data")
+          span {{ dates.formatDate(data.item.creationDate)  }}
+        template(#cell(address)="data")
+          span {{ data.item.address.street + " - " + data.item.address.civicNumber + ", " + data.item.address.city  }}
+        template(#cell(status)="data")
+          h5(v-if="data.item.status=='verified'")
+            b-badge(variant="success") Verified 
+          h5(v-if="data.item.status=='pending'")
+            b-badge(variant="warning") Pending check 
+          //- h5(v-if="data.item.status=='deleted'")
+          //-   b-badge(variant="deleted") Deleted 
+        template(#cell(actions)="data")
+          b-button.color3(block size="sm" @click="verifyFamily(data.item._id)" v-if="data.item.status == 'pending'")
+            span Add
             b-icon(icon="check")
-            span Pack info printed
-          b-button(block, @click="$router.push({ name: 'ManagerFamilyList' })") Create another pack
-          b-button(
-            block,
-            @click="$router.push({ name: 'ManagerPackDelivery' })"
-          ) Reserve a pack
+          b-button.color3(v-b-modal.modal, block size="sm" @click="deletedFamilyId = data.item._id")
+            span Delete
+            b-icon(icon="trash")
+          //- b-button.color3(v-if="data.item.status == 'deleted'")
 
-      vue-html2pdf(
-        :show-layout="false",
-        :float-layout="true",
-        :enable-download="true",
-        :preview-modal="false",
-        :paginate-elements-by-height="1400",
-        :filename="'donation_' + form._id",
-        :pdf-quality="2",
-        :manual-pagination="false",
-        pdf-format="a5",
-        pdf-orientation="landscape",
-        pdf-content-width="800px",
-        ref="printableData"
-      )
-        section(slot="pdf-content")
-          .p-3
-            h3 Pack # {{ form._id }}
-            b-row
-              b-col(cols="auto")
-                QrcodeVue(
-                  value="{a: 'ASD', b: [{c:'asd'}]}",
-                  size="300",
-                  level="H"
-                )
-              b-col
-                p {{ form }}
+  b-row(align-h="end")
+    b-col(lg=3 md=6 cols=12)
+      b-pagination(
+        v-model="currentPage"
+        :total-rows="totalRows"
+        :per-page="perPage"
+        align="fill"
+        size="sm")
 
-        b-button(v-if="!isPrinted", block, @click="print()") Print pack info
-        b-button(v-if="isPrinted", block, variant="success", @click="print()") 
-          b-icon(icon="check")
-          span Pack info printed
-        b-button(block, @click="$router.push({ name: 'ManagerPackCreate' })") Create another pack
-        b-button(block, @click="$router.push({ name: 'ManagerPackDelivery' })") Reserve a pack
+  b-modal#modal(title="Delete the selected family?", @ok="deleteFamily()")
+    div This family will be deleted permanently.
+    
+    template(#modal-footer="{ ok, cancel }")
+      b-button(variant='secondary' @click='cancel()') Cancel
+      b-button.color3(@click='ok()') Confirm
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import moment from "moment";
-import QrcodeVue from "qrcode.vue";
-import VueHtml2pdf from "vue-html2pdf";
 
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
-import FoodView from "../components/FoodView.vue";
-import FamilyView from "../components/FamilyPicker.vue";
+import InputDate from "../components/input/InputDate.vue";
 import eventbus from "../eventbus";
 
-import { Family, SelectableFood, Pack, Address } from "../types";
+import { Family, Address } from "../types";
 
-import packApi from "../api/pack";
-import { PackCreateView } from "../viewTypes";
-import { AxiosResponse, AxiosError } from "axios";
+import familyApi from "../api/family";
+
+import { AxiosResponse, AxiosError, Axios } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamilyCheck",
   components: {
     Navbar,
     Sidebar,
+    InputDate,
   },
-  data: (): PackCreateView => {
+  data: () => {
     return {
-      step: "selectFamily",
-      foodList: new Array<SelectableFood>(),
       familyList: new Array<Family>(),
+      tableFields: [
+        { key: "name", sortable: true, label: "Family name" },
+        { key: "components", sortable: true, label: "Family size" },
+        { key: "phoneNumber", label: "Phone number" },
+        { key: "address", sortable: true, label: "Address" },
+        { key: "creationDate", sortable: true, label: "Submission date" },
+        { key: "status", sortable: true, label: "Status" },
+        { key: "actions", label: "" },
+      ],
+      filterOn: [
+        "name",
+        "phoneNumber",
+        "components",
+        "address",
+        "creationDate",
+        "status",
+      ],
+      filterQuery: "",
+      filterDate: null,
       selectedFamily: null,
-      form: {
-        foodList: new Array<{ foodId: string; number: number }>(),
-        familyId: "",
-        expirationDate: null,
-      } as Pack,
-      isPrinted: false,
+      currentPage: 1,
+      perPage: 10,
+      totalRows: 1,
+      deletedFamilyId: 0,
     };
   },
   created() {
@@ -191,81 +119,100 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
+
+      this.loadFamiliesData();
     } else this.$router.push({ name: "Login" });
   },
   methods: {
-    formatAddress(addr: Address): string {
-      return addr.street + " " + addr.civicNumber + ", " + addr.city;
-    },
     selectFamily(family: Family): void {
       this.selectedFamily = family;
-      this.step = "selectFoods";
     },
-
-    print() {
-      this.isPrinted = true;
-
-      this.$refs.printableData.generatePdf();
-    },
-    createPack(): void {
-      this.foodList.forEach((elem) => {
-        if (elem.selected) {
-          this.form.foodList.push({ foodId: elem._id, number: elem.selected });
-        }
-      });
-
-      console.log(this.foodList);
-
-      this.form.familyId = this.selectedFamily._id;
-      this.form.expirationDate = moment(
-        new Date(
-          Math.max.apply(
-            null,
-            this.foodList
-              .filter((f) => f.selected)
-              .map((f) => new Date(f.expirationDate))
-          )
-        )
-      ).format("YYYY-MM-DD");
-
-      this.showScreen = "loading";
-      packApi
-        .createPack(this.form)
-        .then((r: AxiosResponse<Pack>): void => {
+    loadFamiliesData() {
+      eventbus.$emit("startLoading", "Loading registered families");
+      familyApi
+        .familyList({})
+        .then((r: AxiosResponse) => {
           if (r.status == 200) {
-            this.step = "loading";
+            this.familyList = r.data as Family[];
+            this.totalRows = this.familyList.length;
+          } else {
             eventbus.$emit(
-              "successMessage",
-              "Food packs",
-              "Pack successfully created."
+              "errorMessage",
+              "Family check",
+              "Unable to load families list. Retry later or contact us if the problem persists."
             );
-
-            packApi
-              .getPackInfo(r.data._id)
-              .then((r2: AxiosResponse<Pack>): void => {
-                if (r2.status == 200) {
-                  this.form = r2.data;
-                  this.step = "printableInfo";
-                }
-              })
-              .catch((e2: AxiosError): void => {
-                console.log(e2);
-                eventbus.$emit(
-                  "errorMessage",
-                  "Food packs",
-                  "Unable to find the specified pack. Retry later or contact us if the problem persists."
-                );
-              });
           }
         })
-        .catch((e: AxiosError): void => {
+        .catch((e: AxiosError) => {
+          eventbus.$emit(
+            "errorMessage",
+            "Family check",
+            "Unable to load families list. Retry later or contact us if the problem persists."
+          );
+        })
+        .then(() => {
+          eventbus.$emit("stopLoading");
+        });
+    },
+    verifyFamily(id: string) {
+      eventbus.$emit("startLoading", "Verifying the selected family status.");
+      familyApi
+        .verifyFamily({ id: id })
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            eventbus.$emit(
+              "successMessage",
+              "Family",
+              "Family status setted succesfully."
+            );
+            this.loadFamiliesData();
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "Family",
+              "Family status setting failed. Retry later or contact us if the problem persists."
+            );
+          }
+        })
+        .catch((e: AxiosError) => {
           console.log(e);
           eventbus.$emit(
             "errorMessage",
-            "Food packs",
-            "Unable to create a food pack. Retry later or contact us if the problem persists."
+            "Family",
+            "Family status setting failed. Retry later or contact us if the problem persists."
           );
-        });
+        })
+        .then(() => eventbus.$emit("stopLoading"));
+    },
+    deleteFamily() {
+      eventbus.$emit("startLoading", "Deleting the selected family.");
+      familyApi
+        .deleteFamily({ id: this.deletedFamilyId })
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            eventbus.$emit(
+              "successMessage",
+              "Family",
+              "Family deleted succesfully."
+            );
+            this.loadFamiliesData();
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "Family",
+              "Family deletion failed. Retry later or contact us if the problem persists."
+            );
+          }
+        })
+        .catch((e: AxiosError) => {
+          console.log(e);
+          eventbus.$emit(
+            "errorMessage",
+            "Family",
+            "Family deletion failed. Retry later or contact us if the problem persists."
+          );
+        })
+        .then(() => eventbus.$emit("stopLoading"));
     },
   },
 });

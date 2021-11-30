@@ -136,7 +136,7 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
-      
+
       eventbus.$emit("startLoading", "Loading your events.");
       api
         .eventList({

@@ -74,6 +74,14 @@ const routes: Array<RouteConfig> = [
       ),
   },
   {
+    path: "/manager/families/check",
+    name: "ManagerFamilyCheck",
+    component: () =>
+      import(
+        /* webpackChunkName: "ManagerFamilyCheck" */ "../views/ManagerFamilyCheck.vue"
+      ),
+  },
+  {
     path: "/manager/event/create",
     name: "ManagerEventCreate",
     component: () =>

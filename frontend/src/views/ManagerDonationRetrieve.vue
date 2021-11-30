@@ -288,7 +288,10 @@ export default Vue.extend({
       this.selectedDonations = [];
       this.closeInfoWindow();
 
-      eventbus.$emit("startLoading", "Retrieving avaliable donations in your city.")
+      eventbus.$emit(
+        "startLoading",
+        "Retrieving avaliable donations in your city."
+      );
       donationsApi
         .filterUnpickedDonations(
           this.selectedCity.name,
@@ -304,7 +307,8 @@ export default Vue.extend({
             "Donation",
             "Donation search with filtering options failed. Retry later or contact us if the problem persists."
           );
-        }).then(() => eventbus.$emit("stopLoading"));
+        })
+        .then(() => eventbus.$emit("stopLoading"));
     },
     showModal() {
       this.isModalOpen = true;
@@ -408,4 +412,3 @@ export default Vue.extend({
   }
 }
 </style>
-

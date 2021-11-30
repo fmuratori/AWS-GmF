@@ -46,7 +46,7 @@ export default {
         { expirationDate: { $gte: moment().format("YYYY-MM-DD") } },
       ],
     } as FindPayload;
-    return this.filterDonations({filter: filter});
+    return this.filterDonations({ filter: filter });
   },
 
   async filterUnpickedDonations(
@@ -89,7 +89,7 @@ export default {
       },
     });
 
-    return this.filterDonations({filter: filter});
+    return this.filterDonations({ filter: filter });
   },
 
   async filterPickedDonations(volunteerId: string): Promise<AxiosResponse> {
