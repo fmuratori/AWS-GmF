@@ -8,43 +8,49 @@ b-container
           b CREATE AN EVENT
         hr.shaded
       
+      b-alert(show).mb-5
+        b-row(align-v="center")
+          b-col(cols="auto")
+            h1 
+              b-icon(icon="info")
+          b-col 
+            p.m-0 Create events in your city. Your events will be displayed in the main page and visible to all the users.
+
+      hr
+
       b-form(@submit.stop.prevent="createEvent")
-        .mb4
-          InputText(
-            title="Title:",
-            placeholder="Insert title here",
-            :text="form.eventTitle",
-            required,
-            v-on:data="(e) => { form.eventTitle = e; }"
-          )
+        InputText(
+          title="Title:",
+          placeholder="Insert title here",
+          :text="form.eventTitle",
+          required,
+          v-on:data="(e) => { form.eventTitle = e; }"
+        )
 
-        .mb-4
-          InputTextarea(
-            title="Description:",
-            placeholder="Insert description here",
-            :text="form.description",
-            v-on:data="(e) => { form.description = e; }"
-          )
+        InputTextarea(
+          title="Description:",
+          placeholder="Insert description here",
+          :text="form.description",
+          v-on:data="(e) => { form.description = e; }"
+        )
 
-        .mb-4
-          InputDate(
-            title="Date:",
-            placeholder="Select a date",
-            :date="form.date",
-            required,
-            v-on:data="(e) => { form.date = e; }"
-          )
+        InputDate(
+          title="Date:",
+          placeholder="Select a date",
+          :date="form.date",
+          required,
+          v-on:data="(e) => { form.date = e; }"
+        )
 
         hr
         
-        .mb-4
-          InputAddress(
-            title="Location:",
-            :city="form.address.city",
-            :street="form.address.street",
-            :civic="form.address.civicNumber",
-            v-on:data="(e) => { form.address = e; }"
-          )
+        InputAddress(
+          title="Location:",
+          :city="form.address.city",
+          :street="form.address.street",
+          :civic="form.address.civicNumber",
+          v-on:data="(e) => { form.address = e; }"
+        )
 
         b-row
           b-col

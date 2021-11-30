@@ -4,8 +4,7 @@ b-container
     b-col(lg=6, md=8, cols=11)
       hr.shaded
       h4.text-center
-        b(v-if="this.$store.state.session.userData.type == 'user'") YOUR FAMILY REPORTS
-        b(v-else) FAMILY REPORTS
+        b YOUR FAMILY REPORTS
       hr.shaded
 
   b-row.justify-content-center
@@ -31,62 +30,14 @@ b-container
         b-col(cols="3")
           p Report status:
         b-col
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('verified', reporterFilter)",
-            :class="{ 'my-button-selected': statusFilter == 'verified' }"
-          ) Verified
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('pending', reporterFilter)",
-            :class="{ 'my-button-selected': statusFilter == 'pending' }"
-          ) Pending
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('all', reporterFilter)",
-            :class="{ 'my-button-selected': statusFilter == 'all' }"
-          ) All
+          FilterButtons(:filters="filters" :selected=2 
+            @click="(filter) => filterBy(filter)" )
 
       b-row.mb-2(no-gutters)
         b-col(cols="3")
           p Sort by:
         b-col
-
-          b-button.ml-2.mb-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('creationDateDescending')",
-            :class="{ 'color1': sortByMode == 'creationDateDescending' }"
-          ) 
-            span.mr-1 Submission date
-            b-icon(icon="sort-down" )
-
-          b-button.ml-2.mb-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('creationDateAscending')",
-            :class="{ 'color1': sortByMode == 'creationDateAscending' }"
-          ) 
-            span.mr-1 Submission date
-            b-icon(icon="sort-down-alt" )
-
-      b-row.mb-2(
-        no-gutters,
-        v-if="this.$store.state.session.userData.type != 'user'"
-      )
-        FilterButtons(
-          label="Reporter",
-          :filters="['me', 'all']",
-          v-on:click="(filter) => filterBy(statusFilter, filter)"
-        )
+          FilterButtons(:filters="sorters" :selected=1 @click="sortBy" )
 
       p(v-if="familyList.length == 0") 
         span We found no reports. Be sure to select your filters and status selectors correctly. Click #[a(href="#", @click="$router.push({ name: 'ManagerFamilySubscribe' })") here] to add a new family.
@@ -126,19 +77,19 @@ b-container
               @click="deleteFamilyId = family._id"
             ) DELETE
 
-          b-button(
-            block,
-            v-if="userRole == 'trusted' && family.status != 'verified'",
-            variant="warning",
-            @click="verifyFamily(family._id)"
-          ) VERIFY
+          //- b-button(
+          //-   block,
+          //-   v-if="userRole == 'trusted' && family.status != 'verified'",
+          //-   variant="warning",
+          //-   @click="verifyFamily(family._id)"
+          //- ) VERIFY
 
-          b-button(
-            block,
-            v-if="userRole != 'user' && family.status == 'verified'",
-            variant="primary",
-            @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
-          ) PACK
+          //- b-button(
+          //-   block,
+          //-   v-if="userRole != 'user' && family.status == 'verified'",
+          //-   variant="primary",
+          //-   @click="$router.push({ name: 'ManagerPackCreate', params: { family: family } })"
+          //- ) PACK
 
   b-modal#modal(title="Delete the family report?", @ok="deleteFamily(deleteFamilyId)")
     div This family subscription request will be deleted permanently.
@@ -170,23 +121,33 @@ export default Vue.extend({
   },
   data: () => {
     return {
-      userRole: "",
       statusFilter: "pending",
-      reporterFilter: "me",
       sortByMode: "creationDateAscending",
       familyList: new Array<Family>(),
       familyListBackup: new Array<Family>(),
       deleteFamilyId: "",
+      filters: [],
+      sorters: [],
     };
   },
   created() {
+    this.filters = [
+      ["verified", "Verified", null, true],
+      ["pending", "Pending", null, true],
+      ["all", "All", null, true],
+    ];
+
+    this.sorters = [
+      ["creationDateAscending", "Submission date", "sort-down", true],
+      ["creationDateDescending", "Submission date", "sort-down-alt", true],
+    ];
+
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
 
-      this.userRole = this.$store.state.session.userData.type;
       eventbus.$emit("startLoading", "Filtering all your active requests.");
       api
         .familyList({
@@ -195,7 +156,8 @@ export default Vue.extend({
         .then((r: AxiosResponse): void => {
           this.familyList = r.data as Family[];
           this.familyListBackup = r.data as Family[];
-          this.filterBy("pending", this.reporterFilter);
+
+          this.filterBy(this.statusFilter);
           this.sortBy(this.sortByMode);
         })
         .catch((): void => {
@@ -255,13 +217,8 @@ export default Vue.extend({
           );
         });
     },
-    filterBy(
-      statusFilter: "verified" | "pending" | "all",
-      reporterFilter: "me" | "all"
-    ): void {
+    filterBy(statusFilter: "verified" | "pending" | "all"): void {
       this.statusFilter = statusFilter;
-      this.reporterFilter = reporterFilter;
-
       this.familyList = this.familyListBackup;
       switch (statusFilter) {
         case "verified":
@@ -272,14 +229,7 @@ export default Vue.extend({
           break;
         default:
       }
-      switch (reporterFilter) {
-        case "me":
-          this.familyList = this.familyList.filter(
-            (f: Family) => f._id == this.$store.state.session.userData._id
-          );
-          break;
-        default:
-      }
+      this.sortBy(this.sortByMode);
     },
     deleteFamily(id: string): void {
       api

@@ -1,15 +1,17 @@
 <template lang="pug">
-b-col
-  b {{ label }}:
-  b-button-group
-    b-button.ml-2(
-      v-for="filter in filters",
-      pill,
-      variant="secondary",
-      size="sm",
-      @click="onClick(filter)",
-      :class="{ 'my-button-selected': selectedFilter == filter }"
-    ) {{ formatLabel(filter) }}
+div
+  b-button.ml-2.mb-2(
+    v-for="(filter, idx) in filters",
+    :key="idx"
+    v-if="filter[3]"
+    pill,
+    variant="secondary",
+    size="sm",
+    @click="onClick(filter[0])",
+    :class="{ 'selectedFilter': selectedFilter == filter[0] }"
+  ) 
+    span.mr-1 {{ filter[1] }}
+    b-icon(:icon="filter[2]" v-if="filter[2]")
 </template>
 
 <script lang="ts">
@@ -20,6 +22,7 @@ export default Vue.extend({
   props: {
     label: String,
     filters: Array,
+    selected: Number,
   },
   data: () => {
     return {
@@ -27,7 +30,8 @@ export default Vue.extend({
     };
   },
   created() {
-    this.selectedFilter = this.filters[0];
+    this.selectedFilter = this.filters[this.selected][0];
+    this.$emit("click", this.selectedFilter);
   },
   methods: {
     onClick(filter: string): void {
@@ -44,8 +48,7 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import "@/assets/style.scss";
 
-.my-button-selected {
-  background-color: $color1;
-  border-color: $color1;
+.selectedFilter {
+  @extend .color1;
 }
 </style>

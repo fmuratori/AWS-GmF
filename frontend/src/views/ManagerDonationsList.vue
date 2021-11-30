@@ -31,103 +31,13 @@ b-container
         b-col(cols="3")
           p Donation status:
         b-col
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('waiting')",
-            :class="{ 'color1': filterByMode == 'waiting' }"
-          ) Waiting
-
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('selected')",
-            :class="{ 'color1': filterByMode == 'selected' }"
-          ) Selected
-
-          b-button.ml-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="filterBy('all')",
-            :class="{ 'color1': filterByMode == 'all' }"
-          ) All
+          FilterButtons(:filters="filters" :selected=2 @click="filterBy")
 
       b-row.mb-2(no-gutters)
         b-col(cols="3")
           p Sort by:
         b-col
-
-          b-button.ml-2.mb-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('unreadMessages')",
-            :class="{ 'color1': sortByMode == 'unreadMessages' }"
-          ) 
-            span Unread messages
-
-          b-button.ml-2.mb-2(v-if="$store.getters.isUser"
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('creationDateDescending')",
-            :class="{ 'color1': sortByMode == 'creationDateDescending' }"
-          ) 
-            span.mr-1 Creation date
-            b-icon(icon="sort-down")
-
-          b-button.ml-2.mb-2(v-if="$store.getters.isUser"
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('creationDateAscending')",
-            :class="{ 'color1': sortByMode == 'creationDateAscending' }"
-          ) 
-            span.mr-1 Creation date
-            b-icon(icon="sort-down-alt" )
-
-          b-button.ml-2.mb-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('expirationDateDescending')",
-            :class="{ 'color1': sortByMode == 'expirationDateDescending' }"
-          ) 
-            span Expiration date
-            b-icon(icon="sort-down")
-
-          b-button.ml-2.mb-2(
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('expirationDateAscending')",
-            :class="{ 'color1': sortByMode == 'expirationDateAscending' }"
-          ) 
-            span Expiration date
-            b-icon(icon="sort-down-alt")
-
-          b-button.ml-2.mb-2(v-if="$store.getters.isVolunteer || $store.getters.isTrustedVolunteer"
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('pickUpDateDescending')",
-            :class="{ 'color1': sortByMode == 'pickUpDateDescending' }"
-          ) 
-            span Pick up date
-            b-icon(icon="sort-down")
-
-          b-button.ml-2.mb-2(v-if="$store.getters.isVolunteer || $store.getters.isTrustedVolunteer"
-            pill,
-            variant="secondary",
-            size="sm",
-            @click="sortBy('pickUpDateAscending')",
-            :class="{ 'color1': sortByMode == 'pickUpDateAscending' }"
-          ) 
-            span Pick up date
-            b-icon(icon="sort-down-alt")
+          FilterButtons(:filters="sorters" :selected=1 @click="sortBy")
 
       p(v-if="donations.length == 0") 
         span No donations found. Be sure to select valid filters 
@@ -166,7 +76,7 @@ b-container
                   ) {{ food }}
                 div.mb-2
                   p.mb-0 Expires in:
-                  p.font-weight-bold.mb-0 {{ getExpirationDays(donation) }} days
+                  p.font-weight-bold.mb-0 {{ dates.daysTillDate(donation.expirationDate) }} days
                 div
                   p.mb-0 Location:
                   p.font-weight-bold {{ donation.address.street + ' ' + donation.address.civicNumber + ', ' + donation.address.city }}
@@ -190,7 +100,7 @@ import eventbus from "../eventbus";
 import FilterButtons from "../components/FilterButtons.vue";
 import api from "../api/donation";
 
-import { Donation } from "../types";
+import { Donation, FindPayload } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
@@ -206,9 +116,39 @@ export default Vue.extend({
       donationsBackup: new Array<Donation>(),
       sortByMode: "expirationDateAscending",
       filterByMode: "all",
+      filters: [],
+      sorters: [],
     };
   },
   created() {
+    this.filters = [
+      ["waiting", "Waiting", null, true],
+      ["selected", "Selected", null, true],
+      ["all", "All", null, true],
+    ];
+
+    this.sorters = [
+      ["unreadMessages", "Unread Messages", null, true],
+      ["creationDateDescending", "Creation Date", "sort-down", true],
+      ["creationDateAscending", "Creation Date", "sort-down-alt", true],
+      ["expirationDateDescending", "Expiration Date", "sort-down", true],
+      ["expirationDateAscending", "Expiration Date", "sort-down-alt", true],
+      [
+        "pickUpDateDescending",
+        "Pick Up Date",
+        "sort-down",
+        this.$store.getters.isVolunteer ||
+          this.$store.getters.isTrustedVolunteer,
+      ],
+      [
+        "pickUpDateAscending",
+        "Pick Up Date",
+        "sort-down-alt",
+        this.$store.getters.isVolunteer ||
+          this.$store.getters.isTrustedVolunteer,
+      ],
+    ];
+
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if (!this.$store.getters.isMediumScreenWidth) {
@@ -218,7 +158,7 @@ export default Vue.extend({
       var filter = {};
       if (this.$store.getters.isUser)
         filter = { userId: this.$store.state.session.userData._id };
-      if (
+      else if (
         this.$store.getters.isVolunteer ||
         this.$store.getters.isTrustedVolunteer
       )
@@ -229,7 +169,7 @@ export default Vue.extend({
       eventbus.$emit("startLoading", "Filtering all your active donations.");
 
       api
-        .filterDonations(filter)
+        .filterDonations({ filter: filter } as FindPayload)
         .then((r: AxiosResponse): void => {
           this.donations = r.data as Donation[];
           this.donationsBackup = r.data as Donation[];
@@ -304,11 +244,7 @@ export default Vue.extend({
         default:
           this.donations = this.donationsBackup;
       }
-    },
-    getExpirationDays(donation: Donation) {
-      return moment(donation.expirationDate)
-        .locale("en")
-        .diff(moment.now(), "days");
+      this.sortBy(this.sortByMode);
     },
     inspectDonation(donation: Donation) {
       this.$router.push({
@@ -334,10 +270,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-@import "@/assets/style.scss";
-
-.button-selected {
-  background-color: $color1;
-}
-</style>
+<style scoped lang="scss"></style>
