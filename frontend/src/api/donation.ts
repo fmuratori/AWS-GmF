@@ -31,6 +31,7 @@ export default {
   },
 
   async filterDonations(filter: FindPayload): Promise<AxiosResponse> {
+    console.log(filter);
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/find`,
       filter,

@@ -70,7 +70,7 @@ b-container
                 span.mb-0 Description:&nbsp;
                 span.font-weight-bold {{ event.description }}
 
-          b-button-group.d-flex(v-if="dates.isFutureEvent(event.date)")
+          b-button-group.d-flex(v-if="dates.isFutureDate(event.date)")
             b-button.footerCardButton.color3(
               @click="$router.push({ name: 'ManagerEventCreate', params: { event: event } })"
             ) EDIT
@@ -81,7 +81,7 @@ b-container
             ) DELETE
 
   b-modal#modal(title="Delete this event?", @ok="deleteFamily(deleteEventId)")
-    div This event request will be deleted permanently.
+    div This event will be deleted permanently.
     
     template(#modal-footer="{ ok, cancel }")
       b-button(variant='secondary' @click='cancel()') Cancel
@@ -110,7 +110,7 @@ export default Vue.extend({
   },
   data: () => {
     return {
-      statusFilter: "past", //"past", "today", "future"
+      statusFilter: "past", //"past", "present", "future"
       sortByMode: "eventDateAscending", // "eventDateAscending". "eventDateDescending"
       eventList: new Array<Event>(),
       eventListBackup: new Array<Event>(),
@@ -122,7 +122,7 @@ export default Vue.extend({
   created() {
     this.filters = [
       ["past", "Past", null, true],
-      ["today", "Today", null, true],
+      ["present", "Today", null, true],
       ["future", "Future", null, true],
     ];
 
@@ -136,7 +136,7 @@ export default Vue.extend({
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
-
+      
       eventbus.$emit("startLoading", "Loading your events.");
       api
         .eventList({
@@ -144,6 +144,7 @@ export default Vue.extend({
         })
         .then((r: AxiosResponse): void => {
           this.eventList = r.data as Event[];
+          this.eventListBackup = r.data as Event[];
         })
         .catch((e: AxiosError): void => console.log(e))
         .then(() => eventbus.$emit("stopLoading"));
@@ -157,10 +158,10 @@ export default Vue.extend({
       this.sortByMode = mode;
       switch (mode) {
         case "eventDateAscending":
-          this.donations = this.donations.sort(this.eventDateComparer);
+          this.eventList = this.eventList.sort(this.eventDateComparer);
           break;
         case "eventDateDescending":
-          this.donations = this.donations
+          this.eventList = this.eventList
             .sort(this.eventDateComparer)
             .reverse();
           break;
