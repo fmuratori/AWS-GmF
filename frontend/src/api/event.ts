@@ -19,7 +19,6 @@ export default {
   },
 
   async eventList(payload: FindPayload): Promise<AxiosResponse> {
-    console.log("ASD", payload);
     return axios.post<Event[]>(
       `${process.env.VUE_APP_API_URL}/api/event/find`,
       payload,

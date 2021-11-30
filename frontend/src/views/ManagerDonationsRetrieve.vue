@@ -67,8 +67,8 @@
                     span.mb-0 {{ moment(donation.expirationDate).format("DD-MM-YYYY") }}
               tr
                 td(v-for="(donation, idx) in windowDonations" :key:="idx")
-                  b-button(v-if="!selectedDonations.includes(donation)"  variant="success" size="sm" block @click="selectDonation(donation)") Select
-                  b-button(v-else size="sm" variant="danger" block 
+                  b-button.color3(v-if="!selectedDonations.includes(donation)" size="sm" block @click="selectDonation(donation)") Select
+                  b-button.color3(v-else size="sm" block 
                   @click="deselectDonation(donation)") Cancel
 
       b-col(v-if="selectedCity" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
@@ -113,8 +113,8 @@
                   br
                   span &nbsp;
                   a(href="#" @click="showModal") (Inspect)
-              b-button(variant="success" type="submit" size="sm" block) Submit
-              b-button(variant="danger" type="submit" size="sm" block @click="deselectCity") Select another city
+              b-button.color3(variant="success" type="submit" size="sm" block) Submit
+              b-button(variant="secondary" type="submit" size="sm" block @click="deselectCity") Select another city
 
       b-col(v-if="selectedCity" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
         b-alert.mt-3(show)
@@ -158,43 +158,9 @@
           i No selected donation found.
           p Select a donation by clicking on a yellow exclamation mark found in the map.
           p If you can't find any mark in the map, try to select different filtering options on the right menu.
+
+  
 </template>
-
-<style scoped lang="scss">
-@import "@/assets/style.scss";
-
-#filters {
-  height: 100%;
-
-  overflow-y: scroll;
-}
-
-.fullheight {
-  height: 100%;
-}
-
-.fullheight-lg {
-  @include md {
-    height: auto;
-  }
-
-  @include lg {
-    height: 100%;
-  }
-}
-
-.scrollable-lg {
-  @include md {
-    width: auto;
-    overflow-y: auto;
-  }
-
-  @include lg {
-    width: 100%;
-    overflow-y: scroll;
-  }
-}
-</style>
 
 <script lang="ts">
 import Vue from "vue";
@@ -206,32 +172,10 @@ import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 
+import misc from "../misc/misc";
+
 import donationsApi from "../api/donation";
 import { Donation } from "../types";
-
-//This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
-function calcCrow(lat1, lon1, lat2, lon2) {
-  var R = 6371; // km
-  var dLat = toRad(lat2 - lat1);
-  var dLon = toRad(lon2 - lon1);
-  var lat1Rad = toRad(lat1);
-  var lat2Rad = toRad(lat2);
-
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.sin(dLon / 2) *
-      Math.sin(dLon / 2) *
-      Math.cos(lat1Rad) *
-      Math.cos(lat2Rad);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c;
-  return d;
-}
-
-// Converts numeric degrees to radians
-function toRad(Value) {
-  return (Value * Math.PI) / 180;
-}
 
 export default Vue.extend({
   name: "ManagerDonationsRetrieve",
@@ -312,16 +256,15 @@ export default Vue.extend({
     openInfoWindow(lat: number, lng: number) {
       this.windowDonations.splice(0, this.windowDonations.length);
 
-      // find coordinates near to the clicked marked
       this.windowCoordinates = { x: lat, y: lng };
       for (const donation of this.donations) {
-        const distance = calcCrow(
+        const nearCheck = misc.areCoordinatesNear(
           lat,
           lng,
           donation.address.coordinates.x,
           donation.address.coordinates.y
         );
-        if (distance < 1) {
+        if (nearCheck) {
           this.windowDonations.push(donation);
         }
       }
@@ -343,8 +286,9 @@ export default Vue.extend({
     },
     filterDonations() {
       this.selectedDonations = [];
+      this.closeInfoWindow();
 
-      // TODO: mostrare uno spinner mentre sono caricati i dati
+      eventbus.$emit("startLoading", "Retrieving avaliable donations in your city.")
       donationsApi
         .filterUnpickedDonations(
           this.selectedCity.name,
@@ -360,7 +304,7 @@ export default Vue.extend({
             "Donation",
             "Donation search with filtering options failed. Retry later or contact us if the problem persists."
           );
-        });
+        }).then(() => eventbus.$emit("stopLoading"));
     },
     showModal() {
       this.isModalOpen = true;
@@ -428,3 +372,40 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped lang="scss">
+@import "@/assets/style.scss";
+
+#filters {
+  height: 100%;
+
+  overflow-y: scroll;
+}
+
+.fullheight {
+  height: 100%;
+}
+
+.fullheight-lg {
+  @include md {
+    height: auto;
+  }
+
+  @include lg {
+    height: 100%;
+  }
+}
+
+.scrollable-lg {
+  @include md {
+    width: auto;
+    overflow-y: auto;
+  }
+
+  @include lg {
+    width: 100%;
+    overflow-y: scroll;
+  }
+}
+</style>
+
