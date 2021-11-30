@@ -132,7 +132,7 @@ import { CreateDonationView } from "../viewTypes";
 import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
-  name: "ManagerDonationsCreate",
+  name: "ManagerDonationCreate",
   components: {
     Navbar,
     Sidebar,
@@ -235,7 +235,7 @@ export default Vue.extend({
                 "Donation created successfully."
               );
             }
-            this.$router.push({ name: "ManagerDonationsList" });
+            this.$router.push({ name: "ManagerDonationList" });
           })
           .catch((e: AxiosError): void => {
             console.log(e);

@@ -27,34 +27,34 @@ const routes: Array<RouteConfig> = [
 
   {
     path: "/manager/donations/create",
-    name: "ManagerDonationsCreate",
+    name: "ManagerDonationCreate",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerDonationsCreate" */ "../views/ManagerDonationsCreate.vue"
+        /* webpackChunkName: "ManagerDonationCreate" */ "../views/ManagerDonationCreate.vue"
       ),
   },
   {
     path: "/manager/donations/list",
-    name: "ManagerDonationsList",
+    name: "ManagerDonationList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerDonationsList" */ "../views/ManagerDonationsList.vue"
+        /* webpackChunkName: "ManagerDonationList" */ "../views/ManagerDonationList.vue"
       ),
   },
   {
     path: "/manager/donations/inspect",
-    name: "ManagerDonationsInspect",
+    name: "ManagerDonationInspect",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerDonationsInspect" */ "../views/ManagerDonationsInspect.vue"
+        /* webpackChunkName: "ManagerDonationInspect" */ "../views/ManagerDonationInspect.vue"
       ),
   },
   {
     path: "/manager/donations/retrieve",
-    name: "ManagerDonationsRetrieve",
+    name: "ManagerDonationRetrieve",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerDonationsRetrieve" */ "../views/ManagerDonationsRetrieve.vue"
+        /* webpackChunkName: "ManagerDonationRetrieve" */ "../views/ManagerDonationRetrieve.vue"
       ),
   },
   {
@@ -83,10 +83,10 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/manager/event/list",
-    name: "ManagerEvents",
+    name: "ManagerEventList",
     component: () =>
       import(
-        /* webpackChunkName: "ManagerEvents" */ "../views/ManagerEvents.vue"
+        /* webpackChunkName: "ManagerEventList" */ "../views/ManagerEventList.vue"
       ),
   },
   {

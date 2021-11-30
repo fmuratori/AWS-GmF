@@ -18,27 +18,28 @@
       SidebarItem(
         v-if="this.$store.state.session.userData.type != 'user'",
         text="Retrieve donations",
-        route="ManagerDonationsRetrieve"
+        route="ManagerDonationRetrieve"
       )
       SidebarItem(
         v-if="this.$store.state.session.userData.type == 'user'",
         text="Make a donation",
-        route="ManagerDonationsCreate"
+        route="ManagerDonationCreate"
       )
 
-      SidebarItem(text="Donations list", route="ManagerDonationsList")
+      SidebarItem(text="Donations list", route="ManagerDonationList")
 
     div
       hr.sidebar-hr.my-3
       SidebarCategory(text="Families", icon="users")
       SidebarItem(text="Report a family", route="ManagerFamilySubscribe")
-      SidebarItem(text="Report list", route="ManagerFamilyList")
+      SidebarItem(text="Your reports", route="ManagerFamilyList")
+      SidebarItem(text="Check reports", route="ManagerFamilyCheck")
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
       hr.sidebar-hr.my-3
       SidebarCategory(text="Events", icon="calendar")
       SidebarItem(text="Create an event", route="ManagerEventCreate")
-      SidebarItem(text="Your events", route="ManagerEvents")
+      SidebarItem(text="Your events", route="ManagerEventList")
 
     div(v-if="this.$store.state.session.userData.type != 'user'")
       hr.sidebar-hr.my-3

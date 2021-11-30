@@ -102,7 +102,7 @@ import { Event } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
-  name: "ManagerDonationsList",
+  name: "ManagerEventList",
   components: {
     Navbar,
     Sidebar,

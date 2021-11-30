@@ -121,7 +121,7 @@ b-container
         b-button.color4(
           block,
           variant="secondary",
-          @click="$router.push({ name: 'ManagerDonationsList' })",
+          @click="$router.push({ name: 'ManagerDonationList' })",
           type="reset"
         ) Cancel
 
@@ -135,7 +135,7 @@ b-container
         b-button(
           block,
           variant="outline-secondary",
-          @click="$router.push({ name: 'ManagerDonationsList' })",
+          @click="$router.push({ name: 'ManagerDonationList' })",
           type="reset"
         ) Indietro
 
@@ -161,7 +161,7 @@ import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
-  name: "ManagerDonationsInspect",
+  name: "ManagerDonationInspect",
   components: {
     Navbar,
     Sidebar,
@@ -232,7 +232,7 @@ export default Vue.extend({
       if ("donation" in this.$route.params) {
         this.donation = JSON.parse(this.$route.params.donation) as Donation;
       } else {
-        this.$router.push({ name: "ManagerDonationsList" });
+        this.$router.push({ name: "ManagerDonationList" });
       }
 
       // load donation messages
@@ -271,7 +271,7 @@ export default Vue.extend({
               isEventMessage: true,
             });
 
-            this.$router.push({ name: "ManagerDonationsList" });
+            this.$router.push({ name: "ManagerDonationList" });
             eventbus.$emit(
               "successMessage",
               "Donation",
@@ -290,7 +290,7 @@ export default Vue.extend({
     },
     modifyDonation() {
       this.$router.push({
-        name: "ManagerDonationsCreate",
+        name: "ManagerDonationCreate",
         params: { donation: JSON.stringify(this.donation) },
       });
     },
@@ -316,7 +316,7 @@ export default Vue.extend({
               "Donation",
               "Donation reservation for pickup deleted succesfully."
             );
-            this.$router.push({ name: "ManagerDonationsList" });
+            this.$router.push({ name: "ManagerDonationList" });
           }
         })
         .catch((e: AxiosError): void => {

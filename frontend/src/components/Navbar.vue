@@ -11,7 +11,7 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
         v-if="$store.getters.unreadMessagesTotalCount > 0",
         type="submit",
         variant="danger",
-        @click="$router.push({ name: 'ManagerDonationsList' })"
+        @click="$router.push({ name: 'ManagerDonationList' })"
       )
         b-icon.mr-1(icon="envelope")
         b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
@@ -114,7 +114,7 @@ export default Vue.extend({
       this.$forceUpdate();
     },
     routeToDonations() {
-      this.$router.push({ name: "ManagerDonationsList" });
+      this.$router.push({ name: "ManagerDonationList" });
     },
     changePage(pageName: string) {
       if (this.$router.currentRoute.name != pageName) {

@@ -178,7 +178,7 @@ import donationsApi from "../api/donation";
 import { Donation } from "../types";
 
 export default Vue.extend({
-  name: "ManagerDonationsRetrieve",
+  name: "ManagerDonationRetrieve",
   components: {
     Navbar,
     Sidebar,
@@ -340,7 +340,7 @@ export default Vue.extend({
 
         Promise.all(promises)
           .then((): void => {
-            this.$router.push({ name: "ManagerDonationsList" });
+            this.$router.push({ name: "ManagerDonationList" });
             eventbus.$emit(
               "successMessage",
               "Donations",

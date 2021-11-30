@@ -41,7 +41,7 @@ b-container
 
       p(v-if="donations.length == 0") 
         span No donations found. Be sure to select valid filters 
-        span(v-if="$store.getters.isUser") or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationsCreate' })") here] to insert a donation
+        span(v-if="$store.getters.isUser") or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationCreate' })") here] to insert a donation
         span .
 
       b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(donation, idx) in donations", :key="idx")
@@ -103,7 +103,7 @@ import { Donation, FindPayload } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
-  name: "ManagerDonationsList",
+  name: "ManagerDonationList",
   components: {
     Navbar,
     Sidebar,
@@ -247,7 +247,7 @@ export default Vue.extend({
     },
     inspectDonation(donation: Donation) {
       this.$router.push({
-        name: "ManagerDonationsInspect",
+        name: "ManagerDonationInspect",
         params: { donation: JSON.stringify(donation) },
       });
     },

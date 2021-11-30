@@ -56,11 +56,11 @@ b-container
           b-col
             b-button(
               block,
-              variant="outline-danger",
-              @click="$router.push({ name: 'ManagerEvents' })"
+              variant="secondary",
+              @click="$router.push({ name: 'ManagerEventList' })"
             ) Cancel
           b-col
-            b-button(block, variant="success", type="submit") {{ this.submitLabel }}
+            b-button.color3(block, type="submit") {{ this.submitLabel }}
 </template>
 
 <script lang="ts">
@@ -131,7 +131,7 @@ export default Vue.extend({
 
       fun(this.form)
         .then((): void => {
-          this.$router.push({ name: "ManagerEvents" });
+          this.$router.push({ name: "ManagerEventList" });
           eventbus.$emit(
             "successMessage",
             "Events",
