@@ -28,8 +28,11 @@ b-container
             v-on:data="(e) => { changePasswordForm.newPassword = e; }"
           )
 
-          b-button.color3(block, type="submit") Edit
-          b-button(block, variant="secondary") Cancel
+          b-row
+            b-col
+              b-button(block, variant="secondary", @click="$router.push({name: 'Home'})") Cancel
+            b-col
+              b-button.color3(block, type="submit") Edit
 
       b-form(v-if="mode == 'user_info'" @submit.stop.prevent="editUser")
 
@@ -60,7 +63,7 @@ b-container
           placeholder="Insert your email here",
           type="email",
           required,
-          :text="editUserForm.email",
+          :text ="editUserForm.email",
           v-on:data="(e) => { editUserForm.email = e; }"
         )
 
@@ -72,9 +75,11 @@ b-container
           :text="editUserForm.phoneNumber",
           v-on:data="(e) => { editUserForm.phoneNumber = e; }"
         )
-
-        b-button.color3(block, type="submit") Edit
-        b-button(block, variant="secondary", @click="$router.go(-1)") Cancel
+        b-row
+          b-col
+            b-button(block, variant="secondary", @click="$router.push({name: 'Home'})") Cancel
+          b-col
+            b-button.color3(block, type="submit") Edit
       
       b-form(v-if="mode == 'address'" @submit.stop.prevent="editUser")
         div.my-5
@@ -90,8 +95,11 @@ b-container
           v-on:data="(e) => { editUserForm.address = e; }"
         )
 
-        b-button.color3(block, type="submit") Edit
-        b-button(block, variant="secondary", @click="$router.go(-1)") Cancel
+        b-row
+          b-col
+            b-button(block, variant="secondary", @click="$router.push({name: 'Home'})") Cancel
+          b-col
+            b-button.color3(block, type="submit") Edit
   
 </template>
 

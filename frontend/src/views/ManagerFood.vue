@@ -16,7 +16,7 @@ b-container
                 .px-4.pt-4
                   InputText(
                     title="Name:",
-                    placeholder="Insert food name here",
+                    placeholder="Food name",
                     :text="form.name",
                     required,
                     v-on:data="(e) => { form.name = e; }"
@@ -24,7 +24,7 @@ b-container
 
                   InputText(
                     title="Units: ",
-                    placeholder="Insert food units here",
+                    placeholder="Amont",
                     type="number",
                     :text="form.number",
                     required,
@@ -33,7 +33,7 @@ b-container
 
                   InputDate(
                     title="Expiration date:",
-                    placeholder="Select the expiration date",
+                    placeholder="Date",
                     :date="form.expirationDate",
                     required,
                     v-on:data="(e) => { form.expirationDate = e; }"
@@ -42,7 +42,7 @@ b-container
                   b-form-group(label="Labels:")
                     b-checkbox-group(
                       v-model="form.labels",
-                      :options="availableLables",
+                      :options="constants.foodLabels",
                       stacked
                     )
 
@@ -88,22 +88,13 @@ export default Vue.extend({
     InputList,
     FoodView,
   },
-  data: (): FoodManagerView => {
+  data: () => {
     return {
       form: {
         labels: new Array<string>(),
       } as FoodPayload,
       foodList: new Array<Food>(),
       tableFields: ["name", "number", "expirationDate", "labels"],
-      availableLables: [
-        { text: "Meat", value: "meat" },
-        { text: "Fish", value: "fish" },
-        { text: "Pasta", value: "pasta" },
-        { text: "Vegetable", value: "vegetable" },
-        { text: "Fruit", value: "fruit" },
-        { text: "Fresh", value: "fresh" },
-        { text: "Long life", value: "long-life" },
-      ],
       reloadIndex: 0,
     };
   },

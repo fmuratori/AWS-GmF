@@ -7,11 +7,9 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
     v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
   )
     b-nav-item.my-auto.text-center(href="#")
-      b-button.my-2.my-sm-0.navbar-messages-button(
+      b-button.my-2.my-sm-0.color3(
         v-if="$store.getters.unreadMessagesTotalCount > 0",
-        type="submit",
-        variant="danger",
-        @click="$router.push({ name: 'ManagerDonationList' })"
+        v-b-modal.messagesModal,
       )
         b-icon.mr-1(icon="envelope")
         b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
@@ -20,7 +18,6 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
   )
     b-nav-item.my-auto.text-center(href="#")
       b-button.my-2.my-sm-0(
-        type="submit",
         variant="light",
         @click="toggleSidebar()"
       )
@@ -28,7 +25,6 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
   b-navbar-nav(v-if="$store.getters.isMediumScreenWidth")
     b-nav-item.my-auto.text-center(href="#")
       b-button.my-2.my-sm-0(
-        type="submit",
         variant="light",
         @click="isOpen = !isOpen"
       )
@@ -54,11 +50,9 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
         href="#",
         v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
       )
-        b-button.my-2.my-sm-0.navbar-messages-button(
+        b-button.my-2.my-sm-0.color3(
           v-if="$store.getters.unreadMessagesTotalCount > 0",
-          @click="routeToDonations()",
-          type="submit",
-          variant="danger"
+          v-b-modal.messagesModal,
         )
           span.mr-1 Messages
           b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
@@ -76,15 +70,39 @@ b-navbar#navbar(toggleable="lg", type="dark", sticky)
         @click="changePage('Login')",
         v-if="!$store.getters.isUserLogged"
       ) 
-        b-button.my-2.my-sm-0(type="submit", variant="light")
+        b-button.my-2.my-sm-0(variant="light")
           span.mr-1 Login
           font-awesome-icon(icon="sign-in-alt")
+  
+  b-modal#messagesModal(hide-footer hide-header centered ref="messagesModal" )
+    h4 Your Messages
+
+    b-row.no-gutters.my-4.p-2.border(align-v="center" v-for="(message, idx) in $store.getters.unreadMessages" :key="idx")
+      b-col(cols="auto")
+        span Donated on 
+        br 
+        span {{ dates.formatDate(message.creationDate) }}
+      b-col(class="text-center")
+        span {{ message.chat.length }} unread messages
+        br
+        span {{ dates.formatDatetime(message.chat[0].date) }}
+      b-col(cols="auto")
+        b-button.color3(size="sm" @click="routeToDonation(message._id)")
+          span.mr-1 Open
+          b-icon(icon="envelope-open")
+
+    b-row.no-gutters(align-h="end")
+      b-button.mr-2(size="sm" variant="secondary" @click="() => { this.$refs['messagesModal'].hide(); }") Close
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
 import eventbus from "../eventbus";
+import donationApi from "../api/donation";
+import { AxiosError, AxiosResponse } from "axios";
+import { Donation } from "../types";
+
 export default Vue.extend({
   name: "Navbar",
   components: {
@@ -113,8 +131,36 @@ export default Vue.extend({
 
       this.$forceUpdate();
     },
-    routeToDonations() {
-      this.$router.push({ name: "ManagerDonationList" });
+    routeToDonation(donationId: string) {
+      eventbus.$emit("startLoading", "Loading selected donation.");
+      donationApi
+        .findDonation(donationId)
+        .then((r: AxiosResponse): void => {
+          if (r.status == 200) {
+            this.$refs["messagesModal"].hide();
+            this.$router.push({
+              name: "ManagerDonationInspect",
+              params: { donation: JSON.stringify(r.data[0] as Donation) },
+            });
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "Donation",
+              "Unable to retrieve the donation. Retry later or contact us if the problem persists."
+            );
+          }
+        })
+        .catch((e: AxiosError) => {
+          console.log(e);
+          eventbus.$emit(
+            "errorMessage",
+            "Donation",
+            "Unable to retrieve the donation. Retry later or contact us if the problem persists."
+          );
+        })
+        .then(() => {
+          eventbus.$emit("stopLoading");
+        });
     },
     changePage(pageName: string) {
       if (this.$router.currentRoute.name != pageName) {

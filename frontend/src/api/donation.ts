@@ -99,4 +99,12 @@ export default {
 
     return this.filterDonations(filter);
   },
+
+  async findDonation(donationId: string): Promise<AxiosResponse> {
+    const filter = {
+      _id: donationId,
+    } as FindPayload;
+
+    return this.filterDonations({ filter: filter });
+  },
 };

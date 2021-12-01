@@ -26,7 +26,8 @@
         route="ManagerDonationCreate"
       )
 
-      SidebarItem(text="Donations list", route="ManagerDonationList")
+      SidebarItem(text="Your donations", route="ManagerDonationList" v-if="$store.getters.isUser")
+      SidebarItem(text="Donations list", route="ManagerDonationList" v-if="!$store.getters.isUser")
 
     div
       hr.sidebar-hr.my-3
@@ -52,6 +53,7 @@
       SidebarItem(text="Create a delivery", route="ManagerPackDelivery")
       SidebarItem(text="Scan a pack", route="ManagerPackScan")
 
+      hr.sidebar-hr.my-3
   b-dropdown(text="Your profile" variant="light" dropup menu-class="w-100")
     b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'password')") Change password
     b-dropdown-item(href="#" @click="changePage('ManagerEditUserInfo', 'address')") Change address
@@ -125,7 +127,7 @@ export default Vue.extend({
   z-index: 5;
 
   @include lg {
-    width: 15em;
+    width: 17em;
     position: relative;
     z-index: 0;
   }

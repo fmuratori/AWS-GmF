@@ -177,14 +177,14 @@ export default Vue.extend({
           eventbus.$emit(
             "successMessage",
             "Foods",
-            "Food successfully created. Retry later or contact us if the problem persists."
+            "Food successfully deleted."
           );
         })
         .catch((): void => {
           eventbus.$emit(
             "errorMessage",
             "Foods",
-            "Unable to add food. Retry later or contact us if the problem persists."
+            "Unable to delete the pack. Retry later or contact us if the problem persists."
           );
         });
     },
@@ -201,7 +201,7 @@ export default Vue.extend({
           eventbus.$emit(
             "successMessage",
             "Foods",
-            "Food successfully created. Retry later or contact us if the problem persists."
+            "Pack state changed to delivered succesfully."
           );
         })
         .catch((): void => {

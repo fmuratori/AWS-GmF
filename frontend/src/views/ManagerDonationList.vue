@@ -47,7 +47,8 @@ b-container
       b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(donation, idx) in donations", :key="idx")
         template(#header)
           h5.mb-0
-            b Donated in {{ dates.formatDate(donation.creationDate) }}
+            b(v-if="$store.getters.isUser") Donated on {{ dates.formatDate(donation.creationDate) }}
+            b(v-if="$store.getters.isVolunteer || $store.getters.isTrustedVolunteer") To be collected on {{ dates.formatDate(donation.pickUp.date) }}
             span.float-right
                 b-badge(
                   v-if="donation.status == 'waiting'",
@@ -61,13 +62,11 @@ b-container
                   v-if="donation.status == 'withdrawn'",
                   variant="secondary"
                 ) {{donation.status}}
-          //- h5.mb-0 
-          //-   b Donated in {{ dates.formatDate(donation) }}
 
         b-card-text
           .px-4.pt-3
             b-row
-              b-col(cols="auto")
+              b-col(cols=12 md=6 lg=6)
                 div.mb-2
                   p.mb-0 Food:
                   p.font-weight-bold.mb-0(
@@ -80,9 +79,14 @@ b-container
                 div
                   p.mb-0 Location:
                   p.font-weight-bold {{ donation.address.street + ' ' + donation.address.civicNumber + ', ' + donation.address.city }}
-              b-col(cols="auto")
-                .mb-2(v-if="hasUnreadMessages(donation._id)")
+              b-col(cols=12 md=6 lg=6)
+                div.mb-2(v-if="hasUnreadMessages(donation._id)")
                   a(href="#") {{ unreadMessagesCount(donation._id) }} unread messages
+                div(v-if="donation.status=='selected'")
+                  div.mb-2()
+                    p.mb-0 Pick up:
+                    p.font-weight-bold {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
+              
           b-button.footerCardButton.color3(
             block,
             variant="primary"

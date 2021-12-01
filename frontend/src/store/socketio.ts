@@ -16,6 +16,9 @@ export default {
         .map((e) => e.chat.length)
         .reduce((a, b) => a + b, 0);
     },
+    unreadMessages(state): void {
+      return state.unreadMessages;
+    },
   },
   mutations: {
     addUnreadMessage(state, message): void {

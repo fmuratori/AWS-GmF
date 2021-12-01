@@ -43,8 +43,8 @@ export default class DonationController {
 				}
 			}
 		}, {
-			"donationId": 1,
-			"chat.$": 1
+			"chat.$": 1,
+			"creationDate": 1,
 		})
 
 		if (!counts) {

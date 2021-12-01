@@ -23,8 +23,6 @@ b-container
               :messages="message.messages",
             )
 
-          //- div(class="")
-          //-   label(class="font-italic") Marco stà scrivendo...
           b-form(@submit.stop.prevent="sendMessage")
             b-input-group(class="")
               b-form-input(
@@ -126,18 +124,17 @@ b-container
         ) Cancel
 
       div(v-if="$store.getters.isVolunteer")
-        b-button(
+        b-button.color3(
           block,
-          variant="outline-danger",
           type="submit",
           @click="cancelReservation"
-        ) Annulla prenotazione
+        ) Delete reservation
         b-button(
           block,
-          variant="outline-secondary",
+          variant="secondary",
           @click="$router.push({ name: 'ManagerDonationList' })",
           type="reset"
-        ) Indietro
+        ) Cancel
 
   b-modal#modal(title="Delete your donation?", @ok="deleteDonation()")
     div This donation offer will be deleted permanently.
