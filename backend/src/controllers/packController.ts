@@ -9,8 +9,65 @@ const factory = new ControllerFactory<PackDocument>()
 
 export default class PackController {
 
-	find = factory.findMany(PackModel)
 	edit = factory.edit(PackModel)
+
+	find = catchAsync(async (req: Request, res: Response) => {
+		const packs = await PackModel.aggregate([
+			{
+				$unwind: "$foodList"
+			},
+			{
+				$addFields: {"foodId": {"$toObjectId": "$foodList.foodId"}}
+			},
+			{
+				$lookup: {
+					"from": "foods",
+					"localField": "foodId",
+					"foreignField": "_id",
+					"as": "food"
+					}
+				},
+				{
+				$unwind: "$food"
+			},
+			{
+				$group: {
+					_id: "$_id",
+					"foodList": {"$push": "$food"},
+				}
+			},
+			
+			{
+				$lookup: {
+					"from": "packs",
+					"localField": "_id",
+					"foreignField": "_id",
+					"as": "pack"
+				}
+			},
+			{
+				$unwind: "$pack"
+			},
+			
+			{
+				$lookup: {
+					"from": "families",
+					"localField": "pack.familyId",
+					"foreignField": "_id",
+					"as": "family"
+				}
+			},
+			{
+				$unwind: "$family"
+			},
+			{
+				$project: {
+					"pack.familyId": 0
+				}
+			}
+		])
+		res.status(200).json(packs);
+	})
 
 	findExpanded = catchAsync(async (req: Request, res: Response) => {
 		const pack = await PackModel.aggregate([
@@ -63,7 +120,6 @@ export default class PackController {
 			},
 			{
 				$project: {
-					"pack.foodList": 0,
 					"pack.familyId": 0
 				}
 			},

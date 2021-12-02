@@ -1,31 +1,29 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
+  b-row.justify-content-center.my-5
+    b-col(lg=6, md=8, cols=11)
+      hr.shaded
+      h4.text-center
         b AVAILABLE PACKS
-      hr.sidebar-hr.my-3
+      hr.shaded
+  b-row.justify-content-center.my-5
+    b-col(lg=12, md=12, cols=12)
 
       b-row(v-if="this.$store.state.session.userData.type != 'user'")
-        FilterButtons(
-          label="Pack status",
-          :filters="['all', 'ready', 'planned delivery', 'delivered']",
-          v-on:click="(filter) => filterBy(filter)"
-        )
-
-      hr.sidebar-hr.my-3
+        label Pack status
+        
+        FilterButtons(:filters="filters" :selected=2 @click="filterBy")
 
       b-row
         b-col(lg="8", md="8", sm="12")
-          b-table(
+          b-table(ref="packsTable"
             hover,
             striped,
             responsive,
             :fields="tableFields",
             :items="packList"
           )
-            template(#cell(status)="data")
+            template(#cell(pack.status)="data")
               b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
               b-badge(
                 v-if="data.value == 'planned delivery'",
@@ -34,61 +32,72 @@ b-container
               b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
 
             template(#cell(buttons)="{ item }")
-              b-button-group
-                b-button(size="sm", @click="showDetails(item)") Details
-                b-button(
-                  size="sm",
-                  variant="primary",
-                  @click="setDelivered(item._id)",
-                  :disabled="item.status != 'planned delivery'"
-                ) Advance
-                b-button(
-                  size="sm",
-                  variant="danger",
-                  v-b-modal.modal,
-                  @click="deletePackId = item._id"
-                ) Delete
-
-          b-modal#modal(title="Confirm?", @ok="deletePack(deletePackId)")
-            div Confirm to delete pack
-            template(#modal-cancel) Cancel
-            template(#modal-ok) Confirm
+              b-button.mr-1.color3(size="sm", @click="selectedPack = item;") Details
+              b-button.mr-1.color3(
+                size="sm",
+                @click="setDelivered(item._id)",
+                :disabled="item.status != 'planned delivery'"
+              ) Advance
+              b-button.color3(
+                size="sm",
+                variant="danger",
+                v-b-modal.modal,
+                @click="deletePackId = item._id"
+              ) Delete
 
         b-col(lg="4", md="4", sm="12")
-          b-card
-            b-row(v-model="familyDetails")
-              b-col(v-if="familyDetails != undefined")
-                h4 Family
-                div
-                  b name:
-                  span {{ this.familyDetails.name }}
-                div 
-                  b components:
-                  span {{ this.familyDetails.components }}
-                div
-                  b address:
-                  span {{ formatAddress(this.familyDetails.address) }}
-            hr.sidebar-hr.my-3
-            b-row(v-model="foodDetails")
-              b-col(v-if="foodDetails != undefined")
-                h4 Food list
-                div(v-for="food in foodDetails") {{ food.number }}x {{ food.name }}
+          b-card(bg-variant="light")
+            template(#header)
+              h5.mb-0
+                b Pack info
+                span.float-right(v-if="selectedPack")
+                  b-badge() {{ selectedPack.pack.status }}
+            div(v-if="selectedPack")
+              h4 Family
+              div
+                b name:
+                span {{ selectedPack.family.name }}
+              div 
+                b components:
+                span {{ selectedPack.family.components }}
+              div
+                b address:
+                span {{ formatAddress(selectedPack.family.address) }}
+              hr
+              h4 Food list
+              ul
+                li(v-for="food in selectedPack.foodList") {{ selectedPack.pack.foodList.find(f => f.foodId == food._id).number }}x {{ food.name }}
+              hr
+              h4 QR code
+              QrcodeVue.text-center.my-3(
+                :value="selectedPack._id",
+                size="200",
+                level="H")
+              
+              b-button.color3(block @click="selectedPack = null") Close pack info
+            div(v-else)
+              i No pack selected.     
+
+  b-modal#modal(title="Delete this pack?", @ok="deletePack(deletePackId)")
+    div This pack will be deleted permanently.
+    
+    template(#modal-footer="{ ok, cancel }")
+      b-button(variant='secondary' @click='cancel()') Cancel
+      b-button.color3(@click='ok()') Confirm         
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import moment from "moment";
+import QrcodeVue from "qrcode.vue";
 import eventbus from "../eventbus";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import FilterButtons from "../components/FilterButtons.vue";
 
 import packApi from "../api/pack";
-import familyApi from "../api/family";
-import foodApi from "../api/food";
+import dates from "../misc/dates";
 
-import { Address, Family, Food, Pack } from "../types";
-import { PackManagerView } from "../viewTypes";
+import { Address, Pack } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
@@ -97,38 +106,43 @@ export default Vue.extend({
     Navbar,
     Sidebar,
     FilterButtons,
+    QrcodeVue,
   },
-  data: (): PackManagerView => {
+  data: () => {
     return {
-      statusFilter: "all",
+      filters: [
+        ["all", "All", null, true],
+        ["ready", "Ready", null, true],
+        ["planned delivery", "Planned delivery", null, true],
+        ["delivered", "Delivered", null, true],
+      ],
       packList: new Array<Pack>(),
       packListBackup: new Array<Pack>(),
-      familyDetails: undefined,
-      foodDetails: undefined,
+      selectedPack: undefined,
       tableFields: [
         {
-          key: "status",
+          key: "pack.status",
           label: "Status",
           sortable: false,
         },
         {
-          key: "expirationDate",
+          key: "pack.expirationDate",
           label: "Expiration Date",
           sortable: true,
           formatter: (date: Date) => {
-            if (date) return moment(date).locale("en").format("LL");
+            if (date) return dates.formatDate(date);
           },
         },
         {
-          key: "deliveryDate",
+          key: "pack.deliveryDate",
           label: "Delivery Date",
           sortable: true,
           formatter: (date: Date) => {
-            if (date) return moment(date).locale("en").format("LL");
+            if (date) return dates.formatDate(date);
           },
         },
         {
-          key: "deliveryPeriod",
+          key: "pack.deliveryPeriod",
           label: "Delivery Period",
           sortable: false,
         },
@@ -142,31 +156,36 @@ export default Vue.extend({
     };
   },
   created() {
-    // check if user is logged in
     if (this.$store.getters.isUserLogged) {
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }
 
-      // TODO: mostrare uno spinner mentre sono caricati i dati
+      eventbus.$emit("startLoading", "Loading packs");
       packApi
         .packList({})
         .then((r: AxiosResponse): void => {
-          this.packListBackup = r.data as Pack[];
-          this.packList = this.packListBackup;
+          this.packList = r.data as Pack[];
+          this.packListBackup = this.packList;
         })
-        .catch((e: AxiosError): void => console.log(e));
+        .catch((e: AxiosError): void => console.log(e))
+        .then(() => {
+          eventbus.$emit("stopLoading");
+          this.filterBy("all");
+        });
     } else this.$router.push({ name: "Login" });
   },
   methods: {
     filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
-      if (this.statusFilter == status) return;
+      console.log(status);
+      console.log(this.packListBackup.filter((p) => p.pack.status == status));
 
-      this.statusFilter = status;
       if (status != "all") {
         this.packList = this.packListBackup.filter((p: Pack) => {
-          p.status == status;
+          p.pack.status == status;
         });
+        this.$refs.packsTable.refresh();
+        // if (newPacks) this.packList.push(newPacks)
       } else this.packList = this.packListBackup;
     },
     deletePack(id: string): void {
@@ -210,33 +229,6 @@ export default Vue.extend({
             "Foods",
             "Unable to upgrade pack status. Retry later or contact us if the problem persists."
           );
-        });
-    },
-    showDetails(pack: Pack) {
-      familyApi
-        .familyList({ filter: { _id: pack.familyId } })
-        .then((r: AxiosResponse) => {
-          this.familyDetails = (r.data as Family)[0];
-        })
-        .catch(() => {
-          console.log("TODO");
-        });
-
-      const foodMap = new Map();
-      pack.foodList.forEach((elem) => {
-        foodMap.set(elem.foodId, elem.number);
-      });
-      const foodIdList = Array.from(foodMap.keys());
-      foodApi
-        .foodList({ filter: { _id: foodIdList } })
-        .then((r: AxiosResponse) => {
-          this.foodDetails = r.data as Food[];
-          this.foodDetails.forEach((elem) => {
-            elem.number = foodMap.get(elem._id);
-          });
-        })
-        .catch(() => {
-          console.log("TODO");
         });
     },
     formatAddress(addr: Address) {
