@@ -176,7 +176,7 @@ export default Vue.extend({
       this.index += 1;
       this.$emit(
         "data",
-        this.foodList.filter((f: SelectableFood) => f.selected)
+        this.foodList.filter((f: SelectableFood) => f.selected != 0)
       );
     },
     removeClick(item: SelectableFood) {
@@ -184,7 +184,7 @@ export default Vue.extend({
       this.index += 1;
       this.$emit(
         "data",
-        this.foodList.filter((f: SelectableFood) => f.selected)
+        this.foodList.filter((f: SelectableFood) => f.selected != 0)
       );
     },
     load(item: SelectableFood) {

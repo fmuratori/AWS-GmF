@@ -119,8 +119,6 @@ export default Vue.extend({
       donationsBackup: new Array<Donation>(),
       sortByMode: "expirationDateAscending",
       filterByMode: "all",
-      filters: [],
-      sorters: [],
     };
   },
   created() {

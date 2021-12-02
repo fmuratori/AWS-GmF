@@ -126,8 +126,6 @@ export default Vue.extend({
       familyList: new Array<Family>(),
       familyListBackup: new Array<Family>(),
       deleteFamilyId: "",
-      filters: [],
-      sorters: [],
     };
   },
   created() {

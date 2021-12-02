@@ -28,7 +28,7 @@ export default {
     c1Lng: number,
     c2Lat: number,
     c2Lng: number
-  ) {
+  ): boolean {
     return calcCrow(c1Lat, c1Lng, c2Lat, c2Lng) < MIN_DIST_KM;
   },
 };

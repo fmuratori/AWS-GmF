@@ -190,7 +190,6 @@ b-container
 
 <script lang="ts">
 import Vue from "vue";
-import moment from "moment";
 import QrcodeVue from "qrcode.vue";
 import VueHtml2pdf from "vue-html2pdf";
 
@@ -200,7 +199,7 @@ import FoodView from "../components/FoodView.vue";
 import FamilyView from "../components/FamilyPicker.vue";
 import eventbus from "../eventbus";
 
-import { Family, SelectableFood, Pack, Address } from "../types";
+import { Family, SelectableFood, Pack, Address, PackPayload } from "../types";
 import dates from "../misc/dates";
 import packApi from "../api/pack";
 import { PackCreateView } from "../viewTypes";
@@ -226,7 +225,7 @@ export default Vue.extend({
         foodList: new Array<{ foodId: string; number: number }>(),
         familyId: "",
         expirationDate: null,
-      } as Pack,
+      } as PackPayload,
       isPrinted: false,
     };
   },

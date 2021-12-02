@@ -1,5 +1,5 @@
 import {
-  DonationCreationPayload,
+  Donation,
   Event,
   EventPayload,
   Family,
@@ -28,7 +28,7 @@ export interface ReportFamilyView {
 }
 
 export interface CreateDonationView {
-  form: DonationCreationPayload;
+  form: Donation;
   submitLabel: string;
   isLocationLoaded: boolean;
 }
