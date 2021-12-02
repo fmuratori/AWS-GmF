@@ -104,7 +104,6 @@ export default Vue.extend({
         "status",
       ],
       filterQuery: "",
-      filterDate: null,
       selectedFamily: null,
       currentPage: 1,
       perPage: 10,

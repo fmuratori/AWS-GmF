@@ -1,14 +1,15 @@
 <template lang="pug">
-
-
 b-container
+  b-row.justify-content-center.my-5
+    b-col(lg=6, md=8, sm=10)
+      div
+        hr.shaded
+        h4.text-center
+          b FAMILIES
+        hr.shaded
+
   b-row.justify-content-md-center.my-5.no-gutters()
     b-col(lg=8, md=10, sm=12)
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b SCAN QR CODE
-      hr.sidebar-hr.my-3
-
       div(v-if="showScreen=='scan'")
           
         b-card(bg-variant="light" class="text-center")
@@ -17,11 +18,11 @@ b-container
             span Qr code scanner
 
           div(v-if="scannerState == 'ready'")
-            b-button.m-5(variant="info" @click="startCamera()") Attiva camera
+            b-button.color3.m-5(@click="startCamera()") Open camera
 
           div(v-if="scannerState == 'scanning'")
             qrcode-stream(@decode="onDecode" @init="onInit" :camera="cameraState" )
-            b-button(block variant="danger" @click="stopCamera()" v-if="scannerState=='scanning'") Disattiva camera
+            b-button.color3(block @click="stopCamera()" v-if="scannerState=='scanning'") Close camera
 
           div(v-if="scannerState == 'error'")
             font-awesome-icon(icon="fas fa-qrcode fa-3x")
@@ -42,10 +43,8 @@ b-container
       div(v-if="showScreen=='pack'")
         p {{ pack }}
 
-        b-button(block @click="deliverPack()") Set as delivered
-        b-button(block @click="deletePack()") Delete pack
-        b-button(block @click="resetView()") Scan another code
-        b-button(block @click="$router.replace({ name: 'Home' })") Cancel
+        b-button.color3(block @click="deliverPack()") Set as delivered
+        b-button(block variant="secondary" @click="resetView()") Scan another code
 
 
 </template>
@@ -109,7 +108,7 @@ export default Vue.extend({
         this.scannerState = "validating";
 
         packApi
-          .getPackInfo(result)
+          .packListExpanded({_id: result})
           .then((r: AxiosResponse) => {
             if (r.status == 200) {
               this.scannerState = "valid_success";
@@ -128,7 +127,7 @@ export default Vue.extend({
       this.startCamera();
     },
 
-    async onInit(promise) {
+    async onInit(promise:any) {
       this.$refs.expandButton.style.display = "block";
       this.$refs.compressButton.style.display = "none";
       promise

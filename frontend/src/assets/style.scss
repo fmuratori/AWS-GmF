@@ -97,6 +97,33 @@ hr.shaded {
   background-color: $greyscaleD;
 }
 
+.fullheight {
+  height: 100%;
+}
+
+.fullheight-lg {
+  @include md {
+    height: auto;
+  }
+
+  @include lg {
+    height: 100%;
+  }
+}
+
+.scrollable-lg {
+  @include md {
+    width: auto;
+    overflow-y: auto;
+  }
+
+  @include lg {
+    width: 100%;
+    overflow-y: scroll;
+  }
+}
+
+/* */
 
 .color1 {
   background-color: $color1;
@@ -123,3 +150,4 @@ hr.shaded {
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
+

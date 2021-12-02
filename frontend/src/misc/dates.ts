@@ -15,13 +15,13 @@ export default {
     return moment(date).diff(moment.now(), "days");
   },
 
-  isPastDate(date: string): boolean {
+  isPastDate(date: string | Date): boolean {
     return today.diff(date) > 0;
   },
-  isPresentDate(date: string): boolean {
+  isPresentDate(date: string | Date): boolean {
     return today.diff(date) == 0;
   },
-  isFutureDate(date: string): boolean {
+  isFutureDate(date: string | Date): boolean {
     return today.diff(date) < 0;
   },
 

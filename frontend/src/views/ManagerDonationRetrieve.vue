@@ -1,6 +1,5 @@
 <template lang="pug">
 
-
 div(class="fullheight")
   b-container(v-if="!selectedCity")
     b-row.justify-content-center.my-5

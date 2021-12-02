@@ -12,7 +12,7 @@ b-container
       b-row(v-if="this.$store.state.session.userData.type != 'user'")
         label Pack status
         
-        FilterButtons(:filters="filters" :selected=2 @click="filterBy")
+        FilterButtons(:filters="filters" :selected=0 @click="filterBy")
 
       b-row
         b-col(lg="8", md="8", sm="12")
@@ -74,7 +74,7 @@ b-container
                 size="200",
                 level="H")
               
-              b-button.color3(block @click="selectedPack = null") Close pack info
+              b-button(variant="secondary" block @click="selectedPack = null") Close pack info
             div(v-else)
               i No pack selected.     
 
@@ -125,14 +125,14 @@ export default Vue.extend({
           label: "Status",
           sortable: false,
         },
-        {
-          key: "pack.expirationDate",
-          label: "Expiration Date",
-          sortable: true,
-          formatter: (date: Date) => {
-            if (date) return dates.formatDate(date);
-          },
-        },
+        // {
+        //   key: "pack.expirationDate",
+        //   label: "Expiration Date",
+        //   sortable: true,
+        //   formatter: (date: Date) => {
+        //     if (date) return dates.formatDate(date);
+        //   },
+        // },
         {
           key: "pack.deliveryDate",
           label: "Delivery Date",
@@ -177,15 +177,11 @@ export default Vue.extend({
   },
   methods: {
     filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
-      console.log(status);
-      console.log(this.packListBackup.filter((p) => p.pack.status == status));
-
       if (status != "all") {
         this.packList = this.packListBackup.filter((p: Pack) => {
           p.pack.status == status;
         });
         this.$refs.packsTable.refresh();
-        // if (newPacks) this.packList.push(newPacks)
       } else this.packList = this.packListBackup;
     },
     deletePack(id: string): void {
@@ -208,6 +204,7 @@ export default Vue.extend({
         });
     },
     setDelivered(id: string) {
+      eventbus.$emit("startLoading", "Setting pack as delivered")
       packApi
         .setDelivered({ id: id })
         .then((): void => {
@@ -229,7 +226,7 @@ export default Vue.extend({
             "Foods",
             "Unable to upgrade pack status. Retry later or contact us if the problem persists."
           );
-        });
+        }).then(() => eventbus.$emit("stopLoading"));
     },
     formatAddress(addr: Address) {
       return addr.street + " " + addr.civicNumber + ", " + addr.city;
