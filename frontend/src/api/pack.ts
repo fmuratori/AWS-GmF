@@ -16,7 +16,7 @@ export default {
     });
   },
 
-  async packListExpanded(payload: FindPayload): Promise<AxiosResponse> {
+  async packListExpanded(payload: { _id: string }): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/find-expanded`,
       payload,

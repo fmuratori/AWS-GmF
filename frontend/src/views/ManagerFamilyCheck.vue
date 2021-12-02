@@ -46,13 +46,12 @@ b-container
           //- b-button.color3(v-if="data.item.status == 'deleted'")
 
   b-row(align-h="end")
-    b-col(lg=3 md=6 cols=12)
+    b-col(cols="auto")
       b-pagination(
         v-model="currentPage"
         :total-rows="totalRows"
         :per-page="perPage"
-        align="fill"
-        size="sm")
+        align="fill")
 
   b-modal#modal(title="Delete the selected family?", @ok="deleteFamily()")
     div This family will be deleted permanently.
@@ -88,12 +87,12 @@ export default Vue.extend({
     return {
       familyList: new Array<Family>(),
       tableFields: [
+        { key: "status", sortable: true, label: "Status" },
         { key: "name", sortable: true, label: "Family name" },
         { key: "components", sortable: true, label: "Family size" },
         { key: "phoneNumber", label: "Phone number" },
         { key: "address", sortable: true, label: "Address" },
         { key: "creationDate", sortable: true, label: "Submission date" },
-        { key: "status", sortable: true, label: "Status" },
         { key: "actions", label: "" },
       ],
       filterOn: [

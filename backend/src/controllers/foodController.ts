@@ -8,6 +8,7 @@ const factory = new ControllerFactory<FoodDocument>()
 export default class FoodController {
 
 	find = factory.findMany(FoodModel)
+	edit = factory.edit(FoodModel)
 
 	addOrUpdate = catchAsync(async (req: Request, res: Response) => {
 		var elem = await FoodModel.findOne({

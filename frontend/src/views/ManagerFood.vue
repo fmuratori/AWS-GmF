@@ -1,64 +1,74 @@
 <template lang="pug">
 b-container
-  b-row.justify-content-md-center.my-5.no-gutters
-    b-col
-      hr.sidebar-hr.my-3
-      h4.text-center.mb-4
-        b ADD FOOD
-      hr.sidebar-hr.my-3
+  b-row.justify-content-center.my-5
+    b-col(lg=6, md=8, cols=11)
+      hr.shaded
+      h4.text-center
+        b FOOD BANK 
+      hr.shaded
 
-      b-row
-        b-col(sm=12, md=4)
-          b-form(@submit.stop.prevent="addFood")
-            b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
-              b-card-text
-                b-card-header Add food
-                .px-4.pt-4
-                  InputText(
-                    title="Name:",
-                    placeholder="Food name",
-                    :text="form.name",
-                    required,
-                    v-on:data="(e) => { form.name = e; }"
-                  )
+  b-row.justify-content-center.my-5
+    b-col(lg=4, md=8, cols=11).mb-5
+      b-form(@submit.stop.prevent="addFood")
+        b-card.mb-2(bg-variant="light", text-variant="dark", no-body)
+          b-card-text
+            b-card-header(v-if="!isEditMode") Add food
+            b-card-header(v-else) Edit food
+            .px-4.pt-4
+              InputText(
+                title="Name:",
+                placeholder="Set food name",
+                :text="form.name",
+                required,
+                v-on:data="(e) => { form.name = e; }"
+              )
 
-                  InputText(
-                    title="Units: ",
-                    placeholder="Amont",
-                    type="number",
-                    :text="form.number",
-                    required,
-                    v-on:data="(e) => { form.number = e; }"
-                  )
+              InputText(
+                title="Amount: ",
+                placeholder="Set amount",
+                type="number",
+                :text="form.number",
+                required,
+                v-on:data="(e) => { form.number = e; }"
+              )
 
-                  InputDate(
-                    title="Expiration date:",
-                    placeholder="Date",
-                    :date="form.expirationDate",
-                    required,
-                    v-on:data="(e) => { form.expirationDate = e; }"
-                  )
+              InputDate(
+                title="Expiration date:",
+                placeholder="Set date",
+                :date="form.expirationDate",
+                required,
+                v-on:data="(e) => { form.expirationDate = e; }"
+              )
 
-                  b-form-group(label="Labels:")
-                    b-checkbox-group(
-                      v-model="form.labels",
-                      :options="constants.foodLabels",
-                      stacked
-                    )
+              b-form-group(label="Labels:")
+                b-checkbox-group(
+                  v-model="form.labels",
+                  :options="constants.foodLabels",
+                  stacked
+                )
 
-                b-button.b-card-footer-button(
-                  block,
-                  type="submit",
-                  variant="success"
-                ) Add
+            b-button.footerCardButton.color3(
+              block,
+              type="submit",
+              v-if="!isEditMode"
+            ) ADD
 
-        b-col(sm=12, md=8)
-          FoodView(
-            :key="reloadIndex",
-            loadableItems,
-            deletableItem,
-            v-on:load="(e) => load(e)"
-          )
+            b-button-group.d-flex(v-else)
+              b-button.footerCardButton(
+                variant="secondary"
+                @click="cancelEditMode"
+              ) CANCEL
+              b-button.footerCardButton.color3(
+                type="submit",
+              ) EDIT
+
+    b-col(cols=11, md=12 lg=8)
+      FoodView(
+        :key="reloadIndex",
+        loadableItems,
+        deletableItem,
+        v-on:load="load"
+      )
 </template>
 
 <script lang="ts">
@@ -72,11 +82,10 @@ import InputText from "../components/input/InputText.vue";
 import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 
-import { Food, FoodPayload, SelectableFood } from "../types";
+import { Food } from "../types";
 
 import api from "../api/food";
-import { FoodManagerView } from "../viewTypes";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerFood",
@@ -92,10 +101,13 @@ export default Vue.extend({
     return {
       form: {
         labels: new Array<string>(),
-      } as FoodPayload,
+        number: 0,
+        name: null,
+        expirationDate: null,
+      } as Food,
       foodList: new Array<Food>(),
-      tableFields: ["name", "number", "expirationDate", "labels"],
       reloadIndex: 0,
+      isEditMode: false,
     };
   },
   created() {
@@ -122,50 +134,99 @@ export default Vue.extend({
   },
   methods: {
     addFood(): void {
-      api
-        .addFood(this.form)
-        .then((): void => {
-          eventbus.$emit(
-            "successMessage",
-            "Foods",
-            "Food successfully created. Retry later or contact us if the problem persists."
-          );
-
-          this.updateFoodList();
-
-          //aggiorno l'index per ricaricare il component ListFood
-          this.reloadIndex += 1;
+      if (this.foodFormChecks()) {
+        var f = !this.isEditMode
+          ? api.addFood(this.form)
+          : api.editFood(this.form);
+        eventbus.$emit("startLoading", "Updating food list.");
+        f.then((r: AxiosResponse): void => {
+          if (r.status == 200) {
+            if (this.isEditMode) this.cancelEditMode();
+            this.updateFoodList();
+            //aggiorno l'index per ricaricare il component ListFood
+            this.reloadIndex += 1;
+            eventbus.$emit(
+              "successMessage",
+              "Foods",
+              "Food successfully created/edited."
+            );
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "Foods",
+              "Unable to add/edit food. Retry later or contact us if the problem persists."
+            );
+          }
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Foods",
-            "Unable to add food. Retry later or contact us if the problem persists."
-          );
-        });
+          .catch((e: AxiosError): void => {
+            console.log(e);
+            eventbus.$emit(
+              "errorMessage",
+              "Foods",
+              "Unable to add/edit food. Retry later or contact us if the problem persists."
+            );
+          })
+          .then(() => eventbus.$emit("stopLoading"));
+      }
     },
     updateFoodList(): void {
+      eventbus.$emit("startLoading", "Updating food list.");
       api
         .foodList({})
         .then((r: AxiosResponse): void => {
-          this.foodList = r.data as Food[];
+          if (r.status == 200) {
+            this.foodList = r.data as Food[];
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "Foods",
+              "Unable to update the food list. Retry later or contact us if the problem persists."
+            );
+          }
         })
-        .catch((): void => {
+        .catch((e: AxiosError): void => {
+          console.log(e);
           eventbus.$emit(
             "errorMessage",
             "Foods",
-            "Unable to retrieve food list. Retry later or contact us if the problem persists."
+            "Unable to update the food list. Retry later or contact us if the problem persists."
           );
-        });
+        })
+        .then(() => eventbus.$emit("stopLoading"));
     },
-    formatDate(date: Date): string {
-      return moment(date).locale("en").format("LL");
+    load(item: Food) {
+      this.isEditMode = true;
+      this.form = {
+        _id: item._id,
+        labels: item.labels,
+        number: item.number,
+        name: item.name,
+        expirationDate: item.expirationDate,
+      } as Food;
     },
-    load(item: SelectableFood) {
-      this.form.name = item.name;
-      this.form.number = item.number;
-      this.form.expirationDate = item.expirationDate;
-      this.form.labels = item.labels;
+    cancelEditMode() {
+      this.isEditMode = false;
+      this.form.name = "";
+      this.form.number = null;
+      this.form.expirationDate = null;
+      this.form.labels = [];
+    },
+    foodFormChecks() {
+      if (!this.form.expirationDate) {
+        eventbus.$emit(
+          "errorMessage",
+          "Foods",
+          "Set a not null expiration date for the food you want to add."
+        );
+        return false;
+      } else if (this.form.number <= 0) {
+        eventbus.$emit(
+          "errorMessage",
+          "Foods",
+          "Set an amount greater than 0 for the food you want to add."
+        );
+        return false;
+      } else return true;
     },
   },
 });

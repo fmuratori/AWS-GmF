@@ -6,7 +6,7 @@ const packController = new PackController()
 
 router.post('/find', packController.find)
 
-// find one pack gives his id
+// find one pack gives its id
 router.post('/find-expanded', packController.findExpanded)
 
 // filter many packs

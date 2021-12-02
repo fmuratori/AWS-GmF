@@ -1,13 +1,5 @@
 <template lang="pug">
 div
-  b-row
-    b-col
-      b-pagination(
-        v-model="currentPage",
-        :total-rows="totalRows",
-        :per-page="perPage"
-      )
-
   b-table(
     striped,
     hover,
@@ -20,7 +12,16 @@ div
     :sort-direction="sortDirection"
   )
     template(#cell(select)="{ item }")
-      b-button(@click="select(item)", size="sm") Select
+      b-button.color3(@click="select(item)", size="sm") Select
+
+  
+  b-row(align-h="end")
+    b-col(cols="auto")
+      b-pagination(
+        v-model="currentPage",
+        :total-rows="totalRows",
+        :per-page="perPage"
+      )
 </template>
 
 <script lang="ts">
@@ -69,8 +70,13 @@ export default Vue.extend({
           },
         },
         {
+          key: "lastPackDate",
+          label: "Last received pack",
+          sortable: true,
+        },
+        {
           key: "select",
-          label: "Select",
+          label: "",
           sortable: false,
         },
       ],

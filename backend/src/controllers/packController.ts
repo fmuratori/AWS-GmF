@@ -13,7 +13,6 @@ export default class PackController {
 	edit = factory.edit(PackModel)
 
 	findExpanded = catchAsync(async (req: Request, res: Response) => {
-		
 		const pack = await PackModel.aggregate([
 			{
 				$unwind: "$foodList"
@@ -70,11 +69,10 @@ export default class PackController {
 			},
 			{
 				$match: {
-					"pack._id": new mongoose.Types.ObjectId((req.body.id))
+					"pack._id": new mongoose.Types.ObjectId((req.body._id))
 				}
 			}
 		])
-
 		res.status(200).json(pack[0]);
 	})
 

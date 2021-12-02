@@ -1,7 +1,7 @@
 <template lang="pug">
 div
   b-row
-    b-col
+    b-col(cols=12 md=6 lg=6)
       b-form-group
         b-input-group
           b-form-input(
@@ -11,13 +11,6 @@ div
           )
           b-input-group-append
             b-button(:disabled="!filter", @click="filter = ''") Clear
-
-    b-col
-      b-pagination(
-        v-model="currentPage",
-        :total-rows="totalRows",
-        :per-page="perPage"
-      )
 
   b-table(
     striped,
@@ -34,10 +27,10 @@ div
     @filtered="onFiltered"
   )
     template(#cell(load)="{ item }")
-      b-button(@click="load(item)", size="sm") Load
+      b-button(@click="load(item)", size="sm") Edit
 
     template(#cell(labels)="data")
-      b-badge(v-for="label in data.value", variant="success") {{ label }}
+      b-badge.mr-1(v-for="label in data.value", variant="success") {{ label }}
 
     template(#cell(selected)="{ item }")
       div(:key="index", ref="reload")
@@ -54,18 +47,27 @@ div
         ) +
 
     template(#cell(delete)="{ item }")
-      b-button(
+      b-button.color3(
         block,
         size="sm",
-        variant="danger",
         v-b-modal.modal,
         @click="deleteFoodId = item._id"
       ) Delete
 
-  b-modal#modal(title="Confirm?", @ok="deleteFood(deleteFoodId)")
-    div Confirm to delete food
-    template(#modal-cancel) Cancel
-    template(#modal-ok) Confirm
+  b-row(align-h="end")
+    b-col(cols="auto")
+      b-pagination(
+        v-model="currentPage",
+        :total-rows="totalRows",
+        :per-page="perPage"
+      )
+
+  b-modal#modal(title="Delete the selected food?", @ok="deleteFood(deleteFoodId)")
+    div The selected food will be deleted permanently.
+    
+    template(#modal-footer="{ ok, cancel }")
+      b-button(variant='secondary' @click='cancel()') Cancel
+      b-button.color3(@click='ok()') Confirm
 </template>
 
 <script lang="ts">
@@ -73,7 +75,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 import { SelectableFood } from "../types";
 import { FoodView } from "../viewTypes";
-import moment from "moment";
+import dates from "../misc/dates";
 
 import api from "../api/food";
 import { AxiosError, AxiosResponse } from "axios";
@@ -115,7 +117,7 @@ export default Vue.extend({
           label: "Expiration Date",
           sortable: true,
           formatter: (value) => {
-            return moment(value).locale("en").format("LL");
+            return dates.formatDate(value);
           },
         },
         {
@@ -164,9 +166,6 @@ export default Vue.extend({
       });
   },
   methods: {
-    formatDate(date: Date) {
-      return moment(date).locale("en").format("LL");
-    },
     onFiltered(filteredItems: SelectableFood[]) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
@@ -175,12 +174,18 @@ export default Vue.extend({
       if (!item.selected) item.selected = 1;
       else if (item.selected < item.number) item.selected += 1;
       this.index += 1;
-      this.$emit("data", this.foodList);
+      this.$emit(
+        "data",
+        this.foodList.filter((f: SelectableFood) => f.selected)
+      );
     },
     removeClick(item: SelectableFood) {
       if (item.selected > 0) item.selected -= 1;
       this.index += 1;
-      this.$emit("data", this.foodList);
+      this.$emit(
+        "data",
+        this.foodList.filter((f: SelectableFood) => f.selected)
+      );
     },
     load(item: SelectableFood) {
       this.$emit("load", item);
