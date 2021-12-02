@@ -38,7 +38,7 @@ b-container
           //-   b-badge(variant="deleted") Deleted 
         template(#cell(actions)="data")
           b-button.color3(block size="sm" @click="verifyFamily(data.item._id)" v-if="data.item.status == 'pending'")
-            span Add
+            span Verify
             b-icon(icon="check")
           b-button.color3(v-b-modal.modal, block size="sm" @click="deletedFamilyId = data.item._id")
             span Delete
@@ -70,11 +70,11 @@ import Sidebar from "../components/sidebar/Sidebar.vue";
 import InputDate from "../components/input/InputDate.vue";
 import eventbus from "../eventbus";
 
-import { Family, Address } from "../types";
+import { Family } from "../types";
 
 import familyApi from "../api/family";
 
-import { AxiosResponse, AxiosError, Axios } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamilyCheck",
@@ -108,7 +108,7 @@ export default Vue.extend({
       currentPage: 1,
       perPage: 10,
       totalRows: 1,
-      deletedFamilyId: 0,
+      deletedFamilyId: "",
     };
   },
   created() {

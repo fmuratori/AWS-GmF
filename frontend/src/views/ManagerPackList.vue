@@ -23,7 +23,7 @@ b-container
             :fields="tableFields",
             :items="packList"
           )
-            template(#cell(pack.status)="data")
+            template(#cell(status)="data")
               b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
               b-badge(
                 v-if="data.value == 'planned delivery'",
@@ -121,20 +121,20 @@ export default Vue.extend({
       selectedPack: undefined,
       tableFields: [
         {
-          key: "pack.status",
+          key: "status",
           label: "Status",
           sortable: false,
         },
-        // {
-        //   key: "pack.expirationDate",
-        //   label: "Expiration Date",
-        //   sortable: true,
-        //   formatter: (date: Date) => {
-        //     if (date) return dates.formatDate(date);
-        //   },
-        // },
         {
-          key: "pack.deliveryDate",
+          key: "expirationDate",
+          label: "Expiration Date",
+          sortable: true,
+          formatter: (date: Date) => {
+            if (date) return dates.formatDate(date);
+          },
+        },
+        {
+          key: "deliveryDate",
           label: "Delivery Date",
           sortable: true,
           formatter: (date: Date) => {
@@ -142,7 +142,7 @@ export default Vue.extend({
           },
         },
         {
-          key: "pack.deliveryPeriod",
+          key: "deliveryPeriod",
           label: "Delivery Period",
           sortable: false,
         },
@@ -179,9 +179,11 @@ export default Vue.extend({
     filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
       if (status != "all") {
         this.packList = this.packListBackup.filter((p: Pack) => {
-          p.pack.status == status;
-        });
-        this.$refs.packsTable.refresh();
+          p.status == status;
+        })
+        console.log(this.packListBackup)
+        console.log(this.packList)
+        // if (newPacks) this.packList.push(newPacks)
       } else this.packList = this.packListBackup;
     },
     deletePack(id: string): void {

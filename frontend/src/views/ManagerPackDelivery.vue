@@ -348,7 +348,7 @@ export default Vue.extend({
 
       packsApi
         .filterPackList(payload)
-        .then((r: AxiosResponse<{ packs: Pack; foods: Food }>): void => {
+        .then((r: AxiosResponse<{ packs: Pack[]; foods: Food[] }>): void => {
           if (r.status == 200) {
             this.packs = r.data.packs;
             this.foods = r.data.foods;

@@ -3,29 +3,29 @@ import moment from "moment";
 const today = moment();
 
 export default {
-  formatDate(date: string | Date): string {
+  formatDate(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
   },
 
-  formatDatetime(date: string): string {
+  formatDatetime(date: Date): string {
     return moment(date).calendar();
   },
 
-  daysTillDate(date: string): number {
+  daysTillDate(date: Date): number {
     return moment(date).diff(moment.now(), "days");
   },
 
-  isPastDate(date: string | Date): boolean {
+  isPastDate(date: Date): boolean {
     return today.diff(date) > 0;
   },
-  isPresentDate(date: string | Date): boolean {
+  isPresentDate(date: Date): boolean {
     return today.diff(date) == 0;
   },
-  isFutureDate(date: string | Date): boolean {
+  isFutureDate(date: Date): boolean {
     return today.diff(date) < 0;
   },
 
-  getNearestDate(dates: string[]): string {
+  getNearestDate(dates: Date[]): string {
     const today = moment();
 
     let nearestDate;

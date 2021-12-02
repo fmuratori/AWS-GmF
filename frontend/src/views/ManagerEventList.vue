@@ -115,8 +115,6 @@ export default Vue.extend({
       eventList: new Array<Event>(),
       eventListBackup: new Array<Event>(),
       deleteEventId: "",
-      filters: [],
-      sorters: [],
     };
   },
   created() {

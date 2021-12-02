@@ -128,8 +128,6 @@ export default Vue.extend({
     },
 
     async onInit(promise:any) {
-      this.$refs.expandButton.style.display = "block";
-      this.$refs.compressButton.style.display = "none";
       promise
         // .then(() => { })
         .catch((error) => {
