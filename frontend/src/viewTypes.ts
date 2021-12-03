@@ -68,7 +68,7 @@ interface TableField {
 }
 
 export interface FoodView {
-  foodList: Array<Food>;
+  foodList: Array<SelectableFood>;
   tableFields: Array<TableField>;
   totalRows: number;
   currentPage: number;

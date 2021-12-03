@@ -115,13 +115,15 @@ export default Vue.extend({
       eventList: new Array<Event>(),
       eventListBackup: new Array<Event>(),
       deleteEventId: "",
+      filters: new Array<[string, string, string, boolean]>(),
+      sorters: new Array<[string, string, string, boolean]>(),
     };
   },
   created() {
     this.filters = [
-      ["past", "Past", null, true],
-      ["present", "Today", null, true],
-      ["future", "Future", null, true],
+      ["past", "Past", "", true],
+      ["present", "Today", "", true],
+      ["future", "Future", "", true],
     ];
 
     this.sorters = [
@@ -167,8 +169,7 @@ export default Vue.extend({
           null;
       }
     },
-    filterBy(statusFilter: "past" | "present" | "future" | "all") {
-      this.filterByMode = statusFilter;
+    filterBy(statusFilter: string) {
       switch (statusFilter) {
         case "past":
           this.eventList = this.eventListBackup.filter((d) =>

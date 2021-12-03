@@ -100,10 +100,7 @@ div(class="fullheight")
                   :min="new Date()"
                 )
                   b-icon(icon="x", aria-hidden="true")
-          b-form-group#input-group-3(
-            label="Time of day:",
-            label-for="input-3"
-          )
+          b-form-group#input-group-3(label="Time of day:", label-for="input-3")
             b-form-select(
               v-model="pickUpPeriod",
               :options="['morning', 'afternoon', 'evening']",
@@ -113,10 +110,10 @@ div(class="fullheight")
               b-form-select(
                 v-model="pickUpPeriod",
                 :options="['morning', 'afternoon', 'evening']",
-                required, 
+                required,
                 size="sm"
               )
-          div.mt-auto.d-none.d-lg-block.d-xl-block()
+          .mt-auto.d-none.d-lg-block.d-xl-block
             b-alert(show)
               p.m-0.p-0.text-center 
                 span Selected donations: {{ selectedDonations.length }}
@@ -146,7 +143,7 @@ div(class="fullheight")
         div(v-for="(donation, idx) in selectedDonations" :key="idx" :id="'donation' + idx")
           
           hr.mt-0.pt-0
-          h4 Donation # {{idx}}
+          h4 Donation # {{ idx }}
           p
             label Foods:
             ul
@@ -160,7 +157,7 @@ div(class="fullheight")
               p(
                 v-for="(weekDayName, weekDay, widx) in weekDays",
                 :key="widx",
-                v-if="donation.pickUpPeriod.filter(p => p.weekDay == weekDay)"
+                v-if="donation.pickUpPeriod.filter((p) => p.weekDay == weekDay)"
               )
                 label {{ weekDayName + ':&nbsp;' + donation.pickUpPeriod.filter(p => p.weekDay == weekDay).map((d) => d.period).join(', ') }}
 
@@ -168,8 +165,6 @@ div(class="fullheight")
         i No selected donation found.
         p Select a donation by clicking on a yellow exclamation mark found in the map.
         p If you can't find any mark in the map, try to select different filtering options on the right menu.
-
-  
 </template>
 
 <script lang="ts">
@@ -247,7 +242,33 @@ export default Vue.extend({
     if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
   },
   methods: {
-    selectCity(addressData, placeResultData, id) {
+    filterDonations() {
+      this.selectedDonations = [];
+      this.closeInfoWindow();
+
+      eventbus.$emit(
+        "startLoading",
+        "Retrieving avaliable donations in your city."
+      );
+      donationsApi
+        .filterUnpickedDonations(
+          this.selectedCity.name,
+          this.pickUpDate,
+          this.pickUpPeriod
+        )
+        .then((r: AxiosResponse): void => {
+          this.donations = r.data;
+        })
+        .catch((): void => {
+          eventbus.$emit(
+            "errorMessage",
+            "Donation",
+            "Donation search with filtering options failed. Retry later or contact us if the problem persists."
+          );
+        })
+        .then(() => eventbus.$emit("stopLoading"));
+    },
+    selectCity(addressData) {
       this.selectedCity = {
         name: addressData.locality,
         coordinates: {
@@ -293,32 +314,6 @@ export default Vue.extend({
         ),
         1
       );
-    },
-    filterDonations() {
-      this.selectedDonations = [];
-      this.closeInfoWindow();
-
-      eventbus.$emit(
-        "startLoading",
-        "Retrieving avaliable donations in your city."
-      );
-      donationsApi
-        .filterUnpickedDonations(
-          this.selectedCity.name,
-          this.pickUpDate,
-          this.pickUpPeriod
-        )
-        .then((r: AxiosResponse<{ data: Donation[] }>): void => {
-          this.donations = r.data;
-        })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Donation",
-            "Donation search with filtering options failed. Retry later or contact us if the problem persists."
-          );
-        })
-        .then(() => eventbus.$emit("stopLoading"));
     },
     showModal() {
       this.isModalOpen = true;

@@ -74,7 +74,6 @@ b-container
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-import moment from "moment";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/sidebar/Sidebar.vue";
 import FoodView from "../components/FoodView.vue";
@@ -100,10 +99,10 @@ export default Vue.extend({
   data: () => {
     return {
       form: {
+        _id: "",
         labels: new Array<string>(),
         number: 0,
-        name: null,
-        expirationDate: null,
+        name: "",
       } as Food,
       foodList: new Array<Food>(),
       reloadIndex: 0,

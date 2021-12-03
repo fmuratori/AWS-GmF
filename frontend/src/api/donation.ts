@@ -30,7 +30,9 @@ export default {
     );
   },
 
-  async filterDonations(filter: FindPayload): Promise<AxiosResponse> {
+  async filterDonations(
+    filter: FindPayload
+  ): Promise<AxiosResponse<Donation[]>> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/donation/find`,
       filter,
@@ -52,7 +54,7 @@ export default {
     city: string,
     pickUpDate: string,
     pickUpPeriod: string
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<Donation[]>> {
     const filter = {
       $and: [
         {
@@ -99,7 +101,7 @@ export default {
     return this.filterDonations(filter);
   },
 
-  async findDonation(donationId: string): Promise<AxiosResponse> {
+  async findDonation(donationId: string): Promise<AxiosResponse<Donation[]>> {
     const filter = {
       _id: donationId,
     } as FindPayload;

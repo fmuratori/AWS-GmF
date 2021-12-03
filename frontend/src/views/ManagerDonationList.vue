@@ -119,17 +119,19 @@ export default Vue.extend({
       donationsBackup: new Array<Donation>(),
       sortByMode: "expirationDateAscending",
       filterByMode: "all",
+      filters: new Array<[string, string, string, boolean]>(),
+      sorters: new Array<[string, string, string, boolean]>(),
     };
   },
   created() {
     this.filters = [
-      ["waiting", "Waiting", null, true],
-      ["selected", "Selected", null, true],
-      ["all", "All", null, true],
+      ["waiting", "Waiting", "", true],
+      ["selected", "Selected", "", true],
+      ["all", "All", "", true],
     ];
 
     this.sorters = [
-      ["unreadMessages", "Unread Messages", null, true],
+      ["unreadMessages", "Unread Messages", "", true],
       ["creationDateDescending", "Creation Date", "sort-down", true],
       ["creationDateAscending", "Creation Date", "sort-down-alt", true],
       ["expirationDateDescending", "Expiration Date", "sort-down", true],
@@ -232,7 +234,7 @@ export default Vue.extend({
           null;
       }
     },
-    filterBy(statusFilter: "waiting" | "selected" | "withdrawn" | "all") {
+    filterBy(statusFilter: string) {
       this.filterByMode = statusFilter;
       switch (statusFilter) {
         case "waiting":

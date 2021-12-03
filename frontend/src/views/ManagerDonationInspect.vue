@@ -249,7 +249,7 @@ export default Vue.extend({
         ? "Afternoon"
         : "Evening";
     },
-    sendMessage(event) {
+    sendMessage() {
       this.$store.dispatch("sendMessage", {
         donationId: this.donation._id,
         message: this.chatMessage,

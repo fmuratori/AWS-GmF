@@ -126,13 +126,15 @@ export default Vue.extend({
       familyList: new Array<Family>(),
       familyListBackup: new Array<Family>(),
       deleteFamilyId: "",
+      filters: new Array<[string, string, string, boolean]>(),
+      sorters: new Array<[string, string, string, boolean]>(),
     };
   },
   created() {
     this.filters = [
-      ["verified", "Verified", null, true],
-      ["pending", "Pending", null, true],
-      ["all", "All", null, true],
+      ["verified", "Verified", "", true],
+      ["pending", "Pending", "", true],
+      ["all", "All", "", true],
     ];
 
     this.sorters = [
@@ -215,7 +217,7 @@ export default Vue.extend({
           );
         });
     },
-    filterBy(statusFilter: "verified" | "pending" | "all"): void {
+    filterBy(statusFilter: string): void {
       this.statusFilter = statusFilter;
       this.familyList = this.familyListBackup;
       switch (statusFilter) {
