@@ -1,6 +1,6 @@
 <template lang="pug">
 div(class="fullheight")
-  b-container(v-if="!selectedCity")
+  b-container(v-if="!selectedCity.name")
     b-row.justify-content-center.my-5
       b-col(lg=6, md=8, cols=11 align-self="center")
         div.mb-5
@@ -28,7 +28,7 @@ div(class="fullheight")
   
   b-row(class="fullheight justify-content-center" no-gutters v-else)
 
-    b-col(v-if="selectedCity" class="fullheight" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
+    b-col(v-if="selectedCity.name" class="fullheight" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
       GmapMap(:options="mapsOptions" 
       :center="{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}"
       :zoom="14"
@@ -48,7 +48,7 @@ div(class="fullheight")
               //truck
               b-icon(icon="check-circle-fill" animation="fade" variant="success")
         gmap-info-window(
-        v-if="windowCoordinates"
+        v-if="windowCoordinates.x != 0 && windowCoordinates.y != 0"
         :options="{maxWidth: 300*windowPacks.length, pixelOffset: { width: 0, height: -55 } }"
         :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}", 
         :opened="true"
@@ -78,11 +78,11 @@ div(class="fullheight")
                     br
             tr
               td(v-for="(pack, idx) in windowPacks" :key:="idx")
-                b-button.color3(v-if="!selectedPacks.includes(pack)"  variant="success" size="sm" block @click="selectPack(pack)") Select
+                b-button.color3(v-if="!selectedPacks.includes(pack)" size="sm" block @click="selectPack(pack)") Select
                 b-button.color3(v-else size="sm" block 
                 @click="deselectPack(pack)") Cancel
 
-    b-col(v-if="selectedCity" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
+    b-col(v-if="selectedCity.name" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
       div.py-3.px-lg-2(class="d-flex flex-column" class="fullheight")
         div()
           h5
@@ -127,7 +127,7 @@ div(class="fullheight")
           b-button.color3(variant="success" size="sm" block @click="selectPacks") Submit
           b-button(variant="secondary" size="sm" block @click="deselectCity") Select another city
 
-    b-col(v-if="selectedCity" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
+    b-col(v-if="selectedCity.name" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
       b-alert.mt-3(show)
         p.m-0.p-0.text-center 
           span Selected packs: {{ selectedPacks.length }}
@@ -225,16 +225,22 @@ export default Vue.extend({
         ["expiring_today", "Expiring today", null, true],
         ["expiring_tomorrow", "Expiring tomorros", null, true],
       ],
-      selectedCity: null,
+      selectedCity: {
+        name: "",
+        coordinates: {
+          x: 0,
+          y: 0,
+        },
+      },
       daysToExpiration: 0,
       packs: new Array<Pack>(),
       foods: new Array<Food>(),
       selectedPacks: new Array<Pack>(),
       unselectedPacks: new Array<Pack>(),
       windowPacks: new Array<Pack>(),
-      windowCoordinates: null,
+      windowCoordinates: { x: 0, y: 0 },
       deliveryDate: dates.formatDate(moment().toDate()),
-      deliveryPeriod: null,
+      deliveryPeriod: "",
       isModalOpen: false,
     };
   },
@@ -243,10 +249,15 @@ export default Vue.extend({
   },
   methods: {
     packFoods(pack: Pack) {
-      const packFoodsIds = pack.foodList.map((f) => f.foodId);
-      return this.foods.filter((f) => packFoodsIds.includes(f._id));
+      const packFoodsIds = pack.foodList.map(
+        (f: { _id: string; foodId: string; number: number }) => f.foodId
+      );
+      return this.foods.filter((f: { _id: string }) =>
+        packFoodsIds.includes(f._id)
+      );
     },
-    selectCity(addressData: { locality: any; latitude: any; longitude: any; }) { //, placeResultData, id
+    selectCity(addressData: { locality: any; latitude: any; longitude: any }) {
+      //, placeResultData, id
       this.selectedCity = {
         name: addressData.locality,
         coordinates: {
@@ -257,10 +268,16 @@ export default Vue.extend({
       this.getPacks();
     },
     deselectCity() {
-      this.selectedCity = null;
+      this.selectedCity = {
+        name: "",
+        coordinates: {
+          x: 0,
+          y: 0,
+        },
+      };
       this.selectedPacks = [];
-      this.windowPacks = null;
-      this.windowCoordinates = null;
+      this.windowPacks = new Array<Pack>();
+      this.windowCoordinates = { x: 0, y: 0 };
     },
     openInfoWindow(lat: number, lng: number) {
       this.windowPacks.splice(0, this.windowPacks.length);
@@ -280,7 +297,7 @@ export default Vue.extend({
       }
     },
     closeInfoWindow() {
-      this.windowCoordinates = null;
+      this.windowCoordinates = { x: 0, y: 0 };
     },
     selectPack(pack: Pack) {
       this.selectedPacks.push(pack);
@@ -313,12 +330,14 @@ export default Vue.extend({
               moment(p.expirationDate).toDate() ==
               moment().add(1, "days").toDate()
           );
-          this.deliveryDate = dates.formatDate(moment().add(1, "days").toDate());
+          this.deliveryDate = dates.formatDate(
+            moment().add(1, "days").toDate()
+          );
           break;
         }
         case "all": {
-          this.unselectedPacks = this.packs.filter(
-            (p: Pack) => dates.isFutureDate(p.expirationDate)
+          this.unselectedPacks = this.packs.filter((p: Pack) =>
+            dates.isFutureDate(p.expirationDate)
           );
           break;
         }
@@ -341,7 +360,7 @@ export default Vue.extend({
         filter: {
           $match: {
             "family.address.city": this.selectedCity.name,
-            "status": "ready",
+            status: "ready",
           },
         },
       } as FindPayload;
@@ -385,11 +404,11 @@ export default Vue.extend({
           "Unable to perform the requested operation. Select at least one pack available for delivery."
         );
       } else {
-        eventbus.$emit("startLoading", "Selecting packs for delivery")
+        eventbus.$emit("startLoading", "Selecting packs for delivery");
         const promises: Promise<AxiosResponse>[] = [];
         this.selectedPacks.forEach((element: Pack) => {
           element.status = "planned delivery";
-          element.deliveryDate = this.deliveryDate;
+          element.deliveryDate = new Date(this.deliveryDate);
           element.deliveryPeriod = this.deliveryPeriod;
           element.deliveryVolunteerId = this.$store.state.session.userData._id;
           promises.push(packsApi.editPack(element));
@@ -410,7 +429,10 @@ export default Vue.extend({
               "Packs",
               "Pack reservation submission for pick up failed. Retry later or contact us if the problem persists."
             );
-          }).then(() => {eventbus.$emit("stopLoading")});
+          })
+          .then(() => {
+            eventbus.$emit("stopLoading");
+          });
       }
     },
   },

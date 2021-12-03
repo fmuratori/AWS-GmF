@@ -108,8 +108,8 @@ export default Vue.extend({
         this.scannerState = "validating";
 
         packApi
-          .packListExpanded({_id: result})
-          .then((r: AxiosResponse) => {
+          .packListExpanded({ _id: result })
+          .then((r: AxiosResponse<Pack>) => {
             if (r.status == 200) {
               this.scannerState = "valid_success";
               this.showScreen = "pack";
@@ -127,7 +127,7 @@ export default Vue.extend({
       this.startCamera();
     },
 
-    async onInit(promise:any) {
+    async onInit(promise: any) {
       promise
         // .then(() => { })
         .catch((error) => {

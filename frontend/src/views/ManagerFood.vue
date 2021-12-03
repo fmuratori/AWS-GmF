@@ -207,9 +207,9 @@ export default Vue.extend({
     cancelEditMode() {
       this.isEditMode = false;
       this.form.name = "";
-      this.form.number = null;
-      this.form.expirationDate = null;
-      this.form.labels = [];
+      this.form.number = 0;
+      this.form.expirationDate = new Date();
+      this.form.labels = new Array<string>();
     },
     foodFormChecks() {
       if (!this.form.expirationDate) {

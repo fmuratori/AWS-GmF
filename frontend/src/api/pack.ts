@@ -6,10 +6,11 @@ import {
   PackDeliveryPayload,
   PackPayload,
   Pack,
+  Food,
 } from "../types";
 
 export default {
-  async createPack(payload: PackPayload): Promise<AxiosResponse> {
+  async createPack(payload: PackPayload): Promise<AxiosResponse<Pack>> {
     return axios.post(`${process.env.VUE_APP_API_URL}/api/pack/add`, payload, {
       headers: store.getters.getSessionHeader,
     });
@@ -21,7 +22,9 @@ export default {
     });
   },
 
-  async packListExpanded(payload: { _id: string }): Promise<AxiosResponse> {
+  async packListExpanded(payload: {
+    _id: string;
+  }): Promise<AxiosResponse<Pack>> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/find-expanded`,
       payload,
@@ -29,7 +32,9 @@ export default {
     );
   },
 
-  async filterPackList(payload: FindPayload): Promise<AxiosResponse> {
+  async filterPackList(
+    payload: FindPayload
+  ): Promise<AxiosResponse<{ packs: Pack[]; foods: Food[] }>> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/pack/filter`,
       payload,

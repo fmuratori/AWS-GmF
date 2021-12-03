@@ -55,7 +55,7 @@ export interface changePasswordPayload {
 export interface Donation {
   _id: string;
   userId: string;
-  foods: [string];
+  foods: string[];
   expirationDate: string;
   address: Address;
   additionalInformations: string;
@@ -125,7 +125,7 @@ export interface Event {
 }
 
 export interface PackPayload {
-  foodList: [{ foodId: string; number: number }];
+  foodList: { foodId: string; number: number }[];
   familyId: string;
   expirationDate: Date;
 }
@@ -139,7 +139,7 @@ export interface PackDeliveryPayload {
 
 export interface Pack {
   _id: string;
-  foodList: [{ foodId: string; number: number }] | Food[];
+  foodList: [{ _id: string; foodId: string; number: number }];
   family: Family;
   pack: { status: string };
   deliveryVolunteerId: string;
@@ -154,7 +154,7 @@ export interface FoodPayload {
   name: string;
   number: number;
   expirationDate: Date;
-  labels: [string];
+  labels: string[];
 }
 
 export interface Food {
@@ -162,7 +162,7 @@ export interface Food {
   name: string;
   number: number;
   expirationDate: Date;
-  labels: [string];
+  labels: string[];
 }
 export interface SelectableFood extends Food {
   selected: number;

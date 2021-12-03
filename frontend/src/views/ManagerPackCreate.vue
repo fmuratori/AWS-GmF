@@ -220,11 +220,11 @@ export default Vue.extend({
       step: "selectFamily",
       foodList: new Array<SelectableFood>(),
       familyList: new Array<Family>(),
-      selectedFamily: null,
+      selectedFamily: {} as Family,
       form: {
         foodList: new Array<{ foodId: string; number: number }>(),
         familyId: "",
-        expirationDate: null,
+        expirationDate: new Date(),
       } as PackPayload,
       isPrinted: false,
     };
@@ -256,8 +256,7 @@ export default Vue.extend({
 
     print() {
       this.isPrinted = true;
-
-      this.$refs.printableData.generatePdf();
+      this.$refs.printableData!.generatePdf();
     },
     createPack(): void {
       this.foodList.forEach((elem) => {
@@ -266,58 +265,61 @@ export default Vue.extend({
         }
       });
 
-      this.form.familyId = this.selectedFamily._id;
-      this.form.expirationDate = this.packExpirationDate;
+      this.form.familyId = this.selectedFamily!._id;
+      this.form.expirationDate = new Date(this.packExpirationDate);
 
       eventbus.$emit("startLoading", "Creating a new food pack");
 
-      // TODO: eliminare riga successiva
-      eventbus.$emit("stopLoading");
-
-      // packApi
-      //   .createPack(this.form)
-      //   .then((r: AxiosResponse<Pack>): void => {
-      //     if (r.status == 200) {
-      //       this.step = "loading";
-      //       eventbus.$emit(
-      //         "successMessage",
-      //         "Food packs",
-      //         "Pack successfully created."
-      //       );
-
       packApi
-        .packListExpanded({ _id: "61a7f2d1406111692396214e" }) // r.data._id // 61a7f2d1406111692396214e
-        .then((r2: AxiosResponse<Pack>): void => {
-          if (r2.status == 200) {
-            this.form = r2.data;
-            this.step = "printableInfo";
+        .createPack(this.form)
+        .then((r: AxiosResponse<Pack>): void => {
+          if (r.status == 200) {
+            this.step = "loading";
+            eventbus.$emit(
+              "successMessage",
+              "Food packs",
+              "Pack successfully created."
+            );
+
+            packApi
+              .packListExpanded({ _id: "61a7f2d1406111692396214e" }) // r.data._id // 61a7f2d1406111692396214e
+              .then((r2: AxiosResponse<Pack>): void => {
+                if (r2.status == 200) {
+                  this.form = r2.data;
+                  this.step = "printableInfo";
+                }
+              })
+              .catch((e2: AxiosError): void => {
+                console.log(e2);
+                eventbus.$emit(
+                  "errorMessage",
+                  "Food packs",
+                  "Unable to find the specified pack. Retry later or contact us if the problem persists."
+                );
+              });
           }
         })
-        .catch((e2: AxiosError): void => {
-          console.log(e2);
+        .catch((e: AxiosError): void => {
+          console.log(e);
           eventbus.$emit(
             "errorMessage",
             "Food packs",
-            "Unable to find the specified pack. Retry later or contact us if the problem persists."
+            "Unable to create a food pack. Retry later or contact us if the problem persists."
           );
+        })
+        .then(() => {
+          eventbus.$emit("stopLoading");
         });
-      // }
-      // })
-      // .catch((e: AxiosError): void => {
-      //   console.log(e);
-      //   eventbus.$emit(
-      //     "errorMessage",
-      //     "Food packs",
-      //     "Unable to create a food pack. Retry later or contact us if the problem persists."
-      //   );
-      // }).then(() => {
-      //   eventbus.$emit("stopLoading");
-      // });
     },
     resetView() {
       this.step = "selectFamily";
-      this.selectedFamily = null;
+      this.selectedFamily = {} as Family;
       this.isPrinted = false;
+      this.form = {
+        foodList: new Array<{ foodId: string; number: number }>(),
+        familyId: "",
+        expirationDate: new Date(),
+      } as PackPayload;
     },
   },
 });

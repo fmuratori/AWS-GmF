@@ -180,9 +180,9 @@ export default Vue.extend({
       if (status != "all") {
         this.packList = this.packListBackup.filter((p: Pack) => {
           p.status == status;
-        })
-        console.log(this.packListBackup)
-        console.log(this.packList)
+        });
+        console.log(this.packListBackup);
+        console.log(this.packList);
         // if (newPacks) this.packList.push(newPacks)
       } else this.packList = this.packListBackup;
     },
@@ -206,7 +206,7 @@ export default Vue.extend({
         });
     },
     setDelivered(id: string) {
-      eventbus.$emit("startLoading", "Setting pack as delivered")
+      eventbus.$emit("startLoading", "Setting pack as delivered");
       packApi
         .setDelivered({ id: id })
         .then((): void => {
@@ -228,7 +228,8 @@ export default Vue.extend({
             "Foods",
             "Unable to upgrade pack status. Retry later or contact us if the problem persists."
           );
-        }).then(() => eventbus.$emit("stopLoading"));
+        })
+        .then(() => eventbus.$emit("stopLoading"));
     },
     formatAddress(addr: Address) {
       return addr.street + " " + addr.civicNumber + ", " + addr.city;
