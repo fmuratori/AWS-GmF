@@ -104,11 +104,11 @@ export default Vue.extend({
         "status",
       ],
       filterQuery: "",
-      selectedFamily: null,
       currentPage: 1,
       perPage: 10,
       totalRows: 1,
       deletedFamilyId: "",
+      selectedFamily: {}
     };
   },
   created() {

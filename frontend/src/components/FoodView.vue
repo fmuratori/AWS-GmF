@@ -198,7 +198,8 @@ export default Vue.extend({
           eventbus.$emit(
             "successMessage",
             "Foods",
-            "Food deleted successfully."
+            "Food deleted successfully.",
+            this
           );
         })
         .catch((): void => {

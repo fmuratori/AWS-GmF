@@ -140,7 +140,7 @@ export default Vue.extend({
             this.$refs["messagesModal"].hide();
             this.$router.push({
               name: "ManagerDonationInspect",
-              params: { donation: JSON.stringify(r.data[0]) },
+              params: { donation: JSON.stringify((r.data as Donation[])[0]) },
             });
           } else {
             eventbus.$emit(

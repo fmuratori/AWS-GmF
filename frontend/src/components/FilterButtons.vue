@@ -21,7 +21,7 @@ export default Vue.extend({
   name: "FilterButtons",
   props: {
     label: String,
-    filters: Array,
+    filters: Object,
     selected: Number,
   },
   data: () => {

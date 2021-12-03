@@ -257,7 +257,7 @@ export default Vue.extend({
           this.pickUpPeriod
         )
         .then((r: AxiosResponse): void => {
-          this.donations = r.data;
+          this.donations = r.data as Donation[];
         })
         .catch((): void => {
           eventbus.$emit(
@@ -281,7 +281,7 @@ export default Vue.extend({
     deselectCity() {
       this.selectedCity = null;
       this.selectedDonations = [];
-      this.windowDonations = null;
+      this.windowDonations = new Array<Donation>();
       this.windowCoordinates = null;
     },
     openInfoWindow(lat: number, lng: number) {
