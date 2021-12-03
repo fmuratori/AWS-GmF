@@ -1,21 +1,10 @@
 <template lang="pug">
 div
-  GmapMap.mapContainer(
-    :options="mapsOptions",
-    :center="{ lat: xCoord, lng: yCoord }",
-    :zoom="14",
-    map-type-id="terrain",
-    ref="mapRef"
-  )
-    GmapMarker(
-      :key="0",
-      :position="{ lat: xCoord, lng: yCoord }",
-      :clickable="false",
-      :draggable="true"
-    )
-
-  p(class="text-muted")
-    small Slide inside the map to reposition the marker if it is not pointing in the exact location you provided. This may help our volunteers to reach you.
+  GmapMap.mapContainer(:options='mapsOptions' :center='{ lat: xCoord, lng: yCoord }' :zoom='14' map-type-id='terrain' ref='mapRef')
+    GmapMarker(:key='0' :position='{ lat: xCoord, lng: yCoord }' :clickable='false' :draggable='true')
+  p.text-muted
+    small
+      | Slide inside the map to reposition the marker if it is not pointing in the exact location you provided. This may help our volunteers to reach you.
 </template>
 
 <script lang="ts">

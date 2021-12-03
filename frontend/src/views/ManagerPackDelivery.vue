@@ -1,184 +1,131 @@
 <template lang="pug">
-div(class="fullheight")
-  b-container(v-if="!selectedCity.name")
+.fullheight
+  b-container(v-if='!selectedCity.name')
     b-row.justify-content-center.my-5
-      b-col(lg=6, md=8, cols=11 align-self="center")
-        div.mb-5
+      b-col(lg='6' md='8' cols='11' align-self='center')
+        .mb-5
           hr.shaded
           h4.text-center
             b(v-if="this.$store.state.session.userData.type == 'user'") YOUR DONATIONS
             b(v-else) PACKS DELIVERY MAP
           hr.shaded
-
-        b-alert(show variant="info").mb-5
-          b-row(align-v="center")
-            b-col(cols="auto")
-              h1 
-                b-icon(icon="map")
-            b-col 
+        b-alert.mb-5(show='show' variant='info')
+          b-row(align-v='center')
+            b-col(cols='auto')
+              h1
+                b-icon(icon='map')
+            b-col
               p.m-0 Select a valid city to show all available packs ready for shipping.
-
-        vue-google-autocomplete(
-        id="map"
-        classname="form-control"
-        placeholder="Insert a city name"
-        v-on:placechanged="selectCity"
-        country="it"
-        types="(cities)")
-  
-  b-row(class="fullheight justify-content-center" no-gutters v-else)
-
-    b-col(v-if="selectedCity.name" class="fullheight" cols=10 sm=10 md=10 lg=9 order=2 order-sm=2 order-md=2 order-lg=1) 
-      GmapMap(:options="mapsOptions" 
-      :center="{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}"
-      :zoom="14"
-      map-type-id="terrain"
-      class="fullheight")
-        div 
-          gmap-custom-marker(v-for="(pack, idx) in unselectedPacks" :key="idx" 
-            :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}"
-            @click.native="openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)")
-            h1
-              b-icon(icon="exclamation-circle-fill" variant="warning")
+        vue-google-autocomplete#map(classname='form-control' placeholder='Insert a city name' @placechanged='selectCity' country='it' types='(cities)')
+  b-row.fullheight.justify-content-center(no-gutters='no-gutters' v-else)
+    b-col.fullheight(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='9' order='2' order-sm='2' order-md='2' order-lg='1')
+      gmapmap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
-          gmap-custom-marker(v-for="(pack, idx) in selectedPacks" :key="idx" 
-            :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}"
-            @click.native="openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)")
+          gmap-custom-marker(v-for='(pack, idx) in unselectedPacks' :key='idx' :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}" @click.native='openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)')
             h1
-              //truck
-              b-icon(icon="check-circle-fill" animation="fade" variant="success")
-        gmap-info-window(
-        v-if="windowCoordinates.x != 0 && windowCoordinates.y != 0"
-        :options="{maxWidth: 300*windowPacks.length, pixelOffset: { width: 0, height: -55 } }"
-        :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}", 
-        :opened="true"
-        @closeclick="closeInfoWindow")
-
+              b-icon(icon='exclamation-circle-fill' variant='warning')
+        div
+          gmap-custom-marker(v-for='(pack, idx) in selectedPacks' :key='idx' :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}" @click.native='openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)')
+            h1
+              // truck
+              b-icon(icon='check-circle-fill' animation='fade' variant='success')
+        gmap-info-window(v-if='windowCoordinates.x != 0 && windowCoordinates.y != 0' :options='{maxWidth: 300*windowPacks.length, pixelOffset: { width: 0, height: -55 } }' :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}" :opened='true' @closeclick='closeInfoWindow')
           table
             tr
-              td(v-for="(pack, idx) in windowPacks" :key:="idx") 
+              td(v-for='(pack, idx) in windowPacks' :key:='idx')
                 p
                   span.mb-2.font-weight-bold Family:
                   br
-                  span.mb-0() {{ pack.family[0].name }}
+                  span.mb-0
+                    | {{ pack.family[0].name }}
                     br
             tr
-              td(v-for="(pack, idx) in windowPacks" :key:="idx") 
+              td(v-for='(pack, idx) in windowPacks' :key:='idx')
                 p
                   span.mb-2.font-weight-bold Phone:
                   br
-                  span.mb-0() {{ pack.family[0].phoneNumber }}
+                  span.mb-0
+                    | {{ pack.family[0].phoneNumber }}
                     br
             tr
-              td(v-for="(pack, idx) in windowPacks" :key:="idx") 
+              td(v-for='(pack, idx) in windowPacks' :key:='idx')
                 p
                   span.mb-2.font-weight-bold Components:
                   br
-                  span.mb-0() {{ pack.family[0].components }}
+                  span.mb-0
+                    | {{ pack.family[0].components }}
                     br
             tr
-              td(v-for="(pack, idx) in windowPacks" :key:="idx")
-                b-button.color3(v-if="!selectedPacks.includes(pack)" size="sm" block @click="selectPack(pack)") Select
-                b-button.color3(v-else size="sm" block 
-                @click="deselectPack(pack)") Cancel
-
-    b-col(v-if="selectedCity.name" cols=10 sm=10 md=10 lg=3 order=1 order-sm=1 order-md=1 order-lg=2 class="fullheight-lg scrollable-lg")
-      div.py-3.px-lg-2(class="d-flex flex-column" class="fullheight")
-        div()
+              td(v-for='(pack, idx) in windowPacks' :key:='idx')
+                b-button.color3(v-if='!selectedPacks.includes(pack)' size='sm' block='block' @click='selectPack(pack)') Select
+                b-button.color3(v-else size='sm' block='block' @click='deselectPack(pack)') Cancel
+    b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
+      .py-3.px-lg-2.d-flex.flex-column.fullheight
+        div
           h5
-            font-awesome-icon.mr-1(icon="filter")
+            font-awesome-icon.mr-1(icon='filter')
             span Filters
-        div().mb-2
-          FilterButtons(:filters="filters" :selected=0 @click="updateFilter" )
-
-        div().mt-3
+        .mb-2
+          FilterButtons(:filters='filters' :selected='0' @click='updateFilter')
+        .mt-3
           h5
-            font-awesome-icon.mr-1(icon="truck")
+            font-awesome-icon.mr-1(icon='truck')
             span Delivery options
-          b-form-group#input-group-2(label="Delivery date:", label-for="input-2")
+          b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
             b-input-group
-              b-form-datepicker#input-2.border-right-0(
-                required,
-                v-model="deliveryDate",
-                reset-button,
-                close-button,
-                size="sm",
-                :min="new Date()"
-                @input="updateFilter"
-              )
-                b-icon(icon="x", aria-hidden="true")
-        b-form-group#input-group-3(
-          label="Time of day:",
-          label-for="input-3"
-        )
-          b-form-select(
-            v-model="deliveryPeriod",
-            :options="['morning', 'afternoon', 'evening']",
-            required,
-            size="sm"
-          )
-        div.mt-auto.d-none.d-lg-block.d-xl-block()
-          b-alert(show)
-            p.m-0.p-0.text-center 
+              b-form-datepicker#input-2.border-right-0(required='required' v-model='deliveryDate' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()' @input='updateFilter')
+                b-icon(icon='x' aria-hidden='true')
+        b-form-group#input-group-3(label='Time of day:' label-for='input-3')
+          b-form-select(v-model='deliveryPeriod' :options="['morning', 'afternoon', 'evening']" required='required' size='sm')
+        .mt-auto.d-none.d-lg-block.d-xl-block
+          b-alert(show='show')
+            p.m-0.p-0.text-center
               span Selected packs: {{ selectedPacks.length }}
               br
               span &nbsp;
-              a(href="#" @click="showModal") (Inspect)
-          b-button.color3(variant="success" size="sm" block @click="selectPacks") Submit
-          b-button(variant="secondary" size="sm" block @click="deselectCity") Select another city
-
-    b-col(v-if="selectedCity.name" cols=10 sm=10 md=10 order=3 class="d-block d-lg-none d-xl-none")
-      b-alert.mt-3(show)
-        p.m-0.p-0.text-center 
+              a(href='#' @click='showModal') (Inspect)
+          b-button.color3(variant='success' size='sm' block='block' @click='selectPacks') Submit
+          b-button(variant='secondary' size='sm' block='block' @click='deselectCity') Select another city
+    b-col.d-block.d-lg-none.d-xl-none(v-if='selectedCity.name' cols='10' sm='10' md='10' order='3')
+      b-alert.mt-3(show='show')
+        p.m-0.p-0.text-center
           span Selected packs: {{ selectedPacks.length }}
           br
           span &nbsp;
-          a(href="#" @click="showModal") (Inspect)
-      b-button.color3(variant="success" size="sm" block @click="selectPacks") Submit
-      b-button(variant="secondary" size="sm" block @click="deselectCity") Select another city
-
-    b-modal(id="modal-1" title="Selected packs" size="lg" scrollable centered hide-footer v-model="isModalOpen")
-      b-row(style="height: 100%;")
-        b-col(v-if="selectedPacks.length" cols=10 md=10 lg=3 style="overflow: hidden;")
+          a(href='#' @click='showModal') (Inspect)
+      b-button.color3(variant='success' size='sm' block='block' @click='selectPacks') Submit
+      b-button(variant='secondary' size='sm' block='block' @click='deselectCity') Select another city
+    b-modal#modal-1(title='Selected packs' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
+      b-row(style='height: 100%;')
+        b-col(v-if='selectedPacks.length' cols='10' md='10' lg='3' style='overflow: hidden;')
           b-list-group
-            div(v-for="(pack, idx) in selectedPacks" :key="idx")
+            div(v-for='(pack, idx) in selectedPacks' :key='idx')
               b-list-group-item(:href="'#pack' + idx") Pack # {{ idx }}
-        b-col(v-if="selectedPacks.length" cols=10 md=10 lg=9 style="overflow-y: scroll; height: 100%;")
-          div(v-for="(pack, idx) in selectedPacks" :key="idx" :id="'pack' + idx")
-            
+        b-col(v-if='selectedPacks.length' cols='10' md='10' lg='9' style='overflow-y: scroll; height: 100%;')
+          div(v-for='(pack, idx) in selectedPacks' :key='idx' :id="'pack' + idx")
             hr.mt-0.pt-0
             h4 Pack # {{idx}}
-            
-            p.mb-0 Family name:&nbsp;
+            p.mb-0
+              | Family name:&nbsp;
               label {{ pack.family[0].name }}
-            
-            p.mb-0 Components:&nbsp;
+            p.mb-0
+              | Components:&nbsp;
               label {{ pack.family[0].components }}
-            
             p.mb-0
               label Foods:
               ul
-                li(v-for="(food, fidx) in packFoods(pack)" :key="fidx")
-                  p.mb-0 
-                    label {{ food.name }}&nbsp;
-                      b-badge(v-for="(label, lidx) in food.labels" :key="lidx" variant="info") {{ label }}
+                li(v-for='(food, fidx) in packFoods(pack)' :key='fidx')
+                  p.mb-0
+                    label
+                      | {{ food.name }}&nbsp;
+                      b-badge(v-for='(label, lidx) in food.labels' :key='lidx' variant='info') {{ label }}
                     br
                     label {{ dates.formatDatetime(food.expirationDate) }}
-
-
-            //- p
-            //-   label Pickup periods:
-            //-     p(
-            //-       v-for="(weekDayName, weekDay, widx) in weekDays",
-            //-       :key="widx",
-            //-       v-if="pack.deliveryPeriod.filter(p => p.weekDay == weekDay)"
-            //-     )
-            //-       label {{ weekDayName + ':&nbsp;' + pack.deliveryPeriod.filter(p => p.weekDay == weekDay).map((d) => d.period).join(', ') }}
-
         b-col(v-else)
           i No selected pack found.
           p Select a pack by clicking on a yellow exclamation mark found in the map.
-          p If you can't find any mark in the map, try to select different filtering options on the right menu.
+          p
+            | If you can&apos;t find any mark in the map, try to select different filtering options on the right menu.
 </template>
 
 <style scoped lang="scss"></style>
@@ -186,25 +133,21 @@ div(class="fullheight")
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-import { AxiosResponse } from "axios";
-import GmapCustomMarker from "vue2-gmap-custom-marker";
-
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
-import FilterButtons from "../components/FilterButtons.vue";
-
 import dates from "../misc/dates";
 import misc from "../misc/misc";
 import moment from "moment";
 
+import GmapCustomMarker from "vue2-gmap-custom-marker";
+import FilterButtons from "../components/FilterButtons.vue";
+
 import packsApi from "../api/pack";
+import { AxiosResponse } from "axios";
+
 import { Pack, FindPayload, Food } from "../types";
 
 export default Vue.extend({
   name: "ManagerPackDelivery",
   components: {
-    Navbar,
-    Sidebar,
     GmapCustomMarker,
     FilterButtons,
   },

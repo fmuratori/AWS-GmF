@@ -77,6 +77,7 @@ export interface ChatMessage {
   text: string;
   visualized: boolean;
   messages: string[]; // needed to display the chat in a different way
+  isEventMessage: boolean;
 }
 
 export interface ChatRequestPayload {

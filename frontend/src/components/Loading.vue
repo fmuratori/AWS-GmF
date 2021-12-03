@@ -1,18 +1,18 @@
 <template lang="pug">
-transition(name="fade")
-  div(id="loading" v-if="isActive")
-    div(id="background")
-    b-row(align-v="center" align-h="center" class="text-center").mt-5
-      b-col(cols=10 md=8 lg=4 )
+transition(name='fade')
+  #loading(v-if='isActive')
+    #background
+    b-row.text-center.mt-5(align-v='center' align-h='center')
+      b-col(cols='10' md='8' lg='4')
         b-card
-          h1 
+          h1
             span Loading...
-            div(class="loader") 
+            .loader  
           p
-            label(v-if="message") {{ message }}
+            label(v-if='message')
+              | {{ message }}
               br
-            label This action shouldn't take  too long.
-
+            label This action shouldn&apos;t take  too long.
 </template>
 
 <script lang="ts">

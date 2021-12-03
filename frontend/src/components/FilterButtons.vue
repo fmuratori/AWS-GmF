@@ -1,17 +1,8 @@
 <template lang="pug">
 div
-  b-button.ml-2.mb-2(
-    v-for="(filter, idx) in filters",
-    :key="idx"
-    v-if="filter[3]"
-    pill,
-    variant="secondary",
-    size="sm",
-    @click="onClick(filter[0])",
-    :class="{ 'selectedFilter': selectedFilter == filter[0] }"
-  ) 
-    span.mr-1 {{ filter[1] }}
-    b-icon(:icon="filter[2]" v-if="filter[2]")
+  b-button.ml-2.mb-2(v-for='(filter, idx) in filters' :key='idx' v-if='filter.isVisible' pill='pill' variant='secondary' size='sm' @click='onClick(filter.name)' :class="{ 'selectedFilter': selectedFilter == filter.name }")
+    span.mr-1 {{ filter.label }}
+    b-icon(:icon='filter.icon' v-if='filter.icon')
 </template>
 
 <script lang="ts">
@@ -26,7 +17,12 @@ export default Vue.extend({
   },
   data: () => {
     return {
-      selectedFilter: "",
+      selectedFilter: {} as {
+        name: string;
+        label: string;
+        icon: string | null;
+        isVisible: boolean;
+      },
     };
   },
   created() {

@@ -1,17 +1,17 @@
 <template lang="pug">
-div 
-  p(v-if="!isEvent" class="message m-1 p-2" :class="{'my-message': isOwner}")
-    label(class="font-weight-bolder m-0 p-0") {{ isOwner ? "You" : username }}
-    span(v-for="(msg, idx) in messages" :index="idx")
+div
+  p.message.m-1.p-2(v-if='!isEvent' :class="{'my-message': isOwner}")
+    label.font-weight-bolder.m-0.p-0 {{ isOwner ? &quot;You&quot; : username }}
+    span(v-for='(msg, idx) in messages' :index='idx')
       br
-      label(class="m-0 p-0") {{ msg }}
-    span()
+      label.m-0.p-0 {{ msg }}
+    span
       br
-      small(class="m-0 p-0 font-italic") {{ date }}
-  p(v-else class="message m-1 p-2 text-center")
-    label(class=" m-0 p-0") {{ messages[0] }}
+      small.m-0.p-0.font-italic {{ date }}
+  p.message.m-1.p-2.text-center(v-else)
+    label.m-0.p-0 {{ messages[0] }}
     br
-    small(class="m-0 p-0") {{ date }}
+    small.m-0.p-0 {{ date }}
 </template>
 
 <script lang="ts">

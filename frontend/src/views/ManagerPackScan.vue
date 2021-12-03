@@ -1,72 +1,55 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, sm=10)
+    b-col(lg='6' md='8' sm='10')
       div
         hr.shaded
         h4.text-center
           b FAMILIES
         hr.shaded
-
-  b-row.justify-content-md-center.my-5.no-gutters()
-    b-col(lg=8, md=10, sm=12)
+  b-row.justify-content-md-center.my-5.no-gutters
+    b-col(lg='8' md='10' sm='12')
       div(v-if="showScreen=='scan'")
-          
-        b-card(bg-variant="light" class="text-center")
+        b-card.text-center(bg-variant='light')
           h3.mb-3
-            font-awesome-icon.mr-2(icon="qrcode")
+            font-awesome-icon.mr-2(icon='qrcode')
             span Qr code scanner
-
           div(v-if="scannerState == 'ready'")
-            b-button.color3.m-5(@click="startCamera()") Open camera
-
+            b-button.color3.m-5(@click='startCamera()') Open camera
           div(v-if="scannerState == 'scanning'")
-            qrcode-stream(@decode="onDecode" @init="onInit" :camera="cameraState" )
-            b-button.color3(block @click="stopCamera()" v-if="scannerState=='scanning'") Close camera
-
+            qrcode-stream(@decode='onDecode' @init='onInit' :camera='cameraState')
+            b-button.color3(block='block' @click='stopCamera()' v-if="scannerState=='scanning'") Close camera
           div(v-if="scannerState == 'error'")
-            font-awesome-icon(icon="fas fa-qrcode fa-3x")
-            p(v-if="!isMobile") Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
+            font-awesome-icon(icon='fas fa-qrcode fa-3x')
+            p(v-if='!isMobile') Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
             p(v-else) Devi autorizzare l&apos;utilizzo della fotocamera per scansionare il codice QR
-
           div(v-if="scannerState=='validating'")
             p Validation...
-
           div(v-if="scannerState=='valid_success'")
-            p() Pack identified succesfully.
-
+            p Pack identified succesfully.
           div(v-if="scannerState=='valid_error'")
-            p() Pack unidentified.
-          
-            b-button(@click="reloadScanner()" v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
-
+            p Pack unidentified.
+            b-button(@click='reloadScanner()' v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
       div(v-if="showScreen=='pack'")
         p {{ pack }}
-
-        b-button.color3(block @click="deliverPack()") Set as delivered
-        b-button(block variant="secondary" @click="resetView()") Scan another code
-
-
+        b-button.color3(block='block' @click='deliverPack()') Set as delivered
+        b-button(block='block' variant='secondary' @click='resetView()') Scan another code
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "../eventbus";
+
 import { QrcodeStream } from "vue-qrcode-reader";
 
-import eventbus from "../eventbus";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
-
-import packApi from "../api/pack";
 import { Pack } from "../types";
 
+import packApi from "../api/pack";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerPackScan",
   components: {
-    Navbar,
-    Sidebar,
     QrcodeStream,
   },
   data: () => {

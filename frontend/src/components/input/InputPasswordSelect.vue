@@ -1,30 +1,18 @@
 <template lang="pug">
 div
-  b-form-group(:label="title1" :label-cols-sm="title1 ? 3 : 0", label-align-sm="right")
+  b-form-group(:label='title1' :label-cols-sm='title1 ? 3 : 0' label-align-sm='right')
     b-input-group
-      b-input-group-prepend(v-if="icon")
+      b-input-group-prepend(v-if='icon')
         b-input-group-text
-          b-icon(:icon="icon")
-      b-form-input(
-        required,
-        type="password",
-        v-model="password",
-        :placeholder="placeholder1",
-        @input="$emit('data', $event)"
-      )
+          b-icon(:icon='icon')
+      b-form-input(required='required' type='password' v-model='password' :placeholder='placeholder1' @input="$emit('data', $event)")
+  b-form-group(:label='title2' :label-cols-sm='title2 ? 3 : 0' label-align-sm='right')
+    b-input-group
+      b-input-group-prepend(v-if='icon')
+        b-input-group-text
+          b-icon(:icon='icon')
+      b-form-input(required='required' type='password' v-model='regRepeatPassword' :placeholder='placeholder2' :state='registrationPasswordCheck()')
 
-  b-form-group(:label="title2" :label-cols-sm="title2 ? 3 : 0", label-align-sm="right")
-    b-input-group
-      b-input-group-prepend(v-if="icon")
-        b-input-group-text
-          b-icon(:icon="icon")
-      b-form-input(
-        required,
-        type="password",
-        v-model="regRepeatPassword",
-        :placeholder="placeholder2",
-        :state="registrationPasswordCheck()"
-      )
 </template>
 
 <script lang="ts">

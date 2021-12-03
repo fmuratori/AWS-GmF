@@ -4,10 +4,11 @@ canvas#pie-chart
 
 <script lang="ts">
 import Vue from "vue";
+
 import { Chart, ChartItem, registerables } from "chart.js";
-import { AxiosResponse } from "axios";
 import { FoodLabelsResponse } from "../../types";
 
+import { AxiosResponse } from "axios";
 import api from "../../api/data";
 
 Chart.register(...registerables);

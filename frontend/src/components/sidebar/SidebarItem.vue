@@ -1,14 +1,10 @@
 <template lang="pug">
-b-row.p-1.justify-content-md-center.sidebar-item(
-  no-gutters,
-  align-v="center",
-  @click="changePage(route)",
-  :class="{ 'sidebar-item-selected': isRouteSelected(route) }"
-)
+b-row.p-1.justify-content-md-center.sidebar-item(no-gutters='no-gutters' align-v='center' @click='changePage(route)' :class="{ 'sidebar-item-selected': isRouteSelected(route) }")
   b-col
-    label(class="p-0 m-0") {{ text }}
-  b-col(cols="auto")
-    b-icon(icon="chevron-right")
+    label.p-0.m-0 {{ text }}
+  b-col(cols='auto')
+    b-icon(icon='chevron-right')
+
 </template>
 
 <script lang="ts">

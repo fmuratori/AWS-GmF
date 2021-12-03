@@ -1,156 +1,94 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, cols=11)
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b YOUR DONATION
       hr.shaded
-  
   b-row.justify-content-center
-    b-col(lg=4, md=8, cols=10)
-      b-card(bg-variant="light", no-body)
+    b-col(lg='4' md='8' cols='10')
+      b-card(bg-variant='light' no-body='no-body')
         b-card-text.m-2
-          #messages-area.mb-1(ref="messagesArea")
-            Message(
-              v-for="(message, idx) in processedChat",
-              :key="idx",
-              :username="message.userFullname",
-              :isOwner="message.userId == $store.state.session.userData._id",
-              :date="dates.formatDatetime(message.date)",
-              :isVisualized="message.visualized",
-              :isEvent="message.isEventMessage"
-              :messages="message.messages",
-            )
-
-          b-form(@submit.stop.prevent="sendMessage")
-            b-input-group(class="")
-              b-form-input(
-                type="text",
-                placeholder="Insert here your message",
-                v-model="chatMessage",
-                required
-              )
+          #messages-area.mb-1(ref='messagesArea')
+            Message(v-for='(message, idx) in processedChat' :key='idx' :username='message.userFullname' :isowner='message.userId == $store.state.session.userData._id' :date='dates.formatDatetime(message.date)' :isvisualized='message.visualized' :isevent='message.isEventMessage' :messages='message.messages')
+          b-form(@submit.stop.prevent='sendMessage')
+            b-input-group
+              b-form-input(type='text' placeholder='Insert here your message' v-model='chatMessage' required='required')
               b-input-group-append
-                b-button(variant="success", type="submit") Send
-          
-    b-col(lg=6, md=8, cols=10).mb-5
-      b-card(bg-variant="light", no-body).mb-2
-        b-card-text.p-3 
+                b-button(variant='success' type='submit') Send
+    b-col.mb-5(lg='6' md='8' cols='10')
+      b-card.mb-2(bg-variant='light' no-body='no-body')
+        b-card-text.p-3
           b-row.mb-3
-            b-col(md=3)
+            b-col(md='3')
               label Status:
             b-col
               h5
-                b-badge(
-                  v-if="donation.status == 'waiting'",
-                  variant="warning"
-                ) {{donation.status}}
-                b-badge(
-                  v-if="donation.status == 'selected'",
-                  variant="success"
-                ) {{donation.status}}
-                b-badge(
-                  v-if="donation.status == 'withdrawn'",
-                  variant="secondary"
-                ) {{donation.status}}
-
-          
+                b-badge(v-if="donation.status == 'waiting'" variant='warning') {{donation.status}}
+                b-badge(v-if="donation.status == 'selected'" variant='success') {{donation.status}}
+                b-badge(v-if="donation.status == 'withdrawn'" variant='secondary') {{donation.status}}
           b-row.mb-3(v-if="donation.status == 'selected'")
-            b-col(md=3)
+            b-col(md='3')
               label Pick up date: 
             b-col
               label.font-weight-bold {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
-
           b-row.mb-3
-            b-col(md=3)
+            b-col(md='3')
               label Creation date:
             b-col
               label.font-weight-bold {{ dates.formatDate(donation.creationDate) }}
-
           b-row.mb-3
-            b-col(md=3)
+            b-col(md='3')
               label Expiration date:
             b-col
-              label 
+              label
                 span.font-weight-bold {{ dates.formatDatetime(donation.expirationDate) }}
                 span &nbsp;(expires in&nbsp;
                 span.font-weight-bold {{ dates.daysTillDate(donation.expirationDate) }} days
                 span )
-
           b-row.mb-3
-            b-col(md=3)
+            b-col(md='3')
               label Food list:
             b-col
-              p.mb-0.font-weight-bold(v-for="(value, idx) in donation.foods", :key="idx") {{ value }}
-
+              p.mb-0.font-weight-bold(v-for='(value, idx) in donation.foods' :key='idx') {{ value }}
           b-row.mb-3
-            b-col(md=3)
+            b-col(md='3')
               label Address:
             b-col
-              label.font-weight-bold {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
-
-          b-row.mb-3(v-if="donation.additionalInformations != null")
-            b-col(md=3)
+              label.font-weight-bold
+                | {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
+          b-row.mb-3(v-if='donation.additionalInformations != null')
+            b-col(md='3')
               label Additiona info:
             b-col
               label.font-weight-bold {{ donation.additionalInformations }}
-
           b-row.mb-3
-            b-col(md=3)
+            b-col(md='3')
               label Pickup week days:
             b-col
-              p.mb-0.font-weight-bold(
-                v-for="(weekDayName, weekDay, idx) in constants.weekDays",
-                :key="idx",
-                v-if="weekDayDonations(weekDay).length > 0"
-              ) {{ weekDayName + ':&nbsp;' + weekDayDonations(weekDay).map((d) => d.period).join(', ') }}
-
-      div(v-if="$store.getters.isUser") 
-        b-button.color3(
-          block,
-          type="submit",
-          @click="modifyDonation"
-        ) Edit
-        b-button.color3(
-          block,
-          v-b-modal.modal,
-        ) Delete
-        b-button.color4(
-          block,
-          variant="secondary",
-          @click="$router.push({ name: 'ManagerDonationList' })",
-          type="reset"
-        ) Cancel
-
-      div(v-if="$store.getters.isVolunteer")
-        b-button.color3(
-          block,
-          type="submit",
-          @click="cancelReservation"
-        ) Delete reservation
-        b-button(
-          block,
-          variant="secondary",
-          @click="$router.push({ name: 'ManagerDonationList' })",
-          type="reset"
-        ) Cancel
-
-  b-modal#modal(title="Delete your donation?", @ok="deleteDonation()")
+              p.mb-0.font-weight-bold(v-for='(weekDayName, weekDay, idx) in constants.weekDays' :key='idx' v-if='weekDayDonations(weekDay).length > 0')
+                | {{ weekDayName + &apos;:&nbsp;&apos; + weekDayDonations(weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
+      div(v-if='$store.getters.isUser')
+        b-button.color3(block='block' type='submit' @click='modifyDonation') Edit
+        b-button.color3(block='block' v-b-modal.modal) Delete
+        b-button.color4(block='block' variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Cancel
+      div(v-if='$store.getters.isVolunteer')
+        b-button.color3(block='block' type='submit' @click='cancelReservation') Delete reservation
+        b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Cancel
+  b-modal#modal(title='Delete your donation?' @ok='deleteDonation()')
     div This donation offer will be deleted permanently.
-    
-    template(#modal-footer="{ ok, cancel }")
+    template(#modal-footer='{ ok, cancel }')
       b-button(variant='secondary' @click='cancel()') Cancel
       b-button.color3(@click='ok()') Confirm
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import eventbus from "../eventbus";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
-import Message from "../components/ChatMessage.vue";
 import moment from "moment";
+import eventbus from "../eventbus";
+
+import Message from "../components/ChatMessage.vue";
 
 import { Donation, Address, ChatMessage } from "../types";
 
@@ -160,8 +98,6 @@ import { AxiosError, AxiosResponse } from "axios";
 export default Vue.extend({
   name: "ManagerDonationInspect",
   components: {
-    Navbar,
-    Sidebar,
     Message,
   },
   data: function () {

@@ -5,7 +5,7 @@
 import eventbus from "../eventbus";
 
 export default {
-  created() {
+  mounted() {
     eventbus.$on("successMessage", (title: string, message: string) => {
       this.$root.$bvToast.toast(message, {
         title: title,

@@ -1,117 +1,62 @@
 <template lang="pug">
 b-container
   b-row.justify-content-md-center.no-gutters
-    b-col.mb-5(lg=6, md=8, sm=10)
+    b-col.mb-5(lg='6' md='8' sm='10')
       .mb-4
-        b-form(v-if="mode == 'password'" @submit.stop.prevent="changePassword")
-          
-          div.my-5
+        b-form(v-if="mode == 'password'" @submit.stop.prevent='changePassword')
+          .my-5
             hr.shaded
             h4.text-center
               b CHANGE PASSWORD
             hr.shaded
-
-          InputText.mb-5(
-            title="Old password:",
-            placeholder="Insert your old password here",
-            type="password",
-            required,
-            :text="changePasswordForm.oldPassword",
-            v-on:data="(e) => { changePasswordForm.oldPassword = e; }"
-          )
-
-          InputPasswordSelect(
-            title1="New password: ",
-            title2="Confirm new password: ",
-            placeholder1="Insert your password here",
-            placeholder2="Repeat your password here",
-            v-on:data="(e) => { changePasswordForm.newPassword = e; }"
-          )
-
+          InputText.mb-5(title='Old password:' placeholder='Insert your old password here' type='password' required='required' :text='changePasswordForm.oldPassword' @data='(e) => { changePasswordForm.oldPassword = e; }')
+          InputPasswordSelect(title1='New password: ' title2='Confirm new password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { changePasswordForm.newPassword = e; }')
           b-row
             b-col
-              b-button(block, variant="secondary", @click="$router.push({name: 'Home'})") Cancel
+              b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
             b-col
-              b-button.color3(block, type="submit") Edit
-
-      b-form(v-if="mode == 'user_info'" @submit.stop.prevent="editUser")
-
-        div.my-5
+              b-button.color3(block='block' type='submit') Edit
+      b-form(v-if="mode == 'user_info'" @submit.stop.prevent='editUser')
+        .my-5
           hr.shaded
           h4.text-center
             b USER INFO
           hr.shaded
-
-        InputText(
-          title="Name: ",
-          placeholder="Insert name here",
-          required,
-          :text="editUserForm.name",
-          v-on:data="(e) => { editUserForm.name = e; }"
-        )
-
-        InputText(
-          title="Surname: ",
-          placeholder="Insert surname here",
-          required,
-          :text="editUserForm.surname",
-          v-on:data="(e) => { editUserForm.surname = e; }"
-        )
-        
-        InputText(
-          title="Email: ",
-          placeholder="Insert your email here",
-          type="email",
-          required,
-          :text ="editUserForm.email",
-          v-on:data="(e) => { editUserForm.email = e; }"
-        )
-
-      
-        InputText(
-          title="Phone number: ",
-          placeholder="Insert your phone number here",
-          required,
-          :text="editUserForm.phoneNumber",
-          v-on:data="(e) => { editUserForm.phoneNumber = e; }"
-        )
+        InputText(title='Name: ' placeholder='Insert name here' required='required' :text='editUserForm.name' @data='(e) => { editUserForm.name = e; }')
+        InputText(title='Surname: ' placeholder='Insert surname here' required='required' :text='editUserForm.surname' @data='(e) => { editUserForm.surname = e; }')
+        InputText(title='Email: ' placeholder='Insert your email here' type='email' required='required' :text='editUserForm.email' @data='(e) => { editUserForm.email = e; }')
+        InputText(title='Phone number: ' placeholder='Insert your phone number here' required='required' :text='editUserForm.phoneNumber' @data='(e) => { editUserForm.phoneNumber = e; }')
         b-row
           b-col
-            b-button(block, variant="secondary", @click="$router.push({name: 'Home'})") Cancel
+            b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
           b-col
-            b-button.color3(block, type="submit") Edit
-      
-      b-form(v-if="mode == 'address'" @submit.stop.prevent="editUser")
-        div.my-5
+            b-button.color3(block='block' type='submit') Edit
+      b-form(v-if="mode == 'address'" @submit.stop.prevent='editUser')
+        .my-5
           hr.shaded
           h4.text-center
             b ADDRESS
           hr.shaded
-
-        InputAddress(
-          :city="editUserForm.address.city",
-          :civic="editUserForm.address.civicNumber",
-          :street="editUserForm.address.street",
-          v-on:data="(e) => { editUserForm.address = e; }"
-        )
-
+        InputAddress(:city='editUserForm.address.city' :civic='editUserForm.address.civicNumber' :street='editUserForm.address.street' @data='(e) => { editUserForm.address = e; }')
         b-row
           b-col
-            b-button(block, variant="secondary", @click="$router.push({name: 'Home'})") Cancel
+            b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
           b-col
-            b-button.color3(block, type="submit") Edit
-  
+            b-button.color3(block='block' type='submit') Edit
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
+
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
-import api from "../api/user";
 import { Address, UserData, changePasswordPayload } from "../types";
+
+import api from "../api/user";
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({

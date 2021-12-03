@@ -1,106 +1,66 @@
 <template lang="pug">
-b-navbar#navbar(toggleable="lg", type="dark", sticky)
-  b-navbar-brand(href="#")
+b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
+  b-navbar-brand(href='#')
     h3 Bring me Food
-
-  b-navbar-nav.ml-auto.mr-2(
-    v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
-  )
-    b-nav-item.my-auto.text-center(href="#")
-      b-button.my-2.my-sm-0.color3(
-        v-if="$store.getters.unreadMessagesTotalCount > 0",
-        v-b-modal.messagesModal,
-      )
-        b-icon.mr-1(icon="envelope")
-        b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
-  b-navbar-nav.mr-2(
-    v-if="$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
-  )
-    b-nav-item.my-auto.text-center(href="#")
-      b-button.my-2.my-sm-0(
-        variant="light",
-        @click="toggleSidebar()"
-      )
-        font-awesome-icon(icon="cogs")
-  b-navbar-nav(v-if="$store.getters.isMediumScreenWidth")
-    b-nav-item.my-auto.text-center(href="#")
-      b-button.my-2.my-sm-0(
-        variant="light",
-        @click="isOpen = !isOpen"
-      )
-        font-awesome-icon(v-if="isOpen", icon="times")
-        font-awesome-icon(v-else, icon="bars")
-
-  b-collapse#nav-collapse(is-nav="", v-model="isOpen")
+  b-navbar-nav.ml-auto.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
+    b-nav-item.my-auto.text-center(href='#')
+      b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
+        b-icon.mr-1(icon='envelope')
+        b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
+  b-navbar-nav.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
+    b-nav-item.my-auto.text-center(href='#')
+      b-button.my-2.my-sm-0(variant='light' @click='toggleSidebar()')
+        font-awesome-icon(icon='cogs')
+  b-navbar-nav(v-if='$store.getters.isMediumScreenWidth')
+    b-nav-item.my-auto.text-center(href='#')
+      b-button.my-2.my-sm-0(variant='light' @click='isOpen = !isOpen')
+        font-awesome-icon(v-if='isOpen' icon='times')
+        font-awesome-icon(v-else icon='bars')
+  b-collapse#nav-collapse(is-nav='' v-model='isOpen')
     b-navbar-nav.ml-auto
-      b-nav-item.my-auto.navbar-link.text-center(
-        href="#",
-        @click="changePage('Home')"
-      ) Home
-
-      b-nav-item.my-auto.navbar-link.text-center(
-        href="#",
-        v-if="this.$store.state.session.userData.type == 'trusted'"
-      )
+      b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Home')") Home
+      b-nav-item.my-auto.navbar-link.text-center(href='#' v-if="this.$store.state.session.userData.type == 'trusted'")
         UserUpgradeModal
-
-      b-nav-item.my-auto.navbar-link.text-center(href="#") Contact us
-
-      b-nav-item.my-auto.text-center(
-        href="#",
-        v-if="!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged"
-      )
-        b-button.my-2.my-sm-0.color3(
-          v-if="$store.getters.unreadMessagesTotalCount > 0",
-          v-b-modal.messagesModal,
-        )
+      b-nav-item.my-auto.navbar-link.text-center(href='#') Contact us
+      b-nav-item.my-auto.text-center(href='#' v-if='!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
+        b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
           span.mr-1 Messages
-          b-badge(variant="light") {{ $store.getters.unreadMessagesTotalCount }}
-
-      b-nav-item.my-auto.navbar-link.text-center(:key=""
-        href="#",
-        v-if="$store.getters.isUserLogged",
-        @click="logout()"
-      ) 
+          b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
+      b-nav-item.my-auto.navbar-link.text-center(:key='' href='#' v-if='$store.getters.isUserLogged' @click='logout()')
         span.mr-1 Logout
-        font-awesome-icon(icon="sign-out-alt")
-
-      b-nav-item.my-auto.navbar-link.text-center(
-        href="#",
-        @click="changePage('Login')",
-        v-if="!$store.getters.isUserLogged"
-      ) 
-        b-button.my-2.my-sm-0(variant="light")
+        font-awesome-icon(icon='sign-out-alt')
+      b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Login')" v-if='!$store.getters.isUserLogged')
+        b-button.my-2.my-sm-0(variant='light')
           span.mr-1 Login
-          font-awesome-icon(icon="sign-in-alt")
-  
-  b-modal#messagesModal(hide-footer hide-header centered ref="messagesModal" )
+          font-awesome-icon(icon='sign-in-alt')
+  b-modal#messagesModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='messagesModal')
     h4 Your Messages
-
-    b-row.no-gutters.my-4.p-2.border(align-v="center" v-for="(message, idx) in $store.getters.unreadMessages" :key="idx")
-      b-col(cols="auto")
+    b-row.no-gutters.my-4.p-2.border(align-v='center' v-for='(message, idx) in $store.getters.unreadMessages' :key='idx')
+      b-col(cols='auto')
         span Donated on 
-        br 
+        br
         span {{ dates.formatDate(message.creationDate) }}
-      b-col(class="text-center")
+      b-col.text-center
         span {{ message.chat.length }} unread messages
         br
         span {{ dates.formatDatetime(message.chat[0].date) }}
-      b-col(cols="auto")
-        b-button.color3(size="sm" @click="routeToDonation(message._id)")
+      b-col(cols='auto')
+        b-button.color3(size='sm' @click='routeToDonation(message._id)')
           span.mr-1 Open
-          b-icon(icon="envelope-open")
-
-    b-row.no-gutters(align-h="end")
-      b-button.mr-2(size="sm" variant="secondary" @click="() => { this.$refs['messagesModal'].hide(); }") Close
+          b-icon(icon='envelope-open')
+    b-row.no-gutters(align-h='end')
+      b-button.mr-2(size='sm' variant='secondary' @click='() => { this.$refs.messagesModal.hide(); }') Close
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
 import eventbus from "../eventbus";
+
+import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
+
 import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
+
 import { Donation } from "../types";
 
 export default Vue.extend({
@@ -135,9 +95,9 @@ export default Vue.extend({
       eventbus.$emit("startLoading", "Loading selected donation.");
       donationApi
         .findDonation(donationId)
-        .then((r: AxiosResponse): void => {
+        .then((r: AxiosResponse<Donation[]>): void => {
           if (r.status == 200) {
-            this.$refs["messagesModal"].hide();
+            this.$refs.messagesModal!.hide();
             this.$router.push({
               name: "ManagerDonationInspect",
               params: { donation: JSON.stringify(r.data[0] as Donation) },
@@ -176,10 +136,6 @@ export default Vue.extend({
 
 #navbar {
   background-color: $color1;
-}
-
-.navbar-messages-button {
-  background-color: $color3;
 }
 
 .navbar-link > * {

@@ -1,71 +1,30 @@
 <template lang="pug">
 div
   b-row
-    b-col(cols=12 md=6 lg=6)
+    b-col(cols='12' md='6' lg='6')
       b-form-group
         b-input-group
-          b-form-input(
-            v-model="filter",
-            type="search",
-            placeholder="Type to search"
-          )
+          b-form-input(v-model='filter' type='search' placeholder='Type to search')
           b-input-group-append
-            b-button(:disabled="!filter", @click="filter = ''") Clear
-
-  b-table(
-    striped,
-    hover,
-    :fields="tableFields",
-    :items="foodList",
-    :current-page="currentPage",
-    :per-page="perPage",
-    :filter="filter",
-    :filter-included-fields="filterOn",
-    :sort-by.sync="sortBy",
-    :sort-desc.sync="sortDesc",
-    :sort-direction="sortDirection",
-    @filtered="onFiltered"
-  )
-    template(#cell(load)="{ item }")
-      b-button(@click="load(item)", size="sm") Edit
-
-    template(#cell(labels)="data")
-      b-badge.mr-1(v-for="label in data.value", variant="success") {{ label }}
-
-    template(#cell(selected)="{ item }")
-      div(:key="index", ref="reload")
-        b-button(
-          pill,
-          @click="removeClick(item)",
-          :disabled="!item.selected || item.selected == 0"
-        ) -
+            b-button(:disabled='!filter' @click="filter = ''") Clear
+  b-table(striped='striped' hover='hover' :fields='tableFields' :items='foodList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
+    template(#cell(load)='{ item }')
+      b-button(@click='load(item)' size='sm') Edit
+    template(#cell(labels)='data')
+      b-badge.mr-1(v-for='label in data.value' variant='success') {{ label }}
+    template(#cell(selected)='{ item }')
+      div(:key='index' ref='reload')
+        b-button(pill='pill' @click='removeClick(item)' :disabled='!item.selected || item.selected == 0') -
         b.ml-4.mr-4 {{ item.selected ? item.selected : 0 }}
-        b-button(
-          pill,
-          @click="addClick(item)",
-          :disabled="item.selected == item.number"
-        ) +
-
-    template(#cell(delete)="{ item }")
-      b-button.color3(
-        block,
-        size="sm",
-        v-b-modal.modal,
-        @click="deleteFoodId = item._id"
-      ) Delete
-
-  b-row(align-h="end")
-    b-col(cols="auto")
-      b-pagination(
-        v-model="currentPage",
-        :total-rows="totalRows",
-        :per-page="perPage"
-      )
-
-  b-modal#modal(title="Delete the selected food?", @ok="deleteFood(deleteFoodId)")
+        b-button(pill='pill' @click='addClick(item)' :disabled='item.selected == item.number') +
+    template(#cell(delete)='{ item }')
+      b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
+  b-row(align-h='end')
+    b-col(cols='auto')
+      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage')
+  b-modal#modal(title='Delete the selected food?' @ok='deleteFood(deleteFoodId)')
     div The selected food will be deleted permanently.
-    
-    template(#modal-footer="{ ok, cancel }")
+    template(#modal-footer='{ ok, cancel }')
       b-button(variant='secondary' @click='cancel()') Cancel
       b-button.color3(@click='ok()') Confirm
 </template>
@@ -73,9 +32,10 @@ div
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
+import dates from "../misc/dates";
+
 import { SelectableFood } from "../types";
 import { FoodView } from "../viewTypes";
-import dates from "../misc/dates";
 
 import api from "../api/food";
 import { AxiosError, AxiosResponse } from "axios";

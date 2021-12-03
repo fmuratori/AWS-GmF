@@ -1,24 +1,27 @@
 <template lang="pug">
-  div(id="app")
-    ToastsManager
-    Loading
-    Navbar
-    div(id="body")
-      Sidebar(id="sidebar")
-      div(id="content")
-        router-view
+#app
+  ToastsManager
+  Loading
+  Navbar
+  #body
+    Sidebar#sidebar
+    #content
+      router-view
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse } from "axios";
-import api from "./api/user";
-import { UserData } from "./types";
 
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
 import ToastsManager from "./components/ToastsManager.vue";
 import Loading from "./components/Loading.vue";
+
+import { UserData } from "./types";
+
+import api from "./api/user";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "Home",
@@ -32,7 +35,6 @@ export default Vue.extend({
     this.$store.dispatch("updateScreenWidth", window.innerWidth);
     window.addEventListener("resize", this.resizeEventHandler);
 
-    //
     if (this.$cookies.get("jwt")) {
       api.loadData().then((r: AxiosResponse) => {
         this.$store.dispatch("showSidebar");

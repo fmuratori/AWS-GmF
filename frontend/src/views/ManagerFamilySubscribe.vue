@@ -1,107 +1,67 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, sm=10)
-      div.mb-5
+    b-col(lg='6' md='8' sm='10')
+      .mb-5
         hr.shaded
         h4.text-center
           b REPORT A FAMILY
         hr.shaded
-      b-alert(show).mb-5
-        b-row(align-v="center")
-          b-col(cols="auto")
-            h1 
-              b-icon(icon="info")
-          b-col 
-            p.m-0 Help us find families in need. We will verify your report and convert donors donations into food packs to deliver.    
-
+      b-alert.mb-5(show='show')
+        b-row(align-v='center')
+          b-col(cols='auto')
+            h1
+              b-icon(icon='info')
+          b-col
+            p.m-0
+              | Help us find families in need. We will verify your report and convert donors donations into food packs to deliver.
       hr
-
-      b-form(@submit.stop.prevent="submit")
-
-        b-alert(show)
-          b-row(align-v="center")
-            b-col(cols="auto")
-              h1 
-                b-badge(variant="light") 1
-            b-col 
-              p.m-0 Tell us as much as possible about a family you think may be in need of help. Your informations will be validated by trusted volunteers. 
-
-        InputText(
-            title="Family name:",
-            placeholder="Insert family name here",
-            :text="form.name",
-            required,
-            v-on:data="(e) => { form.name = e; }"
-          )
-
-        InputText(
-            title="Phone number:",
-            placeholder="Insert a phone number for the verification",
-            :text="form.phoneNumber",
-            required,
-            v-on:data="(e) => { form.phoneNumber = e; }"
-          )
-
-        InputText(
-            title="Components:",
-            placeholder="Insert number of family components",
-            type="number",
-            :text="form.components",
-            required,
-            v-on:data="(e) => { form.components = e; }"
-          )
-
-        hr 
-
-        b-alert(show)
-          b-row(align-v="center")
-            b-col(cols="auto")
-              h1 
-                b-badge(variant="light") 2
-            b-col 
-              p.m-0 
-                span Tell us where we can find the family. All the food packs we make with your and other people donations will be delivered here. Do not worry if the position is not correct, we will verifiy it directly.
-
-        
-        InputAddress(
-          :city="form.address.city",
-          :civic="form.address.civicNumber",
-          :street="form.address.street",
-          v-on:data="(e) => { form.address = e; }"
-        )
-
-        hr 
-        
+      b-form(@submit.stop.prevent='submit')
+        b-alert(show='show')
+          b-row(align-v='center')
+            b-col(cols='auto')
+              h1
+                b-badge(variant='light') 1
+            b-col
+              p.m-0
+                | Tell us as much as possible about a family you think may be in need of help. Your informations will be validated by trusted volunteers.
+        InputText(title='Family name:' placeholder='Insert family name here' :text='form.name' required='required' @data='(e) => { form.name = e; }')
+        InputText(title='Phone number:' placeholder='Insert a phone number for the verification' :text='form.phoneNumber' required='required' @data='(e) => { form.phoneNumber = e; }')
+        InputText(title='Components:' placeholder='Insert number of family components' type='number' :text='form.components' required='required' @data='(e) => { form.components = e; }')
+        hr
+        b-alert(show='show')
+          b-row(align-v='center')
+            b-col(cols='auto')
+              h1
+                b-badge(variant='light') 2
+            b-col
+              p.m-0
+                span
+                  | Tell us where we can find the family. All the food packs we make with your and other people donations will be delivered here. Do not worry if the position is not correct, we will verifiy it directly.
+        InputAddress(:city='form.address.city' :civic='form.address.civicNumber' :street='form.address.street' @data='(e) => { form.address = e; }')
+        hr
         b-row
           b-col
-            b-button(
-              block,
-              variant="secondary",
-              @click="$router.push({ name: 'ManagerFamilyList' })"
-            ) Cancel
+            b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerFamilyList' })") Cancel
           b-col
-            b-button.color3(block, type="submit") {{ submitLabel }}
+            b-button.color3(block='block' type='submit') {{ submitLabel }}
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
+
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 
 import { Address, FamilyPayload } from "../types";
+import { ReportFamilyView } from "../viewTypes";
 
 import api from "../api/family";
-import { ReportFamilyView } from "../viewTypes";
 
 export default Vue.extend({
   name: "ManagerFamilySubscribe",
   components: {
-    Navbar,
-    Sidebar,
     InputText,
     InputAddress,
   },

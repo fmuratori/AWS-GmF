@@ -1,73 +1,39 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, sm=10)
-      div.mb-5
+    b-col(lg='6' md='8' sm='10')
+      .mb-5
         hr.shaded
         h4.text-center
           b CREATE AN EVENT
         hr.shaded
-      
-      b-alert(show).mb-5
-        b-row(align-v="center")
-          b-col(cols="auto")
-            h1 
-              b-icon(icon="info")
-          b-col 
-            p.m-0 Create events in your city. Your events will be displayed in the main page and visible to all the users.
-
+      b-alert.mb-5(show='show')
+        b-row(align-v='center')
+          b-col(cols='auto')
+            h1
+              b-icon(icon='info')
+          b-col
+            p.m-0
+              | Create events in your city. Your events will be displayed in the main page and visible to all the users.
       hr
-
-      b-form(@submit.stop.prevent="createEvent")
-        InputText(
-          title="Title:",
-          placeholder="Insert title here",
-          :text="form.eventTitle",
-          required,
-          v-on:data="(e) => { form.eventTitle = e; }"
-        )
-
-        InputTextarea(
-          title="Description:",
-          placeholder="Insert description here",
-          :text="form.description",
-          v-on:data="(e) => { form.description = e; }"
-        )
-
-        InputDate(
-          title="Date:",
-          placeholder="Select a date",
-          :date="form.date",
-          required,
-          v-on:data="(e) => { form.date = e; }"
-        )
-
+      b-form(@submit.stop.prevent='createEvent')
+        InputText(title='Title:' placeholder='Insert title here' :text='form.eventTitle' required='required' @data='(e) => { form.eventTitle = e; }')
+        InputTextarea(title='Description:' placeholder='Insert description here' :text='form.description' @data='(e) => { form.description = e; }')
+        InputDate(title='Date:' placeholder='Select a date' :date='form.date' required='required' @data='(e) => { form.date = e; }')
         hr
-        
-        InputAddress(
-          title="Location:",
-          :city="form.address.city",
-          :street="form.address.street",
-          :civic="form.address.civicNumber",
-          v-on:data="(e) => { form.address = e; }"
-        )
-
+        InputAddress(title='Location:' :city='form.address.city' :street='form.address.street' :civic='form.address.civicNumber' @data='(e) => { form.address = e; }')
         b-row
           b-col
-            b-button(
-              block,
-              variant="secondary",
-              @click="$router.push({ name: 'ManagerEventList' })"
-            ) Cancel
+            b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerEventList' })") Cancel
           b-col
-            b-button.color3(block, type="submit") {{ this.submitLabel }}
+            b-button.color3(block='block' type='submit') {{ this.submitLabel }}
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
+
 import InputText from "../components/input/InputText.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
@@ -81,8 +47,6 @@ import api from "../api/event";
 export default Vue.extend({
   name: "ManagerEventCreate",
   components: {
-    Navbar,
-    Sidebar,
     InputText,
     InputTextarea,
     InputAddress,

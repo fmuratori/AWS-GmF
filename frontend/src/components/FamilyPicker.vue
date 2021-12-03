@@ -1,27 +1,12 @@
 <template lang="pug">
 div
-  b-table(
-    striped,
-    hover,
-    :fields="tableFields",
-    :items="familyList",
-    :current-page="currentPage",
-    :per-page="perPage",
-    :sort-by.sync="sortBy",
-    :sort-desc.sync="sortDesc",
-    :sort-direction="sortDirection"
-  )
-    template(#cell(select)="{ item }")
-      b-button.color3(@click="select(item)", size="sm") Select
+  b-table(striped='striped' hover='hover' :fields='tableFields' :items='familyList' :current-page='currentPage' :per-page='perPage' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
+    template(#cell(select)='{ item }')
+      b-button.color3(@click='select(item)' size='sm') Select
+  b-row(align-h='end')
+    b-col(cols='auto')
+      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage')
 
-  
-  b-row(align-h="end")
-    b-col(cols="auto")
-      b-pagination(
-        v-model="currentPage",
-        :total-rows="totalRows",
-        :per-page="perPage"
-      )
 </template>
 
 <script lang="ts">

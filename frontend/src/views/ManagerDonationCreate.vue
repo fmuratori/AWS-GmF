@@ -1,124 +1,72 @@
 <template lang="pug">
-
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, sm=10)
-      div.mb-5
+    b-col(lg='6' md='8' sm='10')
+      .mb-5
         hr.shaded
         h4.text-center
           b CREATE A DONATION
         hr.shaded
-      b-alert(show).mb-5
-        b-row(align-v="center")
-          b-col(cols="auto")
-            h1 
-              b-icon(icon="info")
-          b-col 
-            p.m-0 Donate food to needing families. Follow 3 simple steps to gift a meal. Bring Me Food will retrieve your offer, handle the foods donated and provide food packs to registered families. 
-
+      b-alert.mb-5(show='show')
+        b-row(align-v='center')
+          b-col(cols='auto')
+            h1
+              b-icon(icon='info')
+          b-col
+            p.m-0
+              | Donate food to needing families. Follow 3 simple steps to gift a meal. Bring Me Food will retrieve your offer, handle the foods donated and provide food packs to registered families.
       hr
-
-      b-form(@submit.stop.prevent="submit")
-        b-alert(show)
-          b-row(align-v="center")
-            b-col(cols="auto")
-                h1 
-                  b-badge(variant="light") 1
-            b-col 
-              p.m-0 Insert in the following forms the foods that you want to donate. We will pick it up and make good use of it. 
-
-      
-        InputList(
-          title="Food list:",
-          placeholder="Fusilli DeCecco, 4 packs, 250gg per pack",
-          description="Do not worry too much about the format of the text you insert."
-          :labelList="form.foods",
-          v-on:data="(e) => { form.foods = e; }"
-        )
-      
-        InputDate(
-          title="Expiration date:",
-          placeholder="Select a date",
-          description="If you are donationg many goods, select a date matching the most deperishable food expiration date. Our volunteers will be sure to pick your donation in time."
-          :date="form.expirationDate",
-          required,
-          v-on:data="(e) => { form.expirationDate = e; }"
-        )
-      
-        InputTextarea(
-          title="Additional information:",
-          placeholder="Insert additional information here",
-          :text="form.additionalInformations",
-          v-on:data="(e) => { form.additionalInformations = e; }"
-        )
+      b-form(@submit.stop.prevent='submit')
+        b-alert(show='show')
+          b-row(align-v='center')
+            b-col(cols='auto')
+              h1
+                b-badge(variant='light') 1
+            b-col
+              p.m-0
+                | Insert in the following forms the foods that you want to donate. We will pick it up and make good use of it.
+        InputList(title='Food list:' placeholder='Fusilli DeCecco, 4 packs, 250gg per pack' description='Do not worry too much about the format of the text you insert.' :labelList='form.foods' @data='(e) => { form.foods = e; }')
+        InputDate(title='Expiration date:' placeholder='Select a date' description='If you are donationg many goods, select a date matching the most deperishable food expiration date. Our volunteers will be sure to pick your donation in time.' :date='form.expirationDate' required='required' @data='(e) => { form.expirationDate = e; }')
+        InputTextarea(title='Additional information:' placeholder='Insert additional information here' :text='form.additionalInformations' @data='(e) => { form.additionalInformations = e; }')
         hr
-
         .mb-4
-
-          b-alert(show)
-            b-row(align-v="center")
-              b-col(cols="auto")
-                h1 
-                  b-badge(variant="light") 2
-              b-col 
-                p.m-0 Select periods of the week when we can reach you to retrieve your donation. Our volunteers will be sure to pick your donation as soon as possible.
-
-          div(
-            v-for="(weekDayName, weekDay, idx) in constants.weekDays",
-            :index="idx"
-          )
-            b-form-group(:label="weekDayName", label-cols-sm="3", label-align-sm="right")
+          b-alert(show='show')
+            b-row(align-v='center')
+              b-col(cols='auto')
+                h1
+                  b-badge(variant='light') 2
+              b-col
+                p.m-0
+                  | Select periods of the week when we can reach you to retrieve your donation. Our volunteers will be sure to pick your donation as soon as possible.
+          div(v-for='(weekDayName, weekDay, idx) in constants.weekDays' :index='idx')
+            b-form-group(:label='weekDayName' label-cols-sm='3' label-align-sm='right')
               b-button-group.d-flex
-                b-button(
-                  @click="weekDayButtonClick(weekDay, 'morning')",
-                  :variant="computeButtonVariant(weekDay, 'morning')"
-                ) Morning
-                b-button(
-                  @click="weekDayButtonClick(weekDay, 'afternoon')",
-                  :variant="computeButtonVariant(weekDay, 'afternoon')"
-                ) Afternoon
-                b-button(
-                  @click="weekDayButtonClick(weekDay, 'evening')",
-                  :variant="computeButtonVariant(weekDay, 'evening')"
-                ) Evening
+                b-button(@click="weekDayButtonClick(weekDay, 'morning')" :variant="computeButtonVariant(weekDay, 'morning')") Morning
+                b-button(@click="weekDayButtonClick(weekDay, 'afternoon')" :variant="computeButtonVariant(weekDay, 'afternoon')") Afternoon
+                b-button(@click="weekDayButtonClick(weekDay, 'evening')" :variant="computeButtonVariant(weekDay, 'evening')") Evening
         hr
-        
-        b-alert(show)
-          b-row(align-v="center")
-            b-col(cols="auto")
-              h1 
-                b-badge(variant="light") 3
-            b-col 
-              p.m-0 Tell us where we can pick up your donation. Then, click on the button "Find in the map" found below to set a more precise location given the inserted address, this action will help us find you faster.
-
-        InputAddress(
-          :city="form.address.city",
-          :street="form.address.street",
-          :civic="form.address.civicNumber",
-          :x="form.address.coordinates.x",
-          :y="form.address.coordinates.y",
-          @data="onAddressUpdate")
-
+        b-alert(show='show')
+          b-row(align-v='center')
+            b-col(cols='auto')
+              h1
+                b-badge(variant='light') 3
+            b-col
+              p.m-0
+                | Tell us where we can pick up your donation. Then, click on the button &quot;Find in the map&quot; found below to set a more precise location given the inserted address, this action will help us find you faster.
+        InputAddress(:city='form.address.city' :street='form.address.street' :civic='form.address.civicNumber' :x='form.address.coordinates.x' :y='form.address.coordinates.y' @data='onAddressUpdate')
         hr
-
         b-row
           b-col
-            b-button(
-              block,
-              variant="secondary",
-              @click="$router.push({ name: 'Home' })",
-              type="reset"
-            ) Cancel
+            b-button(block='block' variant='secondary' @click="$router.push({ name: 'Home' })" type='reset') Cancel
           b-col
-            b-button.color3(block, type="submit") {{ this.submitLabel }}
+            b-button.color3(block='block' type='submit') {{ this.submitLabel }}
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
+
 import InputDate from "../components/input/InputDate.vue";
 import InputList from "../components/input/InputList.vue";
 import InputAddress from "../components/input/InputAddress.vue";
@@ -126,16 +74,14 @@ import InputTextarea from "../components/input/InputTextarea.vue";
 import Loading from "../components/Loading.vue";
 
 import { Address, Donation } from "../types";
+import { CreateDonationView } from "../viewTypes";
 
 import api from "../api/donation";
-import { CreateDonationView } from "../viewTypes";
 import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationCreate",
   components: {
-    Navbar,
-    Sidebar,
     InputDate,
     InputList,
     InputAddress,
@@ -187,7 +133,7 @@ export default Vue.extend({
     },
     onReset() {
       this.isLocationLoaded = false;
-      this.form.address = null;
+      this.form.address = {} as Address;
     },
     computeButtonVariant(weekDay: string, period: string) {
       const idx: number = this.form.pickUpPeriod.findIndex(

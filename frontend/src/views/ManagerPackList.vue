@@ -1,63 +1,40 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, cols=11)
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b AVAILABLE PACKS
       hr.shaded
   b-row.justify-content-center.my-5
-    b-col(lg=12, md=12, cols=12)
-
+    b-col(lg='12' md='12' cols='12')
       b-row(v-if="this.$store.state.session.userData.type != 'user'")
         label Pack status
-        
-        FilterButtons(:filters="filters" :selected=0 @click="filterBy")
-
+        FilterButtons(:filters='filters' :selected='0' @click='filterBy')
       b-row
-        b-col(lg="8", md="8", sm="12")
-          b-table(ref="packsTable"
-            hover,
-            striped,
-            responsive,
-            :fields="tableFields",
-            :items="packList"
-          )
-            template(#cell(status)="data")
-              b-badge(v-if="data.value == 'ready'", variant="primary") {{ data.value }}
-              b-badge(
-                v-if="data.value == 'planned delivery'",
-                variant="warning"
-              ) {{ data.value }}
-              b-badge(v-if="data.value == 'delivered'", variant="success") {{ data.value }}
-
-            template(#cell(buttons)="{ item }")
-              b-button.mr-1.color3(size="sm", @click="selectedPack = item;") Details
-              b-button.mr-1.color3(
-                size="sm",
-                @click="setDelivered(item._id)",
-                :disabled="item.status != 'planned delivery'"
-              ) Advance
-              b-button.color3(
-                size="sm",
-                variant="danger",
-                v-b-modal.modal,
-                @click="deletePackId = item._id"
-              ) Delete
-
-        b-col(lg="4", md="4", sm="12")
-          b-card(bg-variant="light")
+        b-col(lg='8' md='8' sm='12')
+          b-table(ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList')
+            template(#cell(status)='data')
+              b-badge(v-if="data.value == 'ready'" variant='primary') {{ data.value }}
+              b-badge(v-if="data.value == 'planned delivery'" variant='warning') {{ data.value }}
+              b-badge(v-if="data.value == 'delivered'" variant='success') {{ data.value }}
+            template(#cell(buttons)='{ item }')
+              b-button.mr-1.color3(size='sm' @click='selectedPack = item;') Details
+              b-button.mr-1.color3(size='sm' @click='setDelivered(item._id)' :disabled="item.status != 'planned delivery'") Advance
+              b-button.color3(size='sm' variant='danger' v-b-modal.modal @click='deletePackId = item._id') Delete
+        b-col(lg='4' md='4' sm='12')
+          b-card(bg-variant='light')
             template(#header)
               h5.mb-0
                 b Pack info
-                span.float-right(v-if="selectedPack")
-                  b-badge() {{ selectedPack.pack.status }}
-            div(v-if="selectedPack")
+                span.float-right(v-if='selectedPack')
+                  b-badge {{ selectedPack.pack.status }}
+            div(v-if='selectedPack')
               h4 Family
               div
                 b name:
                 span {{ selectedPack.family.name }}
-              div 
+              div
                 b components:
                 span {{ selectedPack.family.components }}
               div
@@ -66,55 +43,53 @@ b-container
               hr
               h4 Food list
               ul
-                li(v-for="food in selectedPack.foodList") {{ selectedPack.pack.foodList.find(f => f.foodId == food._id).number }}x {{ food.name }}
+                li(v-for='food in selectedPack.foodList')
+                  | {{ selectedPack.pack.foodList.find(f =&gt; f.foodId == food._id).number }}x {{ food.name }}
               hr
               h4 QR code
-              QrcodeVue.text-center.my-3(
-                :value="selectedPack._id",
-                size="200",
-                level="H")
-              
-              b-button(variant="secondary" block @click="selectedPack = null") Close pack info
+              qrcodevue.text-center.my-3(:value='selectedPack._id' size='200' level='H')
+              b-button(variant='secondary' block='block' @click='selectedPack = null') Close pack info
             div(v-else)
               i No pack selected.     
-
-  b-modal#modal(title="Delete this pack?", @ok="deletePack(deletePackId)")
+  b-modal#modal(title='Delete this pack?' @ok='deletePack(deletePackId)')
     div This pack will be deleted permanently.
-    
-    template(#modal-footer="{ ok, cancel }")
+    template(#modal-footer='{ ok, cancel }')
       b-button(variant='secondary' @click='cancel()') Cancel
-      b-button.color3(@click='ok()') Confirm         
+      b-button.color3(@click='ok()') Confirm    
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import QrcodeVue from "qrcode.vue";
 import eventbus from "../eventbus";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
+import dates from "../misc/dates";
+
+import QrcodeVue from "qrcode.vue";
 import FilterButtons from "../components/FilterButtons.vue";
 
 import packApi from "../api/pack";
-import dates from "../misc/dates";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { Address, Pack } from "../types";
-import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerPackList",
   components: {
-    Navbar,
-    Sidebar,
     FilterButtons,
     QrcodeVue,
   },
   data: () => {
     return {
       filters: [
-        ["all", "All", null, true],
-        ["ready", "Ready", null, true],
-        ["planned delivery", "Planned delivery", null, true],
-        ["delivered", "Delivered", null, true],
+        { name: "all", label: "All", icon: null, isVisible: true },
+        { name: "ready", label: "Ready", icon: null, isVisible: true },
+        {
+          name: "planned delivery",
+          label: "Planned delivery",
+          icon: null,
+          isVisible: true,
+        },
+        { name: "delivered", label: "Delivered", icon: null, isVisible: true },
       ],
       packList: new Array<Pack>(),
       packListBackup: new Array<Pack>(),

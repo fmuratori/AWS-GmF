@@ -1,56 +1,34 @@
 <template lang="pug">
 div
-  b-form-group(label="City", label-cols-sm="3", label-align-sm="right")
-    b-form-input(
-      placeholder="Insert city here",
-      required,
-      type="text",
-      v-model="address.city"
-      @input="$emit('data', address)"
-    )
-
-  b-form-group(label="Street", label-cols-sm="3", label-align-sm="right")
-    b-form-input(
-      placeholder="Insert street here",
-      required,
-      type="text",
-      v-model="address.street"
-      @input="$emit('data', address)"
-    )
-
-  b-form-group(label="Civic", label-cols-sm="3", label-align-sm="right")
-    b-form-input(
-      placeholder="Insert civic number here",
-      type="text",
-      v-model="address.civicNumber"
-      @input="$emit('data', address)"
-    )
-
-  b-row(align-h="center")
-    b-col(cols=10 md=8 lg=8)
-      b-button.color3(block, size="sm" @click="resetMap" v-if="isLocationLoaded")
+  b-form-group(label='City' label-cols-sm='3' label-align-sm='right')
+    b-form-input(placeholder='Insert city here' required='required' type='text' v-model='address.city' @input="$emit('data', address)")
+  b-form-group(label='Street' label-cols-sm='3' label-align-sm='right')
+    b-form-input(placeholder='Insert street here' required='required' type='text' v-model='address.street' @input="$emit('data', address)")
+  b-form-group(label='Civic' label-cols-sm='3' label-align-sm='right')
+    b-form-input(placeholder='Insert civic number here' type='text' v-model='address.civicNumber' @input="$emit('data', address)")
+  b-row(align-h='center')
+    b-col(cols='10' md='8' lg='8')
+      b-button.color3(block='block' size='sm' @click='resetMap' v-if='isLocationLoaded')
         span.mr-2 Reset location
-
-      div.mapContainer(v-if="!isLocationLoaded").text-center.mb-4
+      .mapContainer.text-center.mb-4(v-if='!isLocationLoaded')
         h1.pt-4
-          b-icon(icon="map").mr
+          b-icon.mr(icon='map')
         h3
           span  Google Maps 
-          br 
+          br
           span Navigator
-       
-        b-button.mt-5(variant="outline-dark", size="sm" @click="find" v-if="!isLocationLoaded") Find in the map
-
-      MapLocation(v-else :x="address.coordinates.x" :y="address.coordinates.y" @locationChange="onLocationChange")
-      
+        b-button.mt-5(variant='outline-dark' size='sm' @click='find' v-if='!isLocationLoaded') Find in the map
+      MapLocation(v-else :x='address.coordinates.x' :y='address.coordinates.y' @locationchange='onLocationChange')
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosError } from "axios";
 
+import { AxiosError } from "axios";
 import mapsApi from "../../api/maps";
+
 import { Address } from "../../types";
+
 import MapLocation from "../MapLocation.vue";
 
 export default Vue.extend({

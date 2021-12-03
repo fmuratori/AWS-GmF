@@ -1,116 +1,94 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg=6, md=8, cols=11)
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b(v-if="this.$store.state.session.userData.type == 'user'") YOUR DONATIONS
         b(v-else) DONATIONS
       hr.shaded
-
   b-row.justify-content-center
-    b-col(lg=4, md=8, cols=11 order-md=1 order-lg=2)
-      b-alert(show)
-        b-row(align-v="center")
-          b-col(cols="auto")
-            h1 
-              b-icon(icon="info")
-          b-col 
-            p.m-0 Here are listed all your active donations. You can inspect, modify, delete them in any moment or directly chat with a volunteer. 
-      
-      b-alert(show).mb-5
-        b-row(align-v="center")
-          b-col(cols="auto")
-            h1 
-              b-icon(icon="info")
-          b-col 
+    b-col(lg='4' md='8' cols='11' order-md='1' order-lg='2')
+      b-alert(show='show')
+        b-row(align-v='center')
+          b-col(cols='auto')
+            h1
+              b-icon(icon='info')
+          b-col
+            p.m-0
+              | Here are listed all your active donations. You can inspect, modify, delete them in any moment or directly chat with a volunteer.
+      b-alert.mb-5(show='show')
+        b-row(align-v='center')
+          b-col(cols='auto')
+            h1
+              b-icon(icon='info')
+          b-col
             p.m-0 To make things easier, filter your donations by status or sort them.
-
-    b-col(lg=6, md=8, cols=11 order-md=2 order-lg=1)
-      b-row.mb-2(no-gutters v-if="$store.getters.isUser")
-        b-col(cols="3")
+    b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
+      b-row.mb-2(no-gutters='no-gutters' v-if='$store.getters.isUser')
+        b-col(cols='3')
           p Donation status:
         b-col
-          FilterButtons(:filters="filters" :selected=2 @click="filterBy")
-
-      b-row.mb-2(no-gutters)
-        b-col(cols="3")
+          FilterButtons(:filters='filters' :selected='2' @click='filterBy')
+      b-row.mb-2(no-gutters='no-gutters')
+        b-col(cols='3')
           p Sort by:
         b-col
-          FilterButtons(:filters="sorters" :selected=1 @click="sortBy")
-
-      p(v-if="donations.length == 0") 
+          FilterButtons(:filters='sorters' :selected='1' @click='sortBy')
+      p(v-if='donations.length == 0')
         span No donations found. Be sure to select valid filters 
-        span(v-if="$store.getters.isUser") or click #[a(href="#", @click="$router.push({ name: 'ManagerDonationCreate' })") here] to insert a donation
+        span(v-if='$store.getters.isUser')
+          | or click 
+          a(href='#' @click="$router.push({ name: 'ManagerDonationCreate' })") here
+          |  to insert a donation
         span .
-
-      b-card.mb-4(bg-variant="light", text-variant="dark", no-body v-for="(donation, idx) in donations", :key="idx")
+      b-card.mb-4(bg-variant='light' text-variant='dark' no-body='no-body' v-for='(donation, idx) in donations' :key='idx')
         template(#header)
           h5.mb-0
-            b(v-if="$store.getters.isUser") Donated on {{ dates.formatDate(donation.creationDate) }}
-            b(v-if="$store.getters.isVolunteer || $store.getters.isTrustedVolunteer") To be collected on {{ dates.formatDate(donation.pickUp.date) }}
+            b(v-if='$store.getters.isUser') Donated on {{ dates.formatDate(donation.creationDate) }}
+            b(v-if='$store.getters.isVolunteer || $store.getters.isTrustedVolunteer') To be collected on {{ dates.formatDate(donation.pickUp.date) }}
             span.float-right
-                b-badge(
-                  v-if="donation.status == 'waiting'",
-                  variant="warning"
-                ) {{donation.status}}
-                b-badge(
-                  v-if="donation.status == 'selected'",
-                  variant="success"
-                ) {{donation.status}}
-                b-badge(
-                  v-if="donation.status == 'withdrawn'",
-                  variant="secondary"
-                ) {{donation.status}}
-
+              b-badge(v-if="donation.status == 'waiting'" variant='warning') {{donation.status}}
+              b-badge(v-if="donation.status == 'selected'" variant='success') {{donation.status}}
+              b-badge(v-if="donation.status == 'withdrawn'" variant='secondary') {{donation.status}}
         b-card-text
           .px-4.pt-3
             b-row
-              b-col(cols=12 md=6 lg=6)
-                div.mb-2
+              b-col(cols='12' md='6' lg='6')
+                .mb-2
                   p.mb-0 Food:
-                  p.font-weight-bold.mb-0(
-                    v-for="(food, idx) in donation.foods",
-                    :key="idx"
-                  ) {{ food }}
-                div.mb-2
+                  p.font-weight-bold.mb-0(v-for='(food, idx) in donation.foods' :key='idx') {{ food }}
+                .mb-2
                   p.mb-0 Expires in:
                   p.font-weight-bold.mb-0 {{ dates.daysTillDate(donation.expirationDate) }} days
                 div
                   p.mb-0 Location:
-                  p.font-weight-bold {{ donation.address.street + ' ' + donation.address.civicNumber + ', ' + donation.address.city }}
-              b-col(cols=12 md=6 lg=6)
-                div.mb-2(v-if="hasUnreadMessages(donation._id)")
-                  a(href="#") {{ unreadMessagesCount(donation._id) }} unread messages
+                  p.font-weight-bold
+                    | {{ donation.address.street + &apos; &apos; + donation.address.civicNumber + &apos;, &apos; + donation.address.city }}
+              b-col(cols='12' md='6' lg='6')
+                .mb-2(v-if='hasUnreadMessages(donation._id)')
+                  a(href='#') {{ unreadMessagesCount(donation._id) }} unread messages
                 div(v-if="donation.status=='selected'")
-                  div.mb-2()
+                  .mb-2
                     p.mb-0 Pick up:
                     p.font-weight-bold {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
-              
-          b-button.footerCardButton.color3(
-            block,
-            variant="primary"
-            @click="inspectDonation(donation)"
-          ) SHOW
-
+          b-button.footerCardButton.color3(block='block' variant='primary' @click='inspectDonation(donation)') SHOW
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/sidebar/Sidebar.vue";
 import eventbus from "../eventbus";
+
 import FilterButtons from "../components/FilterButtons.vue";
+
 import api from "../api/donation";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { Donation, FindPayload } from "../types";
-import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerDonationList",
   components: {
-    Navbar,
-    Sidebar,
     FilterButtons,
   },
   data: () => {
@@ -119,35 +97,74 @@ export default Vue.extend({
       donationsBackup: new Array<Donation>(),
       sortByMode: "expirationDateAscending",
       filterByMode: "all",
+      sorters: new Array<{
+        name: string;
+        label: string;
+        icon: null | string;
+        isVisible: boolean;
+      }>(),
+      filters: new Array<{
+        name: string;
+        label: string;
+        icon: null | string;
+        isVisible: boolean;
+      }>(),
     };
   },
   created() {
     this.filters = [
-      ["waiting", "Waiting", null, true],
-      ["selected", "Selected", null, true],
-      ["all", "All", null, true],
+      { name: "waiting", label: "Waiting", icon: null, isVisible: true },
+      { name: "selected", label: "Selected", icon: null, isVisible: true },
+      { name: "all", label: "All", icon: null, isVisible: true },
     ];
 
     this.sorters = [
-      ["unreadMessages", "Unread Messages", null, true],
-      ["creationDateDescending", "Creation Date", "sort-down", true],
-      ["creationDateAscending", "Creation Date", "sort-down-alt", true],
-      ["expirationDateDescending", "Expiration Date", "sort-down", true],
-      ["expirationDateAscending", "Expiration Date", "sort-down-alt", true],
-      [
-        "pickUpDateDescending",
-        "Pick Up Date",
-        "sort-down",
-        this.$store.getters.isVolunteer ||
+      {
+        name: "unreadMessages",
+        label: "Unread Messages",
+        icon: null,
+        isVisible: true,
+      },
+      {
+        name: "creationDateDescending",
+        label: "Creation Date",
+        icon: "sort-down",
+        isVisible: true,
+      },
+      {
+        name: "creationDateAscending",
+        label: "Creation Date",
+        icon: "sort-down-alt",
+        isVisible: true,
+      },
+      {
+        name: "expirationDateDescending",
+        label: "Expiration Date",
+        icon: "sort-down",
+        isVisible: true,
+      },
+      {
+        name: "expirationDateAscending",
+        label: "Expiration Date",
+        icon: "sort-down-alt",
+        isVisible: true,
+      },
+      {
+        name: "pickUpDateDescending",
+        label: "Pick Up Date",
+        icon: "sort-down",
+        isVisible:
+          this.$store.getters.isVolunteer ||
           this.$store.getters.isTrustedVolunteer,
-      ],
-      [
-        "pickUpDateAscending",
-        "Pick Up Date",
-        "sort-down-alt",
-        this.$store.getters.isVolunteer ||
+      },
+      {
+        name: "pickUpDateAscending",
+        label: "Pick Up Date",
+        icon: "sort-down-alt",
+        isVisible:
+          this.$store.getters.isVolunteer ||
           this.$store.getters.isTrustedVolunteer,
-      ],
+      },
     ];
 
     // check if user is logged in
@@ -232,7 +249,7 @@ export default Vue.extend({
           null;
       }
     },
-    filterBy(statusFilter: "waiting" | "selected" | "withdrawn" | "all") {
+    filterBy(statusFilter: string) {
       this.filterByMode = statusFilter;
       switch (statusFilter) {
         case "waiting":

@@ -1,32 +1,18 @@
 <template lang="pug">
 div
-  //- b-button(block, variant="outline-primary", v-b-modal.updateUserModal) Update user
-  b-nav-item.my-auto.navbar-link.text-center(
-    href="#",
-    v-b-modal.updateUserModal
-  ) Upgrade a user
-
-  b-modal#updateUserModal(
-    title="Upgrade a user to volunteer role",
-    @ok="upgradeUser",
-    hide-footer
-  )
-    b-form(@submit.stop.prevent="upgradeUser")
-      InputText(
-        type="email",
-        placeholder="Digit user's email here",
-        required,
-        v-on:data="(e) => { userEmail = e; }"
-      )
-
+  b-nav-item.my-auto.navbar-link.text-center(href='#' v-b-modal.updateusermodal='v-b-modal.updateUserModal') Upgrade a user
+  b-modal#updateUserModal(title='Upgrade a user to volunteer role' @ok='upgradeUser' hide-footer='hide-footer')
+    b-form(@submit.stop.prevent='upgradeUser')
+      InputText(type='email' placeholder="Digit user's email here" required='required' @data='(e) => { userEmail = e; }')
       b-button-group.d-flex
-        b-button(variant="danger", @click="$bvModal.hide('updateUserModal')") Cancel
-        b-button(variant="primary", type="submit") Upgrade
+        b-button(variant='danger' @click="$bvModal.hide('updateUserModal')") Cancel
+        b-button(variant='primary' type='submit') Upgrade
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../../eventbus";
+
 import InputText from "../input/InputText.vue";
 
 import api from "../../api/user";

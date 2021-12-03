@@ -1,16 +1,17 @@
 <template lang="pug">
 b-row.text-center
-  b-col.m-4.p-4.card(v-for="elem in [food, verifiedFamilies, deliveredPacks]")
-    h1 
+  b-col.m-4.p-4.card(v-for='elem in [food, verifiedFamilies, deliveredPacks]')
+    h1
       b {{ elem.count }}
     h3.pre-formatted {{ elem.message }}
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse } from "axios";
+
 import { CountDataResponse } from "../../types";
 
+import { AxiosResponse } from "axios";
 import api from "../../api/data";
 
 export default Vue.extend({

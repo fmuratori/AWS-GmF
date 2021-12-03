@@ -22,10 +22,11 @@ div
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse } from "axios";
-import { Address, Event } from "../../types";
 import moment from "moment";
 
+import { Address, Event } from "../../types";
+
+import { AxiosResponse } from "axios";
 import api from "../../api/data";
 
 export default Vue.extend({
@@ -61,7 +62,7 @@ export default Vue.extend({
       return addr.street + " " + addr.civicNumber + ", " + addr.city;
     },
     formatDate(date) {
-      return moment(date).locale("it").format("DD-MM-YYYY");
+      return moment(date).format("DD-MM-YYYY");
     },
   },
 });
