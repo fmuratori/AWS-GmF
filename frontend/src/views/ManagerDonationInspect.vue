@@ -100,7 +100,7 @@ export default Vue.extend({
   components: {
     Message,
   },
-  data: function () {
+  data: () => {
     return {
       donation: {
         _id: "",
@@ -185,7 +185,7 @@ export default Vue.extend({
         ? "Afternoon"
         : "Evening";
     },
-    sendMessage(event) {
+    sendMessage() {
       this.$store.dispatch("sendMessage", {
         donationId: this.donation._id,
         message: this.chatMessage,

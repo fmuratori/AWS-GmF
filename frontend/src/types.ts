@@ -211,3 +211,19 @@ export interface CountDataResponse {
 // }
 
 // export interface RegisteredUserData { }
+
+/* Google maps */
+export interface GMapAutoCompleteResponse {
+  results: {
+    address_components: {
+      types: string[];
+      long_name: string;
+    }[];
+    geometry: {
+      location: {
+        lat: number;
+        lng: number;
+      };
+    };
+  }[];
+}

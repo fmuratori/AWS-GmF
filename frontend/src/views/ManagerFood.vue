@@ -30,7 +30,6 @@ b-container
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-
 import FoodView from "../components/FoodView.vue";
 import InputText from "../components/input/InputText.vue";
 import InputDate from "../components/input/InputDate.vue";
@@ -50,6 +49,7 @@ export default Vue.extend({
   data: () => {
     return {
       form: {
+        _id: "",
         labels: new Array<string>(),
         number: 0,
         name: "",

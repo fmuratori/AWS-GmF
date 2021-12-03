@@ -56,7 +56,7 @@
                 b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block='block' @click='selectDonation(donation)') Select
                 b-button.color3(v-else size='sm' block='block' @click='deselectDonation(donation)') Cancel
     b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
-      b-form.fullheight(@submit='submit')
+      b-form.fullheight(@submit.stop.prevent='submit')
         .py-3.px-lg-2.d-flex.flex-column.fullheight
           div
             h5.mb-3
@@ -65,11 +65,10 @@
           div
             b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
               b-input-group
-                b-form-datepicker#input-2.border-right-0(required='required' v-model='pickUpDate' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()')
+                b-form-datepicker#input-2.border-right-0(required='required' v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()')
                   b-icon(icon='x' aria-hidden='true')
           b-form-group#input-group-3(label='Time of day:' label-for='input-3')
-            b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']" required='required' size='sm')
-              b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']" required='required' size='sm')
+            b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']"  @input='filterDonations' required='required' size='sm')
           .mt-auto.d-none.d-lg-block.d-xl-block
             b-alert(show='show')
               p.m-0.p-0.text-center
@@ -77,7 +76,7 @@
                 br
                 span &nbsp;
                 a(href='#' @click='showModal') (Inspect)
-            b-button.color3(variant='success' type='submit' size='sm' block='block') Submit
+            b-button.color3(type='submit' size='sm' block='block') Submit
             b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity') Select another city
     b-col.d-block.d-lg-none.d-xl-none(v-if='selectedCity.name' cols='10' sm='10' md='10' order='3')
       b-alert.mt-3(show='show')
@@ -86,8 +85,8 @@
           br
           span &nbsp;
           a(href='#' @click='showModal') (Inspect)
-      b-button(variant='success' type='submit' size='sm' block='block') Submit
-      b-button(variant='danger' type='submit' size='sm' block='block' @click='deselectCity') Select another city
+      b-button.color3(type='submit' size='sm' block='block') Submit
+      b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity') Select another city
   b-modal#modal-1(title='Selected donations' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
     b-row(style='height: 100%;')
       b-col(v-if='selectedDonations.length' cols='10' md='10' lg='3' style='overflow: hidden;')
@@ -97,7 +96,7 @@
       b-col(v-if='selectedDonations.length' cols='10' md='10' lg='9' style='overflow-y: scroll; height: 100%;')
         div(v-for='(donation, idx) in selectedDonations' :key='idx' :id="'donation' + idx")
           hr.mt-0.pt-0
-          h4 Donation # {{idx}}
+          h4 Donation # {{ idx }}
           p
             label Foods:
             ul
@@ -122,7 +121,6 @@
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
-import moment from "moment";
 import misc from "../misc/misc";
 import dates from "../misc/dates";
 
@@ -161,7 +159,7 @@ export default Vue.extend({
       selectedDonations: new Array<Donation>(),
       windowDonations: new Array<Donation>(),
       windowCoordinates: { x: 0, y: 0 },
-      pickUpDate: dates.formatDate(moment()),
+      pickUpDate: dates.formatDate(new Date()),
       pickUpPeriod: "morning",
       isModalOpen: false,
     };
@@ -174,14 +172,6 @@ export default Vue.extend({
       );
     },
   },
-  watch: {
-    pickUpDate: function (): void {
-      this.filterDonations();
-    },
-    pickUpPeriod: function (): void {
-      this.filterDonations();
-    },
-  },
   created() {
     // check if user is logged in
     if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
@@ -192,7 +182,6 @@ export default Vue.extend({
       latitude: number;
       longitude: number;
     }) {
-      //placeResultData, id
       this.selectedCity = {
         name: addressData.locality,
         coordinates: {
@@ -245,9 +234,10 @@ export default Vue.extend({
         1
       );
     },
-    filterDonations() {
+    filterDonations(): void {
       this.selectedDonations = [];
-      this.closeInfoWindow();
+      this.windowDonations.splice(0, this.windowDonations.length);
+      this.windowCoordinates = { x: 0, y: 0 };
 
       eventbus.$emit(
         "startLoading",
@@ -277,8 +267,7 @@ export default Vue.extend({
     hideModal() {
       this.isModalOpen = false;
     },
-    submit(e: any) {
-      e.preventDefault();
+    submit() {
       if (!this.pickUpDate) {
         eventbus.$emit(
           "warningMessage",
@@ -338,38 +327,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-@import "@/assets/style.scss";
-
-// #filters {
-//   height: 100%;
-
-//   overflow-y: scroll;
-// }
-
-// .fullheight {
-//   height: 100%;
-// }
-
-// .fullheight-lg {
-//   @include md {
-//     height: auto;
-//   }
-
-//   @include lg {
-//     height: 100%;
-//   }
-// }
-
-// .scrollable-lg {
-//   @include md {
-//     width: auto;
-//     overflow-y: auto;
-//   }
-
-//   @include lg {
-//     width: 100%;
-//     overflow-y: scroll;
-//   }
-// }
-</style>
+<style scoped lang="scss"></style>

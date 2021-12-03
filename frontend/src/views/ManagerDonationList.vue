@@ -205,7 +205,7 @@ export default Vue.extend({
       return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
     },
     pickUpDateComparer(a: Donation, b: Donation) {
-      return new Date(a.pickUp.date) < new Date(a.pickUp.date) ? -1 : 1;
+      return new Date(a.pickUp.date) < new Date(b.pickUp.date) ? -1 : 1;
     },
     unreadMessagesComparer(a: Donation, b: Donation) {
       return this.unreadMessagesCount(a._id) < this.unreadMessagesCount(b._id)

@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
+import { GMapAutoCompleteResponse } from "../types";
+
 export default {
   async getLocationCoordinates(location: string): Promise<AxiosResponse> {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
@@ -7,7 +9,9 @@ export default {
     });
   },
 
-  async getAutocompleteCities(query: string) {
+  async getAutocompleteCities(
+    query: string
+  ): Promise<AxiosResponse<GMapAutoCompleteResponse>> {
     return axios.get(
       `https://maps.googleapis.com/maps/api/place/autocomplete/json`,
       {

@@ -24,10 +24,10 @@ div
 <script lang="ts">
 import Vue from "vue";
 
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import mapsApi from "../../api/maps";
 
-import { Address } from "../../types";
+import { Address, GMapAutoCompleteResponse } from "../../types";
 
 import MapLocation from "../MapLocation.vue";
 
@@ -96,7 +96,7 @@ export default Vue.extend({
             " " +
             this.address.street
         )
-        .then((r: any) => {
+        .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
           if (r.status == 200) {
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>

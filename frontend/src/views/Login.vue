@@ -71,7 +71,7 @@ export default Vue.extend({
     InputAddress,
     InputPasswordSelect,
   },
-  data: function () {
+  data: () => {
     return {
       // TODO: remove precompiled test-values
       isLoginSelected: true,

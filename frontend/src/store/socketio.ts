@@ -58,16 +58,19 @@ export default {
     },
   },
   actions: {
-    SOCKET_connect() {
+    SOCKET_connect(): void {
       // TODO: reset the entire application
       console.log("Connected to server socket.io");
     },
 
-    SOCKET_disconnect() {
+    SOCKET_disconnect(): void {
       console.log("Disconnected from server socket.io");
     },
 
-    SOCKET_chat_message({ commit, state, rootState }, stringMessage: string) {
+    SOCKET_chat_message(
+      { commit, state, rootState },
+      stringMessage: string
+    ): void {
       const message = JSON.parse(stringMessage);
 
       if (state.donationId == message._id) {

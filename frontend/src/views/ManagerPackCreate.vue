@@ -210,8 +210,10 @@ export default Vue.extend({
 
     print() {
       this.isPrinted = true;
-      const printableData: any = this.$refs.printableData;
-      printableData.generatePdf();
+      this.$refs.printableData.generatePdf();
+
+      // const printableData: any = this.$refs.printableData;
+      // printableData.generatePdf();
     },
     createPack(): void {
       this.foodList.forEach((elem) => {

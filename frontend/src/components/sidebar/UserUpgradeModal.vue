@@ -22,7 +22,7 @@ export default Vue.extend({
   components: {
     InputText,
   },
-  data: function () {
+  data: () => {
     return {
       userEmail: "",
     };

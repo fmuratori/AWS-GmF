@@ -38,20 +38,41 @@ export default Vue.extend({
     this.yCoord = this.y;
   },
   mounted() {
-    this.$refs.mapRef.$mapPromise.then((map) => {
-      map.addListener(
-        "dragend",
-        function () {
-          this.xCoord = map.getCenter().lat();
-          this.yCoord = map.getCenter().lng();
-          this.$emit(
-            "locationChange",
-            map.getCenter().lat(),
-            map.getCenter().lng()
-          );
-        }.bind(this)
-      );
+    this.$nextTick(() => {
+      this.$refs.mapRef.$mapPromise.then((map: any) => {
+        map.addListener(
+          "dragend",
+          function () {
+            this.xCoord = map.getCenter().lat();
+            this.yCoord = map.getCenter().lng();
+            this.$emit(
+              "locationChange",
+              map.getCenter().lat(),
+              map.getCenter().lng()
+            );
+          }.bind(this)
+        );
+      });
     });
+    console.log(this.$refs.mapRef);
+
+    // if (this.$refs.mapRef) {
+    //   this.$refs.mapRef.$mapPromise.then(
+    //     function (this:any, map: { addListener: (arg0: string, arg1: any) => void; getCenter: () => { (): any; new(): any; lat: { (): any; new(): any; }; lng: { (): any; new(): any; }; }; }) {
+    //       map.addListener(
+    //         "dragend",
+    //         function () {
+    //           this.xCoord = map.getCenter().lat();
+    //           this.yCoord = map.getCenter().lng();
+    //           this.$emit(
+    //             "locationChange",
+    //             map.getCenter().lat(),
+    //             map.getCenter().lng()
+    //           );
+    //       }.bind(this)
+    //     );
+    //   });
+    // }
   },
 });
 </script>

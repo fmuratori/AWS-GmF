@@ -164,9 +164,19 @@ export default Vue.extend({
         clickableIcons: false,
       },
       filters: [
-        ["all", "All", null, true],
-        ["expiring_today", "Expiring today", null, true],
-        ["expiring_tomorrow", "Expiring tomorros", null, true],
+        { name: "all", label: "All", icon: null, isVisible: true },
+        {
+          name: "expiring_today",
+          label: "Expiring today",
+          icon: null,
+          isVisible: true,
+        },
+        {
+          name: "expiring_tomorrow",
+          label: "Expiring tomorros",
+          icon: null,
+          isVisible: true,
+        },
       ],
       selectedCity: {
         name: "",
@@ -199,8 +209,11 @@ export default Vue.extend({
         packFoodsIds.includes(f._id)
       );
     },
-    selectCity(addressData: { locality: any; latitude: any; longitude: any }) {
-      //, placeResultData, id
+    selectCity(addressData: {
+      locality: string;
+      latitude: number;
+      longitude: number;
+    }) {
       this.selectedCity = {
         name: addressData.locality,
         coordinates: {

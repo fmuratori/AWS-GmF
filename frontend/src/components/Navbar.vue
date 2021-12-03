@@ -68,7 +68,7 @@ export default Vue.extend({
   components: {
     UserUpgradeModal,
   },
-  data: function () {
+  data: () => {
     return {
       isOpen: false,
     };
@@ -100,7 +100,7 @@ export default Vue.extend({
             this.$refs.messagesModal!.hide();
             this.$router.push({
               name: "ManagerDonationInspect",
-              params: { donation: JSON.stringify(r.data[0] as Donation) },
+              params: { donation: JSON.stringify((r.data as Donation[])[0]) },
             });
           } else {
             eventbus.$emit(

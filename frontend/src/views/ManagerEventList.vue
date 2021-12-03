@@ -175,7 +175,7 @@ export default Vue.extend({
           null;
       }
     },
-    filterBy(statusFilter: "past" | "present" | "future" | "all") {
+    filterBy(statusFilter: string) {
       switch (statusFilter) {
         case "past":
           this.eventList = this.eventListBackup.filter((d) =>

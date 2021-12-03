@@ -115,6 +115,7 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError) => {
+          console.log(e);
           eventbus.$emit(
             "errorMessage",
             "Family check",

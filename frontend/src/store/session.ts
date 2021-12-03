@@ -32,7 +32,7 @@ const sessionModule = {
     isVolunteer(state: UserState): boolean {
       return state.userData.type == "volunteer";
     },
-    isTrustedVolunteer(state: any) {
+    isTrustedVolunteer(state: UserState): boolean {
       return state.userData.type == "trusted";
     },
     getSessionHeader(): SessionHeader {

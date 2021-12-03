@@ -11,7 +11,7 @@ div
     template(#cell(load)='{ item }')
       b-button(@click='load(item)' size='sm') Edit
     template(#cell(labels)='data')
-      b-badge.mr-1(v-for='label in data.value' variant='success') {{ label }}
+      b-badge.mr-1(v-for='(label, idx) in data.value' variant='success' :key="idx") {{ label }}
     template(#cell(selected)='{ item }')
       div(:key='index' ref='reload')
         b-button(pill='pill' @click='removeClick(item)' :disabled='!item.selected || item.selected == 0') -
@@ -158,7 +158,8 @@ export default Vue.extend({
           eventbus.$emit(
             "successMessage",
             "Foods",
-            "Food deleted successfully."
+            "Food deleted successfully.",
+            this
           );
         })
         .catch((): void => {
