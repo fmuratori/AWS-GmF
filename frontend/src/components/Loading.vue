@@ -1,15 +1,15 @@
 <template lang="pug">
-transition(name='fade')
-  #loading(v-if='isActive')
+transition(name="fade")
+  #loading(v-if="isActive")
     #background
-    b-row.text-center.mt-5(align-v='center' align-h='center')
-      b-col(cols='10' md='8' lg='4')
+    b-row.text-center.mt-5(align-v="center" align-h="center")
+      b-col(cols="10" md="8" lg="4")
         b-card
           h1
             span Loading...
             .loader  
           p
-            label(v-if='message')
+            label(v-if="message")
               | {{ message }}
               br
             label This action shouldn&apos;t take  too long.
