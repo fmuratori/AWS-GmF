@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 import navigationModule from "./navigation";
 import sessionModule from "./session";
@@ -16,4 +17,5 @@ export default new Vuex.Store({
     session: sessionModule,
     socketio: socketioModule,
   },
+  plugins: [createPersistedState()]
 });

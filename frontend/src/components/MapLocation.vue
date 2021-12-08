@@ -11,7 +11,7 @@ div
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "InputAddress",
+  name: "MapLocation",
   props: {
     x: Number,
     y: Number,

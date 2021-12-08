@@ -98,12 +98,7 @@ export default Vue.extend({
       this.mode = mode;
     });
 
-    // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       if (!("mode" in this.$route.params)) {
         this.$router.push({ name: "Home" });
       } else {

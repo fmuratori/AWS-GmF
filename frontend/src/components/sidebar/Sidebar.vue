@@ -14,7 +14,7 @@
       hr.sidebar-hr.my-3
       SidebarCategory(text='Donations' icon='map')
       SidebarItem(v-if='!$store.getters.isUser' text='Retrieve donations' route='ManagerDonationRetrieve')
-      SidebarItem(v-if='$store.getters.isUser' text='Make a donation' route='ManagerDonationCreate')
+      SidebarItem(v-if='$store.getters.isUser' text='Create a donation' route='ManagerDonationCreate')
       SidebarItem(text='Your donations' route='ManagerDonationList' v-if='$store.getters.isUser')
       SidebarItem(text='Donations list' route='ManagerDonationList' v-if='!$store.getters.isUser')
     div

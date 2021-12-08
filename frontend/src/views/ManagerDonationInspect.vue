@@ -11,7 +11,7 @@ b-container
       b-card(bg-variant='light' no-body='no-body')
         b-card-text.m-2
           #messages-area.mb-1(ref='messagesArea')
-            Message(v-for='(message, idx) in processedChat' :key='idx' :username='message.userFullname' :isowner='message.userId == $store.state.session.userData._id' :date='dates.formatDatetime(message.date)' :isvisualized='message.visualized' :isevent='message.isEventMessage' :messages='message.messages')
+            Message(v-for='(message, idx) in processedChat' :key='idx' :username='message.userFullname' :isOwner='message.userId == $store.state.session.userData._id' :date='dates.formatDatetime(message.date)' :isVisualized='message.visualized' :isEvent='message.isEventMessage' :messages='message.messages')
           b-form(@submit.stop.prevent='sendMessage')
             b-input-group
               b-form-input(type='text' placeholder='Insert here your message' v-model='chatMessage' required='required')
@@ -155,12 +155,7 @@ export default Vue.extend({
     },
   },
   created() {
-    // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       // retrieve the donation data from vue-route
       if ("donation" in this.$route.params) {
         this.donation = JSON.parse(this.$route.params.donation) as Donation;

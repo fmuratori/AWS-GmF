@@ -38,7 +38,7 @@ b-container
               p.m-0
                 span
                   | Tell us where we can find the family. All the food packs we make with your and other people donations will be delivered here. Do not worry if the position is not correct, we will verifiy it directly.
-        InputAddress(:city='form.address.city' :civic='form.address.civicNumber' :street='form.address.street' @data='(e) => { form.address = e; }')
+        InputAddress(:city='form.address.city' :civic='form.address.civicNumber' :street='form.address.street' :x='form.address.coordinates.x' :y='form.address.coordinates.y' @data='(e) => { form.address = e; }')
         hr
         b-row
           b-col
@@ -56,7 +56,6 @@ import InputAddress from "../components/input/InputAddress.vue";
 import Icon from "../components/Icon.vue";
 
 import { Address, FamilyPayload } from "../types";
-import { ReportFamilyView } from "../viewTypes";
 
 import api from "../api/family";
 
@@ -67,13 +66,13 @@ export default Vue.extend({
     InputAddress,
     Icon,
   },
-  data: (): ReportFamilyView => {
+  data: () => {
     return {
       form: {
         reporterId: "",
         name: "",
         phoneNumber: "",
-        // components: new Number(),
+        components: 0,
         address: {
           city: "",
           street: "",
@@ -88,12 +87,7 @@ export default Vue.extend({
     };
   },
   created() {
-    // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       if ("family" in this.$route.params) {
         this.form = this.$route.params.family as unknown as FamilyPayload;
         this.submitLabel = "Edit";

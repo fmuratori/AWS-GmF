@@ -30,11 +30,13 @@ import mapsApi from "../../api/maps";
 import { Address, GMapAutoCompleteResponse } from "../../types";
 
 import MapLocation from "../MapLocation.vue";
+import Icon from "../Icon.vue";
 
 export default Vue.extend({
   name: "InputAddress",
   components: {
     MapLocation,
+    Icon,
   },
   props: {
     required: Boolean,
@@ -101,14 +103,14 @@ export default Vue.extend({
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>
               c.types.includes("administrative_area_level_3")
-            ).long_name;
+            )?.long_name;
             this.address.street = r.data.results[0].address_components.find(
               (c) => c.types.includes("route")
-            ).long_name;
+            )?.long_name;
             this.address.civicNumber =
             r.data.results[0].address_components.find((c) =>
               c.types.includes("street_number")
-            ).long_name;
+            )?.long_name;
             this.address.coordinates.x =
               r.data.results[0].geometry.location.lat;
             this.address.coordinates.y =

@@ -23,12 +23,11 @@
         div
           gmap-custom-marker(v-for='(donation, idx) in unselectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
             h1
-              Icon(bootstrap icon='exclamation-circle-fill' variant='warning')
+              b-icon(icon='exclamation-circle-fill' variant='warning')
         div
           gmap-custom-marker(v-for='(donation, idx) in selectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
             h1
-              // truck
-              Icon(bootstrap icon='check-circle-fill' variant='success')
+              b-icon(icon='check-circle-fill' variant='success')
         gmap-info-window(v-if='windowCoordinates.x != 0 && windowCoordinates.y != 0' :options='{maxWidth: 300*windowDonations.length, pixelOffset: { width: 0, height: -55 } }' :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}" :opened='true' @closeclick='closeInfoWindow')
           table
             tr
@@ -175,7 +174,6 @@ export default Vue.extend({
     },
   },
   created() {
-    // check if user is logged in
     if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
   },
   methods: {

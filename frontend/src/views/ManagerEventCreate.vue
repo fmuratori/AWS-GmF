@@ -75,10 +75,8 @@ export default Vue.extend({
     };
   },
   created() {
-    this.form.ownerVolunteerId = this.$store.state.session.userData._id;
-
-    // check if user is logged in
     if (this.$store.getters.isUserLogged) {
+      this.form.ownerVolunteerId = this.$store.state.session.userData._id;
       if (!this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("showSidebar");
       }

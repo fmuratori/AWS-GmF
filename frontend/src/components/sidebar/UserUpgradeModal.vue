@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  b-nav-item.my-auto.navbar-link.text-center(href='#' v-b-modal.updateusermodal='v-b-modal.updateUserModal') Upgrade a user
+  b-nav-item.my-auto.navbar-link.text-center(href='#' v-b-modal.updateUserModal) Upgrade a user
   b-modal#updateUserModal(title='Upgrade a user to volunteer role' @ok='upgradeUser' hide-footer='hide-footer')
     b-form(@submit.stop.prevent='upgradeUser')
       InputText(type='email' placeholder="Digit user's email here" required='required' @data='(e) => { userEmail = e; }')

@@ -23,13 +23,14 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
         UserUpgradeModal
       b-nav-item.my-auto.navbar-link.text-center(href='#footer' @click="$router.push({name: 'Home'})") Contact us
       b-nav-item.my-auto.navbar-link.text-center(href='#events' @click="$router.push({name: 'Home'})") Events
-      b-nav-item.my-auto.text-center(href='#' v-if='!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
-        b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
+      b-nav-item.my-auto.text-center(href='#' v-if='!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged && $store.getters.unreadMessagesTotalCount > 0')
+        b-button.my-2.my-sm-0.color3(v-b-modal.messagesModal)
           span.mr-1 Messages
           b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
       b-nav-item.my-auto.navbar-link.text-center(:key='' href='#' v-if='$store.getters.isUserLogged' @click='logout()')
-        span.mr-1 Logout
-        Icon(fontawesome icon='sign-out-alt')
+        b-button.my-2.my-sm-0(variant='light')
+          span.mr-1 Log-out
+          Icon(fontawesome icon='sign-out-alt')
       b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Login')" v-if='!$store.getters.isUserLogged')
         b-button.my-2.my-sm-0(variant='light')
           span.mr-1 Login

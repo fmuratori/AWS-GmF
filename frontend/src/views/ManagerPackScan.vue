@@ -71,14 +71,10 @@ export default Vue.extend({
   },
   created() {
     this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-    } else this.$router.push({ name: "Login" });
+    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
   },
   mounted() {
-    // this.startCamera();
+    this.startCamera();
     packApi
       .packListExpanded({ _id: "61a7fa7c406111692396215c" })
       .then((r: AxiosResponse<Pack>) => {
@@ -107,7 +103,7 @@ export default Vue.extend({
       this.scannerState = "ready";
     },
 
-    onDecode(result) {
+    onDecode(result: string) {
       console.log(result);
       if (result != "") {
         this.result = result;

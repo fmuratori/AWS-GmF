@@ -15,13 +15,6 @@ b-container
               Icon(bootstrap icon='info')
           b-col
             p.m-0 Here are listed all your events, both past, present and future ones. 
-      b-alert(show='show')
-        b-row(align-v='center')
-          b-col(cols='auto')
-            h1
-              Icon(bootstrap icon='info')
-          b-col
-            p.m-0 To make things easier, filter your events by status or sort them
       b-alert.mb-5(show='show' variant='warning')
         b-row(align-v='center')
           b-col(cols='auto')
@@ -141,10 +134,6 @@ export default Vue.extend({
 
     // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       eventbus.$emit("startLoading", "Loading your events.");
       api
         .eventList({

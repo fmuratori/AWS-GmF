@@ -17,24 +17,23 @@ div
         h3.mb-5 WHAT IS BRING ME FOOD?
         p.m-0.p-0 Bring me Food is a web application which enables users to communciate directly with volunteers to donate foods which will e delivered to needing families.
      
-  div#banner-section  
-    b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters)
+  div  
+    b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters).my-5
       b-col(cols="11" md="8" lg="auto")
         p.m-0.p-0 Donate foods to needy families
       b-col(cols="11" md="8" lg="auto").ml-3
         b-button(size="lg" variant="light" @click="donateFood") Donate
 
-    b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters)
+    b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters).my-5
       b-col(cols="11" md="8" lg="auto")
         p.m-0.p-0 Help us to find needy families
       b-col(cols="11" md="8" lg="auto").ml-3
         b-button(size="lg" variant="light" @click="subscribeFamily") Subscribe family
 
-  div.py-5.events-container(id="events")
+  div#events.my-5
     HomepageEvents
 
-  div.py-5
-    CountBoxes
+  CountBoxes.my-5
 
   div#footer
     b-row(align-h="center").mt-5.no-gutters
@@ -162,7 +161,9 @@ export default Vue.extend({
 }
 
 .blurred-section {
-  padding: 20em;
+  padding-top: 20em;
+  padding-bottom: 20em;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,20 +193,10 @@ export default Vue.extend({
   font-size: 1em;
 }
 
-#banner-section > * {
-  margin-top: 6em;
-  margin-bottom: 6em;
-}
-
 .banner {
   background-color: $color1;
   color: white;
   padding: 2em;
-}
-
-.events-container {
-  background-image: url("~@/assets/images/repeating_pattern.jpg");
-  background-size: 400px 400px;
 }
 
 .banner > * {
@@ -218,14 +209,16 @@ export default Vue.extend({
   background-color: $color2;
 
   background-image: url("~@/assets/images/footer1.jpg");
-  // background-image: url("~@/assets/images/footer2.jpg");
-  // background-size: contain;
-
-  // background-image: url("~@/assets/images/footer3.jpg");
-  // color: $greyscaleD;
 }
 
 #footer a {
-  color: $color2;
+  color: $color1;
 }
+
+
+#events {
+  background-image: url("~@/assets/images/repeating_pattern.jpg");
+  background-size: 400px 400px;
+}
+
 </style>

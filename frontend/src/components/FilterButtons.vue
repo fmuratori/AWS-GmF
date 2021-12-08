@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  b-button.ml-2.mb-2(v-for='(filter, idx) in filters' :key='idx' v-if='filter.isVisible' pill='pill' variant='secondary' size='sm' @click='onClick(filter.name)' :class="{ 'color1': selectedFilter == filter.name }")
+  b-button.ml-2.mb-2.filter-button(v-for='(filter, idx) in filters' :key='idx' v-if='filter.isVisible' pill='pill' variant='secondary' size='sm' @click='onClick(filter.name)' :class="{ 'color1': selectedFilter == filter.name }")
     span.mr-1 {{ filter.label }}
     Icon(bootstrap :icon='filter.icon' v-if='filter.icon')
 </template>
@@ -35,4 +35,10 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+@import "@/assets/style.scss";
+.filter-button:focus {
+  background-color: $color1;
+}
+</style>

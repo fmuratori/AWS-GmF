@@ -1,9 +1,9 @@
 import { SHA3 } from 'sha3';
 
 export default {
-  hashText(text: string) {
+  hashText(text: string): string {
     const hash = new SHA3(512);
-    console.log(hash.update(text));
-    console.log(hash.digest('hex'));
+    hash.update(text);
+    return hash.digest('hex');
   }
 }

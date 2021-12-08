@@ -133,10 +133,6 @@ export default Vue.extend({
   },
   created() {
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       eventbus.$emit("startLoading", "Loading packs");
       packApi
         .packList({})

@@ -16,13 +16,6 @@ b-container
           b-col
             p.m-0
               | Here are listed all your submissions for needing families. Our trusted volunteers will validate your requests and add those families to our food packs distribution system.
-      b-alert.mb-5(show='show')
-        b-row(align-v='center')
-          b-col(cols='auto')
-            h1
-              Icon(bootstrap icon='info')
-          b-col
-            p.m-0 To make things easier, filter your submissions by status or sort them.
     b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
       b-row.mb-2(no-gutters='no-gutters')
         b-col(cols='3')
@@ -133,12 +126,7 @@ export default Vue.extend({
       },
     ];
 
-    // check if user is logged in
     if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-
       eventbus.$emit("startLoading", "Filtering all your active requests.");
       api
         .familyList({

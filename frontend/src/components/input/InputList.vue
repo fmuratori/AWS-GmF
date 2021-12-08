@@ -8,8 +8,8 @@ b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :descripti
       v-model="labels[idx]"
     )
     b-input-group-append
-      b-button.my-no-left-border(
-        :variant="!labels[idx] ? 'outline-danger' : 'danger'",
+      b-button.my-no-left-border.color3(
+        :variant="!labels[idx] ? 'outline-danger' : ''",
         @click="labelDeleteClicked(idx)",
         :disabled="labels[idx] == ''"
       ) 

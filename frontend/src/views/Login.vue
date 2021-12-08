@@ -20,20 +20,22 @@ b-row.justify-content-center(no-gutters='no-gutters')
             a(href='#') Forgot password?
         .p-3(v-else)
           h5.text-center.mt-4 Personal information
-          InputText(title='Name: ' placeholder='Insert name here' required='required' @data='(e) => { registration.name = e; }')
-          InputText(title='Surname: ' placeholder='Insert surname here' required='required' @data='(e) => { registration.surname = e; }')
-          InputText(title='Email: ' placeholder='Insert your email here' type='email' required='required' @data='(e) => { registration.email = e; }')
-          InputText(title='Phone number: ' placeholder='Insert your phone number here' required='required' @data='(e) => { registration.phoneNumber = e; }')
+          InputText(title='Name: ' :text='registration.name' placeholder='Insert name here' required='required' @data='(e) => { registration.name = e; }')
+          InputText(title='Surname: ' :text='registration.surname' placeholder='Insert surname here' required='required' @data='(e) => { registration.surname = e; }')
+          InputText(title='Email: ' :text='registration.email' placeholder='Insert your email here' type='email' required='required' @data='(e) => { registration.email = e; }')
+          InputText(title='Phone number: ' :text='registration.phoneNumber' placeholder='Insert your phone number here' required='required' @data='(e) => { registration.phoneNumber = e; }')
           hr
           InputAddress(@data='(e) => { registration.address = e; }' @addressupdate='onAddressUpdate')
+          hr
           InputPasswordSelect(title1='Password: ' title2='Repeat your password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { registration.password = e; }')
           hr
-          b-form-checkbox#checkbox-1.mt-4(name='checkbox-1' v-model='registrationPrivacyChecked')
-            i
-              | I agree to the
-              a(href='#') privacy policy
-          b-form-checkbox#checkbox-2.mt-2(name='checkbox-2')
-            i I want to receive marketing information (optional)
+          div.ml-4
+            b-form-checkbox#checkbox-1.mt-4(name='checkbox-1' v-model='registrationPrivacyChecked')
+              i
+                | I agree to the
+                a(href='#') privacy policy
+            b-form-checkbox#checkbox-2.mt-2(name='checkbox-2')
+              i I want to receive marketing information (optional)
         b-button.footerCardButton.color3(block='block' size='lg' type='submit')
           span(v-if='isLoginSelected') SIGN IN
           span(v-else) SIGN UP
@@ -86,14 +88,14 @@ export default Vue.extend({
         password: "Password2021!",
       } as LoginPayload,
       registration: {
-        name: "",
-        surname: "",
-        password: "",
-        email: "",
-        phoneNumber: "",
+        name: "Fabio",
+        surname: "Muratori",
+        password: "Password2021!",
+        email: "user@user.com",
+        phoneNumber: "123456789",
         address: {
-          street: "",
-          civicNumber: "",
+          street: "Cesena",
+          civicNumber: "ippodromo",
           city: "",
           coordinates: {
             x: 0,
@@ -105,6 +107,10 @@ export default Vue.extend({
   },
   created() {
     this.$store.dispatch("hideSidebar");
+
+    if (this.$store.getters.userIsLogged) {
+      this.$router.replace({name: "Home"});
+    }
   },
   methods: {
     onAddressUpdate(address: string) {
