@@ -18,13 +18,13 @@ export default class UserController {
 			return
 		}
 
-		if (!validator.isStrongPassword(req.body.password)) {
-			res.status(401).json({
-				status: "weak-password-error",
-				message: "User must insert a strong password"
-			})
-			return
-		}
+		// if (!validator.isStrongPassword(req.body.password)) {
+		// 	res.status(401).json({
+		// 		status: "weak-password-error",
+		// 		message: "User must insert a strong password"
+		// 	})
+		// 	return
+		// }
 
 		const hashPassword = bcrypt.hashSync(req.body.password, parseInt(process.env.SALT_ROUND_NUMBER || "10"))
 		req.body.hashPassword = hashPassword
@@ -162,13 +162,13 @@ export default class UserController {
 			return
 		}
 
-		if (!validator.isStrongPassword(req.body.newPassword)) {
-			res.status(401).json({
-				status: "weak-password-error",
-				message: "User must insert a strong password"
-			})
-			return
-		}
+		// if (!validator.isStrongPassword(req.body.newPassword)) {
+		// 	res.status(401).json({
+		// 		status: "weak-password-error",
+		// 		message: "User must insert a strong password"
+		// 	})
+		// 	return
+		// }
 
 		const hashPassword = bcrypt.hashSync(req.body.newPassword, parseInt(process.env.SALT_ROUND_NUMBER || "10"))
 		user.hashPassword = hashPassword
