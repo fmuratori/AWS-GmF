@@ -8,13 +8,11 @@ div
 <script lang="ts">
 import Vue from "vue";
 
+import { FilterButton } from "../viewTypes";
+
 export default Vue.extend({
   name: "FilterButtons",
-  props: {
-    label: String,
-    filters: [Object],
-    selected: Number,
-  },
+  props: [ "label", "filters", "selected" ],
   data: () => {
     return {
       selectedFilter: "",
@@ -36,4 +34,6 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+</style>

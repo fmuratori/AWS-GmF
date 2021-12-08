@@ -5,6 +5,7 @@ const router: Router = express.Router()
 const familyController = new FamilyController()
 
 router.post('/find', familyController.find)
+router.post('/find-more', familyController.findWithPack)
 router.post('/add', familyController.add)
 router.post('/edit', familyController.edit)
 router.post('/delete', familyController.delete)

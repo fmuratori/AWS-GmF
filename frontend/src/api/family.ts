@@ -28,6 +28,14 @@ export default {
     );
   },
 
+  async familyWithPacksList(payload: FindPayload): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/family/find-more`,
+      payload,
+      { headers: store.getters.getSessionHeader }
+    );
+  },
+
   async verifyFamily(payload: { id: string }): Promise<AxiosResponse> {
     return axios.post(
       `${process.env.VUE_APP_API_URL}/api/family/verify`,

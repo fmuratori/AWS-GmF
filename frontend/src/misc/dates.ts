@@ -41,4 +41,8 @@ export default {
     });
     return nearestDate;
   },
+
+  getMaxDate(dates: Date[] | string[]): Date {
+    return Math.max.apply(null,dates.map(d => new Date(d)))
+  }
 };

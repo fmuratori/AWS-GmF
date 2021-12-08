@@ -2,13 +2,13 @@
 div
   div.blurred-section.text-center()
 
-    div.color1.px-3.py-4.mb-5()
+    div.color1.px-3.py-4.mb-5.mt-5()
       h1.display-4 BmF
       
-    div.p-3#shadow-text
+    div.my-5.p-3#shadow-text
       h2 Help others
       p.lead Gift foods you dont need and feed needy families.
-      div.mt-2
+      div.mt-2(v-if='!$store.getters.isUserLogged')
         b-button.color3(size="lg" @click="$router.push({name: 'Login'})") Sign up
 
   div.grey-section.text-section.text-center
@@ -22,15 +22,15 @@ div
       b-col(cols="11" md="8" lg="auto")
         p.m-0.p-0 Donate foods to needy families
       b-col(cols="11" md="8" lg="auto").ml-3
-        b-button(size="lg" variant="light") Donate
+        b-button(size="lg" variant="light" @click="donateFood") Donate
 
     b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters)
       b-col(cols="11" md="8" lg="auto")
         p.m-0.p-0 Help us to find needy families
       b-col(cols="11" md="8" lg="auto").ml-3
-        b-button(size="lg" variant="light") Subscribe family
+        b-button(size="lg" variant="light" @click="subscribeFamily") Subscribe family
 
-  div.py-5.events-container 
+  div.py-5.events-container(id="events")
     HomepageEvents
 
   div.py-5
@@ -39,11 +39,11 @@ div
   div#footer
     b-row(align-h="center").mt-5.no-gutters
       b-col(lg=8)
-        b-row().no-gutters
-          b-col
+        b-row(align-h="around").no-gutters
+          b-col(cols=10 md=5 lg="auto")
             h1.display-4 BmF
             h6 Bring me Food
-          b-col
+          b-col(cols=10 md=5 lg="auto")
             b Contact us
             b-row.no-gutters
               b-col(cols="auto")
@@ -60,8 +60,7 @@ div
                 Icon.mr-2(source="fa" icon="phone") 
               b-col
                 p +39 123456789
-          
-          b-col
+          b-col(cols=10 md=5 lg="auto")
             b Grow with us
             p 
               a(href="#") Become a volunteer
@@ -69,14 +68,12 @@ div
               a(href="#") Donate food
             p
               a(href="#") Submit needing families
-
-          b-col
+          b-col(cols=10 md=5 lg="auto")
             b Legal 
             p
               a(href="#") Terms of use
             p
               a(href="#") Privacy policy
-
         hr.shaded.mb-1
         b-row.d-flex.flex-row-reverse.no-gutters.mb-1
           b-col.mr-2(cols="auto")
@@ -87,8 +84,6 @@ div
             Icon(source="bt" icon="youtube")
           b-col.mr-2(cols="auto")
             Icon(source="bt" icon="twitter")
-          
-
 
 //- b-container
 //-   b-row.justify-content-md-center.my-5.no-gutters
@@ -138,6 +133,19 @@ export default Vue.extend({
       }
     }
   },
+  methods: {
+    donateFood() {
+      if(this.$store.getters.isUserLogged) {
+        this.$router.push({name: "ManagerDonationCreate"});
+      }
+    },
+    subscribeFamily() {
+      if(this.$store.getters.isUserLogged) {
+        this.$router.push({name: "ManagerFamilySubscribe"});
+      }
+
+    }
+  },
 });
 </script>
 
@@ -145,13 +153,17 @@ export default Vue.extend({
 @import "@/assets/style.scss";
 
 #shadow-text {
+  -webkit-box-shadow: 0px 0px 50px 50px rgba(0,0,0,0.85); 
+  box-shadow: 0px 0px 50px 50px rgba(0,0,0,0.85);
+  
   background-color: rgba(0, 0, 0, 0.83); 
-  border-radius: 20px;
-  -webkit-box-shadow: 0px 0px 50px 25px #000000; 
-  box-shadow: 0px 0px 50px 25px #000000;
+  
+  // -webkit-box-shadow: 0px 0px 50px 25px #000000; 
+  // box-shadow: 0px 0px 50px 25px #000000;
 }
 
 .blurred-section {
+  padding: 20em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,5 +218,18 @@ export default Vue.extend({
   border-top: 20px solid $color1;
   border-bottom: 10px solid $color1;
   background-color: $color2;
+
+  
+  background-image: url("~@/assets/images/footer1.jpg");
+  // background-image: url("~@/assets/images/footer2.jpg");
+  // background-size: contain;
+
+ 
+  // background-image: url("~@/assets/images/footer3.jpg");
+  // color: $greyscaleD;
+}
+
+#footer a {
+  color: $color2;
 }
 </style>

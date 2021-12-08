@@ -21,8 +21,8 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
       b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Home')") Home
       b-nav-item.my-auto.navbar-link.text-center(href='#' v-if="this.$store.state.session.userData.type == 'trusted'")
         UserUpgradeModal
-      b-nav-item.my-auto.navbar-link.text-center(href='#') Contact us
-      b-nav-item.my-auto.navbar-link.text-center(href='#') Events
+      b-nav-item.my-auto.navbar-link.text-center(href='#footer' @click="$router.push({name: 'Home'})") Contact us
+      b-nav-item.my-auto.navbar-link.text-center(href='#events' @click="$router.push({name: 'Home'})") Events
       b-nav-item.my-auto.text-center(href='#' v-if='!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
         b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
           span.mr-1 Messages

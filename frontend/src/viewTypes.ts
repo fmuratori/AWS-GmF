@@ -11,6 +11,13 @@ import {
   SelectableFood,
 } from "./types";
 
+export interface FilterButton {
+  value: string; 
+  label: string; 
+  icon: string; 
+  isVisible: boolean;
+}
+
 export interface CreateEventView {
   form: EventPayload;
   submitLabel: string;

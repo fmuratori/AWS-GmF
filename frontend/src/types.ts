@@ -98,6 +98,7 @@ export interface FamilyPayload {
 
 export interface Family {
   _id: string;
+  packs: Pack[],
   reporterId: string;
   name: string;
   phoneNumber: string;

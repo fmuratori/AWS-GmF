@@ -19,9 +19,10 @@ b-container
               b-badge(v-if="data.value == 'planned delivery'" variant='warning') {{ data.value }}
               b-badge(v-if="data.value == 'delivered'" variant='success') {{ data.value }}
             template(#cell(buttons)='{ item }')
-              b-button.mr-1.color3(size='sm' @click='selectedPack = item;') Details
-              b-button.mr-1.color3(size='sm' @click='setDelivered(item._id)' :disabled="item.status != 'planned delivery'") Advance
-              b-button.color3(size='sm' variant='danger' v-b-modal.modal @click='deletePackId = item._id') Delete
+              b-button-group
+                b-button.color3(size='sm' @click='selectedPack = item;') Details
+                b-button.color3(size='sm' @click='setDelivered(item._id)' :disabled="item.status != 'planned delivery'") Advance
+                b-button.color3(size='sm' variant='danger' v-b-modal.modal @click='deletePackId = item._id') Delete
         b-col(lg='4' md='4' sm='12')
           b-card(bg-variant='light')
             template(#header)
@@ -96,12 +97,12 @@ export default Vue.extend({
       selectedPack: undefined,
       tableFields: [
         {
-          key: "status",
+          key: "pack.status",
           label: "Status",
           sortable: false,
         },
         {
-          key: "expirationDate",
+          key: "pack.expirationDate",
           label: "Expiration Date",
           sortable: true,
           formatter: (date: Date) => {
@@ -109,7 +110,7 @@ export default Vue.extend({
           },
         },
         {
-          key: "deliveryDate",
+          key: "pack.deliveryDate",
           label: "Delivery Date",
           sortable: true,
           formatter: (date: Date) => {
@@ -117,7 +118,7 @@ export default Vue.extend({
           },
         },
         {
-          key: "deliveryPeriod",
+          key: "pack.deliveryPeriod",
           label: "Delivery Period",
           sortable: false,
         },
@@ -156,8 +157,6 @@ export default Vue.extend({
         this.packList = this.packListBackup.filter((p: Pack) => {
           p.status == status;
         });
-        console.log(this.packListBackup);
-        console.log(this.packList);
         // if (newPacks) this.packList.push(newPacks)
       } else this.packList = this.packListBackup;
     },

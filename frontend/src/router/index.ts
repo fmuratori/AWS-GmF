@@ -141,6 +141,14 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+  scrollBehavior (to, from, savedPosition) {
+    const layoutContent = document.getElementById("content");
+    layoutContent.scrollTo(0, 0);
+  }
 });
+
+// router.beforeEach(() => { //to, from, next
+//   window.scrollTo(0, 0);
+// })
 
 export default router;

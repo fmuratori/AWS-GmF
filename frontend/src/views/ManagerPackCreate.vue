@@ -13,7 +13,8 @@ b-container
           FamilyView(@select='(family) => selectFamily(family)')
   b-row.justify-content-center.my-5(v-if="step == 'selectFoods'")
     b-col(cols='12' md='12' lg='12')
-      FoodView.mb-4(selectableitems='selectableItems' @data='(e) => { this.foodList = e; }')
+      FoodView(selectableItems @data='(e) => { this.foodList = e; }').mb-5
+      
       b-row.mb-5
         b-col
           b-card(bg-variant='light' text-variant='dark' no-body='no-body')
@@ -173,7 +174,7 @@ export default Vue.extend({
     return {
       step: "selectFamily",
       foodList: new Array<SelectableFood>(),
-      familyList: new Array<Family>(),
+      familyList: new Array<Family>(), // TODO: delete this, unused
       selectedFamily: {} as Family,
       form: {
         foodList: new Array<{ foodId: string; number: number }>(),
@@ -216,12 +217,16 @@ export default Vue.extend({
       // printableData.generatePdf();
     },
     createPack(): void {
+      
       this.foodList.forEach((elem) => {
         if (elem.selected) {
           this.form.foodList.push({ foodId: elem._id, number: elem.selected });
         }
       });
-
+      if (!this.form.foodList.length) {
+        eventbus.$emit("warningMessage", "Pack creation", "Select at least one food to add in the pack.")
+        return 
+      }
       this.form.familyId = this.selectedFamily!._id;
       this.form.expirationDate = new Date(this.packExpirationDate);
 
@@ -239,7 +244,7 @@ export default Vue.extend({
             );
 
             packApi
-              .packListExpanded({ _id: "61a7f2d1406111692396214e" }) // r.data._id // 61a7f2d1406111692396214e
+              .packListExpanded({ _id: r.data._id })
               .then((r2: AxiosResponse<Pack>): void => {
                 if (r2.status == 200) {
                   this.form = r2.data;

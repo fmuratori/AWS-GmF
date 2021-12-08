@@ -12,6 +12,19 @@ export default class FamilyController {
 	edit = factory.edit(FamilyModel)
 	delete = factory.delete(FamilyModel)
 
+	findWithPack = catchAsync(async (req: Request, res: Response) => {
+		var families = await FamilyModel.aggregate([{
+			$lookup: {
+				from:"packs",
+				localField: "_id",
+				foreignField: "familyId",
+				as: "packs"
+			}
+		}])
+		
+		res.status(200).json(families)
+	})
+
 	verify = catchAsync(async (req: Request, res: Response) => {
 		if (!req.body.id) {
 			res.status(401).json({

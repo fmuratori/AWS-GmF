@@ -1,27 +1,23 @@
 <template lang="pug">
 div
-  b-row
+  b-row(align-h="between")
     b-col(cols='12' md='6' lg='6')
       b-form-group
         b-input-group
-          b-form-input(v-model='filter' type='search' placeholder='Type to search')
+          b-form-input(v-model='filter' type='search' placeholder='Type to search' size='sm')
           b-input-group-append
-            b-button(:disabled='!filter' @click="filter = ''") Clear
+            b-button(:disabled='!filter' @click="filter = ''" size='sm') Clear
+    b-col(cols='auto')
+      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' size='sm')
   b-table(striped='striped' hover='hover' :fields='tableFields' :items='foodList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
     template(#cell(load)='{ item }')
       b-button(@click='load(item)' size='sm') Edit
     template(#cell(labels)='data')
       b-badge.mr-1(v-for='(label, idx) in data.value' variant='success' :key="idx") {{ label }}
     template(#cell(selected)='{ item }')
-      div(:key='index' ref='reload')
-        b-button(pill='pill' @click='removeClick(item)' :disabled='!item.selected || item.selected == 0') -
-        b.ml-4.mr-4 {{ item.selected ? item.selected : 0 }}
-        b-button(pill='pill' @click='addClick(item)' :disabled='item.selected == item.number') +
+      b-form-spinbutton(inline min="0" :max="item.number" value=0 v-model="item.selected" @change='updateFoods(item)')
     template(#cell(delete)='{ item }')
       b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
-  b-row(align-h='end')
-    b-col(cols='auto')
-      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage')
   b-modal#modal(title='Delete the selected food?' @ok='deleteFood(deleteFoodId)')
     div The selected food will be deleted permanently.
     template(#modal-footer='{ ok, cancel }')
@@ -68,11 +64,6 @@ export default Vue.extend({
           sortable: true,
         },
         {
-          key: "selected",
-          label: "Selected",
-          sortable: false,
-        },
-        {
           key: "expirationDate",
           label: "Expiration Date",
           sortable: true,
@@ -83,6 +74,11 @@ export default Vue.extend({
         {
           key: "labels",
           label: "Labels",
+          sortable: false,
+        },
+        {
+          key: "selected",
+          label: "Selected",
           sortable: false,
         },
         {
@@ -130,18 +126,7 @@ export default Vue.extend({
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    addClick(item: SelectableFood) {
-      if (!item.selected) item.selected = 1;
-      else if (item.selected < item.number) item.selected += 1;
-      this.index += 1;
-      this.$emit(
-        "data",
-        this.foodList.filter((f: SelectableFood) => f.selected)
-      );
-    },
-    removeClick(item: SelectableFood) {
-      if (item.selected > 0) item.selected -= 1;
-      this.index += 1;
+    updateFoods() {
       this.$emit(
         "data",
         this.foodList.filter((f: SelectableFood) => f.selected)

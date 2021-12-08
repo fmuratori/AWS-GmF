@@ -5,7 +5,7 @@ b-container
       div
         hr.shaded
         h4.text-center
-          b FAMILIES
+          b PACK INFO
         hr.shaded
   b-row.justify-content-md-center.my-5.no-gutters
     b-col(lg='8' md='10' sm='12')
@@ -31,9 +31,12 @@ b-container
             p Pack unidentified.
             b-button(@click='reloadScanner()' v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
       div(v-if="showScreen=='pack'")
-        p {{ pack }}
-        b-button.color3(block='block' @click='deliverPack()') Set as delivered
-        b-button(block='block' variant='secondary' @click='resetView()') Scan another code
+        h3 Pack # {{ pack._id }}
+        b-row
+          b-col
+            b-button.color3(block='block' @click='deliverPack()') Set as delivered
+          b-col
+            b-button(block='block' variant='secondary' @click='resetView()') Scan another code
 </template>
 
 <script lang="ts">
@@ -73,7 +76,21 @@ export default Vue.extend({
     } else this.$router.push({ name: "Login" });
   },
   mounted() {
-    this.startCamera();
+    // this.startCamera();
+    packApi
+      .packListExpanded({ _id: "61a7fa7c406111692396215c" })
+      .then((r: AxiosResponse<Pack>) => {
+        if (r.status == 200) {
+          this.scannerState = "valid_success";
+          this.showScreen = "pack";
+          this.pack = r.data;
+        }
+      })
+      .catch((e: AxiosError) => {
+        console.log(e);
+        eventbus.$emit("errorMessage", "Pack info", "Unable to retrieve pack info, retry later or contact us if the problem persists.")
+        this.scannerState = "valid_error";
+      }).then(() => eventbus.$emit("stopLoading"));
   },
   methods: {
     startCamera() {
@@ -101,8 +118,9 @@ export default Vue.extend({
           })
           .catch((e: AxiosError) => {
             console.log(e);
+            eventbus.$emit("errorMessage", "Pack info", "Unable to retrieve pack info, retry later or contact us if the problem persists.")
             this.scannerState = "valid_error";
-          });
+          }).then(() => eventbus.$emit("stopLoading"));
       }
     },
 
