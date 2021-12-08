@@ -37,7 +37,7 @@ b-row.justify-content-center(no-gutters='no-gutters')
         b-button.footerCardButton.color3(block='block' size='lg' type='submit')
           span(v-if='isLoginSelected') SIGN IN
           span(v-else) SIGN UP
-          b-icon(icon='chevron-right' aria-hidden='true' font-scale='1')
+          Icon(bootstrap icon='chevron-right' aria-hidden='true' font-scale='1')
       button(@click="login.email = 'user@user.com'") Utente
       button(@click="login.email = 'volunteer@volunteer.com'") Volontario
       button(@click="login.email = 'trusted@trusted.com'") Trusted
@@ -52,6 +52,9 @@ import eventbus from "../eventbus";
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
+import Icon from "../components/Icon.vue";
+
+import sha from "../misc/sha";
 
 import userApi from "../api/user";
 import chatApi from "../api/chat";
@@ -70,6 +73,7 @@ export default Vue.extend({
     InputText,
     InputAddress,
     InputPasswordSelect,
+    Icon,
   },
   data: () => {
     return {
@@ -103,12 +107,13 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
   },
   methods: {
-    onAddressUpdate(address) {
+    onAddressUpdate(address: string) {
       this.registration.address = address;
     },
     submitForm() {
       if (this.isLoginSelected) {
         eventbus.$emit("startLoading", "Checking your log in credentials");
+        this.login.password = sha.hashText(this.login.password);
         userApi
           .loginRequest(this.login)
           .then((r: AxiosResponse<LoginResponse>): void => {
@@ -147,6 +152,7 @@ export default Vue.extend({
           });
       } else {
         eventbus.$emit("startLoading", "Adding your data to our systems");
+        this.registration.password = sha.hashText(this.registration.password);
         userApi
           .registrationRequest(this.registration)
           .then(() => {
