@@ -13,14 +13,18 @@ b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :descripti
         @click="labelDeleteClicked(idx)",
         :disabled="labels[idx] == ''"
       ) 
-        b-icon(icon="x", aria-hidden="true")
+        Icon(bootstrap icon="x", aria-hidden="true")
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import Icon from "../Icon.vue";
 
 export default Vue.extend({
   name: "InputList",
+  components: {
+    Icon,
+  },
   props: {
     title: String,
     description: String,

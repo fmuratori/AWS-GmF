@@ -67,7 +67,7 @@ b-container
         b-alert.mb-5(variant='success' show='show')
           b-row(align-v='center')
             b-col.text-center(cols='3')
-              b-icon(icon='check' font-scale='4')
+              Icon(bootstrap icon='check' font-scale='4')
             b-col(cols='auto')
               p.mb-0 Pack successfully created.
         b-card(bg-variant='light')
@@ -103,7 +103,7 @@ b-container
             span Print pack info
           b-button(v-if='isPrinted' block='block' variant='success' @click='print()')
             span Pack info printed
-            b-icon(icon='check')
+            Icon(bootstrap icon='check')
           b-button(block='block' @click='resetView') Create another pack
           b-button(block='block' @click="$router.push({ name: 'ManagerPackDelivery' })") Reserve a pack
       vue-html2pdf(:show-layout='false' :float-layout='true' :enable-download='true' :preview-modal='false' :paginate-elements-by-height='1400' :filename="'donation_' + form._id" :pdf-quality='2' :manual-pagination='false' pdf-format='a5' pdf-orientation='landscape' pdf-content-width='800px' ref='printableData')
@@ -155,6 +155,7 @@ import QrcodeVue from "qrcode.vue";
 import VueHtml2pdf from "vue-html2pdf";
 import FoodView from "../components/FoodView.vue";
 import FamilyView from "../components/FamilyPicker.vue";
+import Icon from "../components/Icon.vue";
 
 import { PackCreateView } from "../viewTypes";
 import { Family, SelectableFood, Pack, Address, PackPayload } from "../types";
@@ -169,6 +170,7 @@ export default Vue.extend({
     FamilyView,
     QrcodeVue,
     VueHtml2pdf,
+    Icon,
   },
   data: (): PackCreateView => {
     return {
@@ -217,15 +219,18 @@ export default Vue.extend({
       // printableData.generatePdf();
     },
     createPack(): void {
-      
       this.foodList.forEach((elem) => {
         if (elem.selected) {
           this.form.foodList.push({ foodId: elem._id, number: elem.selected });
         }
       });
       if (!this.form.foodList.length) {
-        eventbus.$emit("warningMessage", "Pack creation", "Select at least one food to add in the pack.")
-        return 
+        eventbus.$emit(
+          "warningMessage",
+          "Pack creation",
+          "Select at least one food to add in the pack."
+        );
+        return;
       }
       this.form.familyId = this.selectedFamily!._id;
       this.form.expirationDate = new Date(this.packExpirationDate);

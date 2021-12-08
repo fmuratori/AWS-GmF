@@ -43,7 +43,6 @@ export default Vue.extend({
           userData: r.data as UserData,
         });
       });
-      return true;
     }
   },
   destroyed() {

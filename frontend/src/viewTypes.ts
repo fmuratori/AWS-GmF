@@ -12,9 +12,9 @@ import {
 } from "./types";
 
 export interface FilterButton {
-  value: string; 
-  label: string; 
-  icon: string; 
+  value: string;
+  label: string;
+  icon: string;
   isVisible: boolean;
 }
 

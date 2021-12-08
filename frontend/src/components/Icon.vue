@@ -1,21 +1,20 @@
 <template lang="pug">
-div
-  b-icon(v-if="source == 'bt'" :icon="icon")
+span
+  b-icon(v-if="bootstrap" :icon="icon")
 
-  font-awesome-icon(v-if="source == 'fa'" :icon="icon")
-
+  font-awesome-icon(v-if="fontawesome" :icon="icon")
 </template>
 <script lang="ts">
 import Vue from "vue";
 
 export default Vue.extend({
   name: "Icon",
-  props:{
-    source: String,
+  props: {
+    bootstrap: Boolean,
+    fontawesome: Boolean,
     icon: String,
   },
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

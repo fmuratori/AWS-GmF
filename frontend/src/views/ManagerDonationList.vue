@@ -13,7 +13,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0
               | Here are listed all your active donations. You can inspect, modify, delete them in any moment or directly chat with a volunteer.
@@ -21,7 +21,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0 To make things easier, filter your donations by status or sort them.
     b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
@@ -80,6 +80,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 
 import FilterButtons from "../components/FilterButtons.vue";
+import Icon from "../components/Icon.vue";
 
 import api from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
@@ -90,6 +91,7 @@ export default Vue.extend({
   name: "ManagerDonationList",
   components: {
     FilterButtons,
+    Icon,
   },
   data: () => {
     return {

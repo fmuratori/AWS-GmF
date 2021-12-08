@@ -5,17 +5,17 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
   b-navbar-nav.ml-auto.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
     b-nav-item.my-auto.text-center(href='#')
       b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
-        b-icon.mr-1(icon='envelope')
+        Icon.mr-1(bootstrap icon='envelope')
         b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
   b-navbar-nav.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
     b-nav-item.my-auto.text-center(href='#')
       b-button.my-2.my-sm-0(variant='light' @click='toggleSidebar()')
-        font-awesome-icon(icon='cogs')
+        Icon(fontawesome icon='cogs')
   b-navbar-nav(v-if='$store.getters.isMediumScreenWidth')
     b-nav-item.my-auto.text-center(href='#')
       b-button.my-2.my-sm-0(variant='light' @click='isOpen = !isOpen')
-        font-awesome-icon(v-if='isOpen' icon='times')
-        font-awesome-icon(v-else icon='bars')
+        Icon(fontawesome v-if='isOpen' icon='times')
+        Icon(fontawesome v-else icon='bars')
   b-collapse#nav-collapse(is-nav='' v-model='isOpen')
     b-navbar-nav.ml-auto
       b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Home')") Home
@@ -29,11 +29,11 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
           b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
       b-nav-item.my-auto.navbar-link.text-center(:key='' href='#' v-if='$store.getters.isUserLogged' @click='logout()')
         span.mr-1 Logout
-        font-awesome-icon(icon='sign-out-alt')
+        Icon(fontawesome icon='sign-out-alt')
       b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Login')" v-if='!$store.getters.isUserLogged')
         b-button.my-2.my-sm-0(variant='light')
           span.mr-1 Login
-          font-awesome-icon(icon='sign-in-alt')
+          Icon(fontawesome icon='sign-in-alt')
   b-modal#messagesModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='messagesModal')
     h4 Your Messages
     b-row.no-gutters.my-4.p-2.border(align-v='center' v-for='(message, idx) in $store.getters.unreadMessages' :key='idx')
@@ -48,7 +48,7 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
       b-col(cols='auto')
         b-button.color3(size='sm' @click='routeToDonation(message._id)')
           span.mr-1 Open
-          b-icon(icon='envelope-open')
+          Icon(bootstrap icon='envelope-open')
     b-row.no-gutters(align-h='end')
       b-button.mr-2(size='sm' variant='secondary' @click='() => { this.$refs.messagesModal.hide(); }') Close
 </template>
@@ -58,6 +58,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 
 import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
+import Icon from "./Icon.vue";
 
 import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
@@ -68,6 +69,7 @@ export default Vue.extend({
   name: "Navbar",
   components: {
     UserUpgradeModal,
+    Icon,
   },
   data: () => {
     return {

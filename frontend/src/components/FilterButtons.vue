@@ -2,17 +2,18 @@
 div
   b-button.ml-2.mb-2(v-for='(filter, idx) in filters' :key='idx' v-if='filter.isVisible' pill='pill' variant='secondary' size='sm' @click='onClick(filter.name)' :class="{ 'color1': selectedFilter == filter.name }")
     span.mr-1 {{ filter.label }}
-    b-icon(:icon='filter.icon' v-if='filter.icon')
+    Icon(bootstrap :icon='filter.icon' v-if='filter.icon')
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import { FilterButton } from "../viewTypes";
+import Icon from "./Icon.vue";
 
 export default Vue.extend({
   name: "FilterButtons",
-  props: [ "label", "filters", "selected" ],
+  components: { Icon },
+  props: ["label", "filters", "selected"],
   data: () => {
     return {
       selectedFilter: "",
@@ -34,6 +35,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

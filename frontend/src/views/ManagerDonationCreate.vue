@@ -11,7 +11,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0
               | Donate food to needing families. Follow 3 simple steps to gift a meal. Bring Me Food will retrieve your offer, handle the foods donated and provide food packs to registered families.
@@ -72,6 +72,7 @@ import InputList from "../components/input/InputList.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import Loading from "../components/Loading.vue";
+import Icon from "../components/Icon.vue";
 
 import { Address, Donation } from "../types";
 import { CreateDonationView } from "../viewTypes";
@@ -87,6 +88,7 @@ export default Vue.extend({
     InputAddress,
     InputTextarea,
     Loading,
+    Icon,
   },
   data: (): CreateDonationView => {
     return {

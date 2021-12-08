@@ -13,7 +13,7 @@
           b-row(align-v='center')
             b-col(cols='auto')
               h1
-                b-icon(icon='map')
+                Icon(bootstrap icon='map')
             b-col
               p.m-0 Select a valid city to show all available donations ready for pickup.
         vue-google-autocomplete#map(classname='form-control' placeholder='Insert a city name' @placechanged='selectCity' country='it' types='(cities)')
@@ -23,12 +23,12 @@
         div
           gmap-custom-marker(v-for='(donation, idx) in unselectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
             h1
-              b-icon(icon='exclamation-circle-fill' variant='warning')
+              Icon(bootstrap icon='exclamation-circle-fill' variant='warning')
         div
           gmap-custom-marker(v-for='(donation, idx) in selectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
             h1
               // truck
-              b-icon(icon='check-circle-fill' variant='success')
+              Icon(bootstrap icon='check-circle-fill' variant='success')
         gmap-info-window(v-if='windowCoordinates.x != 0 && windowCoordinates.y != 0' :options='{maxWidth: 300*windowDonations.length, pixelOffset: { width: 0, height: -55 } }' :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}" :opened='true' @closeclick='closeInfoWindow')
           table
             tr
@@ -66,7 +66,7 @@
             b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
               b-input-group
                 b-form-datepicker#input-2.border-right-0(required='required' v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()')
-                  b-icon(icon='x' aria-hidden='true')
+                  Icon(bootstrap icon='x' aria-hidden='true')
           b-form-group#input-group-3(label='Time of day:' label-for='input-3')
             b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']"  @input='filterDonations' required='required' size='sm')
           .mt-auto.d-none.d-lg-block.d-xl-block
@@ -125,6 +125,7 @@ import misc from "../misc/misc";
 import dates from "../misc/dates";
 
 import GmapCustomMarker from "vue2-gmap-custom-marker";
+import Icon from "../components/Icon.vue";
 
 import donationsApi from "../api/donation";
 import { AxiosResponse } from "axios";
@@ -135,6 +136,7 @@ export default Vue.extend({
   name: "ManagerDonationRetrieve",
   components: {
     GmapCustomMarker,
+    Icon,
   },
   data: () => {
     return {

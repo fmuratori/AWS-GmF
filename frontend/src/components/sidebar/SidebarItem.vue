@@ -3,15 +3,19 @@ b-row.p-1.justify-content-md-center.sidebar-item(no-gutters='no-gutters' align-v
   b-col
     label.p-0.m-0 {{ text }}
   b-col(cols='auto')
-    b-icon(icon='chevron-right')
+    Icon(bootstrap icon='chevron-right')
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import Icon from "../Icon.vue";
 
 export default Vue.extend({
   name: "SidebarItem",
+  components: {
+    Icon,
+  },
   props: {
     text: String,
     route: String,

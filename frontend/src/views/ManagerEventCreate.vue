@@ -11,7 +11,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0
               | Create events in your city. Your events will be displayed in the main page and visible to all the users.
@@ -38,6 +38,7 @@ import InputText from "../components/input/InputText.vue";
 import InputTextarea from "../components/input/InputTextarea.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputDate from "../components/input/InputDate.vue";
+import Icon from "../components/Icon.vue";
 
 import { Address, EventPayload } from "../types";
 import { CreateEventView } from "../viewTypes";
@@ -51,6 +52,7 @@ export default Vue.extend({
     InputTextarea,
     InputAddress,
     InputDate,
+    Icon,
   },
   data: (): CreateEventView => {
     return {

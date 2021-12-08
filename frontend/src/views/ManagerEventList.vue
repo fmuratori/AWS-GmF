@@ -12,21 +12,21 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0 Here are listed all your events, both past, present and future ones. 
       b-alert(show='show')
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0 To make things easier, filter your events by status or sort them
       b-alert.mb-5(show='show' variant='warning')
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='exclamation')
+              Icon(bootstrap icon='exclamation')
           b-col
             p.m-0
               | Past or present events cannot be modified anymore. Only future events can be deleted or edited.
@@ -83,6 +83,7 @@ import eventbus from "../eventbus";
 import dates from "../misc/dates";
 
 import FilterButtons from "../components/FilterButtons.vue";
+import Icon from "../components/Icon.vue";
 
 import api from "../api/event";
 import { AxiosError, AxiosResponse } from "axios";
@@ -93,6 +94,7 @@ export default Vue.extend({
   name: "ManagerEventList",
   components: {
     FilterButtons,
+    Icon,
   },
   data: () => {
     return {

@@ -73,12 +73,10 @@ export default Vue.extend({
     changePage(pageName: string, mode: string) {
       if (this.$router.currentRoute.name != pageName)
         this.$router.push({ name: pageName, params: { mode: mode } });
-      else
-        eventbus.$emit("userInfoModeChange", mode);
+      else eventbus.$emit("userInfoModeChange", mode);
 
       if (this.$store.getters.isMediumScreenWidth)
         this.$store.dispatch("hideSidebar");
-      
     },
     isSidebarOpen() {
       return this.$store.state.navigation.isSidebarOpen;
@@ -129,9 +127,8 @@ export default Vue.extend({
   background-color: $greyscale5;
 }
 
-
 ::-webkit-scrollbar {
-    width: 12px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -141,7 +138,4 @@ export default Vue.extend({
 ::-webkit-scrollbar-thumb {
   background-color: $greyscale3;
 }
-
-
-
 </style>

@@ -59,7 +59,6 @@ export default {
   },
   actions: {
     SOCKET_connect(): void {
-      // TODO: reset the entire application
       console.log("Connected to server socket.io");
     },
 

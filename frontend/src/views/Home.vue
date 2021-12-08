@@ -47,17 +47,17 @@ div
             b Contact us
             b-row.no-gutters
               b-col(cols="auto")
-                Icon.mr-2(source="fa" icon="map-marker") 
+                Icon.mr-2(fontawesome icon="map-marker") 
               b-col
                 p Via a caso n.32, Cesena
             b-row.no-gutters
               b-col(cols="auto")
-                Icon.mr-2(source="fa" icon="envelope") 
+                Icon.mr-2(fontawesome icon="envelope") 
               b-col
                 p info@bringmefood.it
             b-row.no-gutters
               b-col(cols="auto")
-                Icon.mr-2(source="fa" icon="phone") 
+                Icon.mr-2(fontawesome icon="phone") 
               b-col
                 p +39 123456789
           b-col(cols=10 md=5 lg="auto")
@@ -77,13 +77,13 @@ div
         hr.shaded.mb-1
         b-row.d-flex.flex-row-reverse.no-gutters.mb-1
           b-col.mr-2(cols="auto")
-            Icon(source="bt" icon="facebook")
+            Icon(bootstrap icon="facebook")
           b-col.mr-2(cols="auto")
-            Icon(source="bt" icon="instagram")
+            Icon(bootstrap icon="instagram")
           b-col.mr-2(cols="auto")
-            Icon(source="bt" icon="youtube")
+            Icon(bootstrap icon="youtube")
           b-col.mr-2(cols="auto")
-            Icon(source="bt" icon="twitter")
+            Icon(bootstrap icon="twitter")
 
 //- b-container
 //-   b-row.justify-content-md-center.my-5.no-gutters
@@ -135,16 +135,15 @@ export default Vue.extend({
   },
   methods: {
     donateFood() {
-      if(this.$store.getters.isUserLogged) {
-        this.$router.push({name: "ManagerDonationCreate"});
+      if (this.$store.getters.isUserLogged) {
+        this.$router.push({ name: "ManagerDonationCreate" });
       }
     },
     subscribeFamily() {
-      if(this.$store.getters.isUserLogged) {
-        this.$router.push({name: "ManagerFamilySubscribe"});
+      if (this.$store.getters.isUserLogged) {
+        this.$router.push({ name: "ManagerFamilySubscribe" });
       }
-
-    }
+    },
   },
 });
 </script>
@@ -153,12 +152,12 @@ export default Vue.extend({
 @import "@/assets/style.scss";
 
 #shadow-text {
-  -webkit-box-shadow: 0px 0px 50px 50px rgba(0,0,0,0.85); 
-  box-shadow: 0px 0px 50px 50px rgba(0,0,0,0.85);
-  
-  background-color: rgba(0, 0, 0, 0.83); 
-  
-  // -webkit-box-shadow: 0px 0px 50px 25px #000000; 
+  -webkit-box-shadow: 0px 0px 50px 50px rgba(0, 0, 0, 0.85);
+  box-shadow: 0px 0px 50px 50px rgba(0, 0, 0, 0.85);
+
+  background-color: rgba(0, 0, 0, 0.83);
+
+  // -webkit-box-shadow: 0px 0px 50px 25px #000000;
   // box-shadow: 0px 0px 50px 25px #000000;
 }
 
@@ -179,7 +178,6 @@ export default Vue.extend({
   background-size: cover;
   background-attachment: fixed;
 
-  
   opacity: 0.9;
   height: 80vh;
 }
@@ -196,7 +194,7 @@ export default Vue.extend({
 
 #banner-section > * {
   margin-top: 6em;
-  margin-bottom: 6em; 
+  margin-bottom: 6em;
 }
 
 .banner {
@@ -219,12 +217,10 @@ export default Vue.extend({
   border-bottom: 10px solid $color1;
   background-color: $color2;
 
-  
   background-image: url("~@/assets/images/footer1.jpg");
   // background-image: url("~@/assets/images/footer2.jpg");
   // background-size: contain;
 
- 
   // background-image: url("~@/assets/images/footer3.jpg");
   // color: $greyscaleD;
 }

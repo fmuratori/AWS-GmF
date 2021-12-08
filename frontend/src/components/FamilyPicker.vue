@@ -12,7 +12,6 @@ div
   b-table(striped='striped' hover='hover' :fields='tableFields' :items='familyList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
     template(#cell(lastPackDate)='{ item }')
       p {{ packsNearestDeliveryDate(item.packs) }}
-      //- p {{ dates.formatDate(dates.getMaxDate(item.packs.filter(p => p.status != 'ready').map(p => p.deliveryDate))) : '' }}
     template(#cell(select)='{ item }')
       b-button.color3(@click='select(item)' size='sm') Select
 
@@ -20,7 +19,6 @@ div
 
 <script lang="ts">
 import Vue from "vue";
-import moment from "moment";
 import eventbus from "../eventbus";
 import dates from "../misc/dates";
 import api from "../api/family";
@@ -79,24 +77,31 @@ export default Vue.extend({
     };
   },
   created() {
-    eventbus.$emit("startLoading", "Loading families")
+    eventbus.$emit("startLoading", "Loading families");
     api
-      .familyWithPacksList({})
+      .familyWithPacksList({filter: { "family.status": "verified" }})
       .then((r: AxiosResponse): void => {
         this.familyList = r.data as Family[];
         this.totalRows = (r.data as Family[]).length;
       })
       .catch((e: AxiosError): void => {
         console.log(e);
-        eventbus.$emit("errorMessage", "Family list", "Unable to retrieve families data.")
-      }).then(() => eventbus.$emit("stopLoading"));
+        eventbus.$emit(
+          "errorMessage",
+          "Family list",
+          "Unable to retrieve families data."
+        );
+      })
+      .then(() => eventbus.$emit("stopLoading"));
   },
   methods: {
     packsNearestDeliveryDate(packs: Pack[]) {
-      const deliveryDates = packs.filter(p => p.status != 'ready').map(p => p.deliveryDate)
-      if (deliveryDates.length) 
-        return dates.formatDate(dates.getMaxDate(deliveryDates))
-      return ""
+      const deliveryDates = packs
+        .filter((p) => p.status != "ready")
+        .map((p) => p.deliveryDate);
+      if (deliveryDates.length)
+        return dates.formatDate(dates.getMaxDate(deliveryDates));
+      return "";
     },
     select(family: Family): void {
       this.$emit("select", family);

@@ -42,7 +42,10 @@ export default {
     return nearestDate;
   },
 
-  getMaxDate(dates: Date[] | string[]): Date {
-    return Math.max.apply(null,dates.map(d => new Date(d)))
-  }
+  getMaxDate(dates: Date[]): Date {
+    return new Date(Math.max.apply(
+      null,
+      dates.map((d) => new Date(d).valueOf()))
+    );
+  },
 };

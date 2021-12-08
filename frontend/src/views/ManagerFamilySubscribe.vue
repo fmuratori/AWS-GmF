@@ -11,7 +11,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0
               | Help us find families in need. We will verify your report and convert donors donations into food packs to deliver.
@@ -53,6 +53,7 @@ import eventbus from "../eventbus";
 
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
+import Icon from "../components/Icon.vue";
 
 import { Address, FamilyPayload } from "../types";
 import { ReportFamilyView } from "../viewTypes";
@@ -64,6 +65,7 @@ export default Vue.extend({
   components: {
     InputText,
     InputAddress,
+    Icon,
   },
   data: (): ReportFamilyView => {
     return {

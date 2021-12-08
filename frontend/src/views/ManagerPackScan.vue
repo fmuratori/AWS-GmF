@@ -20,7 +20,7 @@ b-container
             qrcode-stream(@decode='onDecode' @init='onInit' :camera='cameraState')
             b-button.color3(block='block' @click='stopCamera()' v-if="scannerState=='scanning'") Close camera
           div(v-if="scannerState == 'error'")
-            font-awesome-icon(icon='fas fa-qrcode fa-3x')
+            Icon(fontawesome icon='fas fa-qrcode fa-3x')
             p(v-if='!isMobile') Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
             p(v-else) Devi autorizzare l&apos;utilizzo della fotocamera per scansionare il codice QR
           div(v-if="scannerState=='validating'")
@@ -44,6 +44,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 
 import { QrcodeStream } from "vue-qrcode-reader";
+import Icon from "../components/Icon.vue";
 
 import { Pack } from "../types";
 
@@ -54,6 +55,7 @@ export default Vue.extend({
   name: "ManagerPackScan",
   components: {
     QrcodeStream,
+    Icon,
   },
   data: () => {
     return {
@@ -88,9 +90,14 @@ export default Vue.extend({
       })
       .catch((e: AxiosError) => {
         console.log(e);
-        eventbus.$emit("errorMessage", "Pack info", "Unable to retrieve pack info, retry later or contact us if the problem persists.")
+        eventbus.$emit(
+          "errorMessage",
+          "Pack info",
+          "Unable to retrieve pack info, retry later or contact us if the problem persists."
+        );
         this.scannerState = "valid_error";
-      }).then(() => eventbus.$emit("stopLoading"));
+      })
+      .then(() => eventbus.$emit("stopLoading"));
   },
   methods: {
     startCamera() {
@@ -118,9 +125,14 @@ export default Vue.extend({
           })
           .catch((e: AxiosError) => {
             console.log(e);
-            eventbus.$emit("errorMessage", "Pack info", "Unable to retrieve pack info, retry later or contact us if the problem persists.")
+            eventbus.$emit(
+              "errorMessage",
+              "Pack info",
+              "Unable to retrieve pack info, retry later or contact us if the problem persists."
+            );
             this.scannerState = "valid_error";
-          }).then(() => eventbus.$emit("stopLoading"));
+          })
+          .then(() => eventbus.$emit("stopLoading"));
       }
     },
 
@@ -130,8 +142,7 @@ export default Vue.extend({
 
     async onInit(promise: any) {
       promise
-        // .then(() => { })
-        .catch((error) => {
+        .catch((error: {name: string}) => {
           this.scannerState = "error";
 
           var errorMessage = "";

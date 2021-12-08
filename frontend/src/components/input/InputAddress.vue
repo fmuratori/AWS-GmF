@@ -12,7 +12,7 @@ div
         span.mr-2 Reset location
       .mapContainer.text-center.mb-4(v-if='!isLocationLoaded')
         h1.pt-4
-          b-icon.mr(icon='map')
+          Icon.mr(bootstrap icon='map')
         h3
           span  Google Maps 
           br
@@ -101,14 +101,14 @@ export default Vue.extend({
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>
               c.types.includes("administrative_area_level_3")
-            )?.long_name;
+            ).long_name;
             this.address.street = r.data.results[0].address_components.find(
               (c) => c.types.includes("route")
-            )?.long_name;
+            ).long_name;
             this.address.civicNumber =
-              r.data.results[0].address_components.find((c) =>
-                c.types.includes("street_number")
-              )?.long_name;
+            r.data.results[0].address_components.find((c) =>
+              c.types.includes("street_number")
+            ).long_name;
             this.address.coordinates.x =
               r.data.results[0].geometry.location.lat;
             this.address.coordinates.y =

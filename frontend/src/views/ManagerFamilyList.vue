@@ -12,7 +12,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0
               | Here are listed all your submissions for needing families. Our trusted volunteers will validate your requests and add those families to our food packs distribution system.
@@ -20,7 +20,7 @@ b-container
         b-row(align-v='center')
           b-col(cols='auto')
             h1
-              b-icon(icon='info')
+              Icon(bootstrap icon='info')
           b-col
             p.m-0 To make things easier, filter your submissions by status or sort them.
     b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
@@ -77,6 +77,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 
 import FilterButtons from "../components/FilterButtons.vue";
+import Icon from "../components/Icon.vue";
 
 import { Family } from "../types";
 
@@ -87,6 +88,7 @@ export default Vue.extend({
   name: "ManagerFamilyList",
   components: {
     FilterButtons,
+    Icon,
   },
   data: () => {
     return {

@@ -35,7 +35,7 @@ const navigationModule = {
       state.isSidebarOpen = value;
     },
     updateScreenWidth(state: NavigationState, value: number): void {
-      state.screenWidth = value;  
+      state.screenWidth = value;
     },
   },
   actions: {
@@ -54,7 +54,7 @@ const navigationModule = {
     unsetMangerMode({ commit }): void {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit, state, rootGetters }, value: number): void {
+    updateScreenWidth({ commit, rootGetters }, value: number): void {
       commit("updateScreenWidth", value);
 
       commit("setSidebarVisible", rootGetters.isUserLogged);
