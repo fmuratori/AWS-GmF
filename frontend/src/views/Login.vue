@@ -109,7 +109,7 @@ export default Vue.extend({
     this.$store.dispatch("hideSidebar");
 
     if (this.$store.getters.userIsLogged) {
-      this.$router.replace({name: "Home"});
+      this.$router.replace({ name: "Home" });
     }
   },
   methods: {

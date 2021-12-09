@@ -3,8 +3,8 @@ import moment from "moment";
 const today = moment();
 
 export default {
-  today, 
-  
+  today,
+
   formatDate(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
   },
@@ -45,9 +45,11 @@ export default {
   },
 
   getMaxDate(dates: Date[]): Date {
-    return new Date(Math.max.apply(
-      null,
-      dates.map((d) => new Date(d).valueOf()))
+    return new Date(
+      Math.max.apply(
+        null,
+        dates.map((d) => new Date(d).valueOf())
+      )
     );
   },
 };

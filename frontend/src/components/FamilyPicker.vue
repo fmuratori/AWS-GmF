@@ -81,13 +81,13 @@ export default Vue.extend({
   },
   computed: {
     verifiedFamilyList() {
-      return this.familyList.filter(f => f.status=="verified")
-    }
+      return this.familyList.filter((f) => f.status == "verified");
+    },
   },
   created() {
     eventbus.$emit("startLoading", "Loading families");
     api
-      .familyWithPacksList({filter: { "family.status": "verified" }})
+      .familyWithPacksList({ filter: { "family.status": "verified" } })
       .then((r: AxiosResponse): void => {
         this.familyList = r.data as Family[];
         this.totalRows = (r.data as Family[]).length;

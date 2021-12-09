@@ -36,7 +36,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-
 @import "@/assets/style.scss";
 .filter-button:focus {
   background-color: $color1;

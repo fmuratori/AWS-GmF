@@ -17,5 +17,5 @@ export default new Vuex.Store({
     session: sessionModule,
     socketio: socketioModule,
   },
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState()],
 });

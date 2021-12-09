@@ -121,7 +121,6 @@
 import Vue from "vue";
 import eventbus from "../eventbus";
 import misc from "../misc/misc";
-import dates from "../misc/dates";
 
 import GmapCustomMarker from "vue2-gmap-custom-marker";
 import Icon from "../components/Icon.vue";

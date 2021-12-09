@@ -118,35 +118,32 @@ export default Vue.extend({
     },
 
     async onInit(promise: any) {
-      promise
-        .catch((error: {name: string}) => {
-          this.scannerState = "error";
+      promise.catch((error: { name: string }) => {
+        this.scannerState = "error";
 
-          var errorMessage = "";
-          switch (error.name) {
-            case "NotAllowedError":
-              errorMessage = "ERROR: you need to grant camera access permisson";
-              break;
-            case "NotFoundError":
-              errorMessage = "ERROR: no camera on this device";
-              break;
-            case "NotSupportedError":
-              errorMessage =
-                "ERROR: secure context required (HTTPS, localhost)";
-              break;
-            case "NotReadableError":
-              errorMessage = "ERROR: is the camera already in use?";
-              break;
-            case "OverconstrainedError":
-              errorMessage = "ERROR: installed cameras are not suitable";
-              break;
-            case "StreamApiNotSupportedError":
-              errorMessage =
-                "ERROR: Stream API is not supported in this browser";
-              break;
-          }
-          eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
-        });
+        var errorMessage = "";
+        switch (error.name) {
+          case "NotAllowedError":
+            errorMessage = "ERROR: you need to grant camera access permisson";
+            break;
+          case "NotFoundError":
+            errorMessage = "ERROR: no camera on this device";
+            break;
+          case "NotSupportedError":
+            errorMessage = "ERROR: secure context required (HTTPS, localhost)";
+            break;
+          case "NotReadableError":
+            errorMessage = "ERROR: is the camera already in use?";
+            break;
+          case "OverconstrainedError":
+            errorMessage = "ERROR: installed cameras are not suitable";
+            break;
+          case "StreamApiNotSupportedError":
+            errorMessage = "ERROR: Stream API is not supported in this browser";
+            break;
+        }
+        eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
+      });
     },
     deliverPack() {
       packApi

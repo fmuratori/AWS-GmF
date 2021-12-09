@@ -215,10 +215,8 @@ export default Vue.extend({
   color: $color1;
 }
 
-
 #events {
   background-image: url("~@/assets/images/repeating_pattern.jpg");
   background-size: 400px 400px;
 }
-
 </style>

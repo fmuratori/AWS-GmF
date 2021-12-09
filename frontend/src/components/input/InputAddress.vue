@@ -108,9 +108,9 @@ export default Vue.extend({
               (c) => c.types.includes("route")
             )?.long_name;
             this.address.civicNumber =
-            r.data.results[0].address_components.find((c) =>
-              c.types.includes("street_number")
-            )?.long_name;
+              r.data.results[0].address_components.find((c) =>
+                c.types.includes("street_number")
+              )?.long_name;
             this.address.coordinates.x =
               r.data.results[0].geometry.location.lat;
             this.address.coordinates.y =

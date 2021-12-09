@@ -114,7 +114,6 @@ export default Vue.extend({
   },
   created() {
     if (this.$store.getters.isUserLogged && this.$store.getters.isUser) {
-
       this.form.userId = this.$store.state.session.userData._id;
       this.form.address = this.$store.state.session.userData.address;
 

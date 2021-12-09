@@ -163,7 +163,6 @@ export default Vue.extend({
     ];
 
     if (this.$store.getters.isUserLogged) {
-
       var filter = {};
       if (this.$store.getters.isUser)
         filter = { userId: this.$store.state.session.userData._id };
