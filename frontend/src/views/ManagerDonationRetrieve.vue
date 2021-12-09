@@ -160,7 +160,7 @@ export default Vue.extend({
       selectedDonations: new Array<Donation>(),
       windowDonations: new Array<Donation>(),
       windowCoordinates: { x: 0, y: 0 },
-      pickUpDate: dates.formatDate(new Date()),
+      pickUpDate: new Date(),
       pickUpPeriod: "morning",
       isModalOpen: false,
     };

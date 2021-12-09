@@ -75,25 +75,6 @@ export default Vue.extend({
   },
   mounted() {
     this.startCamera();
-    packApi
-      .packListExpanded({ _id: "61a7fa7c406111692396215c" })
-      .then((r: AxiosResponse<Pack>) => {
-        if (r.status == 200) {
-          this.scannerState = "valid_success";
-          this.showScreen = "pack";
-          this.pack = r.data;
-        }
-      })
-      .catch((e: AxiosError) => {
-        console.log(e);
-        eventbus.$emit(
-          "errorMessage",
-          "Pack info",
-          "Unable to retrieve pack info, retry later or contact us if the problem persists."
-        );
-        this.scannerState = "valid_error";
-      })
-      .then(() => eventbus.$emit("stopLoading"));
   },
   methods: {
     startCamera() {

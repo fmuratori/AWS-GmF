@@ -9,7 +9,7 @@ div
             b-button(:disabled='!filter' @click="filter = ''" size='sm') Clear
     b-col(cols='auto')
       b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' size='sm')
-  b-table(striped='striped' hover='hover' :fields='tableFields' :items='foodList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
+  b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='foodList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
     template(#cell(load)='{ item }')
       b-button(@click='load(item)' size='sm') Edit
     template(#cell(labels)='data')
@@ -18,6 +18,10 @@ div
       b-form-spinbutton(inline min="0" :max="item.number" value=0 v-model="item.selected" @change='updateFoods(item)')
     template(#cell(delete)='{ item }')
       b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
+    template(#empty='scope')
+      h4.text-center There are no records to show
+    template(#emptyfiltered='scope')
+      h4.text-center There are no records matching your request
   b-modal#modal(title='Delete the selected food?' @ok='deleteFood(deleteFoodId)')
     div The selected food will be deleted permanently.
     template(#modal-footer='{ ok, cancel }')

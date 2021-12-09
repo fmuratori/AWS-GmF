@@ -13,7 +13,7 @@ b-container
         FilterButtons(:filters='filters' :selected='0' @click='filterBy')
       b-row
         b-col(lg='8' md='8' sm='12')
-          b-table(ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList')
+          b-table(show-empty ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList')
             template(#cell(status)='data')
               b-badge(v-if="data.value == 'ready'" variant='primary') {{ data.value }}
               b-badge(v-if="data.value == 'planned delivery'" variant='warning') {{ data.value }}
@@ -23,6 +23,10 @@ b-container
                 b-button.color3(size='sm' @click='selectedPack = item;') Details
                 b-button.color3(size='sm' @click='setDelivered(item._id)' :disabled="item.status != 'planned delivery'") Advance
                 b-button.color3(size='sm' variant='danger' v-b-modal.modal @click='deletePackId = item._id') Delete
+            template(#empty='scope')
+              h4.text-center There are no records to show
+            template(#emptyfiltered='scope')
+              h4.text-center There are no records matching your request
         b-col(lg='4' md='4' sm='12')
           b-card(bg-variant='light')
             template(#header)

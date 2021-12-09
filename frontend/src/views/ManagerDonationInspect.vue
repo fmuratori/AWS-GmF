@@ -224,9 +224,9 @@ export default Vue.extend({
     },
     cancelReservation() {
       this.donation.pickUp = {
-        volunteerId: "",
-        date: "",
-        period: "",
+        volunteerId: null,
+        date: null,
+        period: null,
       };
       this.donation.status = "waiting";
       donationApi

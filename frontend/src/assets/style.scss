@@ -151,3 +151,8 @@ hr.shaded {
   border-top-right-radius: 0px;
 }
 
+/* bootstrap changes */
+.pagination > li > button
+{
+  background-color: $color1 !Important;
+}

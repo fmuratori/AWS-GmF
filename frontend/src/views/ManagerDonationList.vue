@@ -9,7 +9,7 @@ b-container
       hr.shaded
   b-row.justify-content-center
     b-col(lg='4' md='8' cols='11' order-md='1' order-lg='2')
-      b-alert(show='show')
+      b-alert(show='show' v-if='$store.getters.isUser')
         b-row(align-v='center')
           b-col(cols='auto')
             h1

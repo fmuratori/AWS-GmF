@@ -20,7 +20,7 @@ b-container
 
   b-row.justify-content-center
     b-col(lg='12' md='12' sm='10')
-      b-table(striped='striped' hover='hover' :items='familyList' :fields='tableFields' :current-page='currentPage' :filter='filterQuery' :filter-included-fields='filterOn' :per-page='perPage')
+      b-table(show-empty striped='striped' hover='hover' :items='familyList' :fields='tableFields' :current-page='currentPage' :filter='filterQuery' :filter-included-fields='filterOn' :per-page='perPage')
         template(#cell(creationdate)='data')
           span {{ dates.formatDate(data.item.creationDate)  }}
         template(#cell(address)='data')
@@ -38,6 +38,10 @@ b-container
           b-button.color3(v-b-modal.modal block='block' size='sm' @click='deletedFamilyId = data.item._id')
             span Delete
             Icon(bootstrap icon='trash')
+        template(#empty='scope')
+          h4.text-center There are no records to show
+        template(#emptyfiltered='scope')
+          h4.text-center There are no records matching your request
   b-modal#modal(title='Delete the selected family?' @ok='deleteFamily()')
     div This family will be deleted permanently.
     template(#modal-footer='{ ok, cancel }')

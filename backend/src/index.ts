@@ -53,7 +53,6 @@ io.on("connection", (socket: Socket) => {
             }
           }
 
-          console.log(volunteerId, activeSockets.has(volunteerId))
           // send the message to the volunteer
           if (volunteerId && activeSockets.has(volunteerId)) {
             console.log("sent message to volunteer", userId)

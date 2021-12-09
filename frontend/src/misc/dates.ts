@@ -3,6 +3,8 @@ import moment from "moment";
 const today = moment();
 
 export default {
+  today, 
+  
   formatDate(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
   },

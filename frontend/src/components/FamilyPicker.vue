@@ -9,12 +9,15 @@ div
             b-button(:disabled='!filter' @click="filter = ''" size='sm') Clear
     b-col(cols='auto')
       b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' size='sm')
-  b-table(striped='striped' hover='hover' :fields='tableFields' :items='familyList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
+  b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='verifiedFamilyList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
     template(#cell(lastPackDate)='{ item }')
       p {{ packsNearestDeliveryDate(item.packs) }}
     template(#cell(select)='{ item }')
       b-button.color3(@click='select(item)' size='sm') Select
-
+    template(#empty='scope')
+      h4.text-center There are no records to show
+    template(#emptyfiltered='scope')
+      h4.text-center There are no records matching your request
 </template>
 
 <script lang="ts">
@@ -75,6 +78,11 @@ export default Vue.extend({
       filterOn: ["addres", "name"],
       filter: "",
     };
+  },
+  computed: {
+    verifiedFamilyList() {
+      return this.familyList.filter(f => f.status=="verified")
+    }
   },
   created() {
     eventbus.$emit("startLoading", "Loading families");

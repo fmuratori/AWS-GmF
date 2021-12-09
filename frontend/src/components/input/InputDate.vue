@@ -9,6 +9,8 @@ b-form-group(:label='title' label-cols-sm='3' label-align-sm='right' :descriptio
 
 <script lang="ts">
 import Vue from "vue";
+import dates from "../../misc/dates";
+
 import Icon from "../Icon.vue";
 
 export default Vue.extend({
