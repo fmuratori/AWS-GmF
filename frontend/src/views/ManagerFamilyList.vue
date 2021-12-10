@@ -17,12 +17,12 @@ b-container
             p.m-0
               | Here are listed all your submissions for needing families. Our trusted volunteers will validate your requests and add those families to our food packs distribution system.
     b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
-      b-row.mb-2(no-gutters='no-gutters')
+      b-row.mb-2(no-gutters)
         b-col(cols='3')
           p Report status:
         b-col
           FilterButtons(:filters='filters' :selected='2' @click='(filter) => filterBy(filter)')
-      b-row.mb-2(no-gutters='no-gutters')
+      b-row.mb-2(no-gutters)
         b-col(cols='3')
           p Sort by:
         b-col

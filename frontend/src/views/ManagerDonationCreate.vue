@@ -26,7 +26,7 @@ b-container
               p.m-0
                 | Insert in the following forms the foods that you want to donate. We will pick it up and make good use of it.
         InputList(title='Food list:' placeholder='Fusilli DeCecco, 4 packs, 250gg per pack' description='Do not worry too much about the format of the text you insert.' :labelList='form.foods' @data='(e) => { form.foods = e; }')
-        InputDate(title='Expiration date:' placeholder='Select a date' description='If you are donationg many goods, select a date matching the most deperishable food expiration date. Our volunteers will be sure to pick your donation in time.' :date='form.expirationDate' required='required' @data='(e) => { form.expirationDate = e; }')
+        InputDate(title='Expiration date:' placeholder='Select a date' description='If you are donationg many goods, select a date matching the most deperishable food expiration date. Our volunteers will be sure to pick your donation in time.' :date='form.expirationDate' required @data='(e) => { form.expirationDate = e; }')
         InputTextarea(title='Additional information:' placeholder='Insert additional information here' :text='form.additionalInformations' @data='(e) => { form.additionalInformations = e; }')
         hr
         .mb-4

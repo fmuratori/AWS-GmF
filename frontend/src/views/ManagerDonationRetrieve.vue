@@ -3,13 +3,13 @@
   b-container(v-if='!selectedCity.name')
     b-row.justify-content-center.my-5
       b-col(lg='6' md='8' cols='11' align-self='center')
-        .mb-5
-          hr.shaded
-          h4.text-center
-            b(v-if="this.$store.state.session.userData.type == 'user'") YOUR DONATIONS
-            b(v-else) DONATIONS MAP
-          hr.shaded
-        b-alert.mb-5(show='show' variant='info')
+        hr.shaded
+        h4.text-center
+          b DONATIONS MAP
+        hr.shaded
+    b-row.justify-content-center
+      b-col(lg='6' md='8' cols='11')
+        b-alert(show='show' variant='info')
           b-row(align-v='center')
             b-col(cols='auto')
               h1
@@ -17,17 +17,23 @@
             b-col
               p.m-0 Select a valid city to show all available donations ready for pickup.
         vue-google-autocomplete#map(classname='form-control' placeholder='Insert a city name' @placechanged='selectCity' country='it' types='(cities)')
-  b-row.fullheight.justify-content-center(no-gutters='no-gutters' v-else)
-    b-col.fullheight(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='9' order='2' order-sm='2' order-md='2' order-lg='1')
+  b-row.fullheight.justify-content-center.mt-3(v-else)
+    b-col.fullheight(v-if='selectedCity.name' cols='10' md='10' lg='9' order='2' order-sm='2' order-md='2' order-lg='1')
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
           gmap-custom-marker(v-for='(donation, idx) in unselectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
             h1
-              b-icon(icon='exclamation-circle-fill' variant='warning')
+              b-iconstack()
+                b-icon(icon='circle-fill' variant='dark' font-scale='0.4')
+                b-icon(icon='exclamation-circle-fill' variant='warning' font-scale='0.4')
+                b-icon(stacked icon='circle' variant='dark')
         div
           gmap-custom-marker(v-for='(donation, idx) in selectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
-            h1
-              b-icon(icon='check-circle-fill' variant='success')
+            h1 
+              b-iconstack()
+                b-icon(icon='circle-fill' variant='dark' font-scale='0.4')
+                b-icon(icon='check-circle-fill' variant='success' font-scale='0.4')
+                b-icon.color3(stacked icon='circle' variant='dark')
         gmap-info-window(v-if='windowCoordinates.x != 0 && windowCoordinates.y != 0' :options='{maxWidth: 300*windowDonations.length, pixelOffset: { width: 0, height: -55 } }' :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}" :opened='true' @closeclick='closeInfoWindow')
           table
             tr
@@ -54,7 +60,7 @@
               td(v-for='(donation, idx) in windowDonations' :key:='idx')
                 b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block='block' @click='selectDonation(donation)') Select
                 b-button.color3(v-else size='sm' block='block' @click='deselectDonation(donation)') Cancel
-    b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
+    b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
       b-form.fullheight(@submit.stop.prevent='submit')
         .py-3.px-lg-2.d-flex.flex-column.fullheight
           div
@@ -64,10 +70,10 @@
           div
             b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
               b-input-group
-                b-form-datepicker#input-2.border-right-0(required='required' v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()')
+                b-form-datepicker#input-2.border-right-0(required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()')
                   Icon(bootstrap icon='x' aria-hidden='true')
           b-form-group#input-group-3(label='Time of day:' label-for='input-3')
-            b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']"  @input='filterDonations' required='required' size='sm')
+            b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']"  @input='filterDonations' required size='sm')
           .mt-auto.d-none.d-lg-block.d-xl-block
             b-alert(show='show')
               p.m-0.p-0.text-center
@@ -77,7 +83,7 @@
                 a(href='#' @click='showModal') (Inspect)
             b-button.color3(type='submit' size='sm' block='block') Submit
             b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity') Select another city
-    b-col.d-block.d-lg-none.d-xl-none(v-if='selectedCity.name' cols='10' sm='10' md='10' order='3')
+    b-col.d-block.d-lg-none.d-xl-none(v-if='selectedCity.name' cols='10' md='10' order='3')
       b-alert.mt-3(show='show')
         p.m-0.p-0.text-center
           span Selected donations: {{ selectedDonations.length }}
@@ -85,7 +91,7 @@
           span &nbsp;
           a(href='#' @click='showModal') (Inspect)
       b-button.color3(type='submit' size='sm' block='block') Submit
-      b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity') Select another city
+      b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity').mb-5 Select another city
   b-modal#modal-1(title='Selected donations' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
     b-row(style='height: 100%;')
       b-col(v-if='selectedDonations.length' cols='10' md='10' lg='3' style='overflow: hidden;')
@@ -326,4 +332,10 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+.map-marker {
+  text-shadow: 0 0 50px red;
+}
+
+</style>

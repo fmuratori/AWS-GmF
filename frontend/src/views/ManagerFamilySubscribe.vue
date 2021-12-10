@@ -2,12 +2,13 @@
 b-container
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' sm='10')
-      .mb-5
-        hr.shaded
-        h4.text-center
-          b REPORT A FAMILY
-        hr.shaded
-      b-alert.mb-5(show='show')
+      hr.shaded
+      h4.text-center
+        b REPORT A FAMILY
+      hr.shaded
+  b-row.justify-content-center
+    b-col(lg='6' md='8' cols='11')
+      b-alert(show='show')
         b-row(align-v='center')
           b-col(cols='auto')
             h1
@@ -25,9 +26,9 @@ b-container
             b-col
               p.m-0
                 | Tell us as much as possible about a family you think may be in need of help. Your informations will be validated by trusted volunteers.
-        InputText(title='Family name:' placeholder='Insert family name here' :text='form.name' required='required' @data='(e) => { form.name = e; }')
-        InputText(title='Phone number:' placeholder='Insert a phone number for the verification' :text='form.phoneNumber' required='required' @data='(e) => { form.phoneNumber = e; }')
-        InputText(title='Components:' placeholder='Insert number of family components' type='number' :text='form.components' required='required' @data='(e) => { form.components = e; }')
+        InputText(title='Family name:' placeholder='Insert family name here' :text='form.name' required @data='(e) => { form.name = e; }')
+        InputText(title='Phone number:' placeholder='Insert a phone number for the verification' :text='form.phoneNumber' required @data='(e) => { form.phoneNumber = e; }')
+        InputText(title='Components:' placeholder='Insert number of family components' type='number' :text='form.components' required @data='(e) => { form.components = e; }')
         hr
         b-alert(show='show')
           b-row(align-v='center')

@@ -1,15 +1,11 @@
 <template lang="pug">
 div
-  b-form-group(label='City' label-cols-sm='3' label-align-sm='right')
-    b-form-input(placeholder='Insert city here' required='required' type='text' v-model='address.city' @input="$emit('data', address)")
-  b-form-group(label='Street' label-cols-sm='3' label-align-sm='right')
-    b-form-input(placeholder='Insert street here' required='required' type='text' v-model='address.street' @input="$emit('data', address)")
-  b-form-group(label='Civic' label-cols-sm='3' label-align-sm='right')
-    b-form-input(placeholder='Insert civic number here' type='text' v-model='address.civicNumber' @input="$emit('data', address)")
+  b-form-group(label='Address' label-cols-sm='3' label-align-sm='right')
+    b-form-input(placeholder='Insert address here'  type='text' )
+  
   b-row(align-h='center')
     b-col(cols='10' md='8' lg='8')
-      b-button.color3(block='block' size='sm' @click='resetMap' v-if='isLocationLoaded')
-        span.mr-2 Reset location
+      b-button.color3(block='block' size='sm' @click='resetMap' v-if='isLocationLoaded') Reset location
       .mapContainer.text-center.mb-4(v-if='!isLocationLoaded')
         h1.pt-4
           Icon.mr(bootstrap icon='map')
@@ -30,6 +26,7 @@ import mapsApi from "../../api/maps";
 import { Address, GMapAutoCompleteResponse } from "../../types";
 
 import MapLocation from "../MapLocation.vue";
+import InputText from "../input/InputText.vue";
 import Icon from "../Icon.vue";
 
 export default Vue.extend({
@@ -37,6 +34,7 @@ export default Vue.extend({
   components: {
     MapLocation,
     Icon,
+    InputText,
   },
   props: {
     required: Boolean,
@@ -48,6 +46,7 @@ export default Vue.extend({
   },
   data: () => {
     return {
+      query: "",
       address: {
         city: "",
         street: "",
@@ -72,6 +71,10 @@ export default Vue.extend({
     }
   },
   methods: {
+    emitValueChange() {
+      this.resetMap();
+      this.$emit('data', this.address);
+    },
     resetMap() {
       this.address.coordinates = { x: 0, y: 0 };
       this.isLocationLoaded = false;
@@ -92,11 +95,7 @@ export default Vue.extend({
     find() {
       mapsApi
         .getLocationCoordinates(
-          this.address.city +
-            " " +
-            this.address.civicNumber +
-            " " +
-            this.address.street
+          this.query
         )
         .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
           if (r.status == 200) {

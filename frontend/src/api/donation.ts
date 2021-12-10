@@ -21,6 +21,14 @@ export default {
     );
   },
 
+  async retrieveDonation(donationId: string): Promise<AxiosResponse> {
+    return axios.post(
+      `${process.env.VUE_APP_API_URL}/api/donation/retrieve`,
+      { donationId: donationId },
+      { headers: store.getters.getSessionHeader }
+    );
+  },
+
   async deleteDonation(donationId: string): Promise<AxiosResponse> {
     const payload = { id: donationId };
     return axios.post(

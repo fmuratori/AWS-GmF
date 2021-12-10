@@ -95,7 +95,7 @@ const donationSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "waiting",
-        enum: ["waiting", "selected", "withdrawn"]
+        enum: ["waiting", "selected", "withdrawn", "retrieved"]
     },
     pickUp: {
         volunteerId: {

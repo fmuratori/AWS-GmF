@@ -8,7 +8,7 @@ b-container
         b(v-else) DONATIONS
       hr.shaded
   b-row.justify-content-center
-    b-col(lg='4' md='8' cols='11' order-md='1' order-lg='2')
+    b-col(lg='4' md='8' cols='11' order-md='1' order-lg='2' v-if='$store.getters.isUser')
       b-alert(show='show' v-if='$store.getters.isUser')
         b-row(align-v='center')
           b-col(cols='auto')
@@ -18,16 +18,28 @@ b-container
             p.m-0
               | Here are listed all your active donations. You can inspect, modify, delete them in any moment or directly chat with a volunteer.
     b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
-      b-row.mb-2(no-gutters='no-gutters' v-if='$store.getters.isUser')
-        b-col(cols='3')
-          p Donation status:
-        b-col
-          FilterButtons(:filters='filters' :selected='2' @click='filterBy')
-      b-row.mb-2(no-gutters='no-gutters')
-        b-col(cols='3')
-          p Sort by:
-        b-col
-          FilterButtons(:filters='sorters' :selected='1' @click='sortBy')
+      div.border.rounded.bg-light.p-2.mb-3
+        b-row.m-1(no-gutters align-v="center")
+          b-col()
+            h5.m-0.p-0
+              Icon.mr-1(fontawesome icon='filter') 
+              span Filters
+          b-col(cols="auto")
+            b-button(variant='light' v-b-toggle.filters-collapse)
+              Icon(fontawesome icon='cogs')
+        
+        b-collapse#filters-collapse
+          b-row.ml-2.mb-2(no-gutters)
+            b-col(cols='3')
+              p Donation status:
+            b-col
+              FilterButtons(:filters='filters' :selected='3' @click='filterBy')
+          b-row.ml-2(no-gutters)
+            b-col(cols='3')
+              p Sort by:
+            b-col
+              FilterButtons(:filters='sorters' :selected='$store.getters.isUser ? 1 : 6' @click='sortBy')
+      
       p(v-if='donations.length == 0')
         span No donations found. Be sure to select valid filters 
         span(v-if='$store.getters.isUser')
@@ -35,7 +47,7 @@ b-container
           a(href='#' @click="$router.push({ name: 'ManagerDonationCreate' })") here
           |  to insert a donation
         span .
-      b-card.mb-4(bg-variant='light' text-variant='dark' no-body='no-body' v-for='(donation, idx) in donations' :key='idx')
+      b-card.mb-2(bg-variant='light' text-variant='dark' no-body='no-body' v-for='(donation, idx) in donations' :key='idx')
         template(#header)
           h5.mb-0
             b(v-if='$store.getters.isUser') Donated on {{ dates.formatDate(donation.creationDate) }}
@@ -43,7 +55,7 @@ b-container
             span.float-right
               b-badge(v-if="donation.status == 'waiting'" variant='warning') {{donation.status}}
               b-badge(v-if="donation.status == 'selected'" variant='success') {{donation.status}}
-              b-badge(v-if="donation.status == 'withdrawn'" variant='secondary') {{donation.status}}
+              b-badge(v-if="donation.status == 'retrieved'" variant='secondary') {{donation.status}}
         b-card-text
           .px-4.pt-3
             b-row
@@ -110,6 +122,7 @@ export default Vue.extend({
     this.filters = [
       { name: "waiting", label: "Waiting", icon: null, isVisible: true },
       { name: "selected", label: "Selected", icon: null, isVisible: true },
+      { name: "retrieved", label: "Retrieved", icon: null, isVisible: true },
       { name: "all", label: "All", icon: null, isVisible: true },
     ];
 

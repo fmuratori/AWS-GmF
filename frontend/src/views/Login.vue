@@ -1,5 +1,5 @@
 <template lang="pug">
-b-row.justify-content-center(no-gutters='no-gutters')
+b-row.justify-content-center(no-gutters)
   b-col(:lg='isLoginSelected ? 3 : 5' md='8' cols='10')
     b-card#login.shadow-lg.mt-5.mb-5(no-body='no-body')
       #login-header.px-5.py-4
@@ -14,16 +14,16 @@ b-row.justify-content-center(no-gutters='no-gutters')
         .p-5(v-if='isLoginSelected')
           p.text-danger(v-if='showLoginErrorMessage') Invalid email or password.
           h5.text-center.mt-4 Credentials
-          InputText(placeholder='Insert your email' type='email' icon='at' required='required' :text='login.email' @data='(e) => { login.email = e; }')
-          InputText(placeholder='Insert your password' type='password' icon='key' required='required' :text='login.password' @data='(e) => { login.password = e; }')
+          InputText(placeholder='Insert your email' type='email' icon='at' required :text='login.email' @data='(e) => { login.email = e; }')
+          InputText(placeholder='Insert your password' type='password' icon='key' required :text='login.password' @data='(e) => { login.password = e; }')
           b-row.justify-content-md-center.mb-4
             a(href='#') Forgot password?
         .p-3(v-else)
           h5.text-center.mt-4 Personal information
-          InputText(title='Name: ' :text='registration.name' placeholder='Insert name here' required='required' @data='(e) => { registration.name = e; }')
-          InputText(title='Surname: ' :text='registration.surname' placeholder='Insert surname here' required='required' @data='(e) => { registration.surname = e; }')
-          InputText(title='Email: ' :text='registration.email' placeholder='Insert your email here' type='email' required='required' @data='(e) => { registration.email = e; }')
-          InputText(title='Phone number: ' :text='registration.phoneNumber' placeholder='Insert your phone number here' required='required' @data='(e) => { registration.phoneNumber = e; }')
+          InputText(title='Name: ' :text='registration.name' placeholder='Insert name here' required @data='(e) => { registration.name = e; }')
+          InputText(title='Surname: ' :text='registration.surname' placeholder='Insert surname here' required @data='(e) => { registration.surname = e; }')
+          InputText(title='Email: ' :text='registration.email' placeholder='Insert your email here' type='email' required @data='(e) => { registration.email = e; }')
+          InputText(title='Phone number: ' :text='registration.phoneNumber' placeholder='Insert your phone number here' required @data='(e) => { registration.phoneNumber = e; }')
           hr
           InputAddress(@data='(e) => { registration.address = e; }' @addressupdate='onAddressUpdate')
           hr

@@ -8,6 +8,7 @@ router.post('/find', donationController.find)
 router.post('/add', donationController.add)
 router.post('/edit', donationController.edit)
 router.post('/delete', donationController.delete)
+router.post('/retrieve', donationController.retrieve)
 
 // TODO: move to socketio
 router.post('/get-chat', donationController.getChat)

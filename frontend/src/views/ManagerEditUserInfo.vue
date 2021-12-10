@@ -9,7 +9,7 @@ b-container
             h4.text-center
               b CHANGE PASSWORD
             hr.shaded
-          InputText.mb-5(title='Old password:' placeholder='Insert your old password here' type='password' required='required' :text='changePasswordForm.oldPassword' @data='(e) => { changePasswordForm.oldPassword = e; }')
+          InputText.mb-5(title='Old password:' placeholder='Insert your old password here' type='password' required :text='changePasswordForm.oldPassword' @data='(e) => { changePasswordForm.oldPassword = e; }')
           InputPasswordSelect(title1='New password: ' title2='Confirm new password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { changePasswordForm.newPassword = e; }')
           b-row
             b-col
@@ -22,10 +22,10 @@ b-container
           h4.text-center
             b USER INFO
           hr.shaded
-        InputText(title='Name: ' placeholder='Insert name here' required='required' :text='editUserForm.name' @data='(e) => { editUserForm.name = e; }')
-        InputText(title='Surname: ' placeholder='Insert surname here' required='required' :text='editUserForm.surname' @data='(e) => { editUserForm.surname = e; }')
-        InputText(title='Email: ' placeholder='Insert your email here' type='email' required='required' :text='editUserForm.email' @data='(e) => { editUserForm.email = e; }')
-        InputText(title='Phone number: ' placeholder='Insert your phone number here' required='required' :text='editUserForm.phoneNumber' @data='(e) => { editUserForm.phoneNumber = e; }')
+        InputText(title='Name: ' placeholder='Insert name here' required :text='editUserForm.name' @data='(e) => { editUserForm.name = e; }')
+        InputText(title='Surname: ' placeholder='Insert surname here' required :text='editUserForm.surname' @data='(e) => { editUserForm.surname = e; }')
+        InputText(title='Email: ' placeholder='Insert your email here' type='email' required :text='editUserForm.email' @data='(e) => { editUserForm.email = e; }')
+        InputText(title='Phone number: ' placeholder='Insert your phone number here' required :text='editUserForm.phoneNumber' @data='(e) => { editUserForm.phoneNumber = e; }')
         b-row
           b-col
             b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel

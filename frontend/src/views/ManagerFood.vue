@@ -14,9 +14,9 @@ b-container
             b-card-header(v-if='!isEditMode') Add food
             b-card-header(v-else) Edit food
             .px-4.pt-4
-              InputText(title='Name:' placeholder='Set food name' :text='form.name' required='required' @data='(e) => { form.name = e; }')
-              InputText(title='Amount: ' placeholder='Set amount' type='number' :text='form.number' required='required' @data='(e) => { form.number = e; }')
-              InputDate(title='Expiration date:' placeholder='Set date' :date='dates.formatDate(form.expirationDate)' required='required' @data='(e) => { form.expirationDate = e; }')
+              InputText(title='Name:' placeholder='Set food name' :text='form.name' required @data='(e) => { form.name = e; }')
+              InputText(title='Amount: ' placeholder='Set amount' type='number' :text='form.number' required @data='(e) => { form.number = e; }')
+              InputDate(title='Expiration date:' placeholder='Set date' :date='dates.formatDate(form.expirationDate)' required @data='(e) => { form.expirationDate = e; }')
               b-form-group(label='Labels:')
                 b-checkbox-group(v-model='form.labels' :options='constants.foodLabels' stacked='stacked')
             b-button.footerCardButton.color3(block='block' type='submit' v-if='!isEditMode') ADD

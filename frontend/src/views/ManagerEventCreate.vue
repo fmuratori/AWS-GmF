@@ -17,9 +17,9 @@ b-container
               | Create events in your city. Your events will be displayed in the main page and visible to all the users.
       hr
       b-form(@submit.stop.prevent='createEvent')
-        InputText(title='Title:' placeholder='Insert title here' :text='form.eventTitle' required='required' @data='(e) => { form.eventTitle = e; }')
+        InputText(title='Title:' placeholder='Insert title here' :text='form.eventTitle' required @data='(e) => { form.eventTitle = e; }')
         InputTextarea(title='Description:' placeholder='Insert description here' :text='form.description' @data='(e) => { form.description = e; }')
-        InputDate(title='Date:' placeholder='Select a date' :date='form.date' required='required' @data='(e) => { form.date = e; }')
+        InputDate(title='Date:' placeholder='Select a date' :date='form.date' required @data='(e) => { form.date = e; }')
         hr
         InputAddress(title='Location:' :city='form.address.city' :street='form.address.street' :civic='form.address.civicNumber' @data='(e) => { form.address = e; }')
         b-row

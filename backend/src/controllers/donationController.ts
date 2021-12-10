@@ -12,6 +12,19 @@ export default class DonationController {
 	edit = factory.edit(DonationModel)
 	delete = factory.delete(DonationModel)
 
+	retrieve = catchAsync(async (req: Request, res: Response) => {
+		const donation = await DonationModel.findById(req.body.donationId)
+		if (!donation) {
+			console.log("donation not found")
+			return
+		}
+
+		donation.status = "retrieved";
+		await DonationModel.findByIdAndUpdate(req.body.donationId, donation)
+
+		res.status(200).json(donation.chat)
+	})
+
 	getChat = catchAsync(async (req: Request, res: Response) => {
 		// retrieve donation by id and linked chat
 		const donation = await DonationModel.findById(req.body.donationId, { "chat": 1 })

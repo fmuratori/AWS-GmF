@@ -17,7 +17,7 @@
             b-col
               p.m-0 Select a valid city to show all available packs ready for shipping.
         vue-google-autocomplete#map(classname='form-control' placeholder='Insert a city name' @placechanged='selectCity' country='it' types='(cities)')
-  b-row.fullheight.justify-content-center(no-gutters='no-gutters' v-else)
+  b-row.fullheight.justify-content-center(no-gutters v-else)
     b-col.fullheight(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='9' order='2' order-sm='2' order-md='2' order-lg='1')
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
@@ -73,10 +73,10 @@
             span Delivery options
           b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
             b-input-group
-              b-form-datepicker#input-2.border-right-0(required='required' v-model='deliveryDate' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()' @input='updateFilter')
+              b-form-datepicker#input-2.border-right-0(required v-model='deliveryDate' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()' @input='updateFilter')
                 Icon(bootstrap icon='x' aria-hidden='true')
         b-form-group#input-group-3(label='Time of day:' label-for='input-3')
-          b-form-select(v-model='deliveryPeriod' :options="['morning', 'afternoon', 'evening']" required='required' size='sm')
+          b-form-select(v-model='deliveryPeriod' :options="['morning', 'afternoon', 'evening']" required size='sm')
         .mt-auto.d-none.d-lg-block.d-xl-block
           b-alert(show='show')
             p.m-0.p-0.text-center

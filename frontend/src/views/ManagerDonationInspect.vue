@@ -7,17 +7,19 @@ b-container
         b YOUR DONATION
       hr.shaded
   b-row.justify-content-center
-    b-col(lg='4' md='8' cols='10')
+    b-col(lg='4' md='8' cols='11').mb-3
       b-card(bg-variant='light' no-body='no-body')
         b-card-text.m-2
           #messages-area.mb-1(ref='messagesArea')
             Message(v-for='(message, idx) in processedChat' :key='idx' :username='message.userFullname' :isOwner='message.userId == $store.state.session.userData._id' :date='dates.formatDatetime(message.date)' :isVisualized='message.visualized' :isEvent='message.isEventMessage' :messages='message.messages')
           b-form(@submit.stop.prevent='sendMessage')
             b-input-group
-              b-form-input(type='text' placeholder='Insert here your message' v-model='chatMessage' required='required')
+              b-form-input(type='text' placeholder='Insert here your message' v-model='chatMessage' required :disabled='donation.status == "retrieved"')
               b-input-group-append
-                b-button(variant='success' type='submit') Send
-    b-col.mb-5(lg='6' md='8' cols='10')
+                b-button(variant='success' type='submit' :disabled='donation.status == "retrieved"') Send
+
+
+    b-col.mb-5(lg='6' md='8' cols='11')
       b-card.mb-2(bg-variant='light' no-body='no-body')
         b-card-text.p-3
           b-row.mb-3
@@ -26,8 +28,8 @@ b-container
             b-col
               h5
                 b-badge(v-if="donation.status == 'waiting'" variant='warning') {{donation.status}}
-                b-badge(v-if="donation.status == 'selected'" variant='success') {{donation.status}}
-                b-badge(v-if="donation.status == 'withdrawn'" variant='secondary') {{donation.status}}
+                b-badge(v-if="donation.status == 'selected'" variant='warning') {{donation.status}}
+                b-badge(v-if="donation.status == 'retrieved'" variant='success') {{donation.status}}
           b-row.mb-3(v-if="donation.status == 'selected'")
             b-col(md='3')
               label Pick up date: 
@@ -58,7 +60,7 @@ b-container
             b-col
               label.font-weight-bold
                 | {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
-          b-row.mb-3(v-if='donation.additionalInformations != null')
+          b-row.mb-3(v-if='donation.additionalInformations')
             b-col(md='3')
               label Additiona info:
             b-col
@@ -69,13 +71,14 @@ b-container
             b-col
               p.mb-0.font-weight-bold(v-for='(weekDayName, weekDay, idx) in constants.weekDays' :key='idx' v-if='weekDayDonations(weekDay).length > 0')
                 | {{ weekDayName + &apos;:&nbsp;&apos; + weekDayDonations(weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
+      
       div(v-if='$store.getters.isUser')
         b-button.color3(block='block' type='submit' @click='modifyDonation') Edit
         b-button.color3(block='block' v-b-modal.modal) Delete
-        b-button.color4(block='block' variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Cancel
-      div(v-if='$store.getters.isVolunteer')
-        b-button.color3(block='block' type='submit' @click='cancelReservation') Delete reservation
-        b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Cancel
+      div(v-if='$store.getters.isVolunteer || $store.getters.isTrustedVolunteer')
+        b-button.color3(block='block' type='submit' @click='retrieveDonation' :disabled="donation.status == 'retrieved'") Mark as retrieved
+        b-button.color3(block='block' type='submit' @click='cancelReservation' :disabled="donation.status == 'retrieved'") Delete reservation
+      b-button.mt-2(block='block' variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Back
   b-modal#modal(title='Delete your donation?' @ok='deleteDonation()')
     div This donation offer will be deleted permanently.
     template(#modal-footer='{ ok, cancel }')
@@ -187,6 +190,34 @@ export default Vue.extend({
         isEventMessage: false,
       });
       this.chatMessage = "";
+    },
+    retrieveDonation() {
+      donationApi
+        .retrieveDonation(this.donation._id)
+        .then((r: AxiosResponse) => {
+          if (r.status == 200) {
+            this.$store.dispatch("sendMessage", {
+              donationId: this.donation._id,
+              message: "Donation retrieved succesfully.",
+              isEventMessage: true,
+            });
+
+            this.$router.push({ name: "ManagerDonationList" });
+            eventbus.$emit(
+              "successMessage",
+              "Donation",
+              "Donation retrieved successfully."
+            );
+          }
+        })
+        .catch((e: AxiosError): void => {
+          eventbus.$emit(
+            "dangerMessage",
+            "Donation",
+            "Donation retrieval failed. Retry later or contact us if the problem persists."
+          );
+          console.log(e);
+        });
     },
     deleteDonation() {
       donationApi
