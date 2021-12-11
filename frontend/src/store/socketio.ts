@@ -1,3 +1,4 @@
+import eventbus from "@/eventbus";
 import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
 
@@ -9,6 +10,7 @@ export default {
     unreadMessages: [],
     chat: new Array<ChatMessage>(),
     donationId: "",
+    connected: false,
   },
   getters: {
     unreadMessagesTotalCount(state): number {
@@ -21,7 +23,15 @@ export default {
     },
   },
   mutations: {
+    setConnected(state, value:boolean): void {
+      state.connected = value;
+      if (!value)
+        eventbus.$emit("startLoading", "Connecting with backend server.");
+      else 
+        eventbus.$emit("stopLoading");
+    },
     addUnreadMessage(state, message): void {
+      console.log(message)
       const donationChat = state.unreadMessages.find(
         (e) => e._id == message._id
       );
@@ -35,11 +45,11 @@ export default {
         state.unreadMessages.push(newUnreadMessage);
       }
     },
-    getChat(state, payload): void {
+    getChat(state, payload: { chat: ChatMessage[], donationId: string }): void {
       state.chat = payload.chat;
       state.donationId = payload.donationId;
     },
-    addMessage(state, message): void {
+    addMessage(state, message:ChatMessage): void {
       state.chat.push(message);
     },
     resetChat(state): void {
@@ -58,11 +68,13 @@ export default {
     },
   },
   actions: {
-    SOCKET_connect(): void {
+    SOCKET_connect({ commit }): void {
+      commit("setConnected", true);
       console.log("Connected to server socket.io");
     },
 
-    SOCKET_disconnect(): void {
+    SOCKET_disconnect({ commit }): void {
+      commit("setConnected", false);
       console.log("Disconnected from server socket.io");
     },
 

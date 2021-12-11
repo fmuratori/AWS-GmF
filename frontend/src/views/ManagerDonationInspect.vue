@@ -73,8 +73,8 @@ b-container
                 | {{ weekDayName + &apos;:&nbsp;&apos; + weekDayDonations(weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
       
       div(v-if='$store.getters.isUser')
-        b-button.color3(block='block' type='submit' @click='modifyDonation') Edit
-        b-button.color3(block='block' v-b-modal.modal) Delete
+        b-button.color3(block='block' type='submit' @click='modifyDonation' :disabled='donation.status == "retrieved"') Edit
+        b-button.color3(block='block' v-b-modal.modal :disabled='donation.status == "retrieved"') Delete
       div(v-if='$store.getters.isVolunteer || $store.getters.isTrustedVolunteer')
         b-button.color3(block='block' type='submit' @click='retrieveDonation' :disabled="donation.status == 'retrieved'") Mark as retrieved
         b-button.color3(block='block' type='submit' @click='cancelReservation' :disabled="donation.status == 'retrieved'") Delete reservation

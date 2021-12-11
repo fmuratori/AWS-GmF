@@ -22,7 +22,7 @@ b-container
         InputDate(title='Date:' placeholder='Select a date' :date='form.date' required @data='(e) => { form.date = e; }')
         hr
         InputAddress(title='Location:' :city='form.address.city' :street='form.address.street' :civic='form.address.civicNumber' @data='(e) => { form.address = e; }')
-        b-row
+        b-row.mt-3
           b-col
             b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerEventList' })") Cancel
           b-col

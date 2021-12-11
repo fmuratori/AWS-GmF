@@ -8,6 +8,35 @@ export interface Address {
   };
 }
 
+export interface Donation {
+  _id: string;
+  userId: string;
+  foods: string[];
+  expirationDate: string;
+  address: Address;
+  additionalInformations: string;
+  pickUpPeriod: Array<{ weekDay: string; period: string }>;
+  chat: ChatMessage[];
+  creationDate: string;
+  status: string;
+  pickUp: {
+    volunteerId: string;
+    date: string;
+    period: string;
+  };
+}
+
+export interface ChatMessage {
+  _id: string,
+  userId: string;
+  userFullName: string;
+  date: string;
+  text: string;
+  visualized: boolean;
+  messages: string[]; // needed to display the chat in a different way
+  isEventMessage: boolean;
+}
+
 export interface UserData {
   _id: string;
   name: string;
@@ -50,34 +79,6 @@ export interface changePasswordPayload {
   id: string;
   oldPassword: string;
   newPassword: string;
-}
-
-export interface Donation {
-  _id: string;
-  userId: string;
-  foods: string[];
-  expirationDate: string;
-  address: Address;
-  additionalInformations: string;
-  pickUpPeriod: Array<{ weekDay: string; period: string }>;
-  chat: ChatMessage[];
-  creationDate: string;
-  status: string;
-  pickUp: {
-    volunteerId: string;
-    date: string;
-    period: string;
-  };
-}
-
-export interface ChatMessage {
-  userId: string;
-  userFullName: string;
-  date: string;
-  text: string;
-  visualized: boolean;
-  messages: string[]; // needed to display the chat in a different way
-  isEventMessage: boolean;
 }
 
 export interface ChatRequestPayload {
@@ -226,5 +227,6 @@ export interface GMapAutoCompleteResponse {
         lng: number;
       };
     };
+    formatted_address: string;
   }[];
 }

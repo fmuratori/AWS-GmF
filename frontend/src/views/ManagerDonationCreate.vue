@@ -1,13 +1,15 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
+    b-col(lg='6' md='8' cols='11')
+      hr.shaded
+      h4.text-center
+        b CREATE A DONATION
+      hr.shaded
+  
+  b-row.justify-content-center
     b-col(lg='6' md='8' sm='10')
-      .mb-5
-        hr.shaded
-        h4.text-center
-          b CREATE A DONATION
-        hr.shaded
-      b-alert.mb-5(show='show')
+      b-alert(show='show')
         b-row(align-v='center')
           b-col(cols='auto')
             h1

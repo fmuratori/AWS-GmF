@@ -1,12 +1,12 @@
 <template lang="pug">
 div
   b-form-group(label='Address' label-cols-sm='3' label-align-sm='right')
-    b-form-input(placeholder='Insert address here'  type='text' )
+    b-form-input(placeholder='Insert address here'  type='text' v-model='query' @input='emitValueChange')
   
   b-row(align-h='center')
     b-col(cols='10' md='8' lg='8')
       b-button.color3(block='block' size='sm' @click='resetMap' v-if='isLocationLoaded') Reset location
-      .mapContainer.text-center.mb-4(v-if='!isLocationLoaded')
+      .mapContainer.text-center(v-if='!isLocationLoaded')
         h1.pt-4
           Icon.mr(bootstrap icon='map')
         h3
@@ -71,11 +71,13 @@ export default Vue.extend({
     }
   },
   methods: {
-    emitValueChange() {
+    emitValueChange(value: string) {
       this.resetMap();
+      this.query =  value;
       this.$emit('data', this.address);
     },
     resetMap() {
+      this.query = "";
       this.address.coordinates = { x: 0, y: 0 };
       this.isLocationLoaded = false;
     },
@@ -99,6 +101,8 @@ export default Vue.extend({
         )
         .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
           if (r.status == 200) {
+            console.log(r, r.data.results[0].formatted_address)
+            this.query = r.data.results[0].formatted_address;
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>
               c.types.includes("administrative_area_level_3")
@@ -129,8 +133,18 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+
+@import "@/assets/style.scss";
+
 #gmap {
   height: 300px;
   width: 300px;
+}
+
+.mapContainer {
+  border-radius: 5px;
+  -moz-box-shadow:    inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow:         inset 0 0 10px #000000;
 }
 </style>

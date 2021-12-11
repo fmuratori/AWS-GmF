@@ -24,16 +24,29 @@ b-container
             p.m-0
               | Past or present events cannot be modified anymore. Only future events can be deleted or edited.
     b-col(lg='6' md='8' cols='11' order-md='2' order-lg='1')
-      b-row.mb-2(no-gutters)
-        b-col(cols='3')
-          p Event status:
-        b-col
-          FilterButtons(:filters='filters' :selected='2' @click='(filter) => filterBy(filter)')
-      b-row.mb-2(no-gutters)
-        b-col(cols='3')
-          p Sort by:
-        b-col
-          FilterButtons(:filters='sorters' :selected='1' @click='sortBy')
+
+      div.border.rounded.bg-light.p-2.mb-3
+        b-row.m-1(no-gutters align-v="center")
+          b-col()
+            h5.m-0.p-0
+              Icon.mr-1(fontawesome icon='filter') 
+              span Filters
+          b-col(cols="auto")
+            b-button(variant='light' v-b-toggle.filters-collapse)
+              Icon(fontawesome icon='cogs')
+        
+        b-collapse#filters-collapse
+          b-row.ml-2.mb-2(no-gutters)
+            b-col(cols='3')
+              p Event status:
+            b-col
+              FilterButtons(:filters='filters' :selected='2' @click='(filter) => filterBy(filter)')
+          b-row.ml-2(no-gutters)
+            b-col(cols='3')
+              p Sort by:
+            b-col
+              FilterButtons(:filters='sorters' :selected='1' @click='sortBy')
+
       p(v-if='eventList.length == 0')
         span
           | We found no event. Be sure to select your filters selectors correctly. Click 
