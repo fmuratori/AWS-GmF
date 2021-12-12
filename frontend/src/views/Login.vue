@@ -116,6 +116,13 @@ export default Vue.extend({
     onAddressUpdate(address: string) {
       this.registration.address = address;
     },
+    redirectNavigation() {
+      if (this.$store.state.navigation.donationCreationFlag) this.$router.push({name: "ManagerDonationCreate"})
+      else if (this.$store.state.navigation.familySubscribeFlag) this.$router.push({name: "ManagerFamilySubscribe"})
+      else this.$router.push({name: "Home"})
+
+      this.$store.dispatch("unsetLoginNavigationFlags");
+    },
     submitForm() {
       if (this.isLoginSelected) {
         eventbus.$emit("startLoading", "Checking your log in credentials");
@@ -133,7 +140,7 @@ export default Vue.extend({
               });
 
               this.showLoginErrorMessage = false;
-              this.$router.push({ name: "Home" });
+              this.redirectNavigation();
 
               // initialize a socket session (let the server know that a new logged user is active)
               this.$socket.emit(

@@ -5,7 +5,7 @@ div
       div.bg-white.p-4.py-5()
         b-row(no-gutters align-v="center")
           b-col(cols=6 lg="auto" order=0 order-md=0 order-lg=0).mb-3
-            b-button(variant="light" @click="selectPrevious" :block="$store.getters.isMediumScreenWidth")
+            b-button(variant="light" @click="selectPrevious" :block="$store.getters.isMediumScreenWidth" :disabled="eventList.length == 1")
               Icon(bootstrap icon="chevron-left")
           b-col.mx-4(order=2 order-md=2 order-lg=1 )
             h3 {{ this.eventList[this.selected].eventTitle }}
@@ -27,7 +27,7 @@ div
               a(href="#" v-if="showFullText" @click="showFullText = false") Hide
 
           b-col(cols=6 lg="auto" order=1 order-md=1 order-lg=2).mb-3
-            b-button(variant="light" @click="selectNext" :block="$store.getters.isMediumScreenWidth")
+            b-button(variant="light" @click="selectNext" :block="$store.getters.isMediumScreenWidth" :disabled="eventList.length == 1")
               Icon(bootstrap icon="chevron-right")
   
   b-row(align-v="center" align-h="center" v-else).no-gutters

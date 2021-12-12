@@ -184,11 +184,6 @@ export interface UserState {
   userData: UserData;
 }
 
-export interface NavigationState {
-  isSidebarOpen: boolean;
-  screenWidth: number;
-}
-
 export interface LoginResponse {
   token: string;
   user: UserData;

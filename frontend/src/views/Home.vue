@@ -15,7 +15,7 @@ div
     b-row(align-h="center").no-gutters
       b-col(cols=10 md=10 lg=6)
         h3.mb-5 WHAT IS BRING ME FOOD?
-        p.m-0.p-0 Bring me Food is a web application which enables users to communciate directly with volunteers to donate foods which will e delivered to needing families.
+        p.m-0.p-0 Bring me Food is a web application that enables users to communciate directly with volunteers to donate foods that will e delivered to needing families.
      
   div  
     b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters).my-5
@@ -30,7 +30,7 @@ div
       b-col(cols="11" md="8" lg="auto").ml-3
         b-button(size="lg" variant="light" @click="subscribeFamily") Subscribe family
 
-  div#events.my-5
+  div#events.my-5.py-5
     HomepageEvents
 
   CountBoxes.my-5
@@ -124,23 +124,23 @@ export default Vue.extend({
     CountBoxes,
     Icon,
   },
-  created() {
-    // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
-    }
-  },
   methods: {
     donateFood() {
       if (this.$store.getters.isUserLogged) {
         this.$router.push({ name: "ManagerDonationCreate" });
+      } else { 
+        this.$store.dispatch("unsetLoginNavigationFlags");
+        this.$store.dispatch("setDonationCreationFlag");
+        this.$router.push({ name: "Login" });
       }
     },
     subscribeFamily() {
       if (this.$store.getters.isUserLogged) {
         this.$router.push({ name: "ManagerFamilySubscribe" });
+      } else { 
+        this.$store.dispatch("unsetLoginNavigationFlags");
+        this.$store.dispatch("setFamilySubscribeFlag");
+        this.$router.push({ name: "Login" });
       }
     },
   },

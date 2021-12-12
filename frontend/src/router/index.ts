@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
+
+import store from "../store";
 import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
@@ -141,15 +143,20 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior() {
-    // to, from, savedPosition
+  scrollBehavior() { // to, from, savedPosition
     const layoutContent = document.getElementById("content");
     layoutContent?.scrollTo(0, 0);
   },
 });
 
-// router.beforeEach(() => { //to, from, next
-//   window.scrollTo(0, 0);
-// })
+router.beforeEach((to, from, next) => { //to, from, next
+  if (store.getters.isUserLogged) {
+    if (!store.getters.isMediumScreenWidth) {
+      store.dispatch("showSidebar");
+    }
+  }
+
+  next();
+})
 
 export default router;
