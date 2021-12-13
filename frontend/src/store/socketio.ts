@@ -95,6 +95,7 @@ export default {
     ): void {
       const message = JSON.parse(stringMessage);
 
+      console.log(message)
       if (state.donationId == message._id) {
         commit("addMessage", message.message);
 

@@ -1,13 +1,13 @@
 <template lang="pug">
 b-container.mb-5
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' cols='10')
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b FOOD MANAGER 
       hr.shaded
   b-row.justify-content-center.my-5
-    b-col.mb-5(lg='4' md='8' cols='10')
+    b-col.mb-5(lg='4' md='8' cols='11')
       b-form(@submit.stop.prevent='addFood')
         b-card.mb-2(bg-variant='light' text-variant='dark' no-body='no-body')
           b-card-text
@@ -35,6 +35,7 @@ import InputText from "../components/input/InputText.vue";
 import InputDate from "../components/input/InputDate.vue";
 
 import { Food } from "../types";
+import { ManagerFoodView } from "../types/viewTypes";
 
 import api from "../api/food";
 import { AxiosResponse, AxiosError } from "axios";
@@ -46,7 +47,7 @@ export default Vue.extend({
     InputDate,
     FoodView,
   },
-  data: () => {
+  data: (): ManagerFoodView => {
     return {
       form: {
         _id: "",

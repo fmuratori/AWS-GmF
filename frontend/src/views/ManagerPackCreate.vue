@@ -1,7 +1,7 @@
 <template lang="pug">
 b-container.mb-5
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' cols='10')
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b CREATE A PACK
@@ -147,7 +147,7 @@ import FoodView from "../components/FoodView.vue";
 import FamilyView from "../components/FamilyView.vue";
 import Icon from "../components/Icon.vue";
 
-import { PackCreateView } from "../viewTypes";
+import { ManagerPackCreateView } from "../types/viewTypes";
 import { Family, SelectableFood, Pack, Address, PackPayload } from "../types";
 
 import packApi from "../api/pack";
@@ -162,11 +162,10 @@ export default Vue.extend({
     VueHtml2pdf,
     Icon,
   },
-  data: (): PackCreateView => {
+  data: (): ManagerPackCreateView => {
     return {
       step: "selectFamily",
       foodList: new Array<SelectableFood>(),
-      familyList: new Array<Family>(), // TODO: delete this, unused
       selectedFamily: {} as Family,
       form: {
         foodList: new Array<{ foodId: string; number: number }>(),

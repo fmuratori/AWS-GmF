@@ -1,14 +1,14 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' sm='10')
+    b-col(lg='6' md='8' cols='11')
       div
         hr.shaded
         h4.text-center
           b PACK INFO
         hr.shaded
   b-row.justify-content-md-center.my-5.no-gutters
-    b-col(lg='6' md='10' sm='12')
+    b-col(lg='6' md='10' cols='11')
       div(v-if="showScreen=='scan'")
         b-card.text-center(bg-variant='light')
           h3.mb-3
@@ -77,6 +77,7 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import Icon from "../components/Icon.vue";
 
 import { Pack } from "../types";
+import { ManagerPackScanView } from "../types/viewTypes";
 
 import packApi from "../api/pack";
 import { AxiosError, AxiosResponse } from "axios";
@@ -87,7 +88,7 @@ export default Vue.extend({
     QrcodeStream,
     Icon,
   },
-  data: () => {
+  data: (): ManagerPackScanView => {
     return {
       showScreen: "scan",
       isScannerVisible: false,

@@ -1,7 +1,7 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' sm='10')
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b REPORT A FAMILY
@@ -56,7 +56,8 @@ import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import Icon from "../components/Icon.vue";
 
-import { Address, FamilyPayload } from "../types";
+import { Address, Family } from "../types";
+import { ManagerFamilySubscribeView } from "../types/viewTypes";
 
 import api from "../api/family";
 
@@ -67,7 +68,7 @@ export default Vue.extend({
     InputAddress,
     Icon,
   },
-  data: () => {
+  data: (): ManagerFamilySubscribeView => {
     return {
       form: {
         reporterId: "",
@@ -83,14 +84,14 @@ export default Vue.extend({
             y: 0,
           },
         } as Address,
-      } as FamilyPayload,
+      } as Family,
       submitLabel: "Report",
     };
   },
   created() {
     if (this.$store.getters.isUserLogged) {
       if ("family" in this.$route.params) {
-        this.form = this.$route.params.family as unknown as FamilyPayload;
+        this.form = this.$route.params.family as Family; //as unknown 
         this.submitLabel = "Edit";
       }
       this.form.reporterId = this.$store.state.session.userData._id;

@@ -153,6 +153,7 @@ import packsApi from "../api/pack";
 import { AxiosResponse } from "axios";
 
 import { Pack, FindPayload, Food } from "../types";
+import { ManagerPackDeliveryView } from "../types/viewTypes";
 
 export default Vue.extend({
   name: "ManagerPackDelivery",
@@ -161,7 +162,7 @@ export default Vue.extend({
     FilterButtons,
     Icon,
   },
-  data: () => {
+  data: (): ManagerPackDeliveryView => {
     return {
       mapsOptions: {
         zoomControl: true,

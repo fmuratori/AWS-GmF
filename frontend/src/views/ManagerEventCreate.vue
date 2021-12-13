@@ -1,13 +1,13 @@
 <template lang="pug">
 b-container.mb-5
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' sm='10')
+    b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
         b CREATE AN EVENT
       hr.shaded
   b-row.justify-content-center
-    b-col(lg='6' md='8' sm='10')
+    b-col(lg='6' md='8' cols='11')
       b-alert(show='show')
         b-row(align-v='center')
           b-col(cols='auto')
@@ -42,7 +42,7 @@ import InputDate from "../components/input/InputDate.vue";
 import Icon from "../components/Icon.vue";
 
 import { Address, EventPayload } from "../types";
-import { CreateEventView } from "../viewTypes";
+import { ManagerEventCreateView } from "../types/viewTypes";
 
 import api from "../api/event";
 
@@ -55,7 +55,7 @@ export default Vue.extend({
     InputDate,
     Icon,
   },
-  data: (): CreateEventView => {
+  data: (): ManagerEventCreateView => {
     return {
       form: {
         _id: null,

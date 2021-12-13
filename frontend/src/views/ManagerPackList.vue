@@ -1,5 +1,5 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' cols='11')
       hr.shaded
@@ -76,6 +76,7 @@ import packApi from "../api/pack";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { Address, Pack } from "../types";
+import { ManagerPackListView } from "../types/viewTypes";
 
 export default Vue.extend({
   name: "ManagerPackList",
@@ -83,7 +84,7 @@ export default Vue.extend({
     FilterButtons,
     QrcodeVue,
   },
-  data: () => {
+  data: (): ManagerPackListView => {
     return {
       filters: [
         { name: "all", label: "All", icon: null, isVisible: true },

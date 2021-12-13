@@ -1,5 +1,5 @@
 <template lang="pug">
-b-row.justify-content-center(no-gutters)
+b-row.justify-content-center(no-gutters).mb-5
   b-col(:lg='isLoginSelected ? 3 : 5' md='8' cols='10')
     b-card#login.shadow-lg.mt-5.mb-5(no-body='no-body')
       #login-header.px-5.py-4
@@ -67,6 +67,9 @@ import {
   LoginResponse,
   UserData,
 } from "../types";
+import {LoginView} from "../types/viewTypes";
+
+
 import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
@@ -77,25 +80,24 @@ export default Vue.extend({
     InputPasswordSelect,
     Icon,
   },
-  data: () => {
+  data: (): LoginView => {
     return {
-      // TODO: remove precompiled test-values
       isLoginSelected: true,
       showLoginErrorMessage: false,
       registrationPrivacyChecked: false,
       login: {
-        email: "volunteer@gmail.com",
-        password: "Password2021!",
+        email: "",
+        password: "",
       } as LoginPayload,
       registration: {
-        name: "Fabio",
-        surname: "Muratori",
-        password: "Password2021!",
-        email: "user@user.com",
-        phoneNumber: "123456789",
+        name: "",
+        surname: "",
+        password: "",
+        email: "",
+        phoneNumber: "",
         address: {
-          street: "Cesena",
-          civicNumber: "ippodromo",
+          street: "",
+          civicNumber: "",
           city: "",
           coordinates: {
             x: 0,
@@ -161,6 +163,8 @@ export default Vue.extend({
           .catch((e: AxiosError): void => {
             console.log(e);
             this.showLoginErrorMessage = true;
+            this.login.email = "";
+            this.login.password = "";
           })
           .then(() => {
             eventbus.$emit("stopLoading");

@@ -1,43 +1,36 @@
 <template lang="pug">
 b-container.mb-5
   b-row.justify-content-md-center.no-gutters
-    b-col.mb-5(lg='6' md='8' sm='10')
-      .mb-4
-        b-form(v-if="mode == 'password'" @submit.stop.prevent='changePassword')
-          .my-5
-            hr.shaded
-            h4.text-center
-              b CHANGE PASSWORD
-            hr.shaded
-          InputText.mb-5(title='Old password:' placeholder='Insert your old password here' type='password' required :text='changePasswordForm.oldPassword' @data='(e) => { changePasswordForm.oldPassword = e; }')
-          InputPasswordSelect(title1='New password: ' title2='Confirm new password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { changePasswordForm.newPassword = e; }')
-          b-row
-            b-col
-              b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
-            b-col
-              b-button.color3(block='block' type='submit') Edit
+    b-col(lg='6' md='8' cols='11')
+      .my-5
+        hr.shaded
+        h4.text-center
+          b(v-if="mode == 'password'") CHANGE PASSWORD
+          b(v-if="mode == 'user_info'") USER INFO
+          b(v-if="mode == 'address'") ADDRESS
+        hr.shaded
+
+      b-form(v-if="mode == 'password'" @submit.stop.prevent='changePassword')
+        
+        InputText.mb-5(title='Old password:' placeholder='Insert your old password here' type='password' required :text='changePasswordForm.oldPassword' @data='(e) => { changePasswordForm.oldPassword = e; }')
+        InputPasswordSelect(title1='New password: ' title2='Confirm new password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { changePasswordForm.newPassword = e; }')
+        b-row
+          b-col
+            b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
+          b-col
+            b-button.color3(block='block' type='submit') Edit
       b-form(v-if="mode == 'user_info'" @submit.stop.prevent='editUser')
-        .my-5
-          hr.shaded
-          h4.text-center
-            b USER INFO
-          hr.shaded
-        InputText(title='Name: ' placeholder='Insert name here' required :text='editUserForm.name' @data='(e) => { editUserForm.name = e; }')
-        InputText(title='Surname: ' placeholder='Insert surname here' required :text='editUserForm.surname' @data='(e) => { editUserForm.surname = e; }')
-        InputText(title='Email: ' placeholder='Insert your email here' type='email' required :text='editUserForm.email' @data='(e) => { editUserForm.email = e; }')
-        InputText(title='Phone number: ' placeholder='Insert your phone number here' required :text='editUserForm.phoneNumber' @data='(e) => { editUserForm.phoneNumber = e; }')
+        InputText(title='Name: ' placeholder='Insert name here' required :text='form.name' @data='(e) => { form.name = e; }')
+        InputText(title='Surname: ' placeholder='Insert surname here' required :text='form.surname' @data='(e) => { form.surname = e; }')
+        InputText(title='Email: ' placeholder='Insert your email here' type='email' required :text='form.email' @data='(e) => { form.email = e; }')
+        InputText(title='Phone number: ' placeholder='Insert your phone number here' required :text='form.phoneNumber' @data='(e) => { form.phoneNumber = e; }')
         b-row
           b-col
             b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
           b-col
             b-button.color3(block='block' type='submit') Edit
       b-form(v-if="mode == 'address'" @submit.stop.prevent='editUser')
-        .my-5
-          hr.shaded
-          h4.text-center
-            b ADDRESS
-          hr.shaded
-        InputAddress(:city='editUserForm.address.city' :civic='editUserForm.address.civicNumber' :street='editUserForm.address.street' @data='(e) => { editUserForm.address = e; }')
+        InputAddress.mb-3(:city='form.address.city' :civic='form.address.civicNumber' :street='form.address.street' :x='form.address.coordinates.x' :y='form.address.coordinates.y' @data='(e) => { form.address = e; }')
         b-row
           b-col
             b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
@@ -49,12 +42,14 @@ b-container.mb-5
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
+import sha from "../misc/sha";
 
 import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
 import { Address, UserData, changePasswordPayload } from "../types";
+import { ManagerEditUserInfoView } from "../types/viewTypes";
 
 import api from "../api/user";
 import { AxiosError, AxiosResponse } from "axios";
@@ -66,10 +61,10 @@ export default Vue.extend({
     InputPasswordSelect,
     InputAddress,
   },
-  data: () => {
+  data: (): ManagerEditUserInfoView => {
     return {
       regRepeatPassword: "",
-      editUserForm: {
+      form: {
         _id: "",
         name: "",
         surname: "",
@@ -105,7 +100,7 @@ export default Vue.extend({
         this.mode = this.$route.params.mode;
       }
 
-      this.editUserForm = this.$store.state.session.userData;
+      this.form = this.$store.state.session.userData;
       this.changePasswordForm.id = this.$store.state.session.userData._id;
     } else this.$router.push({ name: "Login" });
   },
@@ -119,7 +114,7 @@ export default Vue.extend({
     editUser() {
       eventbus.$emit("startLoading", "Updating your account data");
       api
-        .editUser(this.editUserForm)
+        .editUser(this.form)
         .then((r: AxiosResponse): void => {
           if (r.status == 200) {
             this.$store.state.session.userData = r.data;
@@ -145,6 +140,8 @@ export default Vue.extend({
     },
     changePassword() {
       eventbus.$emit("startLoading", "Updating your account data");
+      this.changePasswordForm.oldPassword = sha.hashText(this.changePasswordForm.oldPassword);
+      this.changePasswordForm.newPassword = sha.hashText(this.changePasswordForm.newPassword);
       api
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {

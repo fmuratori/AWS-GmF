@@ -1,5 +1,5 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' cols='11')
       hr.shaded
@@ -58,7 +58,7 @@ b-container
             div
               span.mb-0 Address:&nbsp;
               span.font-weight-bold
-                | {{ family.address.street }} {{ family.address.civicNumber }} {{ family.address.city }}
+                | {{ family.address.street }} {{ family.address.civicNumber }}, {{ family.address.city }}
             div
               span.mb-0 Submission date:&nbsp;
               span.font-weight-bold {{ dates.formatDate(family.creationDate) }}
@@ -84,6 +84,7 @@ import FilterButtons from "../components/FilterButtons.vue";
 import Icon from "../components/Icon.vue";
 
 import { Family } from "../types";
+import { ManagerFamilyListView } from "../types/viewTypes";
 
 import api from "../api/family";
 import { AxiosResponse } from "axios";
@@ -94,7 +95,7 @@ export default Vue.extend({
     FilterButtons,
     Icon,
   },
-  data: () => {
+  data: (): ManagerFamilyListView => {
     return {
       statusFilter: "pending",
       sortByMode: "creationDateAscending",

@@ -5,7 +5,7 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
     h3(v-else) Bring me Food
   b-navbar-nav.ml-auto.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
     b-nav-item.my-auto.text-center(href='#')
-      b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
+      b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal)
         Icon.mr-1(bootstrap icon='envelope')
         b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
   b-navbar-nav.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
@@ -24,6 +24,10 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
         UserUpgradeModal
       b-nav-item.my-auto.navbar-link.text-center(href='#footer' @click="$router.push({name: 'Home'})") Contact us
       b-nav-item.my-auto.navbar-link.text-center(href='#events' @click="$router.push({name: 'Home'})") Events
+      b-nav-item.my-auto.navbar-link.text-center(@click="") 
+        b-button(variant="light" v-b-modal.calendarModal)
+          span.mr-1 Calendar
+          Icon(bootstrap icon="calendar")
       b-nav-item.my-auto.text-center(href='#' v-if='!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged && $store.getters.unreadMessagesTotalCount > 0')
         b-button.my-2.my-sm-0.color3(v-b-modal.messagesModal)
           span.mr-1 Messages
@@ -36,6 +40,9 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
         b-button.my-2.my-sm-0(variant='light')
           span.mr-1 Login
           Icon(fontawesome icon='sign-in-alt')
+
+  b-modal#calendarModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='calendarModal')
+
   b-modal#messagesModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='messagesModal')
     h4 Your Messages
     b-row.no-gutters.my-4.p-2.border(align-v='center' v-for='(message, idx) in $store.getters.unreadMessages' :key='idx')

@@ -53,7 +53,7 @@ export default class UserController {
 
 		if (!bcrypt.compareSync(req.body.password, "" + user.hashPassword)) {
 			res.status(401).json({
-				status: "wrong-credntials-error",
+				status: "wrong-credentials-error",
 				message: "Wrong credential"
 			})
 			return

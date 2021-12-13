@@ -8,7 +8,7 @@ b-container.mb-5
       hr.shaded
   
   b-row.justify-content-center
-    b-col(lg='6' md='8' sm='10')
+    b-col(lg='6' md='8' sm='11')
       b-alert(show='show')
         b-row(align-v='center')
           b-col(cols='auto')
@@ -77,7 +77,7 @@ import Loading from "../components/Loading.vue";
 import Icon from "../components/Icon.vue";
 
 import { Address, Donation } from "../types";
-import { CreateDonationView } from "../viewTypes";
+import { ManagerDonationsCreateView } from "../types/viewTypes";
 
 import api from "../api/donation";
 import { AxiosResponse, AxiosError } from "axios";
@@ -92,7 +92,7 @@ export default Vue.extend({
     Loading,
     Icon,
   },
-  data: (): CreateDonationView => {
+  data: (): ManagerDonationsCreateView => {
     return {
       form: {
         userId: "",

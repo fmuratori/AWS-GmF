@@ -24,7 +24,7 @@ b-container.mb-5
         b-card-text.p-3
           b-row.mb-3
             b-col(md='3')
-              label Status:
+              b Status:
             b-col
               h5
                 b-badge(v-if="donation.status == 'waiting'" variant='warning') {{donation.status}}
@@ -32,44 +32,44 @@ b-container.mb-5
                 b-badge(v-if="donation.status == 'retrieved'" variant='success') {{donation.status}}
           b-row.mb-3(v-if="donation.status == 'selected'")
             b-col(md='3')
-              label Pick up date: 
+              b Pick up date: 
             b-col
-              label.font-weight-bold {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
+              label {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
           b-row.mb-3
             b-col(md='3')
-              label Creation date:
+              b Creation date:
             b-col
-              label.font-weight-bold {{ dates.formatDate(donation.creationDate) }}
+              label {{ dates.formatDate(donation.creationDate) }}
           b-row.mb-3
             b-col(md='3')
-              label Expiration date:
+              b Expiration date:
             b-col
               label
-                span.font-weight-bold {{ dates.formatDatetime(donation.expirationDate) }}
+                span {{ dates.formatDatetime(donation.expirationDate) }}
                 span &nbsp;(expires in&nbsp;
-                span.font-weight-bold {{ dates.daysTillDate(donation.expirationDate) }} days
+                span {{ dates.daysTillDate(donation.expirationDate) }} days
                 span )
           b-row.mb-3
             b-col(md='3')
-              label Food list:
+              b Food list:
             b-col
-              p.mb-0.font-weight-bold(v-for='(value, idx) in donation.foods' :key='idx') {{ value }}
+              p.mb-0(v-for='(value, idx) in donation.foods' :key='idx') {{ value }}
           b-row.mb-3
             b-col(md='3')
-              label Address:
+              b Address:
             b-col
-              label.font-weight-bold
+              label
                 | {{ donation.address.city }}, {{ donation.address.street }}, {{ donation.address.civicNumber }}
           b-row.mb-3(v-if='donation.additionalInformations')
             b-col(md='3')
-              label Additiona info:
+              b Additiona info:
             b-col
-              label.font-weight-bold {{ donation.additionalInformations }}
+              label {{ donation.additionalInformations }}
           b-row.mb-3
             b-col(md='3')
-              label Pickup week days:
+              b Pickup week days:
             b-col
-              p.mb-0.font-weight-bold(v-for='(weekDayName, weekDay, idx) in constants.weekDays' :key='idx' v-if='weekDayDonations(weekDay).length > 0')
+              p.mb-0(v-for='(weekDayName, weekDay, idx) in constants.weekDays' :key='idx' v-if='weekDayDonations(weekDay).length > 0')
                 | {{ weekDayName + &apos;:&nbsp;&apos; + weekDayDonations(weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
       
       div(v-if='$store.getters.isUser')
@@ -94,6 +94,7 @@ import eventbus from "../eventbus";
 import Message from "../components/ChatMessage.vue";
 
 import { Donation, Address, ChatMessage } from "../types";
+import { ManagerDonationsInspectView } from "../types/viewTypes";
 
 import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
@@ -103,7 +104,7 @@ export default Vue.extend({
   components: {
     Message,
   },
-  data: () => {
+  data: ():ManagerDonationsInspectView => {
     return {
       donation: {
         _id: "",

@@ -95,6 +95,7 @@ import api from "../api/event";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { Event } from "../types";
+import { ManagerEventListView } from "../types/viewTypes";
 
 export default Vue.extend({
   name: "ManagerEventList",
@@ -102,7 +103,7 @@ export default Vue.extend({
     FilterButtons,
     Icon,
   },
-  data: () => {
+  data: (): ManagerEventListView => {
     return {
       statusFilter: "past", //"past", "present", "future"
       sortByMode: "eventDateAscending", // "eventDateAscending". "eventDateDescending"

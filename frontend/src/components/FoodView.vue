@@ -37,7 +37,7 @@ import eventbus from "../eventbus";
 import dates from "../misc/dates";
 
 import { SelectableFood } from "../types";
-import { FoodView } from "../viewTypes";
+import { FoodView } from "../types/viewTypes";
 
 import api from "../api/food";
 import { AxiosError, AxiosResponse } from "axios";

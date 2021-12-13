@@ -150,6 +150,7 @@ import donationsApi from "../api/donation";
 import { AxiosResponse } from "axios";
 
 import { Donation } from "../types";
+import { ManagerDonationsRetrieveView } from "../types/viewTypes";
 
 export default Vue.extend({
   name: "ManagerDonationRetrieve",
@@ -157,7 +158,7 @@ export default Vue.extend({
     GmapCustomMarker,
     Icon,
   },
-  data: () => {
+  data: ():ManagerDonationsRetrieveView  => {
     return {
       mapsOptions: {
         zoomControl: true,

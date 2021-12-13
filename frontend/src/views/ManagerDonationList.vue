@@ -61,22 +61,22 @@ b-container.mb-5
             b-row
               b-col(cols='12' md='6' lg='6')
                 .mb-2
-                  p.mb-0 Food:
-                  p.font-weight-bold.mb-0(v-for='(food, idx) in donation.foods' :key='idx') {{ food }}
+                  b.mb-0 Food:
+                  p.text-truncate.mb-0(v-for='(food, idx) in donation.foods' :key='idx') {{ food }}
                 .mb-2
-                  p.mb-0 Expires in:
-                  p.font-weight-bold.mb-0 {{ dates.daysTillDate(donation.expirationDate) }} days
+                  b.mb-0 Expires in:
+                  p.mb-0 {{ dates.daysTillDate(donation.expirationDate) }} days
                 div
-                  p.mb-0 Location:
-                  p.font-weight-bold
+                  b.mb-0 Location:
+                  p.text-truncate
                     | {{ donation.address.street + &apos; &apos; + donation.address.civicNumber + &apos;, &apos; + donation.address.city }}
               b-col(cols='12' md='6' lg='6')
                 .mb-2(v-if='hasUnreadMessages(donation._id)')
                   a(href='#') {{ unreadMessagesCount(donation._id) }} unread messages
                 div(v-if="donation.status=='selected'")
                   .mb-2
-                    p.mb-0 Pick up:
-                    p.font-weight-bold {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
+                    b.mb-0 Pick up:
+                    p {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
           b-button.footerCardButton.color3(block='block' variant='primary' @click='inspectDonation(donation)') SHOW
 </template>
 
@@ -91,6 +91,7 @@ import api from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { Donation, FindPayload } from "../types";
+import { ManagerDonationsListView } from "../types/viewTypes";
 
 export default Vue.extend({
   name: "ManagerDonationList",
@@ -98,7 +99,7 @@ export default Vue.extend({
     FilterButtons,
     Icon,
   },
-  data: () => {
+  data: (): ManagerDonationsListView => {
     return {
       donations: new Array<Donation>(),
       donationsBackup: new Array<Donation>(),

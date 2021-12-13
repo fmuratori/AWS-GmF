@@ -14,7 +14,7 @@ div
           br
           span Navigator
         b-button.mt-5(variant='outline-dark' size='sm' @click='find' v-if='!isLocationLoaded') Find in the map
-      MapLocation(v-else :x='address.coordinates.x' :y='address.coordinates.y' @locationchange='onLocationChange')
+      MapLocation(v-else :x='address.coordinates.x' :y='address.coordinates.y' @locationChange='onLocationChange')
 </template>
 
 <script lang="ts">
@@ -78,16 +78,10 @@ export default Vue.extend({
     }
   },
   methods: {
-    emitValueChange() {
-      //value: string\
+    emitValueChange(value: string) {
       this.resetMap();
-      this.query =
-        this.address.street +
-        " " +
-        this.address.civicNumber +
-        ", " +
-        this.address.city;
       this.$emit("data", this.address);
+      this.query = value;
     },
     resetMap() {
       this.query = "";
@@ -112,7 +106,6 @@ export default Vue.extend({
         .getLocationCoordinates(this.query)
         .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
           if (r.status == 200) {
-            console.log(r, r.data.results[0].formatted_address);
             this.query = r.data.results[0].formatted_address;
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>
@@ -129,6 +122,11 @@ export default Vue.extend({
               r.data.results[0].geometry.location.lat;
             this.address.coordinates.y =
               r.data.results[0].geometry.location.lng;
+            
+            this.query =
+              this.address.street + " " +
+              (!this.address.civicNumber? this.address.civicNumber : "") + 
+              ", " + this.address.city;
 
             this.$emit("data", this.address);
           } else {

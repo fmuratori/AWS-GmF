@@ -1,25 +1,25 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' cols='10')
+    b-col(lg='6' md='8' cols='11')
       div
         hr.shaded
         h4.text-center
           b FAMILIES
         hr.shaded
   b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"').mb-0
-    b-col(lg='6' md='8' cols='10')
+    b-col(lg='6' md='8' cols='11')
       b-form-group(label='' label-for='filter-input' label-size='sm')
         b-input-group(size='sm')
           b-form-input#filter-input(v-model='filterQuery' type='text' placeholder='Type to Search')
           b-input-group-append
             b-button.color3(:disabled='!filterQuery' @click="filterQuery = ''") Clear    
-    b-col(md='auto' cols='10')
+    b-col(md='auto' cols='11')
       b-pagination(size='sm' v-model='currentPage' :total-rows='totalRows' :per-page='perPage' align='fill')
 
 
   b-row.justify-content-center
-    b-col(lg='12' md='12' cols='10')
+    b-col(lg='12' md='12' cols='11')
       b-table(show-empty striped='striped' hover='hover' :items='familyList' :fields='tableFields' :current-page='currentPage' :filter='filterQuery' :filter-included-fields='filterOn' :per-page='perPage')
         template(#cell(creationdate)='data')
           span {{ dates.formatDate(data.item.creationDate)  }}
@@ -55,6 +55,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 
 import { Family } from "../types";
+import { ManagerFamilyCheckView } from "../types/viewTypes";
 
 import Icon from "../components/Icon.vue";
 
@@ -66,17 +67,17 @@ export default Vue.extend({
   components: {
     Icon,
   },
-  data: () => {
+  data: (): ManagerFamilyCheckView => {
     return {
       familyList: new Array<Family>(),
       tableFields: [
         { key: "status", sortable: true, label: "Status" },
         { key: "name", sortable: true, label: "Family name" },
         { key: "components", sortable: true, label: "Family size" },
-        { key: "phoneNumber", label: "Phone number" },
+        { key: "phoneNumber", sortable: false, label: "Phone number" },
         { key: "address", sortable: true, label: "Address" },
         { key: "creationDate", sortable: true, label: "Submission date" },
-        { key: "actions", label: "" },
+        { key: "actions", sortable: false, label: "" },
       ],
       filterOn: [
         "name",
