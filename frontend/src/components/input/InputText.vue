@@ -4,7 +4,7 @@ b-form-group(:label='title' :label-cols-sm='title ? 3 : 0' label-align-sm='right
     b-input-group-prepend(v-if='icon')
       b-input-group-text
         Icon(bootstrap :icon='icon')
-    b-form-input(:required='required' :type='type' :value='text' :placeholder='placeholder' @input="$emit('data', $event)")
+    b-form-input(required :type='type' :value='text' :placeholder='placeholder' @input="$emit('data', $event)")
 
 </template>
 

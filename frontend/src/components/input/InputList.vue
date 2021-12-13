@@ -1,14 +1,14 @@
 <template lang="pug">
 b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :description="description") 
   b-input-group.mb-1(v-for="(label, idx) in labels", :key="idx")
-    b-form-input.my-no-right-border(
+    b-form-input(
       type="text",
       :placeholder="placeholder",
       @input="labelValueChange(idx)",
       v-model="labels[idx]"
     )
     b-input-group-append
-      b-button.my-no-left-border.color3(
+      b-button.color3(
         :variant="!labels[idx] ? 'outline-danger' : ''",
         @click="labelDeleteClicked(idx)",
         :disabled="labels[idx] == ''"

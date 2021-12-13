@@ -1,4 +1,4 @@
-import { NavigationState } from "@/store_types";
+import { NavigationState } from "@/storeTypes";
 
 const screenSmallWidth = 576;
 const screenMediumWidth = 768;

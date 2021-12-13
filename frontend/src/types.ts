@@ -179,11 +179,6 @@ export interface FindPayload {
   page?: number;
 }
 
-export interface UserState {
-  token: string;
-  userData: UserData;
-}
-
 export interface LoginResponse {
   token: string;
   user: UserData;

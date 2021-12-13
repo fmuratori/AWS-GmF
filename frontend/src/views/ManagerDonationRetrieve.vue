@@ -17,7 +17,7 @@
             b-col
               p.m-0 Select a valid city to show all available donations ready for pickup.
         vue-google-autocomplete#map(classname='form-control' placeholder='Insert a city name' @placechanged='selectCity' country='it' types='(cities)')
-  b-row.fullheight.justify-content-center.mt-3(v-else)
+  b-row.fullheight.justify-content-center(v-else).no-gutters
     b-col.fullheight(v-if='selectedCity.name' cols='10' md='10' lg='9' order='2' order-sm='2' order-md='2' order-lg='1')
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
@@ -49,13 +49,15 @@
                 p
                   span.mb-2.font-weight-bold Additional info:
                   br
-                  span.mb-0 {{ donation.additionalInformations ? donation.additionalInformations : &quot;#&quot; }}
+                  span(v-if="donation.additionalInformations") {{donation.additionalInformations}}
+                  span(v-else) #
+            
             tr
               td(v-for='(donation, idx) in windowDonations' :key:='idx')
                 p
                   span.mb-2.font-weight-bold Expiration date:
                   br
-                  span.mb-0 {{ moment(donation.expirationDate).format(&quot;DD-MM-YYYY&quot;) }}
+                  span.mb-0 {{ dates.formatDate(donation.expirationDate) }}
             tr
               td(v-for='(donation, idx) in windowDonations' :key:='idx')
                 b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block='block' @click='selectDonation(donation)') Select
@@ -67,10 +69,11 @@
             h5.mb-3
               font-awesome-icon.mr-1(icon='filter')
               span Filters
-          div
-            b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
-              b-input-group
-                b-form-datepicker#input-2.border-right-0(required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()')
+          b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
+            b-input-group
+              b-form-datepicker(placeholder='Click to select a date' required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
+              b-input-group-append
+                b-button(size="sm" :variant="!pickUpDate ? 'outline-danger' : ''" :class="!pickUpDate ? '' : 'color3'" @click='pickUpDate=null' :disabled="pickUpDate == ''")
                   Icon(bootstrap icon='x' aria-hidden='true')
           b-form-group#input-group-3(label='Time of day:' label-for='input-3')
             b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']"  @input='filterDonations' required size='sm')
@@ -102,16 +105,28 @@
         div(v-for='(donation, idx) in selectedDonations' :key='idx' :id="'donation' + idx")
           hr.mt-0.pt-0
           h4 Donation # {{ idx }}
-          p
-            label Foods:
-            ul
-              li(v-for='(food, fidx) in donation.foods' :key='fidx') {{ food }}
-          p
-            | Expiration date:
-            label {{ donation.expirationDate }}
-          p
-            label
-              | Pickup periods:
+          b-row.mb-2
+            b-col(lg=3 cols=12)
+              b Foods:
+            b-col
+              ul
+                li(v-for='(food, fidx) in donation.foods' :key='fidx') 
+                  label.mb-1 {{ food }}
+          b-row.mb-2
+            b-col(lg=3 cols=12)
+              b Additiona informations:
+            b-col
+              p {{ donation.additionalInformations }}          
+          b-row.mb-2
+            b-col(lg=3 cols=12)
+              b Expiration date:&nbsp;
+            b-col
+              label {{ dates.formatDate(donation.expirationDate) }}
+          
+          b-row.mb-2
+            b-col(lg=3 cols=12)
+              b Pickup periods:
+            b-col  
               p(v-for='(weekDayName, weekDay, widx) in constants.weekDays' :key='widx' v-if='donation.pickUpPeriod.filter(p => p.weekDay == weekDay)')
                 label
                   | {{ weekDayName + &apos;:&nbsp;&apos; + donation.pickUpPeriod.filter(p =&gt; p.weekDay == weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}

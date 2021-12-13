@@ -71,10 +71,14 @@
           h5
             font-awesome-icon.mr-1(icon='truck')
             span Delivery options
+          
           b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
             b-input-group
-              b-form-datepicker#input-2.border-right-0(required v-model='deliveryDate' reset-button='reset-button' close-button='close-button' size='sm' :min='new Date()' @input='updateFilter')
-                Icon(bootstrap icon='x' aria-hidden='true')
+              b-form-datepicker#input-2(placeholder='Click to select a date' required v-model='deliveryDate' @input='updateFilter' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
+              b-input-group-append
+                b-button(size="sm" :variant="!deliveryDate ? 'outline-danger' : ''" :class="!deliveryDate ? '' : 'color3'" @click='deliveryDate=null' :disabled="deliveryDate == ''")
+                  Icon(bootstrap icon='x' aria-hidden='true')
+          
         b-form-group#input-group-3(label='Time of day:' label-for='input-3')
           b-form-select(v-model='deliveryPeriod' :options="['morning', 'afternoon', 'evening']" required size='sm')
         .mt-auto.d-none.d-lg-block.d-xl-block
@@ -273,7 +277,6 @@ export default Vue.extend({
     },
     updateFilter(mode: null | string) {
       this.selectedPacks = [];
-      console.log(mode);
       switch (mode) {
         case "expiring_today": {
           this.unselectedPacks = this.packs.filter(
