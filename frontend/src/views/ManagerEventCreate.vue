@@ -1,5 +1,5 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' sm='10')
       hr.shaded
@@ -22,7 +22,7 @@ b-container
         InputTextarea(title='Description:' placeholder='Insert description here' :text='form.description' @data='(e) => { form.description = e; }')
         InputDate(title='Date:' placeholder='Select a date' :date='form.date' required @data='(e) => { form.date = e; }')
         hr
-        InputAddress(title='Location:' :city='form.address.city' :street='form.address.street' :civic='form.address.civicNumber' @data='(e) => { form.address = e; }')
+        InputAddress(title='Location:' :city='form.address.city' :street='form.address.street' :civic='form.address.civicNumber' :x='form.address.coordinates.x' :y='form.address.coordinates.y' @data='(e) => { form.address = e; }')
         b-row.mt-3
           b-col
             b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerEventList' })") Cancel
@@ -78,12 +78,9 @@ export default Vue.extend({
   created() {
     if (this.$store.getters.isUserLogged) {
       this.form.ownerVolunteerId = this.$store.state.session.userData._id;
-      if (!this.$store.getters.isMediumScreenWidth) {
-        this.$store.dispatch("showSidebar");
-      }
 
       if ("event" in this.$route.params) {
-        this.form = this.$route.params.event as unknown as EventPayload;
+        this.form = this.$route.params.event as EventPayload; //as unknown
         this.submitLabel = "Edit";
       }
     } else this.$router.push({ name: "Login" });

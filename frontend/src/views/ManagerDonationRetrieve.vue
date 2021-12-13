@@ -1,11 +1,11 @@
 <template lang="pug">
 .fullheight
-  b-container(v-if='!selectedCity.name')
+  b-container(v-if='!selectedCity.name').mb-5
     b-row.justify-content-center.my-5
       b-col(lg='6' md='8' cols='11' align-self='center')
         hr.shaded
         h4.text-center
-          b DONATIONS MAP
+          b RETRIEVE DONATIONS
         hr.shaded
     b-row.justify-content-center
       b-col(lg='6' md='8' cols='11')
@@ -30,7 +30,7 @@
         div
           gmap-custom-marker(v-for='(donation, idx) in selectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
             h1 
-              b-iconstack()
+              b-iconstack(animation='fade')
                 b-icon(icon='circle-fill' variant='dark' font-scale='0.4')
                 b-icon(icon='check-circle-fill' variant='success' font-scale='0.4')
                 b-icon.color3(stacked icon='circle' variant='dark')
@@ -63,7 +63,7 @@
                 b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block='block' @click='selectDonation(donation)') Select
                 b-button.color3(v-else size='sm' block='block' @click='deselectDonation(donation)') Cancel
     b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
-      b-form.fullheight(@submit.stop.prevent='submit')
+      b-form.fullheight(@submit.stop.prevent='submit').mb-1
         .py-3.px-lg-2.d-flex.flex-column.fullheight
           div
             h5.mb-3

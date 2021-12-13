@@ -1,5 +1,5 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-md-center.no-gutters
     b-col.mb-5(lg='6' md='8' sm='10')
       .mb-4

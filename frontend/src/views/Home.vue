@@ -11,12 +11,18 @@ div
       div.mt-2(v-if='!$store.getters.isUserLogged')
         b-button.color3(size="lg" @click="$router.push({name: 'Login'})") Sign up
 
+
   div.grey-section.text-section.text-center
     b-row(align-h="center").no-gutters
       b-col(cols=10 md=10 lg=6)
         h3.mb-5 WHAT IS BRING ME FOOD?
         p.m-0.p-0 Bring me Food is a web application that enables users to communciate directly with volunteers to donate foods that will e delivered to needing families.
-     
+  div.my-5.py-5
+    div.text-center
+      h3.mb-5 WHAT DO WE NEED?
+    div
+      DoughnutChart()
+
   div  
     b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters).my-5
       b-col(cols="11" md="8" lg="auto")
@@ -26,9 +32,9 @@ div
 
     b-row.banner.text-sm-center(align-v="center" align-h="center" no-gutters).my-5
       b-col(cols="11" md="8" lg="auto")
-        p.m-0.p-0 Help us to find needy families
+        p.m-0.p-0 Help us find needy families
       b-col(cols="11" md="8" lg="auto").ml-3
-        b-button(size="lg" variant="light" @click="subscribeFamily") Subscribe family
+        b-button(size="lg" variant="light" @click="subscribeFamily") Report a family
 
   div#events.my-5.py-5
     HomepageEvents
@@ -161,8 +167,8 @@ export default Vue.extend({
 }
 
 .blurred-section {
-  padding-top: 20em;
-  padding-bottom: 20em;
+  padding-top: 5em;
+  padding-bottom: 5em;
 
   display: flex;
   align-items: center;
@@ -180,7 +186,7 @@ export default Vue.extend({
   background-attachment: fixed;
 
   opacity: 0.9;
-  height: 80vh;
+  min-height: 80vh;
 }
 
 .grey-section {

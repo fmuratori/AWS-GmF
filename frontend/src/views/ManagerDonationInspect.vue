@@ -1,5 +1,5 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' cols='11')
       hr.shaded

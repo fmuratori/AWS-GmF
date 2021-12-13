@@ -1,10 +1,10 @@
 <template lang="pug">
-b-container
+b-container.mb-5
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' cols='10')
       hr.shaded
       h4.text-center
-        b FOOD BANK 
+        b FOOD MANAGER 
       hr.shaded
   b-row.justify-content-center.my-5
     b-col.mb-5(lg='4' md='8' cols='10')

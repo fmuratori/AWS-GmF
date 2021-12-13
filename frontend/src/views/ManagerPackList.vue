@@ -4,7 +4,7 @@ b-container
     b-col(lg='6' md='8' cols='11')
       hr.shaded
       h4.text-center
-        b AVAILABLE PACKS
+        b PACK LIST
       hr.shaded
   b-row.justify-content-center.my-5
     b-col(lg='12' md='12' cols='12')
@@ -164,17 +164,17 @@ export default Vue.extend({
       packApi
         .deletePack({ id: id })
         .then((): void => {
-          this.packList = this.packList.filter((e) => e._id != id);
+          this.packList = this.packList.filter((e: Pack) => e._id != id);
           eventbus.$emit(
             "successMessage",
-            "Foods",
-            "Food successfully deleted."
+            "Pack",
+            "Pack successfully deleted."
           );
         })
         .catch((): void => {
           eventbus.$emit(
             "errorMessage",
-            "Foods",
+            "Pack",
             "Unable to delete the pack. Retry later or contact us if the problem persists."
           );
         });

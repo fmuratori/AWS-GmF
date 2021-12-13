@@ -1,21 +1,21 @@
 <template lang="pug">
 .fullheight
-  b-container(v-if='!selectedCity.name')
+  b-container(v-if='!selectedCity.name').mb-5
     b-row.justify-content-center.my-5
       b-col(lg='6' md='8' cols='11' align-self='center')
-        .mb-5
-          hr.shaded
-          h4.text-center
-            b(v-if="this.$store.state.session.userData.type == 'user'") YOUR DONATIONS
-            b(v-else) PACKS DELIVERY MAP
-          hr.shaded
-        b-alert.mb-5(show='show' variant='info')
+        hr.shaded
+        h4.text-center
+          b DELIVER PACKS
+        hr.shaded
+    b-row.justify-content-center
+      b-col(lg='6' md='8' cols='11')
+        b-alert(show='show' variant='info')
           b-row(align-v='center')
             b-col(cols='auto')
               h1
                 Icon(bootstrap icon='map')
             b-col
-              p.m-0 Select a valid city to show all available packs ready for shipping.
+              p.m-0 Select a valid city to show all available donations ready for pickup.
         vue-google-autocomplete#map(classname='form-control' placeholder='Insert a city name' @placechanged='selectCity' country='it' types='(cities)')
   b-row.fullheight.justify-content-center(no-gutters v-else)
     b-col.fullheight(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='9' order='2' order-sm='2' order-md='2' order-lg='1')
@@ -23,12 +23,17 @@
         div
           gmap-custom-marker(v-for='(pack, idx) in unselectedPacks' :key='idx' :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}" @click.native='openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)')
             h1
-              Icon(bootstrap icon='exclamation-circle-fill' variant='warning')
+              b-iconstack()
+                b-icon(icon='circle-fill' variant='dark' font-scale='0.4')
+                b-icon(icon='exclamation-circle-fill' variant='warning' font-scale='0.4')
+                b-icon(stacked icon='circle' variant='dark')
         div
           gmap-custom-marker(v-for='(pack, idx) in selectedPacks' :key='idx' :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}" @click.native='openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)')
             h1
-              // truck
-              Icon(bootstrap icon='check-circle-fill' animation='fade' variant='success')
+              b-iconstack(animation='fade')
+                b-icon(icon='circle-fill' variant='dark' font-scale='0.4')
+                b-icon(icon='check-circle-fill' variant='success' font-scale='0.4')
+                b-icon.color3(stacked icon='circle' variant='dark')
         gmap-info-window(v-if='windowCoordinates.x != 0 && windowCoordinates.y != 0' :options='{maxWidth: 300*windowPacks.length, pixelOffset: { width: 0, height: -55 } }' :position="{'lat': windowCoordinates.x , 'lng': windowCoordinates.y}" :opened='true' @closeclick='closeInfoWindow')
           table
             tr
@@ -74,15 +79,14 @@
           
           b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
             b-input-group
-              b-form-datepicker#input-2(locale='en' placeholder='Click to select a date' required v-model='deliveryDate' @input='updateFilter' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
+              b-form-datepicker(locale='en' placeholder='Click to select a date' required v-model='deliveryDate' @input='updateFilter' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
               b-input-group-append
                 b-button(size="sm" :variant="!deliveryDate ? 'outline-danger' : ''" :class="!deliveryDate ? '' : 'color3'" @click='deliveryDate=null' :disabled="deliveryDate == ''")
                   Icon(bootstrap icon='x' aria-hidden='true')
-          
         b-form-group#input-group-3(label='Time of day:' label-for='input-3')
           b-form-select(v-model='deliveryPeriod' :options="['morning', 'afternoon', 'evening']" required size='sm')
         .mt-auto.d-none.d-lg-block.d-xl-block
-          b-alert(show='show')
+          b-alert(show='show' v-if="selectedPacks.length")
             p.m-0.p-0.text-center
               span Selected packs: {{ selectedPacks.length }}
               br
@@ -198,7 +202,7 @@ export default Vue.extend({
       unselectedPacks: new Array<Pack>(),
       windowPacks: new Array<Pack>(),
       windowCoordinates: { x: 0, y: 0 },
-      deliveryDate: dates.formatDate(moment().toDate()),
+      deliveryDate: null,
       deliveryPeriod: "",
       isModalOpen: false,
     };
@@ -352,11 +356,11 @@ export default Vue.extend({
       this.isModalOpen = false;
     },
     selectPacks() {
-      if (!this.deliveryDate) {
+      if (!this.deliveryDate || !this.deliveryPeriod) {
         eventbus.$emit(
           "warningMessage",
           "Packs",
-          "Unable to perform the requested operation. Select a valid delivery day."
+          "Unable to perform the requested operation. Select a valid delivery day and period."
         );
       } else if (!this.selectedPacks.length) {
         eventbus.$emit(

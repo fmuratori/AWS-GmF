@@ -32,9 +32,9 @@
       hr.sidebar-hr.my-3
       SidebarCategory(text='Packs' icon='box')
       SidebarItem(text='Food manager' route='ManagerFood')
-      SidebarItem(text='Create Pack' route='ManagerPackCreate')
+      SidebarItem(text='Create a pack' route='ManagerPackCreate')
       SidebarItem(text='Pack list' route='ManagerPackList')
-      SidebarItem(text='Create a delivery' route='ManagerPackDelivery')
+      SidebarItem(text='Deliver packs' route='ManagerPackDelivery')
       SidebarItem(text='Scan a pack' route='ManagerPackScan')
       hr.sidebar-hr.my-3
   b-dropdown(text='Your profile' variant='light' dropup='dropup' menu-class='w-100')
