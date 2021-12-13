@@ -52,7 +52,7 @@ b-container
                   | {{ selectedPack.pack.foodList.find(f =&gt; f.foodId == food._id).number }}x {{ food.name }}
               hr
               h4 QR code
-              qrcodevue.text-center.my-3(:value='selectedPack._id' size='200' level='H')
+              QrcodeVue.text-center.my-3(:value='selectedPack._id' size='200' level='H')
               b-button(variant='secondary' block='block' @click='selectedPack = null') Close pack info
             div(v-else)
               i No pack selected.     

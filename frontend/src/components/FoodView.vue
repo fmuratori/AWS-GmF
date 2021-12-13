@@ -1,32 +1,34 @@
 <template lang="pug">
 div
-  b-row(align-h="between")
-    b-col(cols='12' md='6' lg='6')
+  b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"')
+    b-col(lg='6' md='8' cols='10')
       b-form-group
         b-input-group
           b-form-input(v-model='filter' type='search' placeholder='Type to search' size='sm')
           b-input-group-append
             b-button(:disabled='!filter' @click="filter = ''" size='sm') Clear
-    b-col(cols='auto')
-      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' size='sm')
-  b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='foodList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
-    template(#cell(load)='{ item }')
-      b-button(@click='load(item)' size='sm') Edit
-    template(#cell(labels)='data')
-      b-badge.mr-1(v-for='(label, idx) in data.value' variant='success' :key="idx") {{ label }}
-    template(#cell(selected)='{ item }')
-      b-form-spinbutton(inline min="0" :max="item.number" value=0 v-model="item.selected" @change='updateFoods(item)')
-    template(#cell(delete)='{ item }')
-      b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
-    template(#empty='scope')
-      h4.text-center There are no records to show
-    template(#emptyfiltered='scope')
-      h4.text-center There are no records matching your request
-  b-modal#modal(title='Delete the selected food?' @ok='deleteFood(deleteFoodId)')
-    div The selected food will be deleted permanently.
-    template(#modal-footer='{ ok, cancel }')
-      b-button(variant='secondary' @click='cancel()') Cancel
-      b-button.color3(@click='ok()') Confirm
+    b-col(md='auto' cols='10')
+      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' align='fill' size='sm')
+  
+    b-col(md='12' cols='10')
+      b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='foodList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
+        template(#cell(load)='{ item }')
+          b-button(@click='load(item)' size='sm') Edit
+        template(#cell(labels)='data')
+          b-badge.mr-1(v-for='(label, idx) in data.value' variant='success' :key="idx") {{ label }}
+        template(#cell(selected)='{ item }')
+          b-form-spinbutton(inline min="0" :max="item.number" value=0 v-model="item.selected" @change='updateFoods(item)')
+        template(#cell(delete)='{ item }')
+          b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
+        template(#empty='scope')
+          h4.text-center There are no records to show
+        template(#emptyfiltered='scope')
+          h4.text-center There are no records matching your request
+      b-modal#modal(title='Delete the selected food?' @ok='deleteFood(deleteFoodId)')
+        div The selected food will be deleted permanently.
+        template(#modal-footer='{ ok, cancel }')
+          b-button(variant='secondary' @click='cancel()') Cancel
+          b-button.color3(@click='ok()') Confirm
 </template>
 
 <script lang="ts">

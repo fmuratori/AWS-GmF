@@ -1,16 +1,14 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' cols='11')
+    b-col(lg='6' md='8' cols='10')
       hr.shaded
       h4.text-center
         b CREATE A PACK
       hr.shaded
-  b-row.justify-content-center.my-5(v-if="step == 'selectFamily'")
-    b-col(cols='12' md='12' lg='12')
-      b-row
-        b-col
-          FamilyView(@select='(family) => selectFamily(family)')
+  div(v-if="step == 'selectFamily'")
+    FamilyView(@select='(family) => selectFamily(family)')
+
   b-row.justify-content-center.my-5(v-if="step == 'selectFoods'")
     b-col(cols='12' md='12' lg='12')
       FoodView(selectableItems @data='(e) => { this.foodList = e; }').mb-5
@@ -74,7 +72,7 @@ b-container
           h3 Pack # {{ form._id }}
           b-row.justify-contect-center(align-h='center')
             b-col.text-center(cols='12')
-              qrcodevue.my-3(:value='form._id' size='300' level='H')
+              QrcodeVue.my-3(:value='form._id' size='300' level='H')
             b-col.mb-3(cols='11' md='6')
               h4.mb-2 Family info
               div
@@ -93,7 +91,7 @@ b-container
               h4.mb-2 Foods
               ul.mb-1.pl-4(v-if='form.foodList.length > 0')
                 li.ml-0.pl-0(v-for='(food, idx) in foodList' :key='idx')
-                  span {{ food.name }}, x{{ food.selected }} 
+                  span {{ food.name }} x{{ food.selected }} 
               div
                 b Pack expiration date:&nbsp;
                 span {{ dates.formatDate(packExpirationDate) }}
@@ -131,16 +129,8 @@ b-container
                 h4 Foods
                 div(v-if='form.foodList.length > 0')
                   div(v-for='(food, idx) in foodList' :key='idx')
-                    div
-                      b Name:&nbsp;
-                      span {{ food.name }}
-                    div
-                      b Labels:&nbsp;
-                      b-badge.mr-1(variant='success' v-for='label in food.labels' size='sm') {{ label }}
-                    div
-                      b Amount:&nbsp;
-                      span {{ food.selected }} / {{ food.number}} 
-                    hr
+                    label {{ food.name }} x {{ food.selected }} 
+                  hr
                   div
                     b Pack expiration date:&nbsp;
                     span {{ dates.formatDate(packExpirationDate) }}
@@ -154,7 +144,7 @@ import eventbus from "../eventbus";
 import QrcodeVue from "qrcode.vue";
 import VueHtml2pdf from "vue-html2pdf";
 import FoodView from "../components/FoodView.vue";
-import FamilyView from "../components/FamilyPicker.vue";
+import FamilyView from "../components/FamilyView.vue";
 import Icon from "../components/Icon.vue";
 
 import { PackCreateView } from "../viewTypes";

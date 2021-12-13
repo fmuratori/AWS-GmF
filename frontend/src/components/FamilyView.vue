@@ -1,23 +1,26 @@
 <template lang="pug">
+
 div
-  b-row(align-h="between")
-    b-col(cols='12' md='6' lg='6')
+  b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"')
+    b-col(lg='6' md='8' cols='10')
       b-form-group
         b-input-group
           b-form-input(v-model='filter' type='search' placeholder='Type to search' size='sm')
           b-input-group-append
             b-button(:disabled='!filter' @click="filter = ''" size='sm') Clear
-    b-col(cols='auto')
-      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' size='sm')
-  b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='verifiedFamilyList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
-    template(#cell(lastPackDate)='{ item }')
-      p {{ packsNearestDeliveryDate(item.packs) }}
-    template(#cell(select)='{ item }')
-      b-button.color3(@click='select(item)' size='sm') Select
-    template(#empty='scope')
-      h4.text-center There are no records to show
-    template(#emptyfiltered='scope')
-      h4.text-center There are no records matching your request
+    b-col(md='auto' cols='10')
+      b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' align='fill' size='sm')
+
+    b-col(md='12' cols='10')  
+      b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='verifiedFamilyList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
+        template(#cell(lastPackDate)='{ item }')
+          p {{ packsNearestDeliveryDate(item.packs) }}
+        template(#cell(select)='{ item }')
+          b-button.color3(@click='select(item)' size='sm') Select
+        template(#empty='scope')
+          h4.text-center There are no records to show
+        template(#emptyfiltered='scope')
+          h4.text-center There are no records matching your request
 </template>
 
 <script lang="ts">

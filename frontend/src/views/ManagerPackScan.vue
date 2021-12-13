@@ -8,7 +8,7 @@ b-container
           b PACK INFO
         hr.shaded
   b-row.justify-content-md-center.my-5.no-gutters
-    b-col(lg='8' md='10' sm='12')
+    b-col(lg='6' md='10' sm='12')
       div(v-if="showScreen=='scan'")
         b-card.text-center(bg-variant='light')
           h3.mb-3
@@ -31,12 +31,42 @@ b-container
             p Pack unidentified.
             b-button(@click='reloadScanner()' v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
       div(v-if="showScreen=='pack'")
-        h3 Pack # {{ pack._id }}
+        b-alert(variant='success' show='show')
+          b-row(align-v='center')
+            b-col.text-center(cols='3')
+              Icon(bootstrap icon='check' font-scale='4')
+            b-col(cols='auto')
+              p.mb-0 Pack successfully created.
+        b-card.mb-3(bg-variant='light')
+          h3 Pack # {{ pack._id }}
+          b-row.justify-contect-center(align-h='center')
+            b-col.mb-3(cols='11' md='6')
+              h4.mb-2 Family info
+              div
+                b Name:&nbsp;
+                span {{ pack.family.name }}
+              div
+                b Components:&nbsp;
+                span {{ pack.family.components }}
+              div
+                b Phone number:&nbsp;
+                span {{ pack.family.phoneNumber }}
+              div
+                b Address:&nbsp;
+                span {{ pack.family.address.street + " " + pack.family.address.civicNumber + ", " + pack.family.address.city }}
+            b-col(cols='11' md='6')
+              h4.mb-2 Foods
+              ul.mb-1.pl-4(v-if='pack.foodList.length > 0')
+                li.ml-0.pl-0(v-for='(food, idx) in pack.foodList' :key='idx')
+                  span {{ food.name }} x{{ food.selected }} 
+              div
+                b Pack expiration date:&nbsp;
+                span {{ dates.formatDate(packExpirationDate) }}
         b-row
           b-col
-            b-button.color3(block='block' @click='deliverPack()') Set as delivered
-          b-col
             b-button(block='block' variant='secondary' @click='resetView()') Scan another code
+          b-col
+            b-button.color3(block='block' @click='deliverPack()') Set as delivered
 </template>
 
 <script lang="ts">

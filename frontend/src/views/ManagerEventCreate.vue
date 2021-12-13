@@ -2,12 +2,13 @@
 b-container
   b-row.justify-content-center.my-5
     b-col(lg='6' md='8' sm='10')
-      .mb-5
-        hr.shaded
-        h4.text-center
-          b CREATE AN EVENT
-        hr.shaded
-      b-alert.mb-5(show='show')
+      hr.shaded
+      h4.text-center
+        b CREATE AN EVENT
+      hr.shaded
+  b-row.justify-content-center
+    b-col(lg='6' md='8' sm='10')
+      b-alert(show='show')
         b-row(align-v='center')
           b-col(cols='auto')
             h1

@@ -14,7 +14,7 @@ export interface UserState {
 
 export interface SocketIoState {
   
-  unreadMessages: ChatMessage[],
+  unreadMessages: {_id: string, chat: ChatMessage[]}[],
   chat: ChatMessage[],
   donationId: string,
   connected: boolean,

@@ -1,25 +1,25 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' sm='10')
+    b-col(lg='6' md='8' cols='10')
       div
         hr.shaded
         h4.text-center
           b FAMILIES
         hr.shaded
-  b-row(align-h='between').mb-0
-    b-col(lg='6' md='8' sm='10')
+  b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"').mb-0
+    b-col(lg='6' md='8' cols='10')
       b-form-group(label='' label-for='filter-input' label-size='sm')
         b-input-group(size='sm')
           b-form-input#filter-input(v-model='filterQuery' type='text' placeholder='Type to Search')
           b-input-group-append
             b-button.color3(:disabled='!filterQuery' @click="filterQuery = ''") Clear    
-    b-col(cols='auto')
+    b-col(md='auto' cols='10')
       b-pagination(size='sm' v-model='currentPage' :total-rows='totalRows' :per-page='perPage' align='fill')
 
 
   b-row.justify-content-center
-    b-col(lg='12' md='12' sm='10')
+    b-col(lg='12' md='12' cols='10')
       b-table(show-empty striped='striped' hover='hover' :items='familyList' :fields='tableFields' :current-page='currentPage' :filter='filterQuery' :filter-included-fields='filterOn' :per-page='perPage')
         template(#cell(creationdate)='data')
           span {{ dates.formatDate(data.item.creationDate)  }}

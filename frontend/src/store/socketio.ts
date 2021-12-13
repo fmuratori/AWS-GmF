@@ -4,33 +4,34 @@ import Vue from "vue";
 
 import chatApi from "../api/chat";
 import { ChatMessage } from "../types";
+import { SocketIoState } from "../storeTypes";
 
 export default {
-  state: {
+  state: (): SocketIoState => ({
     unreadMessages: [],
     chat: new Array<ChatMessage>(),
     donationId: "",
     connected: false,
-  },
+  }),
   getters: {
-    unreadMessagesTotalCount(state): number {
+    unreadMessagesTotalCount(state:SocketIoState): number {
       return state.unreadMessages
         .map((e) => e.chat.length)
         .reduce((a, b) => a + b, 0);
     },
-    unreadMessages(state): void {
+    unreadMessages(state:SocketIoState): {_id: string, chat: ChatMessage[]}[] {
       return state.unreadMessages;
     },
   },
   mutations: {
-    setConnected(state, value:boolean): void {
+    setConnected(state:SocketIoState, value:boolean): void {
       state.connected = value;
       if (!value)
         eventbus.$emit("startLoading", "Connecting with backend server.");
       else 
         eventbus.$emit("stopLoading");
     },
-    addUnreadMessage(state, message): void {
+    addUnreadMessage(state:SocketIoState, message): void {
       console.log(message)
       const donationChat = state.unreadMessages.find(
         (e) => e._id == message._id
@@ -45,23 +46,23 @@ export default {
         state.unreadMessages.push(newUnreadMessage);
       }
     },
-    getChat(state, payload: { chat: ChatMessage[], donationId: string }): void {
+    getChat(state:SocketIoState, payload: { chat: ChatMessage[], donationId: string }): void {
       state.chat = payload.chat;
       state.donationId = payload.donationId;
     },
-    addMessage(state, message:ChatMessage): void {
+    addMessage(state:SocketIoState, message:ChatMessage): void {
       state.chat.push(message);
     },
-    resetChat(state): void {
+    resetChat(state:SocketIoState): void {
       state.chat = new Array<ChatMessage>();
       state.donationId = "";
     },
 
-    updateUnreadMessages(state, messages: ChatMessage[]): void {
+    updateUnreadMessages(state:SocketIoState, messages:{ chat: ChatMessage[], _id: string }[]): void {
       state.unreadMessages = messages;
     },
 
-    removeDonationUnreadMessages(state, donationId: string): void {
+    removeDonationUnreadMessages(state:SocketIoState, donationId: string): void {
       state.unreadMessages = state.unreadMessages.filter(
         (d) => d._id != donationId
       );

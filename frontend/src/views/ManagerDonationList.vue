@@ -257,9 +257,9 @@ export default Vue.extend({
       switch (statusFilter) {
         case "waiting":
         case "selected":
-        case "withdrawn":
+        case "retrieved":
           this.donations = this.donationsBackup.filter(
-            (d) => d.status == statusFilter
+            (d:Donation) => d.status == statusFilter
           );
           break;
         default:

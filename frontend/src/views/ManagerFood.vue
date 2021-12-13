@@ -1,13 +1,13 @@
 <template lang="pug">
 b-container
   b-row.justify-content-center.my-5
-    b-col(lg='6' md='8' cols='11')
+    b-col(lg='6' md='8' cols='10')
       hr.shaded
       h4.text-center
         b FOOD BANK 
       hr.shaded
   b-row.justify-content-center.my-5
-    b-col.mb-5(lg='4' md='8' cols='11')
+    b-col.mb-5(lg='4' md='8' cols='10')
       b-form(@submit.stop.prevent='addFood')
         b-card.mb-2(bg-variant='light' text-variant='dark' no-body='no-body')
           b-card-text
@@ -16,14 +16,14 @@ b-container
             .px-4.pt-4
               InputText(title='Name:' placeholder='Set food name' :text='form.name' required @data='(e) => { form.name = e; }')
               InputText(title='Amount: ' placeholder='Set amount' type='number' :text='form.number' required @data='(e) => { form.number = e; }')
-              InputDate(title='Expiration date:' placeholder='Set date' :date='dates.formatDate(form.expirationDate)' required @data='(e) => { form.expirationDate = e; }')
+              InputDate(title='Expiration date:' placeholder='Set date' :date='dates.formatDate(form.expirationDate)' required @data='(e) => form.expirationDate = e')
               b-form-group(label='Labels:')
                 b-checkbox-group(v-model='form.labels' :options='constants.foodLabels' stacked='stacked')
             b-button.footerCardButton.color3(block='block' type='submit' v-if='!isEditMode') ADD
             b-button-group.d-flex(v-else)
               b-button.footerCardButton(variant='secondary' @click='cancelEditMode') CANCEL
               b-button.footerCardButton.color3(type='submit') EDIT
-    b-col(cols='11' md='12' lg='8')
+    b-col(cols='12' md='11' lg='8')
       FoodView(:key='reloadIndex' loadableItems deletableItem @load='load')
 </template>
 
@@ -82,8 +82,13 @@ export default Vue.extend({
     addFood(): void {
       if (this.foodFormChecks()) {
         var f = !this.isEditMode
-          ? api.addFood(this.form)
+          ? api.addFood({ 
+            labels: this.form.labels, 
+            number: this.form.number,  
+            name: this.form.name, 
+            expirationDate: this.form.expirationDate } as Food)
           : api.editFood(this.form);
+
         eventbus.$emit("startLoading", "Updating food list.");
         f.then((r: AxiosResponse): void => {
           if (r.status == 200) {
@@ -147,7 +152,7 @@ export default Vue.extend({
         labels: item.labels,
         number: item.number,
         name: item.name,
-        expirationDate: new Date(item.expirationDate),
+        expirationDate: item.expirationDate,
       } as Food;
     },
     cancelEditMode() {

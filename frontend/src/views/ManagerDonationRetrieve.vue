@@ -71,7 +71,7 @@
               span Filters
           b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
             b-input-group
-              b-form-datepicker(placeholder='Click to select a date' required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
+              b-form-datepicker(locale='en' placeholder='Click to select a date' required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
               b-input-group-append
                 b-button(size="sm" :variant="!pickUpDate ? 'outline-danger' : ''" :class="!pickUpDate ? '' : 'color3'" @click='pickUpDate=null' :disabled="pickUpDate == ''")
                   Icon(bootstrap icon='x' aria-hidden='true')

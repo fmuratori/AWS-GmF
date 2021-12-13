@@ -74,7 +74,7 @@
           
           b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
             b-input-group
-              b-form-datepicker#input-2(placeholder='Click to select a date' required v-model='deliveryDate' @input='updateFilter' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
+              b-form-datepicker#input-2(locale='en' placeholder='Click to select a date' required v-model='deliveryDate' @input='updateFilter' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
               b-input-group-append
                 b-button(size="sm" :variant="!deliveryDate ? 'outline-danger' : ''" :class="!deliveryDate ? '' : 'color3'" @click='deliveryDate=null' :disabled="deliveryDate == ''")
                   Icon(bootstrap icon='x' aria-hidden='true')

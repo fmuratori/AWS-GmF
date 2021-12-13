@@ -68,12 +68,14 @@ export default Vue.extend({
       this.isLocationLoaded = true;
       this.address.coordinates.x = this.x;
       this.address.coordinates.y = this.y;
+
+      this.query = this.address.street + " " + this.address.civicNumber + ", " + this.address.city
     }
   },
   methods: {
-    emitValueChange(value: string) {
+    emitValueChange() { //value: string\
       this.resetMap();
-      this.query =  value;
+      this.query = this.address.street + " " + this.address.civicNumber + ", " + this.address.city;
       this.$emit('data', this.address);
     },
     resetMap() {

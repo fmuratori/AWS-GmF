@@ -1,7 +1,8 @@
 <template lang="pug">
 b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
   b-navbar-brand(href='#')
-    h3 Bring me Food
+    h3(v-if="$store.getters.isExtraSmallScreenWidth") BMF
+    h3(v-else) Bring me Food
   b-navbar-nav.ml-auto.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
     b-nav-item.my-auto.text-center(href='#')
       b-button.my-2.my-sm-0.color3(v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal='v-b-modal.messagesModal')
