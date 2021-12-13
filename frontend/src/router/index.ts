@@ -143,13 +143,15 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior() { // to, from, savedPosition
+  scrollBehavior() {
+    // to, from, savedPosition
     const layoutContent = document.getElementById("content");
     layoutContent?.scrollTo(0, 0);
   },
 });
 
-router.beforeEach((to, from, next) => { //to, from, next
+router.beforeEach((to, from, next) => {
+  //to, from, next
   if (store.getters.isUserLogged) {
     if (!store.getters.isMediumScreenWidth) {
       store.dispatch("showSidebar");
@@ -157,6 +159,6 @@ router.beforeEach((to, from, next) => { //to, from, next
   }
 
   next();
-})
+});
 
 export default router;

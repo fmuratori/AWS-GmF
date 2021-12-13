@@ -83,7 +83,6 @@ const navigationModule = {
       commit("setFamilySubscribeFlag", false);
       commit("setDonationCreationFlag", false);
     },
-
   },
 };
 

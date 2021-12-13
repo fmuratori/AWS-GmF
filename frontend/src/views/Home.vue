@@ -128,7 +128,7 @@ export default Vue.extend({
     donateFood() {
       if (this.$store.getters.isUserLogged) {
         this.$router.push({ name: "ManagerDonationCreate" });
-      } else { 
+      } else {
         this.$store.dispatch("unsetLoginNavigationFlags");
         this.$store.dispatch("setDonationCreationFlag");
         this.$router.push({ name: "Login" });
@@ -137,7 +137,7 @@ export default Vue.extend({
     subscribeFamily() {
       if (this.$store.getters.isUserLogged) {
         this.$router.push({ name: "ManagerFamilySubscribe" });
-      } else { 
+      } else {
         this.$store.dispatch("unsetLoginNavigationFlags");
         this.$store.dispatch("setFamilySubscribeFlag");
         this.$router.push({ name: "Login" });

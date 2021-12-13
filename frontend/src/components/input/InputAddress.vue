@@ -69,14 +69,25 @@ export default Vue.extend({
       this.address.coordinates.x = this.x;
       this.address.coordinates.y = this.y;
 
-      this.query = this.address.street + " " + this.address.civicNumber + ", " + this.address.city
+      this.query =
+        this.address.street +
+        " " +
+        this.address.civicNumber +
+        ", " +
+        this.address.city;
     }
   },
   methods: {
-    emitValueChange() { //value: string\
+    emitValueChange() {
+      //value: string\
       this.resetMap();
-      this.query = this.address.street + " " + this.address.civicNumber + ", " + this.address.city;
-      this.$emit('data', this.address);
+      this.query =
+        this.address.street +
+        " " +
+        this.address.civicNumber +
+        ", " +
+        this.address.city;
+      this.$emit("data", this.address);
     },
     resetMap() {
       this.query = "";
@@ -98,12 +109,10 @@ export default Vue.extend({
     },
     find() {
       mapsApi
-        .getLocationCoordinates(
-          this.query
-        )
+        .getLocationCoordinates(this.query)
         .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
           if (r.status == 200) {
-            console.log(r, r.data.results[0].formatted_address)
+            console.log(r, r.data.results[0].formatted_address);
             this.query = r.data.results[0].formatted_address;
             this.isLocationLoaded = true;
             this.address.city = r.data.results[0].address_components.find((c) =>
@@ -135,7 +144,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-
 @import "@/assets/style.scss";
 
 #gmap {
@@ -145,8 +153,8 @@ export default Vue.extend({
 
 .mapContainer {
   border-radius: 5px;
-  -moz-box-shadow:    inset 0 0 10px #000000;
+  -moz-box-shadow: inset 0 0 10px #000000;
   -webkit-box-shadow: inset 0 0 10px #000000;
-  box-shadow:         inset 0 0 10px #000000;
+  box-shadow: inset 0 0 10px #000000;
 }
 </style>

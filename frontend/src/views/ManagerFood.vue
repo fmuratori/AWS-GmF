@@ -82,11 +82,12 @@ export default Vue.extend({
     addFood(): void {
       if (this.foodFormChecks()) {
         var f = !this.isEditMode
-          ? api.addFood({ 
-            labels: this.form.labels, 
-            number: this.form.number,  
-            name: this.form.name, 
-            expirationDate: this.form.expirationDate } as Food)
+          ? api.addFood({
+              labels: this.form.labels,
+              number: this.form.number,
+              name: this.form.name,
+              expirationDate: this.form.expirationDate,
+            } as Food)
           : api.editFood(this.form);
 
         eventbus.$emit("startLoading", "Updating food list.");

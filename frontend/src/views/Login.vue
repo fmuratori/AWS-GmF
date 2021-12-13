@@ -117,9 +117,11 @@ export default Vue.extend({
       this.registration.address = address;
     },
     redirectNavigation() {
-      if (this.$store.state.navigation.donationCreationFlag) this.$router.push({name: "ManagerDonationCreate"})
-      else if (this.$store.state.navigation.familySubscribeFlag) this.$router.push({name: "ManagerFamilySubscribe"})
-      else this.$router.push({name: "Home"})
+      if (this.$store.state.navigation.donationCreationFlag)
+        this.$router.push({ name: "ManagerDonationCreate" });
+      else if (this.$store.state.navigation.familySubscribeFlag)
+        this.$router.push({ name: "ManagerFamilySubscribe" });
+      else this.$router.push({ name: "Home" });
 
       this.$store.dispatch("unsetLoginNavigationFlags");
     },

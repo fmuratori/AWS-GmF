@@ -348,9 +348,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-
 .map-marker {
   text-shadow: 0 0 50px red;
 }
-
 </style>

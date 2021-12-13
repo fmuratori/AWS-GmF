@@ -27,7 +27,7 @@ export interface Donation {
 }
 
 export interface ChatMessage {
-  _id: string,
+  _id: string;
   userId: string;
   userFullName: string;
   date: string;

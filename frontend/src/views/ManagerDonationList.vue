@@ -259,7 +259,7 @@ export default Vue.extend({
         case "selected":
         case "retrieved":
           this.donations = this.donationsBackup.filter(
-            (d:Donation) => d.status == statusFilter
+            (d: Donation) => d.status == statusFilter
           );
           break;
         default:

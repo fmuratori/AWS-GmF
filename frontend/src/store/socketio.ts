@@ -14,25 +14,26 @@ export default {
     connected: false,
   }),
   getters: {
-    unreadMessagesTotalCount(state:SocketIoState): number {
+    unreadMessagesTotalCount(state: SocketIoState): number {
       return state.unreadMessages
         .map((e) => e.chat.length)
         .reduce((a, b) => a + b, 0);
     },
-    unreadMessages(state:SocketIoState): {_id: string, chat: ChatMessage[]}[] {
+    unreadMessages(
+      state: SocketIoState
+    ): { _id: string; chat: ChatMessage[] }[] {
       return state.unreadMessages;
     },
   },
   mutations: {
-    setConnected(state:SocketIoState, value:boolean): void {
+    setConnected(state: SocketIoState, value: boolean): void {
       state.connected = value;
       if (!value)
         eventbus.$emit("startLoading", "Connecting with backend server.");
-      else 
-        eventbus.$emit("stopLoading");
+      else eventbus.$emit("stopLoading");
     },
-    addUnreadMessage(state:SocketIoState, message): void {
-      console.log(message)
+    addUnreadMessage(state: SocketIoState, message): void {
+      console.log(message);
       const donationChat = state.unreadMessages.find(
         (e) => e._id == message._id
       );
@@ -46,23 +47,32 @@ export default {
         state.unreadMessages.push(newUnreadMessage);
       }
     },
-    getChat(state:SocketIoState, payload: { chat: ChatMessage[], donationId: string }): void {
+    getChat(
+      state: SocketIoState,
+      payload: { chat: ChatMessage[]; donationId: string }
+    ): void {
       state.chat = payload.chat;
       state.donationId = payload.donationId;
     },
-    addMessage(state:SocketIoState, message:ChatMessage): void {
+    addMessage(state: SocketIoState, message: ChatMessage): void {
       state.chat.push(message);
     },
-    resetChat(state:SocketIoState): void {
+    resetChat(state: SocketIoState): void {
       state.chat = new Array<ChatMessage>();
       state.donationId = "";
     },
 
-    updateUnreadMessages(state:SocketIoState, messages:{ chat: ChatMessage[], _id: string }[]): void {
+    updateUnreadMessages(
+      state: SocketIoState,
+      messages: { chat: ChatMessage[]; _id: string }[]
+    ): void {
       state.unreadMessages = messages;
     },
 
-    removeDonationUnreadMessages(state:SocketIoState, donationId: string): void {
+    removeDonationUnreadMessages(
+      state: SocketIoState,
+      donationId: string
+    ): void {
       state.unreadMessages = state.unreadMessages.filter(
         (d) => d._id != donationId
       );
