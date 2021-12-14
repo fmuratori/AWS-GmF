@@ -58,7 +58,6 @@ io.on("connection", (socket: Socket) => {
             console.log("sent message to volunteer", userId)
             const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
             if (destSocket) { 
-              console.log("asd");
               destSocket.emit("chat_message", JSON.stringify(newMessage));
             }
           }
@@ -69,7 +68,6 @@ io.on("connection", (socket: Socket) => {
 
   socket.on("visualize_message", (jsonMessage: any) => {
     const message = JSON.parse(jsonMessage)
-    console.log(message)
     setMessageAsVisualized(message.donationId, message.message.index);
   });
 

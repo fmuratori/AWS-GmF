@@ -134,8 +134,10 @@ export default Vue.extend({
   },
   watch: {
     chat: function(val) {
-      var objDiv = document.getElementById("messages-area");
-      objDiv.scrollTop = objDiv.scrollHeight;
+      this.$nextTick(() => {
+        var objDiv = document.getElementById("messages-area");
+        objDiv.scrollTop = objDiv.scrollHeight;
+      });
     }
   },
   computed: {

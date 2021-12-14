@@ -113,7 +113,7 @@ export interface ManagerEventListView {
 
 export interface ManagerFamilyCheckView {
   familyList: Family[];
-  tableFields: {key: string; sortable: boolean; label: string}[];    
+  tableFields: TableField[];    
   filterOn: string[];
   filterQuery: string;
   selectedFamily: Family;
@@ -150,7 +150,7 @@ export interface ManagerFamilySubscribeView {
 
 export interface ManagerFoodView {
   form: Food;
-  foodList: Food[];
+  foodList: Food[]; //SelectableFood
   reloadIndex: number;
   isEditMode: boolean;
 }
@@ -209,7 +209,7 @@ export interface ManagerPackListView {
   packList: Pack[];
   packListBackup: Pack[];
   selectedPack: Pack;
-  tableFields: { key: string; sortable: boolean; label: string }[];   
+  tableFields: TableField[];   
   deletePackId: string;
 }
 
@@ -233,34 +233,9 @@ export interface FilterButton {
   isVisible: boolean;
 }
 
-export interface PackManagerView {
-  statusFilter: "ready" | "planned delivery" | "delivered" | "all";
-  packList: Array<Pack>;
-  packListBackup: Array<Pack>;
-  familyDetails?: Family;
-  foodDetails?: Array<Food>;
-  tableFields: Array<TableField>;
-  deletePackId: string;
-}
-
 interface TableField {
   key: string;
   label: string;
   sortable: boolean;
   formatter?: any;
-}
-
-export interface FoodView {
-  foodList: Array<SelectableFood>;
-  tableFields: Array<TableField>;
-  totalRows: number;
-  currentPage: number;
-  perPage: number;
-  filter: string;
-  filterOn: Array<string>;
-  sortBy: string;
-  sortDesc: false;
-  sortDirection: "asc" | "desc";
-  index: number;
-  deleteFoodId: string;
 }

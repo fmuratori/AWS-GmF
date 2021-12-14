@@ -5,16 +5,17 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
     h3(v-else) Bring me Food
   b-navbar-nav.ml-auto.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
     b-nav-item.my-auto.text-center(href='#')
-      b-button.my-2.my-sm-0.color3(pill v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesmodal)
+      b-button.my-2.my-sm-0.color3(pill v-if='$store.getters.unreadMessagesTotalCount > 0' v-b-modal.messagesModal)
+        span.mr-1 Messages
         Icon.mr-1(bootstrap icon='envelope')
         b-badge(variant='light') {{ $store.getters.unreadMessagesTotalCount }}
-  b-navbar-nav.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
-    b-nav-item.my-auto.text-center(href='#')
-      b-button.my-2.my-sm-0(variant='light' @click='toggleSidebar()')
-        Icon(fontawesome icon='cogs')
+  //- b-navbar-nav.mr-2(v-if='$store.getters.isMediumScreenWidth && $store.getters.isUserLogged')
+  //-   b-nav-item.my-auto.text-center(href='#')
+  //-     b-button.my-2.my-sm-0(variant='light' @click='toggleSidebar()')
+  //-       Icon(fontawesome icon='cogs')
   b-navbar-nav(v-if='$store.getters.isMediumScreenWidth')
     b-nav-item.my-auto.text-center(href='#')
-      b-button.my-2.my-sm-0(variant='light' @click='isOpen = !isOpen')
+      b-button.my-2.my-sm-0(variant='light' @click='toggleNavbar')
         Icon(fontawesome v-if='isOpen' icon='times')
         Icon(fontawesome v-else icon='bars')
   b-collapse#nav-collapse(is-nav='' v-model='isOpen')
@@ -89,8 +90,12 @@ export default Vue.extend({
     };
   },
   methods: {
-    toggleSidebar() {
-      this.$store.dispatch("toggleSidebar");
+    toggleNavbar() {
+      this.isOpen = !this.isOpen;
+      if (this.isOpen)
+        this.$store.dispatch("showSidebar");
+      else 
+        this.$store.dispatch("hideSidebar");
     },
     logout() {
       eventbus.$emit("startLoading");

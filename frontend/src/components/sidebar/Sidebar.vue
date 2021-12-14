@@ -1,46 +1,47 @@
 <template lang="pug">
-#sidebar.p-3(v-if='isSidebarOpen()')
-  #sidebar-user
-    b-row.mt-3.mb-2(no-gutters='no-gutters' align-h='center')
-      b-col.mr-1(cols='auto')
-        b-icon-person-circle(font-scale='3')
-    b-row(no-gutters='no-gutters' align-h='center')
-      b-col.ml-1.text-center(cols='auto')
-        p {{ userFullname }}
-        h5
-          b-badge.color1 {{ this.$store.state.session.userData.type }}
-  #sidebar-actions.mb-3
-    div
-      hr.sidebar-hr.my-3
-      SidebarCategory(text='Donations' icon='map')
-      SidebarItem(v-if='!$store.getters.isUser' text='Retrieve donations' route='ManagerDonationRetrieve')
-      SidebarItem(v-if='$store.getters.isUser' text='Create a donation' route='ManagerDonationCreate')
-      SidebarItem(text='Your donations' route='ManagerDonationList' v-if='$store.getters.isUser')
-      SidebarItem(text='Donations list' route='ManagerDonationList' v-if='!$store.getters.isUser')
-    div
-      hr.sidebar-hr.my-3
-      SidebarCategory(text='Families' icon='users')
-      SidebarItem(text='Report a family' route='ManagerFamilySubscribe')
-      SidebarItem(text='Your reports' route='ManagerFamilyList')
-      SidebarItem(text='Check reports' route='ManagerFamilyCheck' v-if='$store.getters.isTrustedVolunteer')
-    div(v-if='!$store.getters.isUser')
-      hr.sidebar-hr.my-3
-      SidebarCategory(text='Events' icon='calendar')
-      SidebarItem(text='Create an event' route='ManagerEventCreate')
-      SidebarItem(text='Your events' route='ManagerEventList')
-    div(v-if='!$store.getters.isUser')
-      hr.sidebar-hr.my-3
-      SidebarCategory(text='Packs' icon='box')
-      SidebarItem(text='Food manager' route='ManagerFood')
-      SidebarItem(text='Create a pack' route='ManagerPackCreate')
-      SidebarItem(text='Pack list' route='ManagerPackList')
-      SidebarItem(text='Deliver packs' route='ManagerPackDelivery')
-      SidebarItem(text='Scan a pack' route='ManagerPackScan')
-      hr.sidebar-hr.my-3
-  b-dropdown(text='Your profile' variant='light' dropup='dropup' menu-class='w-100')
-    b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'password')") Change password
-    b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'address')") Change address
-    b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'user_info')") Change profile info
+transition(name="fade")
+  #sidebar.p-3(v-if='isSidebarOpen')
+    #sidebar-user
+      b-row.mt-3.mb-2(no-gutters='no-gutters' align-h='center')
+        b-col.mr-1(cols='auto')
+          b-icon-person-circle(font-scale='3')
+      b-row(no-gutters='no-gutters' align-h='center')
+        b-col.ml-1.text-center(cols='auto')
+          p {{ userFullname }}
+          h5
+            b-badge.color1 {{ this.$store.state.session.userData.type }}
+    #sidebar-actions.mb-3
+      div
+        hr.sidebar-hr.my-3
+        SidebarCategory(text='Donations' icon='map')
+        SidebarItem(v-if='!$store.getters.isUser' text='Retrieve donations' route='ManagerDonationRetrieve')
+        SidebarItem(v-if='$store.getters.isUser' text='Create a donation' route='ManagerDonationCreate')
+        SidebarItem(text='Your donations' route='ManagerDonationList' v-if='$store.getters.isUser')
+        SidebarItem(text='Donations list' route='ManagerDonationList' v-if='!$store.getters.isUser')
+      div
+        hr.sidebar-hr.my-3
+        SidebarCategory(text='Families' icon='users')
+        SidebarItem(text='Report a family' route='ManagerFamilySubscribe')
+        SidebarItem(text='Your reports' route='ManagerFamilyList')
+        SidebarItem(text='Check reports' route='ManagerFamilyCheck' v-if='$store.getters.isTrustedVolunteer')
+      div(v-if='!$store.getters.isUser')
+        hr.sidebar-hr.my-3
+        SidebarCategory(text='Events' icon='calendar')
+        SidebarItem(text='Create an event' route='ManagerEventCreate')
+        SidebarItem(text='Your events' route='ManagerEventList')
+      div(v-if='!$store.getters.isUser')
+        hr.sidebar-hr.my-3
+        SidebarCategory(text='Packs' icon='box')
+        SidebarItem(text='Food manager' route='ManagerFood')
+        SidebarItem(text='Create a pack' route='ManagerPackCreate')
+        SidebarItem(text='Pack list' route='ManagerPackList')
+        SidebarItem(text='Deliver packs' route='ManagerPackDelivery')
+        SidebarItem(text='Scan a pack' route='ManagerPackScan')
+        hr.sidebar-hr.my-3
+    b-dropdown(text='Your profile' variant='light' dropup='dropup' menu-class='w-100')
+      b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'password')") Change password
+      b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'address')") Change address
+      b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'user_info')") Change profile info
 
 </template>
 
@@ -68,6 +69,9 @@ export default Vue.extend({
       }
       return fullname;
     },
+    isSidebarOpen() {
+      return this.$store.state.navigation.isSidebarOpen;
+    },
   },
   methods: {
     changePage(pageName: string, mode: string) {
@@ -77,9 +81,6 @@ export default Vue.extend({
 
       if (this.$store.getters.isMediumScreenWidth)
         this.$store.dispatch("hideSidebar");
-    },
-    isSidebarOpen() {
-      return this.$store.state.navigation.isSidebarOpen;
     },
   },
 });
@@ -137,5 +138,13 @@ export default Vue.extend({
 
 ::-webkit-scrollbar-thumb {
   background-color: $greyscale3;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
 }
 </style>

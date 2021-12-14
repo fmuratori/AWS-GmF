@@ -111,7 +111,7 @@ export default Vue.extend({
           label: "Expiration Date",
           sortable: true,
           formatter: (date: Date) => {
-            if (date) return dates.formatDate(date); //TODO: risolvere questo e sotto
+            if (date) return dates.formatDate(date);
           },
         },
         {

@@ -151,6 +151,7 @@ export default Vue.extend({
                 "login",
                 this.$store.state.session.userData._id
               );
+              this.$store.dispatch("showSidebar");
 
               chatApi
                 .unreadMessages(this.$store.state.session.userData._id)
