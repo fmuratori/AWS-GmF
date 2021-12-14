@@ -132,6 +132,12 @@ export default Vue.extend({
       chatMessage: "",
     };
   },
+  watch: {
+    chat: function(val) {
+      var objDiv = document.getElementById("messages-area");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+  },
   computed: {
     chat(): ChatMessage[] {
       return this.$store.state.socketio.chat;

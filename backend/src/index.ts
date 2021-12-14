@@ -58,6 +58,7 @@ io.on("connection", (socket: Socket) => {
             console.log("sent message to volunteer", userId)
             const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
             if (destSocket) { 
+              console.log("asd");
               destSocket.emit("chat_message", JSON.stringify(newMessage));
             }
           }

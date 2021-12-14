@@ -24,10 +24,10 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
         UserUpgradeModal
       b-nav-item.my-auto.navbar-link.text-center(href='#footer' @click="$router.push({name: 'Home'})") Contact us
       b-nav-item.my-auto.navbar-link.text-center(href='#events' @click="$router.push({name: 'Home'})") Events
-      b-nav-item.my-auto.navbar-link.text-center(@click="") 
-        b-button(variant="light" v-b-modal.calendarModal)
-          span.mr-1 Calendar
-          Icon(bootstrap icon="calendar")
+      //- b-nav-item.my-auto.navbar-link.text-center(@click="") 
+      //-   b-button(variant="light" v-b-modal.calendarModal)
+      //-     span.mr-1 Calendar
+      //-     Icon(bootstrap icon="calendar")
       b-nav-item.my-auto.text-center(href='#' v-if='!$store.getters.isMediumScreenWidth && $store.getters.isUserLogged && $store.getters.unreadMessagesTotalCount > 0')
         b-button.my-2.my-sm-0.color3(v-b-modal.messagesModal)
           span.mr-1 Messages
@@ -41,7 +41,8 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
           span.mr-1 Login
           Icon(fontawesome icon='sign-in-alt')
 
-  b-modal#calendarModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='calendarModal')
+  //- b-modal#calendarModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='calendarModal')
+  //-   vc-calendar
 
   b-modal#messagesModal(hide-footer='hide-footer' hide-header='hide-header' centered='centered' ref='messagesModal')
     h4 Your Messages
@@ -68,6 +69,7 @@ import eventbus from "../eventbus";
 
 import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
 import Icon from "./Icon.vue";
+import VCalendar from 'v-calendar';
 
 import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
@@ -79,6 +81,7 @@ export default Vue.extend({
   components: {
     UserUpgradeModal,
     Icon,
+    VCalendar,
   },
   data: () => {
     return {
