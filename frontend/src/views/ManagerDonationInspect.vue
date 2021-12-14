@@ -93,7 +93,7 @@ import eventbus from "../eventbus";
 
 import Message from "../components/ChatMessage.vue";
 
-import { Donation, Address, ChatMessage } from "../types";
+import { Donation, Address, ChatMessage } from "../types/types";
 import { ManagerDonationsInspectView } from "../types/viewTypes";
 
 import donationApi from "../api/donation";

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import moment from "moment";
 
 import store from "../store";
-import { Donation, FindPayload } from "../types";
+import { Donation, FindPayload } from "../types/types";
 
 export default {
   async addDonation(payload: Donation): Promise<AxiosResponse> {

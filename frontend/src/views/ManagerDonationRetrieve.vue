@@ -149,7 +149,7 @@ import Icon from "../components/Icon.vue";
 import donationsApi from "../api/donation";
 import { AxiosResponse } from "axios";
 
-import { Donation } from "../types";
+import { Donation } from "../types/types";
 import { ManagerDonationsRetrieveView } from "../types/viewTypes";
 
 export default Vue.extend({

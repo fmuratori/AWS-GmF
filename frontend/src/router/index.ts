@@ -153,11 +153,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   //to, from, next
   if (store.getters.isUserLogged) {
-    if (!store.getters.isMediumScreenWidth) {
-      store.dispatch("showSidebar"); //TODO: cehck with hideSidebar
+    if (store.getters.isMediumScreenWidth) {
+      store.dispatch("hideSidebar");
     }
     next();
   } else if (to.name !== "Login") {
+    store.dispatch("hideSidebar"); 
     next({name: "Login"});
   } else {
     next();

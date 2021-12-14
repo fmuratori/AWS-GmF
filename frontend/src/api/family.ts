@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { Family, FamilyPayload, FindPayload } from "../types";
+import { Family, FamilyPayload, FindPayload } from "../types/types";
 
 export default {
   async addFamily(payload: FamilyPayload): Promise<AxiosResponse<Family[]>> {

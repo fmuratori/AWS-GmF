@@ -30,7 +30,7 @@ import dates from "../misc/dates";
 import api from "../api/family";
 import { AxiosError, AxiosResponse } from "axios";
 
-import { Address, Family, Pack } from "../types";
+import { Address, Family, Pack } from "../types/types";
 
 export default Vue.extend({
   name: "FamilyView",

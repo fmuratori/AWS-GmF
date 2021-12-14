@@ -8,7 +8,7 @@ import {
   editUserPayload,
   changePasswordPayload,
   LoginResponse,
-} from "../types";
+} from "../types/types";
 
 export default {
   async loginRequest(

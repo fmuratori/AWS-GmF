@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { FindPayload, Food } from "../types";
+import { FindPayload, Food } from "../types/types";
 
 export default {
   async addFood(payload: Food): Promise<AxiosResponse> {

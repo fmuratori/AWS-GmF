@@ -74,7 +74,7 @@ import VCalendar from 'v-calendar';
 import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
 
-import { Donation } from "../types";
+import { Donation } from "../types/types";
 
 export default Vue.extend({
   name: "Navbar",

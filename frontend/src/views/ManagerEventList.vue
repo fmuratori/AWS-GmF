@@ -94,7 +94,7 @@ import Icon from "../components/Icon.vue";
 import api from "../api/event";
 import { AxiosError, AxiosResponse } from "axios";
 
-import { Event } from "../types";
+import { Event } from "../types/types";
 import { ManagerEventListView } from "../types/viewTypes";
 
 export default Vue.extend({

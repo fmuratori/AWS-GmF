@@ -36,7 +36,7 @@ import Vue from "vue";
 import eventbus from "../eventbus";
 import dates from "../misc/dates";
 
-import { SelectableFood } from "../types";
+import { SelectableFood } from "../types/types";
 import { FoodView } from "../types/viewTypes";
 
 import api from "../api/food";

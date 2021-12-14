@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-import { GMapAutoCompleteResponse } from "../types";
+import { GMapAutoCompleteResponse } from "../types/types";
 
 export default {
   async getLocationCoordinates(location: string): Promise<AxiosResponse> {

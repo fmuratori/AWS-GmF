@@ -152,7 +152,7 @@ import Icon from "../components/Icon.vue";
 import packsApi from "../api/pack";
 import { AxiosResponse } from "axios";
 
-import { Pack, FindPayload, Food } from "../types";
+import { Pack, FindPayload, Food } from "../types/types";
 import { ManagerPackDeliveryView } from "../types/viewTypes";
 
 export default Vue.extend({

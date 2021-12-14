@@ -66,7 +66,7 @@ import {
   Address,
   LoginResponse,
   UserData,
-} from "../types";
+} from "../types/types";
 import {LoginView} from "../types/viewTypes";
 
 

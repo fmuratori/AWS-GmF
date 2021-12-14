@@ -41,7 +41,7 @@ import InputAddress from "../components/input/InputAddress.vue";
 import InputDate from "../components/input/InputDate.vue";
 import Icon from "../components/Icon.vue";
 
-import { Address, EventPayload } from "../types";
+import { Address, EventPayload } from "../types/types";
 import { ManagerEventCreateView } from "../types/viewTypes";
 
 import api from "../api/event";

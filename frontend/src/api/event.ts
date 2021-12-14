@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { EventPayload, FindPayload } from "../types";
+import { EventPayload, FindPayload } from "../types/types";
 
 export default {
   async createEvent(payload: EventPayload): Promise<AxiosResponse> {

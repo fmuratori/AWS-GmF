@@ -76,7 +76,7 @@ import eventbus from "../eventbus";
 import { QrcodeStream } from "vue-qrcode-reader";
 import Icon from "../components/Icon.vue";
 
-import { Pack } from "../types";
+import { Pack } from "../types/types";
 import { ManagerPackScanView } from "../types/viewTypes";
 
 import packApi from "../api/pack";

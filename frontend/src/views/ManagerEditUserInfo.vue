@@ -48,7 +48,7 @@ import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import InputPasswordSelect from "../components/input/InputPasswordSelect.vue";
 
-import { Address, UserData, changePasswordPayload } from "../types";
+import { Address, UserData, changePasswordPayload } from "../types/types";
 import { ManagerEditUserInfoView } from "../types/viewTypes";
 
 import api from "../api/user";

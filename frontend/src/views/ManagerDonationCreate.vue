@@ -76,7 +76,7 @@ import InputTextarea from "../components/input/InputTextarea.vue";
 import Loading from "../components/Loading.vue";
 import Icon from "../components/Icon.vue";
 
-import { Address, Donation } from "../types";
+import { Address, Donation } from "../types/types";
 import { ManagerDonationsCreateView } from "../types/viewTypes";
 
 import api from "../api/donation";

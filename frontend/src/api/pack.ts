@@ -7,7 +7,7 @@ import {
   PackPayload,
   Pack,
   Food,
-} from "../types";
+} from "../types/types";
 
 export default {
   async createPack(payload: PackPayload): Promise<AxiosResponse<Pack>> {

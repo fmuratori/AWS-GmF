@@ -6,7 +6,7 @@ canvas#pie-chart
 import Vue from "vue";
 
 import { Chart, ChartItem, registerables } from "chart.js";
-import { FoodLabelsResponse } from "../../types";
+import { FoodLabelsResponse } from "../../types/types";
 
 import { AxiosResponse } from "axios";
 import api from "../../api/data";

@@ -8,7 +8,7 @@ b-row.text-center.no-gutters(align-h="center")
 <script lang="ts">
 import Vue from "vue";
 
-import { CountDataResponse } from "../../types";
+import { CountDataResponse } from "../../types/types";
 
 import { AxiosResponse } from "axios";
 import api from "../../api/data";

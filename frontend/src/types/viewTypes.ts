@@ -12,7 +12,7 @@ import {
   RegistrationPayload,
   UserData,
   changePasswordPayload,
-} from "../types";
+} from "./types";
 
 export interface LoginView {
   isLoginSelected: boolean;
@@ -156,7 +156,7 @@ export interface ManagerFoodView {
 }
 
 export interface ManagerPackCreateView {
-  step: string;
+  step: "selectFamily" | "selectFoods" | "loading" | "printableInfo"; // string;
   foodList: SelectableFood[];
   selectedFamily: Family;
   form: PackPayload;
@@ -231,28 +231,6 @@ export interface FilterButton {
   label: string;
   icon: string;
   isVisible: boolean;
-}
-
-export interface ReportFamilyView {
-  form: Family;
-  submitLabel: string;
-}
-
-export interface FoodManagerView {
-  form: FoodPayload;
-  foodList: Array<Food>;
-  tableFields: Array<string>;
-  availableLables: Array<{ text: string; value: string }>;
-  reloadIndex: number;
-}
-
-export interface PackCreateView {
-  step: "selectFamily" | "selectFoods" | "loading" | "printableInfo";
-  isPrinted: boolean;
-  foodList: Array<SelectableFood>;
-  familyList: Array<Family>;
-  selectedFamily: Family | null;
-  form: PackPayload;
 }
 
 export interface PackManagerView {

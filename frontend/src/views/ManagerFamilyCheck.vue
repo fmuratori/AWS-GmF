@@ -54,7 +54,7 @@ b-container.mb-5
 import Vue from "vue";
 import eventbus from "../eventbus";
 
-import { Family } from "../types";
+import { Family } from "../types/types";
 import { ManagerFamilyCheckView } from "../types/viewTypes";
 
 import Icon from "../components/Icon.vue";

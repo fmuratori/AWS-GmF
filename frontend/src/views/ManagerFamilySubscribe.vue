@@ -56,7 +56,7 @@ import InputText from "../components/input/InputText.vue";
 import InputAddress from "../components/input/InputAddress.vue";
 import Icon from "../components/Icon.vue";
 
-import { Address, Family } from "../types";
+import { Address, Family } from "../types/types";
 import { ManagerFamilySubscribeView } from "../types/viewTypes";
 
 import api from "../api/family";

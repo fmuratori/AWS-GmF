@@ -83,7 +83,7 @@ import eventbus from "../eventbus";
 import FilterButtons from "../components/FilterButtons.vue";
 import Icon from "../components/Icon.vue";
 
-import { Family } from "../types";
+import { Family } from "../types/types";
 import { ManagerFamilyListView } from "../types/viewTypes";
 
 import api from "../api/family";

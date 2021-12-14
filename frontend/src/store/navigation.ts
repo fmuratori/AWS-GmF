@@ -1,4 +1,4 @@
-import { NavigationState } from "@/storeTypes";
+import { NavigationState } from "@/types/storeTypes";
 
 const screenSmallWidth = 576;
 const screenMediumWidth = 768;
@@ -65,10 +65,12 @@ const navigationModule = {
     unsetMangerMode({ commit }): void {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit, rootGetters }, value: number): void {
+    updateScreenWidth({ commit, getters, rootGetters }, value: number): void {
       commit("updateScreenWidth", value);
+      
+      if (rootGetters.isUserLogged)
+        commit("setSidebarVisible", getters.isMediumScreenWidth ? false : true);
 
-      commit("setSidebarVisible", rootGetters.isUserLogged);
     },
 
     setDonationCreationFlag({ commit }): void {

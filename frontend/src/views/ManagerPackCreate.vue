@@ -148,7 +148,7 @@ import FamilyView from "../components/FamilyView.vue";
 import Icon from "../components/Icon.vue";
 
 import { ManagerPackCreateView } from "../types/viewTypes";
-import { Family, SelectableFood, Pack, Address, PackPayload } from "../types";
+import { Family, SelectableFood, Pack, Address, PackPayload } from "../types/types";
 
 import packApi from "../api/pack";
 import { AxiosResponse, AxiosError } from "axios";

@@ -23,7 +23,7 @@ import Vue from "vue";
 import { AxiosError, AxiosResponse } from "axios";
 import mapsApi from "../../api/maps";
 
-import { Address, GMapAutoCompleteResponse } from "../../types";
+import { Address, GMapAutoCompleteResponse } from "../../types/types";
 
 import MapLocation from "../MapLocation.vue";
 import InputText from "../input/InputText.vue";

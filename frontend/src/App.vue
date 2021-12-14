@@ -18,7 +18,7 @@ import Sidebar from "./components/sidebar/Sidebar.vue";
 import ToastsManager from "./components/ToastsManager.vue";
 import Loading from "./components/Loading.vue";
 
-import { UserData } from "./types";
+import { UserData } from "./types/types";
 
 import api from "./api/user";
 import { AxiosResponse } from "axios";
@@ -37,7 +37,6 @@ export default Vue.extend({
 
     if (this.$cookies.get("jwt")) {
       api.loadData().then((r: AxiosResponse) => {
-        this.$store.dispatch("showSidebar");
         this.$store.dispatch("login", {
           token: this.$cookies.get("jwt"),
           userData: r.data as UserData,

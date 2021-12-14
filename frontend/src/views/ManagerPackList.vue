@@ -75,7 +75,7 @@ import FilterButtons from "../components/FilterButtons.vue";
 import packApi from "../api/pack";
 import { AxiosError, AxiosResponse } from "axios";
 
-import { Address, Pack } from "../types";
+import { Address, Pack } from "../types/types";
 import { ManagerPackListView } from "../types/viewTypes";
 
 export default Vue.extend({

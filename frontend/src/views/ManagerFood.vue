@@ -34,7 +34,7 @@ import FoodView from "../components/FoodView.vue";
 import InputText from "../components/input/InputText.vue";
 import InputDate from "../components/input/InputDate.vue";
 
-import { Food } from "../types";
+import { Food } from "../types/types";
 import { ManagerFoodView } from "../types/viewTypes";
 
 import api from "../api/food";

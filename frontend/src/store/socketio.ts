@@ -3,8 +3,8 @@ import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
 
 import chatApi from "../api/chat";
-import { ChatMessage } from "../types";
-import { SocketIoState } from "../storeTypes";
+import { ChatMessage } from "../types/types";
+import { SocketIoState } from "../types/storeTypes";
 
 export default {
   state: (): SocketIoState => ({

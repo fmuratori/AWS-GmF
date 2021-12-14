@@ -90,7 +90,7 @@ import Icon from "../components/Icon.vue";
 import api from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
 
-import { Donation, FindPayload } from "../types";
+import { Donation, FindPayload } from "../types/types";
 import { ManagerDonationsListView } from "../types/viewTypes";
 
 export default Vue.extend({

@@ -1,5 +1,5 @@
-import { SessionHeader, UserData } from "../types";
-import { UserState } from "@/storeTypes";
+import { SessionHeader, UserData } from "../types/types";
+import { UserState } from "@/types/storeTypes";
 import Vue from "vue";
 
 const sessionModule = {

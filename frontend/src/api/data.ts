@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import store from "../store";
-import { FoodLabelsResponse, CountDataResponse, Event } from "../types";
+import { FoodLabelsResponse, CountDataResponse, Event } from "../types/types";
 
 export default {
   async getFoodLabels(): Promise<AxiosResponse<FoodLabelsResponse>> {
