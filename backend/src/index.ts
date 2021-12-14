@@ -6,13 +6,13 @@ import app from './app'
 // express server
 const httpServer: http.Server = new http.Server(app)
 
-//interfaccia definita per creare la lista di key-value userId-socketId
-let activeSockets = new Map();
 
 import { Server, Socket } from "socket.io";
 import { addMessageToChat, getDonationUsers, setMessageAsVisualized } from './controllers/donationController'
 import ExportManager from './utils/exportManager'
 import ImportManager from './utils/importManager'
+
+let activeSockets = new Map();
 
 const io = new Server(httpServer, {});
 io.on("connection", (socket: Socket) => {

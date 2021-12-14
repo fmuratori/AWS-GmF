@@ -115,16 +115,14 @@ export default Vue.extend({
     };
   },
   created() {
-    if (this.$store.getters.isUserLogged && this.$store.getters.isUser) {
-      this.form.userId = this.$store.state.session.userData._id;
-      this.form.address = this.$store.state.session.userData.address;
+    this.form.userId = this.$store.state.session.userData._id;
+    this.form.address = this.$store.state.session.userData.address;
 
-      if ("donation" in this.$route.params) {
-        this.form = JSON.parse(this.$route.params.donation) as Donation;
-        //ccreate an empty textbox
-        this.submitLabel = "Edit";
-      }
-    } else this.$router.push({ name: "Login" });
+    if ("donation" in this.$route.params) {
+      this.form = JSON.parse(this.$route.params.donation) as Donation;
+      //ccreate an empty textbox
+      this.submitLabel = "Edit";
+    }
   },
   methods: {
     onAddressUpdate(address: Address) {

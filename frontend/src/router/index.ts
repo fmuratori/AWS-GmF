@@ -154,11 +154,14 @@ router.beforeEach((to, from, next) => {
   //to, from, next
   if (store.getters.isUserLogged) {
     if (!store.getters.isMediumScreenWidth) {
-      store.dispatch("showSidebar");
+      store.dispatch("showSidebar"); //TODO: cehck with hideSidebar
     }
+    next();
+  } else if (to.name !== "Login") {
+    next({name: "Login"});
+  } else {
+    next();
   }
-
-  next();
 });
 
 export default router;

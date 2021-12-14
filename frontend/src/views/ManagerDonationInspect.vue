@@ -165,17 +165,14 @@ export default Vue.extend({
     },
   },
   created() {
-    if (this.$store.getters.isUserLogged) {
-      // retrieve the donation data from vue-route
-      if ("donation" in this.$route.params) {
-        this.donation = JSON.parse(this.$route.params.donation) as Donation;
-      } else {
-        this.$router.push({ name: "ManagerDonationList" });
-      }
-
+    // retrieve the donation data from vue-route
+    if ("donation" in this.$route.params) {
+      this.donation = JSON.parse(this.$route.params.donation) as Donation;
       // load donation messages
       this.$store.dispatch("getChat", this.donation._id);
-    } else this.$router.push({ name: "Login" });
+    } else {
+      this.$router.push({ name: "ManagerDonationList" });
+    }
   },
   methods: {
     weekDayDonations(weekDay: string): { weekDay: string; period: string }[] {

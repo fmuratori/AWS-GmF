@@ -76,14 +76,12 @@ export default Vue.extend({
     };
   },
   created() {
-    if (this.$store.getters.isUserLogged) {
-      this.form.ownerVolunteerId = this.$store.state.session.userData._id;
+    this.form.ownerVolunteerId = this.$store.state.session.userData._id;
 
-      if ("event" in this.$route.params) {
-        this.form = this.$route.params.event as EventPayload; //as unknown
-        this.submitLabel = "Edit";
-      }
-    } else this.$router.push({ name: "Login" });
+    if ("event" in this.$route.params) {
+      this.form = this.$route.params.event as EventPayload; //as unknown
+      this.submitLabel = "Edit";
+    }
   },
   methods: {
     createEvent(): void {

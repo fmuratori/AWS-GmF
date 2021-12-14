@@ -102,7 +102,6 @@ export default Vue.extend({
   },
   created() {
     this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
   },
   mounted() {
     this.startCamera();

@@ -89,13 +89,11 @@ export default Vue.extend({
     };
   },
   created() {
-    if (this.$store.getters.isUserLogged) {
-      if ("family" in this.$route.params) {
-        this.form = this.$route.params.family as Family; //as unknown 
-        this.submitLabel = "Edit";
-      }
-      this.form.reporterId = this.$store.state.session.userData._id;
-    } else this.$router.push({ name: "Login" });
+    if ("family" in this.$route.params) {
+      this.form = this.$route.params.family as Family; //as unknown 
+      this.submitLabel = "Edit";
+    }
+    this.form.reporterId = this.$store.state.session.userData._id;
   },
   methods: {
     onAddressUpdate(address: Address): void {

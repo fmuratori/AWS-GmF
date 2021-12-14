@@ -111,7 +111,7 @@ export default Vue.extend({
           label: "Expiration Date",
           sortable: true,
           formatter: (date: Date) => {
-            if (date) return dates.formatDate(date);
+            if (date) return dates.formatDate(date); //TODO: risolvere questo e sotto
           },
         },
         {
@@ -137,20 +137,18 @@ export default Vue.extend({
     };
   },
   created() {
-    if (this.$store.getters.isUserLogged) {
-      eventbus.$emit("startLoading", "Loading packs");
-      packApi
-        .packList({})
-        .then((r: AxiosResponse): void => {
-          this.packList = r.data as Pack[];
-          this.packListBackup = this.packList;
-        })
-        .catch((e: AxiosError): void => console.log(e))
-        .then(() => {
-          eventbus.$emit("stopLoading");
-          this.filterBy("all");
-        });
-    } else this.$router.push({ name: "Login" });
+    eventbus.$emit("startLoading", "Loading packs");
+    packApi
+      .packList({})
+      .then((r: AxiosResponse): void => {
+        this.packList = r.data as Pack[];
+        this.packListBackup = this.packList;
+      })
+      .catch((e: AxiosError): void => console.log(e))
+      .then(() => {
+        eventbus.$emit("stopLoading");
+        this.filterBy("all");
+      });
   },
   methods: {
     filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {

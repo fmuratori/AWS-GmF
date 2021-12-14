@@ -183,9 +183,6 @@ export default Vue.extend({
       return date;
     },
   },
-  created() {
-    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
-  },
   methods: {
     formatAddress(addr: Address): string {
       return addr.street + " " + addr.civicNumber + ", " + addr.city;

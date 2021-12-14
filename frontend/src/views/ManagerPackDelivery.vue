@@ -208,9 +208,6 @@ export default Vue.extend({
       isModalOpen: false,
     };
   },
-  created() {
-    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
-  },
   methods: {
     packFoods(pack: Pack) {
       const packFoodsIds = pack.foodList.map(

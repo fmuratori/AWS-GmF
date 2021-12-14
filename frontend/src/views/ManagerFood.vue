@@ -62,22 +62,19 @@ export default Vue.extend({
     };
   },
   created() {
-    // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      //populate the food list
-      api
-        .foodList({})
-        .then((r: AxiosResponse): void => {
-          this.foodList = r.data as Food[];
-        })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Foods",
-            "Unable to retrieve food list. Retry later or contact us if the problem persists."
-          );
-        });
-    } else this.$router.push({ name: "Login" });
+    //populate the food list
+    api
+      .foodList({})
+      .then((r: AxiosResponse): void => {
+        this.foodList = r.data as Food[];
+      })
+      .catch((): void => {
+        eventbus.$emit(
+          "errorMessage",
+          "Foods",
+          "Unable to retrieve food list. Retry later or contact us if the problem persists."
+        );
+      });
   },
   methods: {
     addFood(): void {

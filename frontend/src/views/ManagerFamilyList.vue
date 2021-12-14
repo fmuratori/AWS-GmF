@@ -138,30 +138,28 @@ export default Vue.extend({
       },
     ];
 
-    if (this.$store.getters.isUserLogged) {
-      eventbus.$emit("startLoading", "Filtering all your active requests.");
-      api
-        .familyList({
-          filter: { reporterId: this.$store.state.session.userData._id },
-        })
-        .then((r: AxiosResponse): void => {
-          this.familyList = r.data as Family[];
-          this.familyListBackup = r.data as Family[];
+    eventbus.$emit("startLoading", "Filtering all your active requests.");
+    api
+      .familyList({
+        filter: { reporterId: this.$store.state.session.userData._id },
+      })
+      .then((r: AxiosResponse): void => {
+        this.familyList = r.data as Family[];
+        this.familyListBackup = r.data as Family[];
 
-          this.filterBy(this.statusFilter);
-          this.sortBy(this.sortByMode);
-        })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Family",
-            "Unable to verify the selected family. Retry later or contact us if the problem persists."
-          );
-        })
-        .then(() => {
-          eventbus.$emit("stopLoading");
-        });
-    } else this.$router.push({ name: "Login" });
+        this.filterBy(this.statusFilter);
+        this.sortBy(this.sortByMode);
+      })
+      .catch((): void => {
+        eventbus.$emit(
+          "errorMessage",
+          "Family",
+          "Unable to verify the selected family. Retry later or contact us if the problem persists."
+        );
+      })
+      .then(() => {
+        eventbus.$emit("stopLoading");
+      });
   },
   methods: {
     creationDateComparer(a, b): number {

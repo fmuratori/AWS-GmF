@@ -96,10 +96,7 @@ export default Vue.extend({
     };
   },
   created() {
-    // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      this.loadFamiliesData();
-    } else this.$router.push({ name: "Login" });
+    this.loadFamiliesData();
   },
   methods: {
     selectFamily(family: Family): void {

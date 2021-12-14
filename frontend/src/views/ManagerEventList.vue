@@ -146,20 +146,17 @@ export default Vue.extend({
       },
     ];
 
-    // check if user is logged in
-    if (this.$store.getters.isUserLogged) {
-      eventbus.$emit("startLoading", "Loading your events.");
-      api
-        .eventList({
-          filter: { ownerVolunteerId: this.$store.state.session.userData._id },
-        })
-        .then((r: AxiosResponse): void => {
-          this.eventList = r.data as Event[];
-          this.eventListBackup = r.data as Event[];
-        })
-        .catch((e: AxiosError): void => console.log(e))
-        .then(() => eventbus.$emit("stopLoading"));
-    } else this.$router.push({ name: "Login" });
+    eventbus.$emit("startLoading", "Loading your events.");
+    api
+      .eventList({
+        filter: { ownerVolunteerId: this.$store.state.session.userData._id },
+      })
+      .then((r: AxiosResponse): void => {
+        this.eventList = r.data as Event[];
+        this.eventListBackup = r.data as Event[];
+      })
+      .catch((e: AxiosError): void => console.log(e))
+      .then(() => eventbus.$emit("stopLoading"));
   },
   methods: {
     eventDateComparer(a: Event, b: Event) {

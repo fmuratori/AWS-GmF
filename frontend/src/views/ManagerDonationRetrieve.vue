@@ -194,9 +194,6 @@ export default Vue.extend({
       );
     },
   },
-  created() {
-    if (!this.$store.getters.isUserLogged) this.$router.push({ name: "Login" });
-  },
   methods: {
     selectCity(addressData: {
       locality: string;

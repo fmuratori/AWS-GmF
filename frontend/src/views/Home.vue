@@ -16,10 +16,12 @@ div
     b-row(align-h="center").no-gutters
       b-col(cols=10 md=10 lg=6)
         h3.mb-5 WHAT IS BRING ME FOOD?
-        p.m-0.p-0 Bring me Food is a web application that enables users to communciate directly with volunteers to donate foods that will e delivered to needing families.
-  div.my-5.py-5
-    div.text-center
-      h3.mb-5 WHAT DO WE NEED?
+        p.m-0.p-0 Bring me Food is a web application that enables users to donate foods that will e delivered to needing families. You provide the food and we will put it to good use. 
+  div.my-5.py-5.text-section.text-center
+    b-row(align-h="center").no-gutters
+      b-col(cols=10 md=10 lg=6)
+        h3.mb-5 FOOD BANK
+        p This graph shows what foods we currently have in stock and ready to be delivered. If you want to donate something, here you can see what we are in most need of.  
     div
       DoughnutChart()
 

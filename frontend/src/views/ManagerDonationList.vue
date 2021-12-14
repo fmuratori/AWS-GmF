@@ -176,33 +176,31 @@ export default Vue.extend({
       },
     ];
 
-    if (this.$store.getters.isUserLogged) {
-      var filter = {};
-      if (this.$store.getters.isUser)
-        filter = { userId: this.$store.state.session.userData._id };
-      else if (
-        this.$store.getters.isVolunteer ||
-        this.$store.getters.isTrustedVolunteer
-      )
-        filter = {
-          "pickUp.volunteerId": this.$store.state.session.userData._id,
-        };
+    var filter = {};
+    if (this.$store.getters.isUser)
+      filter = { userId: this.$store.state.session.userData._id };
+    else if (
+      this.$store.getters.isVolunteer ||
+      this.$store.getters.isTrustedVolunteer
+    )
+      filter = {
+        "pickUp.volunteerId": this.$store.state.session.userData._id,
+      };
 
-      eventbus.$emit("startLoading", "Filtering all your active donations.");
+    eventbus.$emit("startLoading", "Filtering all your active donations.");
 
-      api
-        .filterDonations({ filter: filter } as FindPayload)
-        .then((r: AxiosResponse): void => {
-          this.donations = r.data as Donation[];
-          this.donationsBackup = r.data as Donation[];
-          this.sortBy(this.sortByMode);
-          this.filterBy(this.filterByMode);
-        })
-        .catch((e: AxiosError): void => console.log(e))
-        .then(() => {
-          eventbus.$emit("stopLoading");
-        });
-    } else this.$router.push({ name: "Login" });
+    api
+      .filterDonations({ filter: filter } as FindPayload)
+      .then((r: AxiosResponse): void => {
+        this.donations = r.data as Donation[];
+        this.donationsBackup = r.data as Donation[];
+        this.sortBy(this.sortByMode);
+        this.filterBy(this.filterByMode);
+      })
+      .catch((e: AxiosError): void => console.log(e))
+      .then(() => {
+        eventbus.$emit("stopLoading");
+      });
   },
   methods: {
     creationDateComparer(a: Donation, b: Donation) {

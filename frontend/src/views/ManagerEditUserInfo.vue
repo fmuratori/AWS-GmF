@@ -93,16 +93,14 @@ export default Vue.extend({
       this.mode = mode;
     });
 
-    if (this.$store.getters.isUserLogged) {
-      if (!("mode" in this.$route.params)) {
-        this.$router.push({ name: "Home" });
-      } else {
-        this.mode = this.$route.params.mode;
-      }
+    if (!("mode" in this.$route.params)) {
+      this.$router.push({ name: "Home" });
+    } else {
+      this.mode = this.$route.params.mode;
+    }
 
-      this.form = this.$store.state.session.userData;
-      this.changePasswordForm.id = this.$store.state.session.userData._id;
-    } else this.$router.push({ name: "Login" });
+    this.form = this.$store.state.session.userData;
+    this.changePasswordForm.id = this.$store.state.session.userData._id;
   },
   methods: {
     registrationPasswordCheck() {
