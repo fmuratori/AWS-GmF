@@ -1,9 +1,4 @@
-import {
-  Event,
-  Family,
-  SelectableFood,
-  Address,
-} from "./types";
+import { Event, Family, SelectableFood, Address } from "./types";
 
 import { TableField, MapOptions } from "./miscTypes";
 
@@ -54,7 +49,6 @@ export interface FilterButtonsComponent {
   selectedFilter: string;
 }
 
-
 export interface FoodViewComponent {
   foodList: SelectableFood[];
   tableFields: TableField[];
@@ -79,8 +73,4 @@ export interface MapLocationComponent {
   xCoord: number;
   yCoord: number;
   mapsOptions: MapOptions;
-}
-
-export interface NavbarComponent {
-  isOpen: boolean;
 }

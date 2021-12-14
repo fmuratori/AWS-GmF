@@ -5,7 +5,6 @@ export interface TableField {
   formatter?: any;
 }
 
-
 export interface MapOptions {
   zoomControl: boolean;
   mapTypeControl: boolean;
@@ -15,7 +14,7 @@ export interface MapOptions {
   fullscreenControl: boolean;
   disableDefaultUi: boolean;
   clickableIcons: boolean;
-};
+}
 
 export interface Coordinates {
   x: number;

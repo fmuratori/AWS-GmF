@@ -90,7 +90,7 @@ export default Vue.extend({
   },
   created() {
     if ("family" in this.$route.params) {
-      this.form = this.$route.params.family as Family; //as unknown 
+      this.form = this.$route.params.family as unknown as Family;
       this.submitLabel = "Edit";
     }
     this.form.reporterId = this.$store.state.session.userData._id;

@@ -4,7 +4,6 @@ import {
   EventPayload,
   Family,
   Food,
-  FoodPayload,
   Pack,
   PackPayload,
   SelectableFood,
@@ -40,13 +39,15 @@ export interface ManagerDonationsListView {
   donationsBackup: Donation[];
   sortByMode: string;
   filterByMode: string;
-  sorters: { // TODO: move to components types
+  sorters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
     isVisible: boolean;
   }[];
-  filters: { // TODO: move to components types
+  filters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
@@ -58,7 +59,7 @@ export interface ManagerDonationsRetrieveView {
   mapsOptions: MapOptions;
   selectedCity: {
     name: string;
-    coordinates: Coordinates
+    coordinates: Coordinates;
   };
   donations: Donation[];
   selectedDonations: Donation[];
@@ -74,7 +75,7 @@ export interface ManagerEditUserInfoView {
   form: UserData;
   changePasswordForm: changePasswordPayload; // TODO: move to components type
   mode: string;
-};
+}
 
 export interface ManagerEventCreateView {
   form: EventPayload;
@@ -87,13 +88,15 @@ export interface ManagerEventListView {
   eventList: Event[];
   eventListBackup: Event[];
   deleteEventId: string;
-  sorters: { // TODO: move to components types
+  sorters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
     isVisible: boolean;
   }[];
-  filters: { // TODO: move to components types
+  filters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
@@ -103,7 +106,7 @@ export interface ManagerEventListView {
 
 export interface ManagerFamilyCheckView {
   familyList: Family[];
-  tableFields: TableField[];    
+  tableFields: TableField[];
   filterOn: string[];
   filterQuery: string;
   selectedFamily: Family;
@@ -119,13 +122,15 @@ export interface ManagerFamilyListView {
   familyList: Family[];
   familyListBackup: Family[];
   deleteFamilyId: string;
-  sorters: { // TODO: move to components types
+  sorters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
     isVisible: boolean;
   }[];
-  filters: { // TODO: move to components types
+  filters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
@@ -155,7 +160,8 @@ export interface ManagerPackCreateView {
 
 export interface ManagerPackDeliveryView {
   mapsOptions: MapOptions;
-  filters: { // TODO: move to components types
+  filters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
@@ -178,7 +184,8 @@ export interface ManagerPackDeliveryView {
 }
 
 export interface ManagerPackListView {
-  filters: { // TODO: move to components types
+  filters: {
+    // TODO: move to components types
     name: string;
     label: string;
     icon: null | string;
@@ -187,7 +194,7 @@ export interface ManagerPackListView {
   packList: Pack[];
   packListBackup: Pack[];
   selectedPack: Pack;
-  tableFields: TableField[];   
+  tableFields: TableField[];
   deletePackId: string;
 }
 

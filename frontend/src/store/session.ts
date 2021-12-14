@@ -1,3 +1,5 @@
+import { Commit } from "vuex";
+
 import { SessionHeader, UserData } from "../types/types";
 import { UserState } from "@/types/storeTypes";
 import Vue from "vue";
@@ -57,10 +59,10 @@ const sessionModule = {
     },
   },
   actions: {
-    login({ commit }: any, payload: any): void {
+    login({ commit }: { commit: Commit }, payload: UserState): void {
       commit("login", payload);
     },
-    logout({ commit }): void {
+    logout({ commit }: { commit: Commit }): void {
       commit("logout");
     },
   },

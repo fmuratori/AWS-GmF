@@ -1,3 +1,5 @@
+import { Commit } from "vuex";
+
 import { NavigationState } from "@/types/storeTypes";
 
 const screenSmallWidth = 576;
@@ -8,6 +10,7 @@ const screenExtraLargeWidth = 1200;
 const navigationModule = {
   state: (): NavigationState => ({
     isSidebarOpen: false,
+    isNavbarMobileOpen: false,
     screenWidth: 0,
 
     // those flags redirect the user after a successfull login
@@ -38,6 +41,9 @@ const navigationModule = {
     setSidebarVisible(state: NavigationState, value: boolean): void {
       state.isSidebarOpen = value;
     },
+    setNavbarMobileVisible(state: NavigationState, value: boolean): void {
+      state.isNavbarMobileOpen = value;
+    },
     updateScreenWidth(state: NavigationState, value: number): void {
       state.screenWidth = value;
     },
@@ -50,38 +56,43 @@ const navigationModule = {
     },
   },
   actions: {
-    showSidebar({ commit }): void {
+    showSidebar({ commit }: { commit: Commit }): void {
       commit("setSidebarVisible", true);
     },
-    hideSidebar({ commit }): void {
+    hideSidebar({ commit }: { commit: Commit }): void {
       commit("setSidebarVisible", false);
     },
-    toggleSidebar({ commit }): void {
+    showNavbarMobile({ commit }: { commit: Commit }): void {
+      commit("setNavbarMobileVisible", true);
+    },
+    hideNavbarMobile({ commit }: { commit: Commit }): void {
+      commit("setNavbarMobileVisible", false);
+    },
+    toggleSidebar({ commit }: { commit: Commit }): void {
       commit("toggleSidebar");
     },
-    setMangerMode({ commit }): void {
+    setMangerMode({ commit }: { commit: Commit }): void {
       commit("setMangerMode");
     },
-    unsetMangerMode({ commit }): void {
+    unsetMangerMode({ commit }: { commit: Commit }): void {
       commit("unsetMangerMode");
     },
     updateScreenWidth({ commit, getters, rootGetters }, value: number): void {
       commit("updateScreenWidth", value);
-      
+
       if (rootGetters.isUserLogged)
         commit("setSidebarVisible", getters.isMediumScreenWidth ? false : true);
-
     },
 
-    setDonationCreationFlag({ commit }): void {
+    setDonationCreationFlag({ commit }: { commit: Commit }): void {
       commit("setDonationCreationFlag", true);
     },
 
-    setFamilySubscribeFlag({ commit }): void {
+    setFamilySubscribeFlag({ commit }: { commit: Commit }): void {
       commit("setFamilySubscribeFlag", true);
     },
 
-    unsetLoginNavigationFlags({ commit }): void {
+    unsetLoginNavigationFlags({ commit }: { commit: Commit }): void {
       commit("setFamilySubscribeFlag", false);
       commit("setDonationCreationFlag", false);
     },

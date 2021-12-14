@@ -158,7 +158,7 @@ export default Vue.extend({
     GmapCustomMarker,
     Icon,
   },
-  data: ():ManagerDonationsRetrieveView  => {
+  data: (): ManagerDonationsRetrieveView => {
     return {
       mapsOptions: {
         zoomControl: true,
@@ -252,7 +252,7 @@ export default Vue.extend({
         1
       );
     },
-    filterDonations(): void {
+    filterDonations() {
       this.selectedDonations = [];
       this.windowDonations.splice(0, this.windowDonations.length);
       this.windowCoordinates = { x: 0, y: 0 };
@@ -264,7 +264,7 @@ export default Vue.extend({
       donationsApi
         .filterUnpickedDonations(
           this.selectedCity.name,
-          this.pickUpDate,
+          this.pickUpDate.toString(),
           this.pickUpPeriod
         )
         .then((r: AxiosResponse<Donation[]>): void => {
@@ -305,7 +305,7 @@ export default Vue.extend({
           element.pickUp = {
             volunteerId: this.$store.state.session.userData._id,
             period: this.pickUpPeriod,
-            date: this.pickUpDate,
+            date: this.pickUpDate.toString(),
           };
           promises.push(donationsApi.editDonation(element));
         });

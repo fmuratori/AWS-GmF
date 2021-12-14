@@ -25,7 +25,7 @@ b-row.justify-content-center(no-gutters).mb-5
           InputText(title='Email: ' :text='registration.email' placeholder='Insert your email here' type='email' required @data='(e) => { registration.email = e; }')
           InputText(title='Phone number: ' :text='registration.phoneNumber' placeholder='Insert your phone number here' required @data='(e) => { registration.phoneNumber = e; }')
           hr
-          InputAddress(@data='(e) => { registration.address = e; }' @addressupdate='onAddressUpdate')
+          InputAddress(@data='(e) => { registration.address = e; }')
           hr
           InputPasswordSelect(title1='Password: ' title2='Repeat your password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { registration.password = e; }')
           hr
@@ -67,8 +67,7 @@ import {
   LoginResponse,
   UserData,
 } from "../types/types";
-import {LoginView} from "../types/viewTypes";
-
+import { LoginView } from "../types/viewTypes";
 
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -115,9 +114,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    onAddressUpdate(address: string) {
-      this.registration.address = address;
-    },
     redirectNavigation() {
       if (this.$store.state.navigation.donationCreationFlag)
         this.$router.push({ name: "ManagerDonationCreate" });

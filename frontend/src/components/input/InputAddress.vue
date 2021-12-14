@@ -109,25 +109,36 @@ export default Vue.extend({
           if (r.status == 200) {
             this.query = r.data.results[0].formatted_address;
             this.isLocationLoaded = true;
-            this.address.city = r.data.results[0].address_components.find((c) =>
+
+            const cityName = r.data.results[0].address_components.find((c) =>
               c.types.includes("administrative_area_level_3")
-            )?.long_name;
-            this.address.street = r.data.results[0].address_components.find(
-              (c) => c.types.includes("route")
-            )?.long_name;
-            this.address.civicNumber =
-              r.data.results[0].address_components.find((c) =>
-                c.types.includes("street_number")
-              )?.long_name;
+            );
+            if (cityName && "long_name" in cityName)
+              this.address.city = cityName.long_name;
+
+            const streetName = r.data.results[0].address_components.find((c) =>
+              c.types.includes("route")
+            );
+            if (streetName && "long_name" in streetName)
+              this.address.city = streetName.long_name;
+
+            const civicNumber = r.data.results[0].address_components.find((c) =>
+              c.types.includes("street_number")
+            );
+            if (civicNumber && "long_name" in civicNumber)
+              this.address.city = civicNumber.long_name;
+
             this.address.coordinates.x =
               r.data.results[0].geometry.location.lat;
             this.address.coordinates.y =
               r.data.results[0].geometry.location.lng;
-            
+
             this.query =
-              this.address.street + " " +
-              (!this.address.civicNumber? this.address.civicNumber : "") + 
-              ", " + this.address.city;
+              this.address.street +
+              " " +
+              (!this.address.civicNumber ? this.address.civicNumber : "") +
+              ", " +
+              this.address.city;
 
             this.$emit("data", this.address);
           } else {

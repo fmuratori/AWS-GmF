@@ -138,8 +138,12 @@ export default Vue.extend({
     },
     changePassword() {
       eventbus.$emit("startLoading", "Updating your account data");
-      this.changePasswordForm.oldPassword = sha.hashText(this.changePasswordForm.oldPassword);
-      this.changePasswordForm.newPassword = sha.hashText(this.changePasswordForm.newPassword);
+      this.changePasswordForm.oldPassword = sha.hashText(
+        this.changePasswordForm.oldPassword
+      );
+      this.changePasswordForm.newPassword = sha.hashText(
+        this.changePasswordForm.newPassword
+      );
       api
         .changePassword(this.changePasswordForm)
         .then((r: AxiosResponse): void => {

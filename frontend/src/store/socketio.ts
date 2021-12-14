@@ -1,6 +1,7 @@
 import eventbus from "@/eventbus";
 import { AxiosError, AxiosResponse } from "axios";
 import Vue from "vue";
+import { Commit } from "vuex";
 
 import chatApi from "../api/chat";
 import { ChatMessage } from "../types/types";
@@ -32,8 +33,10 @@ export default {
         eventbus.$emit("startLoading", "Connecting with backend server.");
       else eventbus.$emit("stopLoading");
     },
-    addUnreadMessage(state: SocketIoState, message): void {
-      console.log(message);
+    addUnreadMessage(
+      state: SocketIoState,
+      message: { _id: string; message: ChatMessage }
+    ): void {
       const donationChat = state.unreadMessages.find(
         (e) => e._id == message._id
       );
@@ -79,12 +82,12 @@ export default {
     },
   },
   actions: {
-    SOCKET_connect({ commit }): void {
+    SOCKET_connect({ commit }: { commit: Commit }): void {
       commit("setConnected", true);
       console.log("Connected to server socket.io");
     },
 
-    SOCKET_disconnect({ commit }): void {
+    SOCKET_disconnect({ commit }: { commit: Commit }): void {
       commit("setConnected", false);
       console.log("Disconnected from server socket.io");
     },
@@ -127,11 +130,14 @@ export default {
         .catch((e: AxiosError) => console.log(e));
     },
 
-    resetChat({ commit }): void {
+    resetChat({ commit }: { commit: Commit }): void {
       commit("resetChat");
     },
 
-    updateUnreadMessages({ commit }, messages: ChatMessage[]): void {
+    updateUnreadMessages(
+      { commit }: { commit: Commit },
+      messages: ChatMessage[]
+    ): void {
       commit("updateUnreadMessages", messages);
     },
   },

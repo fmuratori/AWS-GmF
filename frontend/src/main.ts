@@ -46,9 +46,8 @@ Vue.component("vue-google-autocomplete", VueGoogleAutocomplete);
 /* v-calendar */
 import VCalendar from "v-calendar";
 Vue.use(VCalendar, {
-  componentPrefix: "vc",  // Use <vc-calendar /> instead of <v-calendar />
+  componentPrefix: "vc", // Use <vc-calendar /> instead of <v-calendar />
 });
-
 
 /* enable misc functionalities use inside html/pug code */
 import moment from "moment";

@@ -30,6 +30,7 @@ export default Vue.extend({
 
         if (this.$store.getters.isMediumScreenWidth) {
           this.$store.dispatch("hideSidebar");
+          this.$store.dispatch("hideNavbarMobile");
         }
       }
     },

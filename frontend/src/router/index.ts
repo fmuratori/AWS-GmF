@@ -158,8 +158,8 @@ router.beforeEach((to, from, next) => {
     }
     next();
   } else if (to.name !== "Login") {
-    store.dispatch("hideSidebar"); 
-    next({name: "Login"});
+    store.dispatch("hideSidebar");
+    next({ name: "Login" });
   } else {
     next();
   }

@@ -147,7 +147,7 @@ export default Vue.extend({
       this.startCamera();
     },
 
-    async onInit(promise: any) {
+    async onInit(promise: Promise<any>) {
       promise.catch((error: { name: string }) => {
         this.scannerState = "error";
 

@@ -2,6 +2,7 @@ import { UserData, ChatMessage } from "./types";
 
 export interface NavigationState {
   isSidebarOpen: boolean;
+  isNavbarMobileOpen: boolean;
   screenWidth: number;
   donationCreationFlag: boolean;
   familySubscribeFlag: boolean;

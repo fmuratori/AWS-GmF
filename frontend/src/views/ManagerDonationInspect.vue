@@ -104,7 +104,7 @@ export default Vue.extend({
   components: {
     Message,
   },
-  data: ():ManagerDonationsInspectView => {
+  data: (): ManagerDonationsInspectView => {
     return {
       donation: {
         _id: "",
@@ -133,12 +133,12 @@ export default Vue.extend({
     };
   },
   watch: {
-    chat: function(val) {
+    chat: function () {
       this.$nextTick(() => {
         var objDiv = document.getElementById("messages-area");
-        objDiv.scrollTop = objDiv.scrollHeight;
+        if (objDiv) objDiv.scrollTop = objDiv.scrollHeight;
       });
-    }
+    },
   },
   computed: {
     chat(): ChatMessage[] {

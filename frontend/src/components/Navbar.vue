@@ -18,7 +18,7 @@ b-navbar#navbar(toggleable='lg' type='dark' sticky='sticky')
       b-button.my-2.my-sm-0(variant='light' @click='toggleNavbar')
         Icon(fontawesome v-if='isOpen' icon='times')
         Icon(fontawesome v-else icon='bars')
-  b-collapse#nav-collapse(is-nav='' v-model='isOpen')
+  b-collapse#nav-collapse(is-nav :visible="isOpen")
     b-navbar-nav.ml-auto
       b-nav-item.my-auto.navbar-link.text-center(href='#' @click="changePage('Home')") Home
       b-nav-item.my-auto.navbar-link.text-center(href='#' v-if="this.$store.state.session.userData.type == 'trusted'")
@@ -70,13 +70,12 @@ import eventbus from "../eventbus";
 
 import UserUpgradeModal from "./sidebar/UserUpgradeModal.vue";
 import Icon from "./Icon.vue";
-import VCalendar from 'v-calendar';
+import VCalendar from "v-calendar";
 
 import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { Donation } from "../types/types";
-import { NavbarComponent } from "../types/componentTypes";
 
 export default Vue.extend({
   name: "Navbar",
@@ -85,18 +84,20 @@ export default Vue.extend({
     Icon,
     VCalendar,
   },
-  data: (): NavbarComponent => {
-    return {
-      isOpen: false,
-    };
+  computed: {
+    isOpen() {
+      return this.$store.state.navigation.isNavbarMobileOpen;
+    },
   },
   methods: {
     toggleNavbar() {
-      this.isOpen = !this.isOpen;
-      if (this.isOpen)
-        this.$store.dispatch("showSidebar");
-      else 
+      if (this.$store.state.navigation.isNavbarMobileOpen) {
         this.$store.dispatch("hideSidebar");
+        this.$store.dispatch("hideNavbarMobile");
+      } else {
+        this.$store.dispatch("showSidebar");
+        this.$store.dispatch("showNavbarMobile");
+      }
     },
     logout() {
       eventbus.$emit("startLoading");
@@ -118,7 +119,7 @@ export default Vue.extend({
         .findDonation(donationId)
         .then((r: AxiosResponse<Donation[]>): void => {
           if (r.status == 200) {
-            this.$refs.messagesModal!.hide();
+            this.$bvModal.hide("messagesModal");
             this.$router.push({
               name: "ManagerDonationInspect",
               params: { donation: JSON.stringify((r.data as Donation[])[0]) },

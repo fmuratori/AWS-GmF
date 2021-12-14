@@ -96,10 +96,10 @@ b-container.mb-5
                 b Pack expiration date:&nbsp;
                 span {{ dates.formatDate(packExpirationDate) }}
         .mt-3
-          b-button.color3(v-if='!isPrinted' block='block' @click='print()')
+          b-button.color3(v-if='!isPrinted' block='block' @click='saveAsPdf()')
             b-icon.mr-2(icon='printer')
             span Print pack info
-          b-button(v-if='isPrinted' block='block' variant='success' @click='print()')
+          b-button(v-if='isPrinted' block='block' variant='success' @click='saveAsPdf()')
             span Pack info printed
             Icon(bootstrap icon='check')
           b-button(block='block' @click='resetView') Create another pack
@@ -148,7 +148,13 @@ import FamilyView from "../components/FamilyView.vue";
 import Icon from "../components/Icon.vue";
 
 import { ManagerPackCreateView } from "../types/viewTypes";
-import { Family, SelectableFood, Pack, Address, PackPayload } from "../types/types";
+import {
+  Family,
+  SelectableFood,
+  Pack,
+  Address,
+  PackPayload,
+} from "../types/types";
 
 import packApi from "../api/pack";
 import { AxiosResponse, AxiosError } from "axios";
@@ -192,15 +198,12 @@ export default Vue.extend({
       this.step = "selectFoods";
     },
 
-    print() {
+    saveAsPdf() {
       this.isPrinted = true;
       this.$refs.printableData.generatePdf();
-
-      // const printableData: any = this.$refs.printableData;
-      // printableData.generatePdf();
     },
     createPack(): void {
-      this.foodList.forEach((elem) => {
+      this.foodList.forEach((elem: { selected: boolean; _id: string }) => {
         if (elem.selected) {
           this.form.foodList.push({ foodId: elem._id, number: elem.selected });
         }
@@ -213,7 +216,7 @@ export default Vue.extend({
         );
         return;
       }
-      this.form.familyId = this.selectedFamily!._id;
+      if (this.selectedFamily) this.form.familyId = this.selectedFamily._id;
       this.form.expirationDate = new Date(this.packExpirationDate);
 
       eventbus.$emit("startLoading", "Creating a new food pack");

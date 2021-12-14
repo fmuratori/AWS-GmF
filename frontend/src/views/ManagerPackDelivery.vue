@@ -203,7 +203,7 @@ export default Vue.extend({
       unselectedPacks: new Array<Pack>(),
       windowPacks: new Array<Pack>(),
       windowCoordinates: { x: 0, y: 0 },
-      deliveryDate: null,
+      deliveryDate: new Date(),
       deliveryPeriod: "",
       isModalOpen: false,
     };
@@ -284,7 +284,7 @@ export default Vue.extend({
           this.unselectedPacks = this.packs.filter(
             (p: Pack) => moment(p.expirationDate).toDate() == moment().toDate()
           );
-          this.deliveryDate = dates.formatDate(moment().toDate());
+          this.deliveryDate = moment().toDate();
           break;
         }
         case "expiring_tomorrow": {
@@ -293,9 +293,7 @@ export default Vue.extend({
               moment(p.expirationDate).toDate() ==
               moment().add(1, "days").toDate()
           );
-          this.deliveryDate = dates.formatDate(
-            moment().add(1, "days").toDate()
-          );
+          this.deliveryDate = moment().add(1, "days").toDate();
           break;
         }
         case "all": {

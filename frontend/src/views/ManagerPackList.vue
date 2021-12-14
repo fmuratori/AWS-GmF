@@ -99,7 +99,7 @@ export default Vue.extend({
       ],
       packList: new Array<Pack>(),
       packListBackup: new Array<Pack>(),
-      selectedPack: undefined,
+      selectedPack: {} as Pack,
       tableFields: [
         {
           key: "pack.status",

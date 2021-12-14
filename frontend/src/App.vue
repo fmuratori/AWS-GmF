@@ -41,10 +41,7 @@ export default Vue.extend({
           token: this.$cookies.get("jwt"),
           userData: r.data as UserData,
         });
-        this.$socket.emit(
-          "login",
-          this.$store.state.session.userData._id
-        );
+        this.$socket.emit("login", this.$store.state.session.userData._id);
       });
     }
   },

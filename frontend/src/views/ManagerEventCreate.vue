@@ -79,7 +79,7 @@ export default Vue.extend({
     this.form.ownerVolunteerId = this.$store.state.session.userData._id;
 
     if ("event" in this.$route.params) {
-      this.form = this.$route.params.event as EventPayload; //as unknown
+      this.form = this.$route.params.event as unknown as EventPayload;
       this.submitLabel = "Edit";
     }
   },

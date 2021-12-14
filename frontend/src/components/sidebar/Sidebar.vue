@@ -79,8 +79,10 @@ export default Vue.extend({
         this.$router.push({ name: pageName, params: { mode: mode } });
       else eventbus.$emit("userInfoModeChange", mode);
 
-      if (this.$store.getters.isMediumScreenWidth)
+      if (this.$store.getters.isMediumScreenWidth) {
         this.$store.dispatch("hideSidebar");
+        this.$store.dispatch("hideNavbarMobile");
+      }
     },
   },
 });
@@ -140,11 +142,11 @@ export default Vue.extend({
   background-color: $greyscale3;
 }
 
-
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.2s
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-    opacity: 0
+  opacity: 0;
 }
 </style>

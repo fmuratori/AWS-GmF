@@ -2,9 +2,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import eventbus from "../eventbus";
 
-export default {
+export default Vue.extend({
+  name: "ToastsManager",
   created() {
     eventbus.$on("successMessage", (title: string, message: string) => {
       this.$root.$bvToast.toast(message, {
@@ -31,5 +33,5 @@ export default {
       });
     });
   },
-};
+});
 </script>
