@@ -14,6 +14,8 @@ import {
   changePasswordPayload,
 } from "./types";
 
+import { TableField, MapOptions, Coordinates } from "./miscTypes";
+
 export interface LoginView {
   isLoginSelected: boolean;
   showLoginErrorMessage: boolean;
@@ -53,27 +55,15 @@ export interface ManagerDonationsListView {
 }
 
 export interface ManagerDonationsRetrieveView {
-  mapsOptions: {
-    zoomControl: boolean;
-    mapTypeControl: boolean;
-    scaleControl: boolean;
-    streetViewControl: boolean;
-    rotateControl: boolean;
-    fullscreenControl: boolean;
-    disableDefaultUi: boolean;
-    clickableIcons: boolean;
-  };
+  mapsOptions: MapOptions;
   selectedCity: {
     name: string;
-    coordinates: {
-      x: 0;
-      y: 0;
-    };
+    coordinates: Coordinates
   };
   donations: Donation[];
   selectedDonations: Donation[];
   windowDonations: Donation[];
-  windowCoordinates: { x: number; y: number };
+  windowCoordinates: Coordinates;
   pickUpDate: Date;
   pickUpPeriod: string;
   isModalOpen: boolean;
@@ -164,16 +154,7 @@ export interface ManagerPackCreateView {
 }
 
 export interface ManagerPackDeliveryView {
-  mapsOptions: {
-    zoomControl: boolean;
-    mapTypeControl: boolean;
-    scaleControl: boolean;
-    streetViewControl: boolean;
-    rotateControl: boolean;
-    fullscreenControl: boolean;
-    disableDefaultUi: boolean;
-    clickableIcons: boolean;
-  };
+  mapsOptions: MapOptions;
   filters: { // TODO: move to components types
     name: string;
     label: string;
@@ -182,10 +163,7 @@ export interface ManagerPackDeliveryView {
   }[];
   selectedCity: {
     name: string;
-    coordinates: {
-      x: number;
-      y: number;
-    };
+    coordinates: Coordinates;
   };
   daysToExpiration: number;
   packs: Pack[];
@@ -193,7 +171,7 @@ export interface ManagerPackDeliveryView {
   selectedPacks: Pack[];
   unselectedPacks: Pack[];
   windowPacks: Pack[];
-  windowCoordinates: { x: number; y: number };
+  windowCoordinates: Coordinates;
   deliveryDate: Date;
   deliveryPeriod: string;
   isModalOpen: boolean;
@@ -231,11 +209,4 @@ export interface FilterButton {
   label: string;
   icon: string;
   isVisible: boolean;
-}
-
-interface TableField {
-  key: string;
-  label: string;
-  sortable: boolean;
-  formatter?: any;
 }

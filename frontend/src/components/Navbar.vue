@@ -76,6 +76,7 @@ import donationApi from "../api/donation";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { Donation } from "../types/types";
+import { NavbarComponent } from "../types/componentTypes";
 
 export default Vue.extend({
   name: "Navbar",
@@ -84,7 +85,7 @@ export default Vue.extend({
     Icon,
     VCalendar,
   },
-  data: () => {
+  data: (): NavbarComponent => {
     return {
       isOpen: false,
     };

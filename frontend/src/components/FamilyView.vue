@@ -31,10 +31,11 @@ import api from "../api/family";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { Address, Family, Pack } from "../types/types";
+import { FamilyViewComponent } from "../types/componentTypes";
 
 export default Vue.extend({
   name: "FamilyView",
-  data: () => {
+  data: (): FamilyViewComponent => {
     return {
       familyList: new Array<Family>(),
       tableFields: [

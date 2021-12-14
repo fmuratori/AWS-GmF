@@ -37,7 +37,7 @@ import eventbus from "../eventbus";
 import dates from "../misc/dates";
 
 import { SelectableFood } from "../types/types";
-import { FoodView } from "../types/viewTypes";
+import { FoodViewComponent } from "../types/componentTypes";
 
 import api from "../api/food";
 import { AxiosError, AxiosResponse } from "axios";
@@ -49,7 +49,7 @@ export default Vue.extend({
     loadableItems: Boolean,
     deletableItem: Boolean,
   },
-  data: (): FoodView => {
+  data: (): FoodViewComponent => {
     return {
       foodList: new Array<SelectableFood>(),
       tableFields: [

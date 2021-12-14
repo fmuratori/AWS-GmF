@@ -11,6 +11,7 @@ b-form-group(:label='title' label-cols-sm='3' label-align-sm='right' :descriptio
 import Vue from "vue";
 
 import Icon from "../Icon.vue";
+import { InputDateComponent } from "../../types/componentTypes";
 
 export default Vue.extend({
   name: "InputDate",
@@ -24,7 +25,7 @@ export default Vue.extend({
     required: Boolean,
     description: String,
   },
-  data: () => {
+  data: (): InputDateComponent => {
     return {
       dateModel: "",
     };

@@ -9,6 +9,7 @@ div
 
 <script lang="ts">
 import Vue from "vue";
+import { MapLocationComponent } from "../types/componentTypes";
 
 export default Vue.extend({
   name: "MapLocation",
@@ -16,7 +17,7 @@ export default Vue.extend({
     x: Number,
     y: Number,
   },
-  data: () => {
+  data: (): MapLocationComponent => {
     return {
       xCoord: 0,
       yCoord: 0,
@@ -29,7 +30,6 @@ export default Vue.extend({
         fullscreenControl: true,
         disableDefaultUi: false,
         clickableIcons: false,
-        gmapCenter: null,
       },
     };
   },

@@ -18,9 +18,10 @@ div
 <script lang="ts">
 import Vue from "vue";
 import Icon from "../Icon.vue";
+import { InputPasswordSelectComponent } from "../../types/componentTypes";
 
 export default Vue.extend({
-  name: "InputText",
+  name: "InputPassword",
   components: {
     Icon,
   },
@@ -31,7 +32,7 @@ export default Vue.extend({
     placeholder2: String,
     icon: String,
   },
-  data: () => {
+  data: (): InputPasswordSelectComponent => {
     return {
       password: "",
       regRepeatPassword: "",

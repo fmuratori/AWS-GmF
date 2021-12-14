@@ -42,6 +42,7 @@ import Vue from "vue";
 import Icon from "../Icon.vue";
 
 import { Address, Event } from "../../types/types";
+import { HomepageEventsComponent } from "../../types/componentTypes";
 
 import { AxiosResponse } from "axios";
 import api from "../../api/data";
@@ -51,7 +52,7 @@ export default Vue.extend({
   components: {
     Icon,
   },
-  data: () => {
+  data: (): HomepageEventsComponent => {
     return {
       selected: 0,
       eventList: new Array<Event>(),

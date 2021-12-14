@@ -17,12 +17,14 @@ import InputText from "../input/InputText.vue";
 
 import api from "../../api/user";
 
+import { UserUpgradeModalComponent } from "../../types/componentTypes";
+
 export default Vue.extend({
   name: "UserUpgradeModal",
   components: {
     InputText,
   },
-  data: () => {
+  data: (): UserUpgradeModalComponent => {
     return {
       userEmail: "",
     };

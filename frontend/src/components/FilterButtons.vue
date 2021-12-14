@@ -9,12 +9,13 @@ div
 import Vue from "vue";
 
 import Icon from "./Icon.vue";
+import { FilterButtonsComponent } from "../types/componentTypes";
 
 export default Vue.extend({
   name: "FilterButtons",
   components: { Icon },
   props: ["label", "filters", "selected"],
-  data: () => {
+  data: (): FilterButtonsComponent => {
     return {
       selectedFilter: "",
     };

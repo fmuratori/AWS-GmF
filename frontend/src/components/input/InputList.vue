@@ -19,6 +19,7 @@ b-form-group(:label="title" label-cols-sm="3", label-align-sm="right" :descripti
 <script lang="ts">
 import Vue from "vue";
 import Icon from "../Icon.vue";
+import { InputListComponent } from "../../types/componentTypes";
 
 export default Vue.extend({
   name: "InputList",
@@ -31,7 +32,7 @@ export default Vue.extend({
     placeholder: String,
     labelList: Array,
   },
-  data: () => {
+  data: (): InputListComponent => {
     return {
       labels: new Array<string>(),
     };

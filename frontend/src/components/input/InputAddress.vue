@@ -28,6 +28,7 @@ import { Address, GMapAutoCompleteResponse } from "../../types/types";
 import MapLocation from "../MapLocation.vue";
 import InputText from "../input/InputText.vue";
 import Icon from "../Icon.vue";
+import { InputAddressComponent } from "../../types/componentTypes";
 
 export default Vue.extend({
   name: "InputAddress",
@@ -44,7 +45,7 @@ export default Vue.extend({
     x: Number,
     y: Number,
   },
-  data: () => {
+  data: (): InputAddressComponent => {
     return {
       query: "",
       address: {

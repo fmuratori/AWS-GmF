@@ -27,10 +27,6 @@ export default Vue.extend({
     isVisualized: Boolean,
     isEvent: Boolean,
   },
-  data: () => {
-    return {};
-  },
-  methods: {},
 });
 </script>
 

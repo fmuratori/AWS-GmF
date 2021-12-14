@@ -47,7 +47,4 @@ export default Vue.extend({
 .pre-formatted {
   white-space: pre;
 }
-
-.box {
-}
 </style>

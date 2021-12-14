@@ -18,10 +18,11 @@ transition(name="fade")
 <script lang="ts">
 import Vue from "vue";
 import eventbus from "../eventbus";
+import { LoadingComponent } from "../types/componentTypes";
 
 export default Vue.extend({
   name: "Loading",
-  data: () => {
+  data: (): LoadingComponent => {
     return {
       isActive: false,
       message: "",
