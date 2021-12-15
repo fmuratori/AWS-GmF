@@ -97,6 +97,56 @@ hr.shaded {
   background-color: $greyscaleD;
 }
 
+
+.filters-button {
+  z-index: 1;
+  position:absolute;
+
+  top: 1em;
+  left: 1em;
+
+  @include lg {
+    top: 2em;
+    left: 2em;
+  }
+}
+
+.submit-button {
+  z-index: 1;
+  bottom: 1em;
+  left: 1em;
+  position:absolute;
+
+  
+  @include lg {
+    bottom: 2em;
+    left: 2em;
+  }
+}
+
+#map-sidebar {
+  padding: 1em;
+  position:absolute;
+  overflow-y: scroll;
+  z-index: 2;
+  top: 5%;
+  left: 5%;
+  height: 90%;
+  width: 90%;
+  background-color: #fefefe;
+
+  -webkit-box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.7); 
+  box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.7);   
+
+  @include lg {
+    width: 20em;
+    left: 0;
+  }
+}
+
+/* mobile utilities */
+
+
 .fullheight {
   height: 100%;
 }
@@ -155,4 +205,14 @@ hr.shaded {
 .pagination > li > button
 {
   background-color: $color1 !Important;
+}
+
+/* vue transitions animations */
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }

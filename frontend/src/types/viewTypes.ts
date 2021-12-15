@@ -68,6 +68,7 @@ export interface ManagerDonationsRetrieveView {
   pickUpDate: Date;
   pickUpPeriod: string;
   isModalOpen: boolean;
+  openMapSidebar: boolean;
 }
 
 export interface ManagerEditUserInfoView {
@@ -181,6 +182,7 @@ export interface ManagerPackDeliveryView {
   deliveryDate: Date;
   deliveryPeriod: string;
   isModalOpen: boolean;
+  openMapSidebar: boolean;
 }
 
 export interface ManagerPackListView {
@@ -196,6 +198,14 @@ export interface ManagerPackListView {
   selectedPack: Pack;
   tableFields: TableField[];
   deletePackId: string;
+  totalRows: number;
+  currentPage: number;
+  perPage: number;
+  filter: string;
+  filterOn: string[];
+  sortBy: string;
+  sortDesc: boolean;
+  sortDirection: string;
 }
 
 export interface ManagerPackScanView {

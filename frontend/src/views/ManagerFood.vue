@@ -11,8 +11,10 @@ b-container.mb-5
       b-form(@submit.stop.prevent='addFood')
         b-card.mb-2(bg-variant='light' text-variant='dark' no-body='no-body')
           b-card-text
-            b-card-header(v-if='!isEditMode') Add food
-            b-card-header(v-else) Edit food
+            b-card-header(v-if='!isEditMode') 
+              b Add food
+            b-card-header(v-else) 
+              b Edit food
             .px-4.pt-4
               InputText(title='Name:' placeholder='Set food name' :text='form.name' required @data='(e) => { form.name = e; }')
               InputText(title='Amount: ' placeholder='Set amount' type='number' :text='form.number' required @data='(e) => { form.number = e; }')

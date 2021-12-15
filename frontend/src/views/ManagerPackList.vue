@@ -6,14 +6,19 @@ b-container.mb-5
       h4.text-center
         b PACK LIST
       hr.shaded
-  b-row.justify-content-center.my-5
-    b-col(lg='12' md='12' cols='12')
-      b-row(v-if="this.$store.state.session.userData.type != 'user'")
-        label Pack status
-        FilterButtons(:filters='filters' :selected='0' @click='filterBy')
-      b-row
-        b-col(lg='8' md='8' sm='12')
-          b-table(show-empty ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList')
+  b-row
+    b-col(lg='8' md='12' sm='12')
+      b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"')
+        b-col(lg='6' md='8' cols='12')
+          b-form-group
+            b-input-group
+              b-form-input(v-model='filter' type='search' placeholder='Type to search' size='sm')
+              b-input-group-append
+                b-button(:disabled='!filter' @click="filter = ''" size='sm') Clear
+        b-col(md='auto' cols='12')
+          b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' align='fill' size='sm')  
+        b-col(md='auto' cols='12')
+          b-table(show-empty ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
             template(#cell(status)='data')
               b-badge(v-if="data.value == 'ready'" variant='primary') {{ data.value }}
               b-badge(v-if="data.value == 'planned delivery'" variant='warning') {{ data.value }}
@@ -27,23 +32,24 @@ b-container.mb-5
               h4.text-center There are no records to show
             template(#emptyfiltered='scope')
               h4.text-center There are no records matching your request
-        b-col(lg='4' md='4' sm='12')
-          b-card(bg-variant='light')
-            template(#header)
-              h5.mb-0
-                b Pack info
-                span.float-right(v-if='selectedPack')
-                  b-badge {{ selectedPack.pack.status }}
-            div(v-if='selectedPack')
+    b-col(lg='4' md='12' sm='12')
+      b-card(bg-variant='light' no-body='no-body')
+        b-card-text
+          b-card-header
+            b Pack info
+            span.float-right(v-if='"_id" in selectedPack')
+              b-badge {{ selectedPack.pack.status }}
+          .px-4.pt-4
+            div(v-if='"_id" in selectedPack')
               h4 Family
               div
-                b name:
+                b Name:&nbsp;
                 span {{ selectedPack.family.name }}
               div
-                b components:
+                b Components:&nbsp;
                 span {{ selectedPack.family.components }}
               div
-                b address:
+                b Address:&nbsp;
                 span {{ formatAddress(selectedPack.family.address) }}
               hr
               h4 Food list
@@ -53,9 +59,10 @@ b-container.mb-5
               hr
               h4 QR code
               QrcodeVue.text-center.my-3(:value='selectedPack._id' size='200' level='H')
-              b-button(variant='secondary' block='block' @click='selectedPack = null') Close pack info
-            div(v-else)
-              i No pack selected.     
+            div(v-else).mb-4
+              i No pack selected.    
+          b-button.footerCardButton(variant='secondary' block='block' v-if='"_id" in selectedPack' @click='selectedPack = {}') CLOSE
+  
   b-modal#modal(title='Delete this pack?' @ok='deletePack(deletePackId)')
     div This pack will be deleted permanently.
     template(#modal-footer='{ ok, cancel }')
@@ -100,11 +107,24 @@ export default Vue.extend({
       packList: new Array<Pack>(),
       packListBackup: new Array<Pack>(),
       selectedPack: {} as Pack,
+      totalRows: 0,
+      currentPage: 1,
+      perPage: 10,
+      filter: "",
+      filterOn: [
+        "pack.status",
+        "pack.expirationDate",
+        "pack.deliveryDate",
+        "pack.deliveryPeriod",
+      ],
+      sortBy: "",
+      sortDesc: false,
+      sortDirection: "asc",
       tableFields: [
         {
           key: "pack.status",
           label: "Status",
-          sortable: false,
+          sortable: true,
         },
         {
           key: "pack.expirationDate",
@@ -125,7 +145,7 @@ export default Vue.extend({
         {
           key: "pack.deliveryPeriod",
           label: "Delivery Period",
-          sortable: false,
+          sortable: true,
         },
         {
           key: "buttons",
@@ -151,6 +171,10 @@ export default Vue.extend({
       });
   },
   methods: {
+    onFiltered(filteredItems: Pack[]) {
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
     filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
       if (status != "all") {
         this.packList = this.packListBackup.filter((p: Pack) => {
