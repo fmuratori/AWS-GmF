@@ -217,6 +217,7 @@ export interface ManagerPackScanView {
   scannerState: string;
   isScannerFullscreen: boolean;
   pack: Pack;
+  isLoading: boolean;
 }
 
 //////////////////////////////////

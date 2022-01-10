@@ -70,7 +70,7 @@ export default Vue.extend({
       return fullname;
     },
     isSidebarOpen() {
-      return this.$store.state.navigation.isSidebarOpen;
+      return this.$store.state.navigation.isSidebarOpen && this.$store.getters.isUserLogged;
     },
   },
   methods: {

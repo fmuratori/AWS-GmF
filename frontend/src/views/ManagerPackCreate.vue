@@ -15,7 +15,7 @@ b-container.mb-5
       
       b-row.mb-5
         b-col
-          b-card(bg-variant='light' text-variant='dark' no-body='no-body')
+          b-card(bg-variant='light' text-variant='dark' no-body)
             b-card-text
               b-card-header Family info
               .p-4
@@ -32,7 +32,7 @@ b-container.mb-5
                   b Address:&nbsp;
                   span {{ formatAddress(selectedFamily.address) }}
         b-col
-          b-card(bg-variant='light' text-variant='dark' no-body='no-body')
+          b-card(bg-variant='light' text-variant='dark' no-body)
             b-card-text
               b-card-header Pack
               .p-4

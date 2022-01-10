@@ -8,7 +8,7 @@ b-container.mb-5
       hr.shaded
   b-row.justify-content-center
     b-col(lg='4' md='8' cols='11').mb-3
-      b-card(bg-variant='light' no-body='no-body')
+      b-card(bg-variant='light' no-body)
         b-card-text.m-2
           #messages-area.mb-1(ref='messagesArea')
             Message(v-for='(message, idx) in processedChat' :key='idx' :username='message.userFullname' :isOwner='message.userId == $store.state.session.userData._id' :date='dates.formatDatetime(message.date)' :isVisualized='message.visualized' :isEvent='message.isEventMessage' :messages='message.messages')
@@ -20,7 +20,7 @@ b-container.mb-5
 
 
     b-col.mb-5(lg='6' md='8' cols='11')
-      b-card.mb-2(bg-variant='light' no-body='no-body')
+      b-card.mb-2(bg-variant='light' no-body)
         b-card-text.p-3
           b-row.mb-3
             b-col(md='3')

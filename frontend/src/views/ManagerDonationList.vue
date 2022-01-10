@@ -47,7 +47,7 @@ b-container.mb-5
           a(href='#' @click="$router.push({ name: 'ManagerDonationCreate' })") here
           |  to insert a donation
         span .
-      b-card.mb-2(bg-variant='light' text-variant='dark' no-body='no-body' v-for='(donation, idx) in donations' :key='idx')
+      b-card.mb-2(bg-variant='light' text-variant='dark' no-body v-for='(donation, idx) in donations' :key='idx')
         template(#header)
           h5.mb-0
             b(v-if='$store.getters.isUser') Donated on {{ dates.formatDate(donation.creationDate) }}

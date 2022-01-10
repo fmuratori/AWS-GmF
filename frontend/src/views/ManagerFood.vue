@@ -9,7 +9,7 @@ b-container.mb-5
   b-row.justify-content-center.my-5
     b-col.mb-5(lg='4' md='8' cols='11')
       b-form(@submit.stop.prevent='addFood')
-        b-card.mb-2(bg-variant='light' text-variant='dark' no-body='no-body')
+        b-card.mb-2(bg-variant='light' text-variant='dark' no-body)
           b-card-text
             b-card-header(v-if='!isEditMode') 
               b Add food

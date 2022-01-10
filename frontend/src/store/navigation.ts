@@ -77,11 +77,11 @@ const navigationModule = {
     unsetMangerMode({ commit }: { commit: Commit }): void {
       commit("unsetMangerMode");
     },
-    updateScreenWidth({ commit, getters, rootGetters }, value: number): void {
+    updateScreenWidth({ commit, state, getters, rootGetters }, value: number): void {
       commit("updateScreenWidth", value);
 
       if (rootGetters.isUserLogged)
-        commit("setSidebarVisible", getters.isMediumScreenWidth ? false : true);
+        commit("setSidebarVisible", getters.isMediumScreenWidth ? state.isNavbarMobileOpen : true);
     },
 
     setDonationCreationFlag({ commit }: { commit: Commit }): void {

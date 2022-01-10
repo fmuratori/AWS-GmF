@@ -159,10 +159,10 @@ router.beforeEach((to, from, next) => {
     next();
   } else if (to.name !== "Login") {
     store.dispatch("hideSidebar");
-    next({ name: "Login" });
-  } else {
-    next();
-  }
+
+    if (to.name !== "Home") next({ name: "Login" });
+    else next();
+  } else next();
 });
 
 export default router;

@@ -1,7 +1,7 @@
 <template lang="pug">
 b-row.justify-content-center(no-gutters).mb-5
   b-col(:lg='isLoginSelected ? 3 : 5' md='8' cols='10')
-    b-card#login.shadow-lg.mt-5.mb-5(no-body='no-body')
+    b-card#login.shadow-lg.mt-5.mb-5(no-body)
       #login-header.px-5.py-4
         b-row(align-h='center')
           b-icon-person-circle(font-scale='3')
@@ -16,7 +16,7 @@ b-row.justify-content-center(no-gutters).mb-5
           h5.text-center.mt-4 Credentials
           InputText(placeholder='Insert your email' type='email' icon='at' required :text='login.email' @data='(e) => { login.email = e; }')
           InputText(placeholder='Insert your password' type='password' icon='key' required :text='login.password' @data='(e) => { login.password = e; }')
-          b-row.justify-content-md-center.mb-4
+          b-row.justify-content-center.mb-4
             a(href='#') Forgot password?
         .p-3(v-else)
           h5.text-center.mt-4 Personal information

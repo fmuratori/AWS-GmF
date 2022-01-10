@@ -52,7 +52,7 @@ b-container.mb-5
           | We found no event. Be sure to select your filters selectors correctly. Click 
           a(href='#' @click="$router.push({ name: 'ManagerEventCreate' })") here
           |  to add a new event.
-      b-card.mb-4(bg-variant='light' text-variant='dark' no-body='no-body' v-for='(event, idx) in eventList' :key='idx')
+      b-card.mb-4(bg-variant='light' text-variant='dark' no-body v-for='(event, idx) in eventList' :key='idx')
         template(#header)
           h5.mb-0
             b {{ event.eventTitle }}
@@ -63,15 +63,15 @@ b-container.mb-5
         b-card-text
           .px-4.py-3
             div
-              span.mb-0 Date:&nbsp;
-              span.font-weight-bold.mb-2 {{ dates.formatDate(event.date) }}
+              span.font-weight-bold.mb-0 Date:&nbsp;
+              span.mb-2 {{ dates.formatDate(event.date) }}
             div
-              span.mb-0 Address:&nbsp;
-              span.font-weight-bold
+              span.font-weight-bold.mb-0 Address:&nbsp;
+              span
                 | {{ event.address.street }} {{ event.address.civicNumber }} {{ event.address.city }}
             div
-              span.mb-0 Description:&nbsp;
-              span.font-weight-bold {{ event.description }}
+              span.font-weight-bold.mb-0 Description:&nbsp;
+              span {{ event.description }}
           b-button-group.d-flex(v-if='dates.isFutureDate(event.date)')
             b-button.footerCardButton.color3(@click="$router.push({ name: 'ManagerEventCreate', params: { event: event } })") EDIT
             b-button.footerCardButton.color3(v-b-modal.modal @click='deleteEventId = event._id') DELETE
@@ -144,6 +144,18 @@ export default Vue.extend({
         icon: "sort-down-alt",
         isVisible: true,
       },
+      {
+        name: "eventNameDescending",
+        label: "Event name",
+        icon: "sort-alpha-down",
+        isVisible: true,
+      },
+      {
+        name: "eventNameAscending",
+        label: "Event name",
+        icon: "sort-alpha-down-alt",
+        isVisible: true,
+      },
     ];
 
     eventbus.$emit("startLoading", "Loading your events.");
@@ -162,6 +174,9 @@ export default Vue.extend({
     eventDateComparer(a: Event, b: Event) {
       return new Date(a.date) < new Date(b.date) ? -1 : 1;
     },
+    eventNameComparer(a: Event, b: Event) {
+      return a.eventTitle < b.eventTitle ? -1 : 1;
+    },
     sortBy(mode: string) {
       this.sortByMode = mode;
       switch (mode) {
@@ -172,6 +187,14 @@ export default Vue.extend({
           this.eventList = this.eventList
             .sort(this.eventDateComparer)
             .reverse();
+          break;
+        case "eventNameAscending":
+          this.eventList = this.eventList
+            .sort(this.eventNameComparer)
+            .reverse();
+          break;
+        case "eventNameDescending":
+          this.eventList = this.eventList.sort(this.eventNameComparer);
           break;
         default:
           null;

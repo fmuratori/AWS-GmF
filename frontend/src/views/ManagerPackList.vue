@@ -33,7 +33,7 @@ b-container.mb-5
             template(#emptyfiltered='scope')
               h4.text-center There are no records matching your request
     b-col(lg='4' md='12' sm='12')
-      b-card(bg-variant='light' no-body='no-body')
+      b-card(bg-variant='light' no-body)
         b-card-text
           b-card-header
             b Pack info

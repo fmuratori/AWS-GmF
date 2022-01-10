@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container.mb-5
-  b-row.justify-content-md-center.no-gutters
+  b-row.justify-content-center.no-gutters
     b-col(lg='6' md='8' cols='11')
       .my-5
         hr.shaded

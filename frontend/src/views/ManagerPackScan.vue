@@ -5,31 +5,38 @@ b-container.mb-5
       div
         hr.shaded
         h4.text-center
-          b PACK INFO
+          b PACK SCANNER
         hr.shaded
-  b-row.justify-content-md-center.my-5.no-gutters
+  b-row.justify-content-center.my-5.no-gutters
     b-col(lg='6' md='10' cols='11')
       div(v-if="showScreen=='scan'")
-        b-card.text-center(bg-variant='light')
-          h3.mb-3
-            font-awesome-icon.mr-2(icon='qrcode')
-            span Qr code scanner
-          div(v-if="scannerState == 'ready'")
-            b-button.color3.m-5(@click='startCamera()') Open camera
-          div(v-if="scannerState == 'scanning'")
-            qrcode-stream(@decode='onDecode' @init='onInit' :camera='cameraState')
-            b-button.color3(block='block' @click='stopCamera()' v-if="scannerState=='scanning'") Close camera
-          div(v-if="scannerState == 'error'")
-            Icon(fontawesome icon='fas fa-qrcode fa-3x')
-            p(v-if='!isMobile') Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
-            p(v-else) Devi autorizzare l&apos;utilizzo della fotocamera per scansionare il codice QR
-          div(v-if="scannerState=='validating'")
-            p Validation...
-          div(v-if="scannerState=='valid_success'")
-            p Pack identified succesfully.
-          div(v-if="scannerState=='valid_error'")
-            p Pack unidentified.
-            b-button(@click='reloadScanner()' v-if="scannerState=='valid_error' || scannerState=='valid_success'") Riattiva camera
+        b-card.text-center(bg-variant='light' no-body)
+          template(#header)
+            h3.mb-0
+              font-awesome-icon.mr-2(icon='qrcode')
+              span Qr code scanner
+
+          b-card-text
+            div(v-if="scannerState == 'ready'")
+              b-button.color3.m-5(@click='startCamera()') Open camera
+            div(v-if="scannerState == 'scanning'")
+              qrcode-stream(@decode='onDecode' @init='onInit' :camera='cameraState')
+                p(v-if="isLoading").mt-5 Loading ...
+              b-button.footerCardButton.color3(block='block' @click='stopCamera()' v-if="scannerState=='scanning'") Close camera
+            div(v-if="scannerState == 'error'")
+              Icon(fontawesome icon='fas fa-qrcode fa-3x')
+              p(v-if='!isMobile') Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
+              p(v-else) Devi autorizzare l&apos;utilizzo della fotocamera per scansionare il codice QR
+            div(v-if="scannerState=='validating'")
+              p.m-5 
+                i Validation...
+            div(v-if="scannerState=='valid_success'")
+              p.m-5 
+                i Pack identified succesfully.
+            div(v-if="scannerState=='valid_error'")
+              p.m-5 
+                i Pack unidentified.
+          b-button.footerCardButton(@click='reloadScanner()' v-if="scannerState=='valid_error' || scannerState=='valid_success'") Restart camera
       div(v-if="showScreen=='pack'")
         b-alert(variant='success' show='show')
           b-row(align-v='center')
@@ -98,6 +105,7 @@ export default Vue.extend({
       scannerState: "ready",
       isScannerFullscreen: false,
       pack: {} as Pack,
+      isLoading: false,
     };
   },
   created() {
@@ -115,7 +123,6 @@ export default Vue.extend({
     },
 
     onDecode(result: string) {
-      console.log(result);
       if (result != "") {
         this.result = result;
 
@@ -124,14 +131,23 @@ export default Vue.extend({
         packApi
           .packListExpanded({ _id: result })
           .then((r: AxiosResponse<Pack>) => {
-            if (r.status == 200) {
+            console.log(r);
+            if (r.status == 200 && r.data) {
               this.scannerState = "valid_success";
               this.showScreen = "pack";
               this.pack = r.data;
+            } else {
+              this.scannerState = "valid_error";
+              eventbus.$emit(
+                "errorMessage",
+                "Pack info",
+                "Unable to retrieve pack info, retry later or contact us if the problem persists."
+              );
             }
           })
           .catch((e: AxiosError) => {
             console.log(e);
+            this.scannerState = "valid_error";
             eventbus.$emit(
               "errorMessage",
               "Pack info",
@@ -148,32 +164,41 @@ export default Vue.extend({
     },
 
     async onInit(promise: Promise<any>) {
-      promise.catch((error: { name: string }) => {
-        this.scannerState = "error";
+      this.isLoading = true;
+      eventbus.$emit("startLoading", "Opening device camera");
+      promise
+        .catch((error: { name: string }) => {
+          this.scannerState = "error";
 
-        var errorMessage = "";
-        switch (error.name) {
-          case "NotAllowedError":
-            errorMessage = "ERROR: you need to grant camera access permisson";
-            break;
-          case "NotFoundError":
-            errorMessage = "ERROR: no camera on this device";
-            break;
-          case "NotSupportedError":
-            errorMessage = "ERROR: secure context required (HTTPS, localhost)";
-            break;
-          case "NotReadableError":
-            errorMessage = "ERROR: is the camera already in use?";
-            break;
-          case "OverconstrainedError":
-            errorMessage = "ERROR: installed cameras are not suitable";
-            break;
-          case "StreamApiNotSupportedError":
-            errorMessage = "ERROR: Stream API is not supported in this browser";
-            break;
-        }
-        eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
-      });
+          var errorMessage = "";
+          switch (error.name) {
+            case "NotAllowedError":
+              errorMessage = "ERROR: you need to grant camera access permisson";
+              break;
+            case "NotFoundError":
+              errorMessage = "ERROR: no camera on this device";
+              break;
+            case "NotSupportedError":
+              errorMessage =
+                "ERROR: secure context required (HTTPS, localhost)";
+              break;
+            case "NotReadableError":
+              errorMessage = "ERROR: is the camera already in use?";
+              break;
+            case "OverconstrainedError":
+              errorMessage = "ERROR: installed cameras are not suitable";
+              break;
+            case "StreamApiNotSupportedError":
+              errorMessage =
+                "ERROR: Stream API is not supported in this browser";
+              break;
+          }
+          eventbus.$emit("errorMessage", "PACK SCANNER", errorMessage);
+        })
+        .then(() => {
+          this.isLoading = false;
+          eventbus.$emit("stopLoading");
+        });
     },
     deliverPack() {
       packApi
@@ -241,4 +266,14 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import "@/assets/style.scss";
+
+.scannerBody {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  height: 0px;
+  background-color: $greyscaleD;
+}
+</style>

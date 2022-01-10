@@ -106,6 +106,7 @@ export interface Family {
   components: number;
   status: string;
   address: Address;
+  creationDate: Date;
 }
 
 export interface EventPayload {

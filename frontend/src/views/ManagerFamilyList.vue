@@ -43,7 +43,7 @@ b-container.mb-5
           | We found no reports. Be sure to select your filters and status selectors correctly. Click 
           a(href='#' @click="$router.push({ name: 'ManagerFamilySubscribe' })") here
           |  to add a new family.
-      b-card.mb-4(bg-variant='light' text-variant='dark' no-body='no-body' v-for='(family, idx) in familyList' :key='idx')
+      b-card.mb-4(bg-variant='light' text-variant='dark' no-body v-for='(family, idx) in familyList' :key='idx')
         template(#header)
           h5.mb-0
             b {{ family.name }}
@@ -136,6 +136,18 @@ export default Vue.extend({
         icon: "sort-down-alt",
         isVisible: true,
       },
+      {
+        name: "familyNameAscending",
+        label: "Family name",
+        icon: "sort-alpha-down",
+        isVisible: true,
+      },
+      {
+        name: "familyNameDescending",
+        label: "Family name",
+        icon: "sort-alpha-down-alt",
+        isVisible: true,
+      },
     ];
 
     eventbus.$emit("startLoading", "Filtering all your active requests.");
@@ -162,8 +174,11 @@ export default Vue.extend({
       });
   },
   methods: {
-    creationDateComparer(a, b): number {
+    creationDateComparer(a: Family, b: Family): number {
       return new Date(a.creationDate) < new Date(b.creationDate) ? -1 : 1;
+    },
+    familyNameComparer(a: Family, b: Family): number {
+      return a.name < b.name ? -1 : 1;
     },
     sortBy(mode: string) {
       this.sortByMode = mode;
@@ -174,6 +189,14 @@ export default Vue.extend({
         case "creationDateDescending":
           this.familyList = this.familyList
             .sort(this.creationDateComparer)
+            .reverse();
+          break;
+        case "familyNameAscending":
+          this.familyList = this.familyList.sort(this.familyNameComparer);
+          break;
+        case "familyNameDescending":
+          this.familyList = this.familyList
+            .sort(this.familyNameComparer)
             .reverse();
           break;
         default:

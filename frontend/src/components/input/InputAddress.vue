@@ -167,11 +167,6 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import "@/assets/style.scss";
 
-#gmap {
-  height: 300px;
-  width: 300px;
-}
-
 .mapContainer {
   border-radius: 5px;
   -moz-box-shadow: inset 0 0 10px #000000;
