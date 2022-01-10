@@ -1,11 +1,10 @@
 <template lang="pug">
 div
-  b-form-group(label='Address' label-cols-sm='3' label-align-sm='right')
+  b-form-group(label='Address:' label-cols-sm='3' label-align-sm='right')
     b-form-input(placeholder='Insert address here'  type='text' v-model='query' @input='emitValueChange')
   
-  b-row(align-h='center')
+  b-row(align-h='center').no-gutters
     b-col(cols='10' md='8' lg='8')
-      b-button.color3(block='block' size='sm' @click='resetMap' v-if='isLocationLoaded') Reset location
       .mapContainer.text-center(v-if='!isLocationLoaded')
         h1.pt-4
           Icon.mr(bootstrap icon='map')
@@ -14,7 +13,8 @@ div
           br
           span Navigator
         b-button.mt-5(variant='outline-dark' size='sm' @click='find' v-if='!isLocationLoaded') Find in the map
-      MapLocation(v-else :x='address.coordinates.x' :y='address.coordinates.y' @locationChange='onLocationChange')
+      div(v-else)
+        MapLocation(:x='address.coordinates.x' :y='address.coordinates.y' @resetEvent='resetMap' @locationChange='onLocationChange')
 </template>
 
 <script lang="ts">
@@ -29,6 +29,7 @@ import MapLocation from "../MapLocation.vue";
 import InputText from "../input/InputText.vue";
 import Icon from "../Icon.vue";
 import { InputAddressComponent } from "../../types/componentTypes";
+import eventbus from "../../eventbus";
 
 export default Vue.extend({
   name: "InputAddress",
@@ -103,51 +104,61 @@ export default Vue.extend({
       this.$emit("data", this.address);
     },
     find() {
-      mapsApi
-        .getLocationCoordinates(this.query)
-        .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
-          if (r.status == 200) {
-            this.query = r.data.results[0].formatted_address;
-            this.isLocationLoaded = true;
+      if (!this.query) {
+        eventbus.$emit("warningMessage", "Address", "Input a valid address.");
+        this.isLocationLoaded = false;
+      } else {
+        mapsApi
+          .getLocationCoordinates(this.query)
+          .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
+            if (r.status == 200) {
+              this.query = r.data.results[0].formatted_address;
+              this.isLocationLoaded = true;
 
-            const cityName = r.data.results[0].address_components.find((c) =>
-              c.types.includes("administrative_area_level_3")
-            );
-            if (cityName && "long_name" in cityName)
-              this.address.city = cityName.long_name;
+              const cityName = r.data.results[0].address_components.find((c) =>
+                c.types.includes("administrative_area_level_3")
+              );
+              if (cityName && "long_name" in cityName)
+                this.address.city = cityName.long_name;
 
-            const streetName = r.data.results[0].address_components.find((c) =>
-              c.types.includes("route")
-            );
-            if (streetName && "long_name" in streetName)
-              this.address.city = streetName.long_name;
+              const streetName = r.data.results[0].address_components.find(
+                (c) => c.types.includes("route")
+              );
+              if (streetName && "long_name" in streetName)
+                this.address.city = streetName.long_name;
 
-            const civicNumber = r.data.results[0].address_components.find((c) =>
-              c.types.includes("street_number")
-            );
-            if (civicNumber && "long_name" in civicNumber)
-              this.address.city = civicNumber.long_name;
+              const civicNumber = r.data.results[0].address_components.find(
+                (c) => c.types.includes("street_number")
+              );
+              if (civicNumber && "long_name" in civicNumber)
+                this.address.city = civicNumber.long_name;
 
-            this.address.coordinates.x =
-              r.data.results[0].geometry.location.lat;
-            this.address.coordinates.y =
-              r.data.results[0].geometry.location.lng;
+              this.address.coordinates.x =
+                r.data.results[0].geometry.location.lat;
+              this.address.coordinates.y =
+                r.data.results[0].geometry.location.lng;
 
-            this.query =
-              this.address.street +
-              " " +
-              (!this.address.civicNumber ? this.address.civicNumber : "") +
-              ", " +
-              this.address.city;
+              this.query =
+                this.address.street +
+                " " +
+                (!this.address.civicNumber ? this.address.civicNumber : "") +
+                ", " +
+                this.address.city;
 
-            this.$emit("data", this.address);
-          } else {
-            this.isLocationLoaded = false;
-          }
-        })
-        .catch((e: AxiosError) => {
-          console.log(e);
-        });
+              this.$emit("data", this.address);
+            } else {
+              eventbus.$emit(
+                "warningMessage",
+                "Address",
+                "Input a valid address."
+              );
+              this.isLocationLoaded = false;
+            }
+          })
+          .catch((e: AxiosError) => {
+            console.log(e);
+          });
+      }
     },
   },
 });

@@ -120,7 +120,7 @@ export default Vue.extend({
 
     if ("donation" in this.$route.params) {
       this.form = JSON.parse(this.$route.params.donation) as Donation;
-      //ccreate an empty textbox
+      //create an empty textbox
       this.submitLabel = "Edit";
     }
   },
