@@ -38,12 +38,6 @@ b-container.mb-5
                 i Pack unidentified.
           b-button.footerCardButton(@click='reloadScanner()' v-if="scannerState=='valid_error' || scannerState=='valid_success'") Restart camera
       div(v-if="showScreen=='pack'")
-        b-alert(variant='success' show='show')
-          b-row(align-v='center')
-            b-col.text-center(cols='3')
-              Icon(bootstrap icon='check' font-scale='4')
-            b-col(cols='auto')
-              p.mb-0 Pack successfully created.
         b-card.mb-3(bg-variant='light')
           h3 Pack # {{ pack._id }}
           b-row.justify-contect-center(align-h='center')

@@ -186,6 +186,7 @@ export interface ManagerPackDeliveryView {
 }
 
 export interface ManagerPackListView {
+  yourPacksSelected: boolean;
   filters: {
     // TODO: move to components types
     name: string;

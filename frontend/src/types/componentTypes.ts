@@ -50,7 +50,9 @@ export interface FilterButtonsComponent {
 }
 
 export interface FoodViewComponent {
+  selectedTab: string;
   foodList: SelectableFood[];
+  foodListBackup: SelectableFood[];
   tableFields: TableField[];
   totalRows: number;
   currentPage: number;

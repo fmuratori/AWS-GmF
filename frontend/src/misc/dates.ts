@@ -2,8 +2,11 @@ import moment from "moment";
 
 const today = moment();
 
+const tomorrow = today.add(1, "days");
+
 export default {
   today,
+  tomorrow,
 
   formatDate(date: Date): string {
     return moment(date).format("DD-MM-YYYY");
@@ -47,6 +50,14 @@ export default {
   getMaxDate(dates: Date[]): Date {
     return new Date(
       Math.max.apply(
+        null,
+        dates.map((d) => new Date(d).valueOf())
+      )
+    );
+  },
+  getMinDate(dates: Date[]): Date {
+    return new Date(
+      Math.min.apply(
         null,
         dates.map((d) => new Date(d).valueOf())
       )

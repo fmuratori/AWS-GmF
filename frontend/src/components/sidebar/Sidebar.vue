@@ -17,7 +17,7 @@ transition(name="fade")
         SidebarItem(v-if='!$store.getters.isUser' text='Retrieve donations' route='ManagerDonationRetrieve')
         SidebarItem(v-if='$store.getters.isUser' text='Create a donation' route='ManagerDonationCreate')
         SidebarItem(text='Your donations' route='ManagerDonationList' v-if='$store.getters.isUser')
-        SidebarItem(text='Donations list' route='ManagerDonationList' v-if='!$store.getters.isUser')
+        SidebarItem(text='Reserved donations' route='ManagerDonationList' v-if='!$store.getters.isUser')
       div
         hr.sidebar-hr.my-3
         SidebarCategory(text='Families' icon='users')
@@ -36,7 +36,7 @@ transition(name="fade")
         SidebarItem(text='Create a pack' route='ManagerPackCreate')
         SidebarItem(text='Pack list' route='ManagerPackList')
         SidebarItem(text='Deliver packs' route='ManagerPackDelivery')
-        SidebarItem(text='Scan a pack' route='ManagerPackScan')
+        SidebarItem(text='Packs scanner' route='ManagerPackScan')
         hr.sidebar-hr.my-3
     b-dropdown(text='Your profile' variant='light' dropup='dropup' menu-class='w-100')
       b-dropdown-item(href='#' @click="changePage('ManagerEditUserInfo', 'password')") Change password
@@ -70,7 +70,10 @@ export default Vue.extend({
       return fullname;
     },
     isSidebarOpen() {
-      return this.$store.state.navigation.isSidebarOpen && this.$store.getters.isUserLogged;
+      return (
+        this.$store.state.navigation.isSidebarOpen &&
+        this.$store.getters.isUserLogged
+      );
     },
   },
   methods: {

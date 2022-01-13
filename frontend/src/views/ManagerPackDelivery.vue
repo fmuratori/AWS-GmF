@@ -20,12 +20,11 @@
   b-row.fullheight.justify-content-center(no-gutters v-else)
     b-col.fullheight(v-if='selectedCity.name' cols='12')
       b-button.filters-button.color3(@click='openMapSidebar = true;') 
-        Icon(fontawesome icon='filter').mr-1
         span Options
 
       div.submit-button
         b-button.color3(@click='showModal' block='block') Submit
-        b-button(variant='light' type='submit' block='block' @click='deselectCity') Cancel
+        b-button(variant='light' block='block' @click='deselectCity') Cancel
       
       transition(name='fade')
         div#map-sidebar(v-if='openMapSidebar')  
@@ -43,14 +42,6 @@
           h4
             Icon.mr-1(fontawesome icon='truck')
             span Delivery options
-          b-alert(show='show' variant="warning").p-0.mt-2
-            b-row(align-v='center').no-gutters
-              b-col(cols='auto')
-                h1.ml-2
-                  Icon(bootstrap icon='exclamation')
-              b-col
-                p.p-2.m-0
-                  | Changing the delivery options will automatically deselect all the selected packs.
           .mt-2
             b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
               b-input-group
@@ -73,7 +64,9 @@
             p Selected packs:&nbsp;
               span {{ selectedPacks.length }}&nbsp;
               a(href="#" @click="showModal") Show
-
+          hr
+          b-button.color3(size='sm' block='block' @click='showModal') Submit
+          b-button(variant="light" size='sm' block='block' @click='deselectCity') Cancel
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
           gmap-custom-marker(v-for='(pack, idx) in unselectedPacks' :key='idx' :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}" @click.native='openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)')
@@ -127,61 +120,33 @@
               td(v-for='(pack, idx) in windowPacks' :key:='idx')
                 b-button.color3(v-if='!selectedPacks.includes(pack)' size='sm' block='block' @click='selectPack(pack)') Select
                 b-button.color3(v-else size='sm' block='block' @click='deselectPack(pack)') Cancel
-    //- b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' sm='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
-    //-   .py-3.px-lg-2.d-flex.flex-column.fullheight
-    //-     div
-    //-       h5
-    //-         font-awesome-icon.mr-1(icon='filter')
-    //-         span Filters
-    //-     .mb-2
-    //-       FilterButtons(:filters='filters' :selected='0' @click='updateFilter')
-    //-     .mt-3
-    //-       h5
-    //-         font-awesome-icon.mr-1(icon='truck')
-    //-         span Delivery options
-          
-    //-       b-form-group#input-group-2(label='Delivery date:' label-for='input-2')
-    //-         b-input-group
-    //-           b-form-datepicker(locale='en' placeholder='Click to select a date' required v-model='deliveryDate' @input='updateFilter' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
-    //-           b-input-group-append
-    //-             b-button(size="sm" :variant="!deliveryDate ? 'outline-danger' : ''" :class="!deliveryDate ? '' : 'color3'" @click='deliveryDate=null' :disabled="deliveryDate == ''")
-    //-               Icon(bootstrap icon='x' aria-hidden='true')
-    //-     b-form-group#input-group-3(label='Time of day:' label-for='input-3')
-    //-       b-form-select(v-model='deliveryPeriod' :options="['morning', 'afternoon', 'evening']" required size='sm')
-    //-     .mt-auto.d-none.d-lg-block.d-xl-block
-    //-       b-alert(show='show' v-if="selectedPacks.length")
-    //-         p.m-0.p-0.text-center
-    //-           span Selected packs: {{ selectedPacks.length }}
-    //-           br
-    //-           span &nbsp;
-    //-           a(href='#' @click='showModal') (Inspect)
-    //-       b-button.color3(variant='success' size='sm' block='block' @click='selectPacks') Submit
-    //-       b-button(variant='secondary' size='sm' block='block' @click='deselectCity') Select another city
-    //- b-col.d-block.d-lg-none.d-xl-none(v-if='selectedCity.name' cols='10' sm='10' md='10' order='3')
-    //-   b-alert.mt-3(show='show')
-    //-     p.m-0.p-0.text-center
-    //-       span Selected packs: {{ selectedPacks.length }}
-    //-       br
-    //-       span &nbsp;
-    //-       a(href='#' @click='showModal') (Inspect)
-    //-   b-button.color3(variant='success' size='sm' block='block' @click='selectPacks') Submit
-    //-   b-button(variant='secondary' size='sm' block='block' @click='deselectCity') Select another city
     b-modal#modal-1(title='Selected packs' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
       b-row(style='height: 100%;' align-h="center")
         b-col(v-if='selectedPacks.length' cols='11' lg='3' style='overflow: hidden;')
           b-list-group
+            b-list-group-item(href="#deliveryOptions") Delivery options
             div(v-for='(pack, idx) in selectedPacks' :key='idx')
               b-list-group-item(:href="'#pack' + idx") Pack # {{ idx }}
+          b-button.color3.mt-2(block @click="selectPacks").mb-2 Confirm
         b-col.fullheight-lg(v-if='selectedPacks.length' cols='11' lg='9' style='overflow-y: scroll;')
+
+          div(id="deliveryOptions")
+            h4 Delivery options
+            p.mb-0 Delivery day:
+              span {{ dates.formatDate(deliveryDate) }}
+
+            p Period of the day: 
+              span {{ deliveryPeriod }}
+
           div(v-for='(pack, idx) in selectedPacks' :key='idx' :id="'pack' + idx")
             hr.mt-0.pt-0
             h4 Pack # {{idx}}
             p.mb-0
               | Family name:&nbsp;
-              label {{ pack.family[0].name }}
+              span {{ pack.family[0].name }}
             p.mb-0
               | Components:&nbsp;
-              label {{ pack.family[0].components }}
+              span {{ pack.family[0].components }}
             p.mb-0
               label Foods:
               ul
@@ -191,7 +156,7 @@
                       | {{ food.name }}&nbsp;
                       b-badge(v-for='(label, lidx) in food.labels' :key='lidx' variant='info') {{ label }}
                     br
-                    label {{ dates.formatDatetime(food.expirationDate) }}
+                    label Expired by {{ dates.formatDate(food.expirationDate) }}
         b-col(v-else)
           i No selected packs found.
           p
@@ -265,10 +230,10 @@ export default Vue.extend({
       unselectedPacks: new Array<Pack>(),
       windowPacks: new Array<Pack>(),
       windowCoordinates: { x: 0, y: 0 },
-      deliveryDate: new Date(),
-      deliveryPeriod: "",
+      deliveryDate: dates.tomorrow.toDate(),
+      deliveryPeriod: "morning",
       isModalOpen: false,
-      openMapSidebar: false,
+      openMapSidebar: true,
     };
   },
   methods: {

@@ -1,5 +1,10 @@
 <template lang="pug">
 div
+  b-tabs(content-class='mt-3' v-if="!removeExpired")
+    b-tab(title='Near expiration' @click="selectTab('near_expiration')" :active="selectedTab == 'near_expiration'")
+    b-tab(title='Expired' @click="selectTab('expired')" :active="selectedTab == 'expired'")
+    b-tab(title='All' @click="selectTab('all')" :active="selectedTab == 'all'")
+
   b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"')
     b-col(lg='6' md='8' cols='10')
       b-form-group
@@ -17,7 +22,7 @@ div
         template(#cell(labels)='data')
           b-badge.mr-1(v-for='(label, idx) in data.value' variant='success' :key="idx") {{ label }}
         template(#cell(selected)='{ item }')
-          b-form-spinbutton(inline min="0" :max="item.number" value=0 v-model="item.selected" @change='updateFoods(item)')
+          b-form-spinbutton(inline min=0 value=0 :max="item.number" v-model="item.selected" @change='updateFoods(item)')
         template(#cell(delete)='{ item }')
           b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
         template(#empty='scope')
@@ -46,12 +51,15 @@ export default Vue.extend({
   name: "FoodView",
   props: {
     selectableItems: Boolean,
+    removeExpired: Boolean,
     loadableItems: Boolean,
     deletableItem: Boolean,
   },
   data: (): FoodViewComponent => {
     return {
+      selectedTab: "all",
       foodList: new Array<SelectableFood>(),
+      foodListBackup: new Array<SelectableFood>(),
       tableFields: [
         {
           key: "load",
@@ -85,7 +93,7 @@ export default Vue.extend({
         {
           key: "selected",
           label: "Selected",
-          sortable: false,
+          sortable: true,
         },
         {
           key: "delete",
@@ -117,17 +125,45 @@ export default Vue.extend({
         (elem) => elem.key != "delete"
       );
 
+    eventbus.$emit("startLoading", "Loading available foods");
     api
       .foodList({ filter: { number: { $gt: 0 } } })
       .then((r: AxiosResponse): void => {
-        this.foodList = r.data as SelectableFood[];
-        this.totalRows = (r.data as SelectableFood[]).length;
+        if (this.removeExpired) {
+          this.foodListBackup = r.data as SelectableFood[];
+          this.foodListBackup = this.foodListBackup.filter(
+            (f) => !dates.isPastDate(f.expirationDate)
+          );
+        } else this.foodListBackup = r.data as SelectableFood[];
+        this.selectTab("all");
       })
       .catch((e: AxiosError): void => {
         console.log(e);
+      })
+      .then(() => {
+        eventbus.$emit("stopLoading");
       });
   },
   methods: {
+    selectTab(mode: string) {
+      this.selectedTab = mode;
+      if (mode == "all") {
+        this.foodList = this.foodListBackup;
+      } else if (mode == "expired") {
+        this.foodList = this.foodListBackup.filter((f) =>
+          dates.isPastDate(f.expirationDate)
+        );
+      } else if (mode == "near_expiration") {
+        this.foodList = this.foodListBackup.filter(
+          (f) =>
+            !dates.isPastDate(f.expirationDate) &&
+            dates.daysTillDate(f.expirationDate) <= 7
+        );
+      }
+
+      this.totalRows = this.foodList.length;
+      this.currentPage = 1;
+    },
     onFiltered(filteredItems: SelectableFood[]) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;

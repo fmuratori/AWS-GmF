@@ -8,6 +8,10 @@ b-container.mb-5
       hr.shaded
   b-row
     b-col(lg='8' md='12' sm='12')
+      b-tabs(content-class='mt-3')
+        b-tab(title='Your packs' :active="yourPacksSelected" @click="showYourPacks(true)")
+        b-tab(title='All packs' :active="!yourPacksSelected" @click="showYourPacks(false)")
+
       b-row.justify-content-center(:align-h='$store.getters.isMediumScreenWidth ? null : "between"')
         b-col(lg='6' md='8' cols='12')
           b-form-group
@@ -18,7 +22,7 @@ b-container.mb-5
         b-col(md='auto' cols='12')
           b-pagination(v-model='currentPage' :total-rows='totalRows' :per-page='perPage' align='fill' size='sm')  
         b-col(md='auto' cols='12')
-          b-table(show-empty ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection' @filtered='onFiltered')
+          b-table(show-empty ref='packsTable' hover='hover' striped='striped' responsive='responsive' :fields='tableFields' :items='packList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
             template(#cell(status)='data')
               b-badge(v-if="data.value == 'ready'" variant='primary') {{ data.value }}
               b-badge(v-if="data.value == 'planned delivery'" variant='warning') {{ data.value }}
@@ -26,7 +30,7 @@ b-container.mb-5
             template(#cell(buttons)='{ item }')
               b-button-group
                 b-button.color3(size='sm' @click='selectedPack = item;') Details
-                b-button.color3(size='sm' @click='setDelivered(item._id)' :disabled="item.status != 'planned delivery'") Advance
+                b-button.color3(size='sm' @click='setDelivered(item._id)' :disabled="item.pack.status != 'planned delivery'") Advance
                 b-button.color3(size='sm' variant='danger' v-b-modal.modal @click='deletePackId = item._id') Delete
             template(#empty='scope')
               h4.text-center There are no records to show
@@ -93,6 +97,7 @@ export default Vue.extend({
   },
   data: (): ManagerPackListView => {
     return {
+      yourPacksSelected: true,
       filters: [
         { name: "all", label: "All", icon: null, isVisible: true },
         { name: "ready", label: "Ready", icon: null, isVisible: true },
@@ -163,25 +168,27 @@ export default Vue.extend({
       .then((r: AxiosResponse): void => {
         this.packList = r.data as Pack[];
         this.packListBackup = this.packList;
+        this.showYourPacks(true);
       })
       .catch((e: AxiosError): void => console.log(e))
       .then(() => {
         eventbus.$emit("stopLoading");
-        this.filterBy("all");
       });
   },
   methods: {
-    onFiltered(filteredItems: Pack[]) {
-      this.totalRows = filteredItems.length;
+    showYourPacks(value: boolean) {
+      this.yourPacksSelected = value;
+
+      if (value)
+        this.packList = this.packListBackup.filter(
+          (p) =>
+            "deliveryVolunteerId" in p.pack &&
+            p.pack.deliveryVolunteerId == this.$store.state.session.userData._id
+        );
+      else this.packList = this.packListBackup;
+
+      this.totalRows = this.packList.length;
       this.currentPage = 1;
-    },
-    filterBy(status: "ready" | "planned delivery" | "delivered" | "all"): void {
-      if (status != "all") {
-        this.packList = this.packListBackup.filter((p: Pack) => {
-          p.status == status;
-        });
-        // if (newPacks) this.packList.push(newPacks)
-      } else this.packList = this.packListBackup;
     },
     deletePack(id: string): void {
       packApi
@@ -210,7 +217,9 @@ export default Vue.extend({
           this.packList.forEach((elem) => {
             if (elem._id == id) {
               elem.status = "delivered";
-              console.log(elem);
+              this.packListBackup.find((e) => e._id == id).pack.status ==
+                "delivered";
+              this.showYourPacks(this.yourPacksSelected);
             }
           });
           eventbus.$emit(

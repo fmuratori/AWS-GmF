@@ -15,6 +15,8 @@ div
       b-table(show-empty striped='striped' hover='hover' :fields='tableFields' :items='verifiedFamilyList' :current-page='currentPage' :per-page='perPage' :filter='filter' :filter-included-fields='filterOn' :sort-by.sync='sortBy' :sort-desc.sync='sortDesc' :sort-direction='sortDirection')
         template(#cell(lastPackDate)='{ item }')
           p {{ packsNearestDeliveryDate(item.packs) }}
+        template(#cell(plannedPackDate)='{ item }')
+          p {{ packsPlannedDeliveryDate(item.packs) }}
         template(#cell(select)='{ item }')
           b-button.color3(@click='select(item)' size='sm') Select
         template(#empty='scope')
@@ -64,7 +66,12 @@ export default Vue.extend({
         },
         {
           key: "lastPackDate",
-          label: "Last pack",
+          label: "Last delivery",
+          sortable: true,
+        },
+        {
+          key: "plannedPackDate",
+          label: "Planned delivery",
           sortable: true,
         },
         {
@@ -109,10 +116,18 @@ export default Vue.extend({
   methods: {
     packsNearestDeliveryDate(packs: Pack[]) {
       const deliveryDates = packs
-        .filter((p) => p.status != "ready")
+        .filter((p) => p.status == "delivered")
         .map((p) => p.deliveryDate);
       if (deliveryDates.length)
         return dates.formatDate(dates.getMaxDate(deliveryDates));
+      return "";
+    },
+    packsPlannedDeliveryDate(packs: Pack[]) {
+      const deliveryDates = packs
+        .filter((p) => p.status == "planned delivery")
+        .map((p) => p.deliveryDate);
+      if (deliveryDates.length)
+        return dates.formatDate(dates.getMinDate(deliveryDates));
       return "";
     },
     select(family: Family): void {

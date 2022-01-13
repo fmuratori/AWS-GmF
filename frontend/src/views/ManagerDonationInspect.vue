@@ -28,8 +28,8 @@ b-container.mb-5
             b-col
               h5
                 b-badge(v-if="donation.status == 'waiting'" variant='warning') {{donation.status}}
-                b-badge(v-if="donation.status == 'selected'" variant='warning') {{donation.status}}
-                b-badge(v-if="donation.status == 'retrieved'" variant='success') {{donation.status}}
+                b-badge(v-if="donation.status == 'selected'" variant='success') {{donation.status}}
+                b-badge(v-if="donation.status == 'retrieved'" variant='secondary') {{donation.status}}
           b-row.mb-3(v-if="donation.status == 'selected'")
             b-col(md='3')
               b Pick up date: 
@@ -46,9 +46,7 @@ b-container.mb-5
             b-col
               label
                 span {{ dates.formatDatetime(donation.expirationDate) }}
-                span &nbsp;(expires in&nbsp;
-                span {{ dates.daysTillDate(donation.expirationDate) }} days
-                span )
+                span(v-if="donation.status != 'retrieved'") &nbsp;(expires in&nbsp; {{ dates.daysTillDate(donation.expirationDate) }} days)
           b-row.mb-3
             b-col(md='3')
               b Food list:
@@ -71,7 +69,7 @@ b-container.mb-5
             b-col
               p.mb-0(v-for='(weekDayName, weekDay, idx) in constants.weekDays' :key='idx' v-if='weekDayDonations(weekDay).length > 0')
                 | {{ weekDayName + &apos;:&nbsp;&apos; + weekDayDonations(weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
-      
+            
       div(v-if='$store.getters.isUser')
         b-button.color3(block='block' type='submit' @click='modifyDonation' :disabled='donation.status == "retrieved"') Edit
         b-button.color3(block='block' v-b-modal.modal :disabled='donation.status == "retrieved"') Delete

@@ -63,7 +63,7 @@ b-container.mb-5
                 .mb-2
                   b.mb-0 Food:
                   p.text-truncate.mb-0(v-for='(food, idx) in donation.foods' :key='idx') {{ food }}
-                .mb-2
+                .mb-2(v-if="donation.status != 'retrieved'")
                   b.mb-0 Expires in:
                   p.mb-0 {{ dates.daysTillDate(donation.expirationDate) }} days
                 div

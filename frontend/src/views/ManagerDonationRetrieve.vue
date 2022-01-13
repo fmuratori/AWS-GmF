@@ -49,7 +49,7 @@
           .mt-2
             b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
               b-input-group
-                b-form-datepicker(locale='en' placeholder='Click to select a date' required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
+                b-form-datepicker(locale='en' placeholder='Click to select a date' required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min="new Date()")
                 b-input-group-append
                   b-button(size='sm' :variant="!pickUpDate ? 'outline-danger' : ''" :class="!pickUpDate ? '' : 'color3'" @click='pickUpDate=null' :disabled="pickUpDate == ''")
                     Icon(bootstrap icon='x' aria-hidden='true')
@@ -69,7 +69,9 @@
             p Selected donations:&nbsp;
               span {{ selectedDonations.length }}&nbsp;
               a(href="#" @click="showModal") Show
-
+        
+          b-button.color3(size='sm' block='block' @click='selectDonation(donation)') Submit
+          b-button(variant="light" size='sm' block='block' @click='deselectDonation(donation)') Cancel
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
           gmap-custom-marker(v-for='(donation, idx) in unselectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
@@ -112,46 +114,14 @@
             tr
               td(v-for='(donation, idx) in windowDonations' :key:='idx')
                 b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block='block' @click='selectDonation(donation)') Select
-                b-button.color3(v-else size='sm' block='block' @click='deselectDonation(donation)') Cancel
-    //- b-col.fullheight-lg.scrollable-lg(v-if='selectedCity.name' cols='10' md='10' lg='3' order='1' order-sm='1' order-md='1' order-lg='2')
-    //-   b-form.fullheight(@submit.stop.prevent='submit').mb-1
-    //-     .py-3.px-lg-2.d-flex.flex-column.fullheight
-    //-       div
-    //-         h5.mb-3
-    //-           font-awesome-icon.mr-1(icon='filter')
-    //-           span Filters
-    //-       b-form-group#input-group-2(label='Pick up date:' label-for='input-2')
-    //-         b-input-group
-    //-           b-form-datepicker(locale='en' placeholder='Click to select a date' required v-model='pickUpDate' @input='filterDonations' reset-button='reset-button' close-button='close-button' size='sm' :min="moment().add(1, 'days').toDate()")
-    //-           b-input-group-append
-    //-             b-button(size="sm" :variant="!pickUpDate ? 'outline-danger' : ''" :class="!pickUpDate ? '' : 'color3'" @click='pickUpDate=null' :disabled="pickUpDate == ''")
-    //-               Icon(bootstrap icon='x' aria-hidden='true')
-    //-       b-form-group#input-group-3(label='Time of day:' label-for='input-3')
-    //-         b-form-select(v-model='pickUpPeriod' :options="['morning', 'afternoon', 'evening']"  @input='filterDonations' required size='sm')
-    //-       .mt-auto.d-none.d-lg-block.d-xl-block
-    //-         b-alert(show='show')
-    //-           p.m-0.p-0.text-center
-    //-             span Selected donations: {{ selectedDonations.length }}
-    //-             br
-    //-             span &nbsp;
-    //-             a(href='#' @click='showModal') (Inspect)
-    //-         b-button.color3(type='submit' size='sm' block='block') Submit
-    //-         b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity') Select another city
-    //- b-col.d-block.d-lg-none.d-xl-none(v-if='selectedCity.name' cols='10' md='10' order='3')
-    //-   b-alert.mt-3(show='show')
-    //-     p.m-0.p-0.text-center
-    //-       span Selected donations: {{ selectedDonations.length }}
-    //-       br
-    //-       span &nbsp;
-    //-       a(href='#' @click='showModal') (Inspect)
-    //-   b-button.color3(type='submit' size='sm' block='block') Submit
-    //-   b-button(variant='secondary' type='submit' size='sm' block='block' @click='deselectCity').mb-5 Select another city
+                b-button.color3(v-else variant="light" size='sm' block='block' @click='deselectDonation(donation)') Cancel
   b-modal#modal-1(title='Selected donations' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
     b-row(style='height: 100%;' align-h="center")
       b-col(v-if='selectedDonations.length' cols='11' lg='3' style='overflow: hidden;')
         b-list-group
           div(v-for='(donation, idx) in selectedDonations' :key='idx')
             b-list-group-item(:href="'#donation' + idx") Donation # {{ idx }}
+        b-button.color3.mt-2(block @click="submit").mb-2 Confirm
       b-col.fullheight-lg(v-if='selectedDonations.length' cols='11' lg='9' style='overflow-y: scroll;')
         div(v-for='(donation, idx) in selectedDonations' :key='idx' :id="'donation' + idx")
           hr.mt-0.pt-0
@@ -182,7 +152,7 @@
                 p(v-for='(weekDayName, weekDay, widx) in constants.weekDays' :key='widx' v-if='donation.pickUpPeriod.filter(p => p.weekDay == weekDay)')
                   label
                     | {{ weekDayName + &apos;:&nbsp;&apos; + donation.pickUpPeriod.filter(p =&gt; p.weekDay == weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
-        b-button.color3(block @click="submit").mb-2 Confirm
+        
       b-col.text-center(v-else)
         p
           i No selected donation found.
@@ -237,7 +207,7 @@ export default Vue.extend({
       pickUpDate: new Date(),
       pickUpPeriod: "morning",
       isModalOpen: false,
-      openMapSidebar: false,
+      openMapSidebar: true,
     };
   },
   computed: {

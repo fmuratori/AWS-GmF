@@ -11,13 +11,13 @@ b-container.mb-5
 
   b-row.justify-content-center.my-5(v-if="step == 'selectFoods'")
     b-col(cols='12' md='12' lg='12')
-      FoodView(selectableItems @data='(e) => { this.foodList = e; }').mb-5
-      
-      b-row.mb-5
+      FoodView(selectableItems removeExpired @data='(e) => { this.foodList = e; }')
+      b-row.mb-3
         b-col
           b-card(bg-variant='light' text-variant='dark' no-body)
             b-card-text
-              b-card-header Family info
+              b-card-header 
+                b Family info
               .p-4
                 div
                   b Name:&nbsp;
@@ -34,7 +34,8 @@ b-container.mb-5
         b-col
           b-card(bg-variant='light' text-variant='dark' no-body)
             b-card-text
-              b-card-header Pack
+              b-card-header 
+                b Pack
               .p-4
                 div(v-if='foodList.length > 0')
                   div(v-for='(food, idx) in foodList' :key='idx')
@@ -44,6 +45,9 @@ b-container.mb-5
                     div
                       b Labels:&nbsp;
                       b-badge.mr-1(variant='success' v-for='label in food.labels' size='sm') {{ label }}
+                    div
+                      b Expiration date:&nbsp;
+                      span {{ dates.formatDate(food.expirationDate) }}
                     div
                       b Amount:&nbsp;
                       span {{ food.selected }} / {{ food.number}} 
