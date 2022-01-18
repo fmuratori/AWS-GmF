@@ -6,11 +6,8 @@ import app from './app'
 // express server
 const httpServer: http.Server = new http.Server(app)
 
-
 import { Server, Socket } from "socket.io";
 import { addMessageToChat, getDonationUsers, setMessageAsVisualized } from './controllers/donationController'
-import ExportManager from './utils/exportManager'
-import ImportManager from './utils/importManager'
 
 let activeSockets = new Map();
 
@@ -76,6 +73,8 @@ httpServer.listen(3001);
 
 dotenv.config({ path: __dirname + '/../properties.env' });
 
+import ExportManager from './utils/exportManager'
+import ImportManager from './utils/importManager'
 mongoose
   .connect(process.env.DB || "missing db path")
   .then(() => {
