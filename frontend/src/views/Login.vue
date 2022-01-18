@@ -7,7 +7,7 @@ b-row.justify-content-center(no-gutters).mb-5
           b-icon-person-circle(font-scale='3')
         b-row(align-h='center')
           h2 Bring me Food
-      b-button-group(block='block')
+      b-button-group(block)
         b-button.login-section-button(variant='light' @click='isLoginSelected = true' :class="{ 'login-selected-button': isLoginSelected }") Sign in
         b-button.login-section-button(variant='light' @click='isLoginSelected = false' :class="{ 'login-selected-button': !isLoginSelected }") Sign up
       b-form(@submit.stop.prevent='submitForm')
@@ -36,7 +36,7 @@ b-row.justify-content-center(no-gutters).mb-5
                 a(href='#') privacy policy
             b-form-checkbox#checkbox-2.mt-2(name='checkbox-2')
               i I want to receive marketing information (optional)
-        b-button.footerCardButton.color3(block='block' size='lg' type='submit')
+        b-button.footerCardButton.color3(block size='lg' type='submit')
           span(v-if='isLoginSelected') SIGN IN
           span(v-else) SIGN UP
           Icon(bootstrap icon='chevron-right' aria-hidden='true' font-scale='1')

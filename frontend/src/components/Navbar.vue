@@ -120,6 +120,7 @@ export default Vue.extend({
         .then((r: AxiosResponse<Donation[]>): void => {
           if (r.status == 200) {
             this.$bvModal.hide("messagesModal");
+
             this.$router.push({
               name: "ManagerDonationInspect",
               params: { donation: JSON.stringify((r.data as Donation[])[0]) },

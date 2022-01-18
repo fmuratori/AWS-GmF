@@ -65,7 +65,7 @@ b-container.mb-5
               QrcodeVue.text-center.my-3(:value='selectedPack._id' size='200' level='H')
             div(v-else).mb-4
               i No pack selected.    
-          b-button.footerCardButton(variant='secondary' block='block' v-if='"_id" in selectedPack' @click='selectedPack = {}') CLOSE
+          b-button.footerCardButton(variant='secondary' block v-if='"_id" in selectedPack' @click='selectedPack = {}') CLOSE
   
   b-modal#modal(title='Delete this pack?' @ok='deletePack(deletePackId)')
     div This pack will be deleted permanently.

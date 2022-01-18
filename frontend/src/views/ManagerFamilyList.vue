@@ -30,7 +30,7 @@ b-container.mb-5
         b-collapse#filters-collapse
           b-row.ml-2.mb-2(no-gutters)
             b-col(cols='3')
-              p Donation status:
+              p Report status:
             b-col
               FilterButtons(:filters='filters' :selected='2' @click='(filter) => filterBy(filter)')
           b-row.ml-2(no-gutters)

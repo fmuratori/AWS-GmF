@@ -26,9 +26,9 @@ b-container.mb-5
         hr
         b-row.mt-3
           b-col
-            b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerEventList' })") Cancel
+            b-button(block variant='secondary' @click="$router.push({ name: 'ManagerEventList' })") Cancel
           b-col
-            b-button.color3(block='block' type='submit') {{ this.submitLabel }}
+            b-button.color3(block type='submit') {{ this.submitLabel }}
 
 </template>
 

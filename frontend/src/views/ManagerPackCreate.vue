@@ -11,7 +11,7 @@ b-container.mb-5
 
   b-row.justify-content-center.my-5(v-if="step == 'selectFoods'")
     b-col(cols='12' md='12' lg='12')
-      FoodView(selectableItems removeExpired @data='(e) => { this.foodList = e; }')
+      FoodView(selectableItems removeExpired @data='updateFoodList')
       b-row.mb-3
         b-col
           b-card(bg-variant='light' text-variant='dark' no-body)
@@ -54,15 +54,15 @@ b-container.mb-5
                     hr
                   div
                     b Expiration date:&nbsp;
-                    span {{ dates.formatDate(packExpirationDate) }}
+                    span {{ dates.formatDate(form.expirationDate) }}
                 .text-center(v-if='foodList.length == 0')
                   i No food selected for this family.
       b-form(@submit.stop.prevent='createPack')
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click='resetView()') Cancel
+            b-button(block variant='secondary' @click='resetView()') Cancel
           b-col
-            b-button.color3(block='block' type='submit') Create
+            b-button.color3(block type='submit') Create
   b-row.justify-content-center.my-5(v-if="step == 'printableInfo'")
     b-col(cols='11' md='11' lg='6')
       div
@@ -98,16 +98,16 @@ b-container.mb-5
                   span {{ food.name }} x{{ food.selected }} 
               div
                 b Pack expiration date:&nbsp;
-                span {{ dates.formatDate(packExpirationDate) }}
+                span {{ dates.formatDate(form.expirationDate) }}
         .mt-3
-          b-button.color3(v-if='!isPrinted' block='block' @click='saveAsPdf()')
+          b-button.color3(v-if='!isPrinted' block @click='saveAsPdf()')
             b-icon.mr-2(icon='printer')
             span Print pack info
-          b-button(v-if='isPrinted' block='block' variant='success' @click='saveAsPdf()')
+          b-button(v-if='isPrinted' block variant='success' @click='saveAsPdf()')
             span Pack info printed
             Icon(bootstrap icon='check')
-          b-button(block='block' @click='resetView') Create another pack
-          b-button(block='block' @click="$router.push({ name: 'ManagerPackDelivery' })") Reserve a pack
+          b-button(block @click='resetView') Create another pack
+          b-button(block @click="$router.push({ name: 'ManagerPackDelivery' })") Reserve a pack
       vue-html2pdf(:show-layout='false' :float-layout='true' :enable-download='true' :preview-modal='false' :paginate-elements-by-height='1400' :filename="'donation_' + form._id" :pdf-quality='2' :manual-pagination='false' pdf-format='a5' pdf-orientation='landscape' pdf-content-width='800px' ref='printableData')
         section(slot='pdf-content')
           h3.px-4.pt-4.pb-2 Pack # {{ form._id }}
@@ -137,7 +137,7 @@ b-container.mb-5
                   hr
                   div
                     b Pack expiration date:&nbsp;
-                    span {{ dates.formatDate(packExpirationDate) }}
+                    span {{ dates.formatDate(form.expirationDate) }}
 </template>
 
 <script lang="ts">
@@ -185,15 +185,14 @@ export default Vue.extend({
       isPrinted: false,
     };
   },
-  computed: {
-    packExpirationDate() {
-      const date = dates.getNearestDate(
+  computed: {},
+  methods: {
+    updateFoodList(foods: SelectableFood[]) {
+      this.foodList = foods;
+      this.form.expirationDate = dates.getNearestDate(
         this.foodList.map((f: SelectableFood) => f.expirationDate)
       );
-      return date;
     },
-  },
-  methods: {
     formatAddress(addr: Address): string {
       return addr.street + " " + addr.civicNumber + ", " + addr.city;
     },
@@ -221,8 +220,6 @@ export default Vue.extend({
         return;
       }
       if (this.selectedFamily) this.form.familyId = this.selectedFamily._id;
-      this.form.expirationDate = new Date(this.packExpirationDate);
-
       eventbus.$emit("startLoading", "Creating a new food pack");
 
       packApi
@@ -270,6 +267,7 @@ export default Vue.extend({
       this.step = "selectFamily";
       this.selectedFamily = {} as Family;
       this.isPrinted = false;
+      this.foodList = [];
       this.form = {
         foodList: new Array<{ foodId: string; number: number }>(),
         familyId: "",

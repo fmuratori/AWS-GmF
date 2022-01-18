@@ -111,7 +111,6 @@ export default Vue.extend({
         mapsApi
           .getLocationCoordinates(this.query)
           .then((r: AxiosResponse<GMapAutoCompleteResponse>) => {
-            console.log(r);
             if (r.status == 200) {
               this.query = r.data.results[0].formatted_address;
               this.isLocationLoaded = true;
@@ -138,8 +137,6 @@ export default Vue.extend({
                 r.data.results[0].geometry.location.lat;
               this.address.coordinates.y =
                 r.data.results[0].geometry.location.lng;
-
-              console.log(this.address);
 
               this.$emit("data", this.address);
             } else {

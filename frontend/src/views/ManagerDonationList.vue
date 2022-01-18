@@ -41,11 +41,13 @@ b-container.mb-5
               FilterButtons(:filters='sorters' :selected='$store.getters.isUser ? 1 : 6' @click='sortBy')
       
       p(v-if='donations.length == 0')
-        span No donations found. Be sure to select valid filters 
+        span No donations found. Be sure to select valid filters or click
         span(v-if='$store.getters.isUser')
-          | or click 
-          a(href='#' @click="$router.push({ name: 'ManagerDonationCreate' })") here
+          a(href='#' @click="$router.push({ name: 'ManagerDonationCreate' })") &nbsp;here
           |  to insert a donation
+        span(v-if='!$store.getters.isUser')
+          a(href='#' @click="$router.push({ name: 'ManagerDonationRetrieve' })") &nbsp;here
+          |  to book a donation
         span .
       b-card.mb-2(bg-variant='light' text-variant='dark' no-body v-for='(donation, idx) in donations' :key='idx')
         template(#header)
@@ -77,7 +79,7 @@ b-container.mb-5
                   .mb-2
                     b.mb-0 Pick up:
                     p {{ dates.formatDate(donation.pickUp.date) }}, {{ donation.pickUp.period }}
-          b-button.footerCardButton.color3(block='block' variant='primary' @click='inspectDonation(donation)') SHOW
+          b-button.footerCardButton.color3(block variant='primary' @click='inspectDonation(donation)') SHOW
 </template>
 
 <script lang="ts">

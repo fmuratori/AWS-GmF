@@ -24,7 +24,7 @@ div
         template(#cell(selected)='{ item }')
           b-form-spinbutton(inline min=0 value=0 :max="item.number" v-model="item.selected" @change='updateFoods(item)')
         template(#cell(delete)='{ item }')
-          b-button.color3(block='block' size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
+          b-button.color3(block size='sm' v-b-modal.modal @click='deleteFoodId = item._id') Delete
         template(#empty='scope')
           h4.text-center There are no records to show
         template(#emptyfiltered='scope')

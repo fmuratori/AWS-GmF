@@ -21,7 +21,7 @@ b-container.mb-5
               InputDate(title='Expiration date:' placeholder='Set date' :date='dates.formatDate(form.expirationDate)' required @data='(e) => form.expirationDate = e')
               b-form-group(label='Labels:')
                 b-checkbox-group(v-model='form.labels' :options='constants.foodLabels' stacked='stacked')
-            b-button.footerCardButton.color3(block='block' type='submit' v-if='!isEditMode') ADD
+            b-button.footerCardButton.color3(block type='submit' v-if='!isEditMode') ADD
             b-button-group.d-flex(v-else)
               b-button.footerCardButton(variant='secondary' @click='cancelEditMode') CANCEL
               b-button.footerCardButton.color3(type='submit') EDIT

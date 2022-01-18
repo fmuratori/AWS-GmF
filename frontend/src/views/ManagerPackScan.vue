@@ -22,7 +22,7 @@ b-container.mb-5
             div(v-if="scannerState == 'scanning'")
               qrcode-stream(@decode='onDecode' @init='onInit' :camera='cameraState')
                 p(v-if="isLoading").mt-5 Loading ...
-              b-button.footerCardButton.color3(block='block' @click='stopCamera()' v-if="scannerState=='scanning'") Close camera
+              b-button.footerCardButton.color3(block @click='stopCamera()' v-if="scannerState=='scanning'") Close camera
             div(v-if="scannerState == 'error'")
               Icon(fontawesome icon='fas fa-qrcode fa-3x')
               p(v-if='!isMobile') Devi autorizzare l&apos;utilizzo della webcam per scansionare il codice QR
@@ -65,9 +65,9 @@ b-container.mb-5
                 span {{ dates.formatDate(packExpirationDate) }}
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click='resetView()') Scan another code
+            b-button(block variant='secondary' @click='resetView()') Scan another code
           b-col
-            b-button.color3(block='block' @click='deliverPack()') Set as delivered
+            b-button.color3(block @click='deliverPack()') Set as delivered
 </template>
 
 <script lang="ts">

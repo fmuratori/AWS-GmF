@@ -59,9 +59,9 @@ b-container.mb-5
         hr
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click="$router.push({ name: 'Home' })" type='reset') Cancel
+            b-button(block variant='secondary' @click="$router.push({ name: 'Home' })" type='reset') Cancel
           b-col
-            b-button.color3(block='block' type='submit') {{ this.submitLabel }}
+            b-button.color3(block type='submit') {{ this.submitLabel }}
 
 </template>
 

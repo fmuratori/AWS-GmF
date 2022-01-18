@@ -25,7 +25,7 @@
 
       div.submit-button
         b-button.color3(@click='showModal' block='block') Submit
-        b-button(variant='light' type='submit' block='block' @click='deselectCity') Cancel
+        b-button(variant='light' type='submit' block @click='deselectCity') Cancel
       
       transition(name='fade')
         div#map-sidebar(v-if='openMapSidebar')  
@@ -69,9 +69,9 @@
             p Selected donations:&nbsp;
               span {{ selectedDonations.length }}&nbsp;
               a(href="#" @click="showModal") Show
-        
-          b-button.color3(size='sm' block='block' @click='selectDonation(donation)') Submit
-          b-button(variant="light" size='sm' block='block' @click='deselectDonation(donation)') Cancel
+          hr
+          b-button.color3(@click='showModal' block) Submit
+          b-button(variant='light' type='submit' block @click='deselectCity') Cancel
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
           gmap-custom-marker(v-for='(donation, idx) in unselectedDonations' :key='idx' :marker="{'lat': donation.address.coordinates.x , 'lng': donation.address.coordinates.y}" @click.native='openInfoWindow(donation.address.coordinates.x, donation.address.coordinates.y)')
@@ -113,16 +113,30 @@
                   span.mb-0 {{ dates.formatDate(donation.expirationDate) }}
             tr
               td(v-for='(donation, idx) in windowDonations' :key:='idx')
-                b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block='block' @click='selectDonation(donation)') Select
-                b-button.color3(v-else variant="light" size='sm' block='block' @click='deselectDonation(donation)') Cancel
+                b-button.color3(v-if='!selectedDonations.includes(donation)' size='sm' block @click='selectDonation(donation)') Select
+                b-button.color3(v-else variant="light" size='sm' block @click='deselectDonation(donation)') Cancel
   b-modal#modal-1(title='Selected donations' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
     b-row(style='height: 100%;' align-h="center")
       b-col(v-if='selectedDonations.length' cols='11' lg='3' style='overflow: hidden;')
         b-list-group
+          b-list-group-item(href="#pickupOptions") Pick up options
           div(v-for='(donation, idx) in selectedDonations' :key='idx')
             b-list-group-item(:href="'#donation' + idx") Donation # {{ idx }}
         b-button.color3.mt-2(block @click="submit").mb-2 Confirm
       b-col.fullheight-lg(v-if='selectedDonations.length' cols='11' lg='9' style='overflow-y: scroll;')
+        div(id="pickupOptions")
+          h4 Pick up options
+          b-row.no-gutters.mb-2
+            b-col(lg=3 cols=12)
+              b Pick up date:
+            b-col
+              label {{ dates.formatDate(pickUpDate) }}
+          
+          b-row.no-gutters.mb-2
+            b-col(lg=3 cols=12)
+              b Pick up period: 
+            b-col
+              label {{ pickUpPeriod }}
         div(v-for='(donation, idx) in selectedDonations' :key='idx' :id="'donation' + idx")
           hr.mt-0.pt-0
           div

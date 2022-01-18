@@ -32,10 +32,10 @@ b-container.mb-5
           h5(v-if="data.item.status=='pending'")
             b-badge(variant='warning') Pending check 
         template(#cell(actions)='data')
-          b-button.color3(block='block' size='sm' @click='verifyFamily(data.item._id)' v-if="data.item.status == 'pending'")
+          b-button.color3(block size='sm' @click='verifyFamily(data.item._id)' v-if="data.item.status == 'pending'")
             span Verify
             Icon(bootstrap icon='check')
-          b-button.color3(v-b-modal.modal block='block' size='sm' @click='deletedFamilyId = data.item._id')
+          b-button.color3(v-b-modal.modal block size='sm' @click='deletedFamilyId = data.item._id')
             span Delete
             Icon(bootstrap icon='trash')
         template(#empty='scope')

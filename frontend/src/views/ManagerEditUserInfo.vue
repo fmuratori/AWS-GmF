@@ -16,9 +16,9 @@ b-container.mb-5
         InputPasswordSelect(title1='New password: ' title2='Confirm new password: ' placeholder1='Insert your password here' placeholder2='Repeat your password here' @data='(e) => { changePasswordForm.newPassword = e; }')
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
+            b-button(block variant='secondary' @click="$router.push({name: 'Home'})") Cancel
           b-col
-            b-button.color3(block='block' type='submit') Edit
+            b-button.color3(block type='submit') Edit
       b-form(v-if="mode == 'user_info'" @submit.stop.prevent='editUser')
         InputText(title='Name: ' placeholder='Insert name here' required :text='form.name' @data='(e) => { form.name = e; }')
         InputText(title='Surname: ' placeholder='Insert surname here' required :text='form.surname' @data='(e) => { form.surname = e; }')
@@ -26,16 +26,16 @@ b-container.mb-5
         InputText(title='Phone number: ' placeholder='Insert your phone number here' required :text='form.phoneNumber' @data='(e) => { form.phoneNumber = e; }')
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
+            b-button(block variant='secondary' @click="$router.push({name: 'Home'})") Cancel
           b-col
-            b-button.color3(block='block' type='submit') Edit
+            b-button.color3(block type='submit') Edit
       b-form(v-if="mode == 'address'" @submit.stop.prevent='editUser')
         InputAddress.mb-3(:city='form.address.city' :civic='form.address.civicNumber' :street='form.address.street' :x='form.address.coordinates.x' :y='form.address.coordinates.y' @data='(e) => { form.address = e; }')
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click="$router.push({name: 'Home'})") Cancel
+            b-button(block variant='secondary' @click="$router.push({name: 'Home'})") Cancel
           b-col
-            b-button.color3(block='block' type='submit') Edit
+            b-button.color3(block type='submit') Edit
 
 </template>
 

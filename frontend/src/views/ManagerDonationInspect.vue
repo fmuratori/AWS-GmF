@@ -71,12 +71,12 @@ b-container.mb-5
                 | {{ weekDayName + &apos;:&nbsp;&apos; + weekDayDonations(weekDay).map((d) =&gt; d.period).join(&apos;, &apos;) }}
             
       div(v-if='$store.getters.isUser')
-        b-button.color3(block='block' type='submit' @click='modifyDonation' :disabled='donation.status == "retrieved"') Edit
-        b-button.color3(block='block' v-b-modal.modal :disabled='donation.status == "retrieved"') Delete
+        b-button.color3(block type='submit' @click='modifyDonation' :disabled='donation.status == "retrieved"') Edit
+        b-button.color3(block v-b-modal.modal :disabled='donation.status == "retrieved"') Delete
       div(v-if='$store.getters.isVolunteer || $store.getters.isTrustedVolunteer')
-        b-button.color3(block='block' type='submit' @click='retrieveDonation' :disabled="donation.status == 'retrieved'") Mark as retrieved
-        b-button.color3(block='block' type='submit' @click='cancelReservation' :disabled="donation.status == 'retrieved'") Delete reservation
-      b-button.mt-2(block='block' variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Back
+        b-button.color3(block type='submit' @click='retrieveDonation' :disabled="donation.status == 'retrieved'") Mark as retrieved
+        b-button.color3(block type='submit' @click='cancelReservation' :disabled="donation.status == 'retrieved'") Delete reservation
+      b-button.mt-2(block variant='secondary' @click="$router.push({ name: 'ManagerDonationList' })" type='reset') Back
   b-modal#modal(title='Delete your donation?' @ok='deleteDonation()')
     div This donation offer will be deleted permanently.
     template(#modal-footer='{ ok, cancel }')

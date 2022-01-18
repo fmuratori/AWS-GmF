@@ -23,8 +23,8 @@
         span Options
 
       div.submit-button
-        b-button.color3(@click='showModal' block='block') Submit
-        b-button(variant='light' block='block' @click='deselectCity') Cancel
+        b-button.color3(@click='showModal' block) Submit
+        b-button(variant='light' block @click='deselectCity') Cancel
       
       transition(name='fade')
         div#map-sidebar(v-if='openMapSidebar')  
@@ -65,8 +65,8 @@
               span {{ selectedPacks.length }}&nbsp;
               a(href="#" @click="showModal") Show
           hr
-          b-button.color3(size='sm' block='block' @click='showModal') Submit
-          b-button(variant="light" size='sm' block='block' @click='deselectCity') Cancel
+          b-button.color3(size='sm' block @click='showModal') Submit
+          b-button(variant="light" size='sm' block @click='deselectCity') Cancel
       GmapMap.fullheight(:options='mapsOptions' :center='{lat:selectedCity.coordinates.x, lng:selectedCity.coordinates.y}' :zoom='14' map-type-id='terrain')
         div
           gmap-custom-marker(v-for='(pack, idx) in unselectedPacks' :key='idx' :marker="{'lat': pack.family[0].address.coordinates.x , 'lng': pack.family[0].address.coordinates.y}" @click.native='openInfoWindow(pack.family[0].address.coordinates.x, pack.family[0].address.coordinates.y)')
@@ -118,8 +118,8 @@
                     br
             tr
               td(v-for='(pack, idx) in windowPacks' :key:='idx')
-                b-button.color3(v-if='!selectedPacks.includes(pack)' size='sm' block='block' @click='selectPack(pack)') Select
-                b-button.color3(v-else size='sm' block='block' @click='deselectPack(pack)') Cancel
+                b-button.color3(v-if='!selectedPacks.includes(pack)' size='sm' block @click='selectPack(pack)') Select
+                b-button.color3(v-else size='sm' block @click='deselectPack(pack)') Cancel
     b-modal#modal-1(title='Selected packs' size='lg' scrollable='scrollable' centered='centered' hide-footer='hide-footer' v-model='isModalOpen')
       b-row(style='height: 100%;' align-h="center")
         b-col(v-if='selectedPacks.length' cols='11' lg='3' style='overflow: hidden;')

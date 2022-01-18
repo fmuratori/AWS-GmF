@@ -85,5 +85,6 @@ export default Vue.extend({
 
 #content {
   flex-grow: 1;
+  overflow-y: scroll;
 }
 </style>

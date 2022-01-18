@@ -43,9 +43,9 @@ b-container.mb-5
         hr
         b-row
           b-col
-            b-button(block='block' variant='secondary' @click="$router.push({ name: 'ManagerFamilyList' })") Cancel
+            b-button(block variant='secondary' @click="$router.push({ name: 'ManagerFamilyList' })") Cancel
           b-col
-            b-button.color3(block='block' type='submit') {{ submitLabel }}
+            b-button.color3(block type='submit') {{ submitLabel }}
 </template>
 
 <script lang="ts">
