@@ -52,7 +52,7 @@ io.on("connection", (socket: Socket) => {
 
           // send the message to the volunteer
           if (volunteerId && activeSockets.has(volunteerId)) {
-            console.log("sent message to volunteer", userId)
+            console.log("sent message to volunteer", volunteerId)
             const destSocket = io.sockets.sockets.get(activeSockets.get(volunteerId))
             if (destSocket) { 
               destSocket.emit("chat_message", JSON.stringify(newMessage));
