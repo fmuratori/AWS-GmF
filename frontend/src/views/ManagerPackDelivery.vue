@@ -177,7 +177,7 @@ import FilterButtons from "../components/FilterButtons.vue";
 import Icon from "../components/Icon.vue";
 
 import packsApi from "../api/pack";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { Pack, FindPayload, Food } from "../types/types";
 import { ManagerPackDeliveryView } from "../types/viewTypes";
@@ -366,12 +366,17 @@ export default Vue.extend({
             this.updateFilter("all");
           }
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Pack",
-            "Pack search with filtering options failed. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Pack",
+              "Pack search with filtering options failed. Retry later or contact us if the problem persists."
+            );
         });
     },
     showModal() {
@@ -413,12 +418,21 @@ export default Vue.extend({
               "Pack reservation submitted succesfully."
             );
           })
-          .catch((): void => {
-            eventbus.$emit(
-              "errorMessage",
-              "Packs",
-              "Pack reservation submission for pick up failed. Retry later or contact us if the problem persists."
-            );
+          .catch((e: AxiosError): void => {
+            if (e.response.status == 401) {
+              eventbus.$emit("logout");
+              eventbus.$emit(
+                "errorMessage",
+                "User session",
+                "Session expired."
+              );
+              this.$router.push({ name: "Login" });
+            } else
+              eventbus.$emit(
+                "errorMessage",
+                "Packs",
+                "Pack reservation submission for pick up failed. Retry later or contact us if the problem persists."
+              );
           })
           .then(() => {
             eventbus.$emit("stopLoading");

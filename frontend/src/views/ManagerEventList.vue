@@ -167,7 +167,13 @@ export default Vue.extend({
         this.eventList = r.data as Event[];
         this.eventListBackup = r.data as Event[];
       })
-      .catch((e: AxiosError): void => console.log(e))
+      .catch((e: AxiosError): void => {
+        if (e.response.status == 401) {
+          eventbus.$emit("logout");
+          eventbus.$emit("errorMessage", "User session", "Session expired.");
+          this.$router.push({ name: "Login" });
+        }
+      })
       .then(() => eventbus.$emit("stopLoading"));
   },
   methods: {
@@ -233,12 +239,17 @@ export default Vue.extend({
             "Event successfully deleted."
           );
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Events",
-            "Unable to delete the event. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Events",
+              "Unable to delete the event. Retry later or contact us if the problem persists."
+            );
         });
     },
   },

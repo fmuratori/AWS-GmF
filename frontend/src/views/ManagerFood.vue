@@ -70,12 +70,17 @@ export default Vue.extend({
       .then((r: AxiosResponse): void => {
         this.foodList = r.data as Food[];
       })
-      .catch((): void => {
-        eventbus.$emit(
-          "errorMessage",
-          "Foods",
-          "Unable to retrieve food list. Retry later or contact us if the problem persists."
-        );
+      .catch((e: AxiosError): void => {
+        if (e.response.status == 401) {
+          eventbus.$emit("logout");
+          eventbus.$emit("errorMessage", "User session", "Session expired.");
+          this.$router.push({ name: "Login" });
+        } else
+          eventbus.$emit(
+            "errorMessage",
+            "Foods",
+            "Unable to retrieve food list. Retry later or contact us if the problem persists."
+          );
       });
   },
   methods: {
@@ -111,12 +116,20 @@ export default Vue.extend({
           }
         })
           .catch((e: AxiosError): void => {
-            console.log(e);
-            eventbus.$emit(
-              "errorMessage",
-              "Foods",
-              "Unable to add/edit food. Retry later or contact us if the problem persists."
-            );
+            if (e.response.status == 401) {
+              eventbus.$emit("logout");
+              eventbus.$emit(
+                "errorMessage",
+                "User session",
+                "Session expired."
+              );
+              this.$router.push({ name: "Login" });
+            } else
+              eventbus.$emit(
+                "errorMessage",
+                "Foods",
+                "Unable to add/edit food. Retry later or contact us if the problem persists."
+              );
           })
           .then(() => eventbus.$emit("stopLoading"));
       }
@@ -137,12 +150,16 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError): void => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "Foods",
-            "Unable to update the food list. Retry later or contact us if the problem persists."
-          );
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Foods",
+              "Unable to update the food list. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => eventbus.$emit("stopLoading"));
     },

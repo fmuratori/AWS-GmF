@@ -139,15 +139,23 @@ export default Vue.extend({
               );
             }
           })
-          .catch((e: AxiosError) => {
-            console.log(e);
-            this.scannerState = "valid_error";
-            eventbus.$emit(
-              "errorMessage",
-              "Pack info",
-              "Unable to retrieve pack info, retry later or contact us if the problem persists."
-            );
-            this.scannerState = "valid_error";
+          .catch((e: AxiosError): void => {
+            if (e.response.status == 401) {
+              eventbus.$emit("logout");
+              eventbus.$emit(
+                "errorMessage",
+                "User session",
+                "Session expired."
+              );
+              this.$router.push({ name: "Login" });
+            } else {
+              this.scannerState = "valid_error";
+              eventbus.$emit(
+                "errorMessage",
+                "Pack info",
+                "Unable to retrieve pack info, retry later or contact us if the problem persists."
+              );
+            }
           })
           .then(() => eventbus.$emit("stopLoading"));
       }
@@ -213,13 +221,17 @@ export default Vue.extend({
             );
           }
         })
-        .catch((e: AxiosError) => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "PACK DELIVERY",
-            "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "PACK DELIVERY",
+              "Unable to set the specified pack as delivere. Retry later or contact us if the problem persists."
+            );
         });
     },
     deletePack() {
@@ -241,13 +253,17 @@ export default Vue.extend({
             );
           }
         })
-        .catch((e: AxiosError) => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "PACK DELIVERY",
-            "Unable to delete the specified pack. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "PACK DELIVERY",
+              "Unable to delete the specified pack. Retry later or contact us if the problem persists."
+            );
         });
       this.resetView();
     },

@@ -124,13 +124,17 @@ export default Vue.extend({
             );
           }
         })
-        .catch((e: AxiosError) => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "User data",
-            "Unable to change the user info. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "User data",
+              "Unable to change the user info. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => {
           eventbus.$emit("stopLoading");
@@ -157,12 +161,16 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError): void => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "User data",
-            "Unable to change the user password. Retry later or contact us if the problem persists."
-          );
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "User data",
+              "Unable to change the user password. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => {
           eventbus.$emit("stopLoading");

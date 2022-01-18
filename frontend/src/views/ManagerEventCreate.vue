@@ -46,6 +46,7 @@ import { Address, EventPayload } from "../types/types";
 import { ManagerEventCreateView } from "../types/viewTypes";
 
 import api from "../api/event";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerEventCreate",
@@ -99,12 +100,17 @@ export default Vue.extend({
             "Event created succesfully."
           );
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Events",
-            "Unable to create the event. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Events",
+              "Unable to create the event. Retry later or contact us if the problem persists."
+            );
         });
     },
   },

@@ -6,12 +6,13 @@
   #body
     Sidebar#sidebar
     #content
-      router-view
+      router-view()
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import eventbus from "./eventbus";
 
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
@@ -44,6 +45,22 @@ export default Vue.extend({
         this.$socket.emit("login", this.$store.state.session.userData._id);
       });
     }
+
+    eventbus.$on("logout", () => {
+      console.log("User loged out.");
+
+      eventbus.$emit("startLoading");
+
+      this.$cookies.remove("jwt");
+      this.$cookies.remove("user-id");
+
+      this.$socket.emit("logout", this.$store.state.session.userData._id);
+
+      this.$store.dispatch("logout");
+      this.$store.dispatch("hideSidebar");
+
+      this.$router.go(0);
+    });
   },
   destroyed() {
     window.removeEventListener("resize", this.resizeEventHandler);

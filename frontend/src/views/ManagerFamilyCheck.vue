@@ -118,13 +118,17 @@ export default Vue.extend({
             );
           }
         })
-        .catch((e: AxiosError) => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "Family check",
-            "Unable to load families list. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Family check",
+              "Unable to load families list. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => {
           eventbus.$emit("stopLoading");
@@ -150,13 +154,17 @@ export default Vue.extend({
             );
           }
         })
-        .catch((e: AxiosError) => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "Family",
-            "Family status setting failed. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Family",
+              "Family status setting failed. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => eventbus.$emit("stopLoading"));
     },
@@ -180,8 +188,12 @@ export default Vue.extend({
             );
           }
         })
-        .catch((e: AxiosError) => {
-          console.log(e);
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else console.log(e);
           eventbus.$emit(
             "errorMessage",
             "Family",

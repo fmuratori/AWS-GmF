@@ -252,12 +252,16 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError): void => {
-          console.log(e);
-          eventbus.$emit(
-            "errorMessage",
-            "Food packs",
-            "Unable to create a food pack. Retry later or contact us if the problem persists."
-          );
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Food packs",
+              "Unable to create a food pack. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => {
           eventbus.$emit("stopLoading");

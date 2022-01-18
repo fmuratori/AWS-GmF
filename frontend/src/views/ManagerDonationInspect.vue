@@ -215,12 +215,17 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError): void => {
-          eventbus.$emit(
-            "dangerMessage",
-            "Donation",
-            "Donation retrieval failed. Retry later or contact us if the problem persists."
-          );
-          console.log(e);
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else {
+            eventbus.$emit(
+              "dangerMessage",
+              "Donation",
+              "Donation retrieval failed. Retry later or contact us if the problem persists."
+            );
+          }
         });
     },
     deleteDonation() {
@@ -243,12 +248,17 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError): void => {
-          eventbus.$emit(
-            "dangerMessage",
-            "Donation",
-            "Donation deletion failed. Retry later or contact us if the problem persists."
-          );
-          console.log(e);
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else {
+            eventbus.$emit(
+              "dangerMessage",
+              "Donation",
+              "Donation deletion failed. Retry later or contact us if the problem persists."
+            );
+          }
         });
     },
     modifyDonation() {
@@ -283,12 +293,17 @@ export default Vue.extend({
           }
         })
         .catch((e: AxiosError): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Donation",
-            "Donation reservation cancellation failed. Retry later or contact us if the problem persists."
-          );
-          console.log(e);
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else {
+            eventbus.$emit(
+              "errorMessage",
+              "Donation",
+              "Donation reservation cancellation failed. Retry later or contact us if the problem persists."
+            );
+          }
         });
     },
   },

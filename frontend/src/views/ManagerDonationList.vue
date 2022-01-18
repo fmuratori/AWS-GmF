@@ -199,7 +199,13 @@ export default Vue.extend({
         this.sortBy(this.sortByMode);
         this.filterBy(this.filterByMode);
       })
-      .catch((e: AxiosError): void => console.log(e))
+      .catch((e: AxiosError): void => {
+        if (e.response.status == 401) {
+          eventbus.$emit("logout");
+          eventbus.$emit("errorMessage", "User session", "Session expired.");
+          this.$router.push({ name: "Login" });
+        }
+      })
       .then(() => {
         eventbus.$emit("stopLoading");
       });

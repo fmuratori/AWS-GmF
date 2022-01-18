@@ -181,12 +181,21 @@ export default Vue.extend({
             this.$router.push({ name: "ManagerDonationList" });
           })
           .catch((e: AxiosError): void => {
-            console.log(e);
-            eventbus.$emit(
-              "errorMessage",
-              "Donation",
-              "Unable to send the donation. Retry later or contact us if the problem persists."
-            );
+            if (e.response.status == 401) {
+              eventbus.$emit("logout");
+              eventbus.$emit(
+                "errorMessage",
+                "User session",
+                "Session expired."
+              );
+              this.$router.push({ name: "Login" });
+            } else {
+              eventbus.$emit(
+                "errorMessage",
+                "Donation",
+                "Unable to send the donation. Retry later or contact us if the problem persists."
+              );
+            }
           })
           .then(() => {
             eventbus.$emit("stopLoading");

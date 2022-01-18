@@ -100,18 +100,7 @@ export default Vue.extend({
       }
     },
     logout() {
-      eventbus.$emit("startLoading");
-
-      this.$cookies.remove("jwt");
-      this.$cookies.remove("user-id");
-
-      this.$socket.emit("logout", this.$store.state.session.userData._id);
-      this.$store.dispatch("logout");
-      this.$router.go(0);
-
-      this.$store.dispatch("hideSidebar");
-
-      this.$forceUpdate();
+      eventbus.$emit("logout");
     },
     routeToDonation(donationId: string) {
       eventbus.$emit("startLoading", "Loading selected donation.");

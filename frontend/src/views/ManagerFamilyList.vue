@@ -87,7 +87,7 @@ import { Family } from "../types/types";
 import { ManagerFamilyListView } from "../types/viewTypes";
 
 import api from "../api/family";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamilyList",
@@ -162,12 +162,17 @@ export default Vue.extend({
         this.filterBy(this.statusFilter);
         this.sortBy(this.sortByMode);
       })
-      .catch((): void => {
-        eventbus.$emit(
-          "errorMessage",
-          "Family",
-          "Unable to verify the selected family. Retry later or contact us if the problem persists."
-        );
+      .catch((e: AxiosError): void => {
+        if (e.response.status == 401) {
+          eventbus.$emit("logout");
+          eventbus.$emit("errorMessage", "User session", "Session expired.");
+          this.$router.push({ name: "Login" });
+        } else
+          eventbus.$emit(
+            "errorMessage",
+            "Family",
+            "Unable to verify the selected family. Retry later or contact us if the problem persists."
+          );
       })
       .then(() => {
         eventbus.$emit("stopLoading");
@@ -221,12 +226,17 @@ export default Vue.extend({
             "Family verified succesfully. Retry later or contact us if the problem persists."
           );
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "successMessage",
-            "Family",
-            "Unable to verify the selected family. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "successMessage",
+              "Family",
+              "Unable to verify the selected family. Retry later or contact us if the problem persists."
+            );
         });
     },
     filterBy(statusFilter: string): void {
@@ -254,12 +264,17 @@ export default Vue.extend({
           );
           this.familyList = this.familyList.filter((e) => e._id != id);
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Family",
-            "`Unable to delete the selected family. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Family",
+              "`Unable to delete the selected family. Retry later or contact us if the problem persists."
+            );
         });
     },
   },

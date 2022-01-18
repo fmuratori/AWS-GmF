@@ -60,6 +60,7 @@ import { Address, Family } from "../types/types";
 import { ManagerFamilySubscribeView } from "../types/viewTypes";
 
 import api from "../api/family";
+import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "ManagerFamilySubscribe",
@@ -118,12 +119,17 @@ export default Vue.extend({
             "Family registration request received succesfully. In a later date we will validate your request."
           );
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Events",
-            "Unable to submit the family registration request. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Events",
+              "Unable to submit the family registration request. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => {
           eventbus.$emit("stopLoading");

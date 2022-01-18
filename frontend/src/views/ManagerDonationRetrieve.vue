@@ -184,7 +184,7 @@ import GmapCustomMarker from "vue2-gmap-custom-marker";
 import Icon from "../components/Icon.vue";
 
 import donationsApi from "../api/donation";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { Donation } from "../types/types";
 import { ManagerDonationsRetrieveView } from "../types/viewTypes";
@@ -308,12 +308,17 @@ export default Vue.extend({
         .then((r: AxiosResponse<Donation[]>): void => {
           this.donations = r.data;
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Donation",
-            "Donation search with filtering options failed. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Donation",
+              "Donation search with filtering options failed. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => eventbus.$emit("stopLoading"));
     },
@@ -370,12 +375,21 @@ export default Vue.extend({
               });
             });
           })
-          .catch((): void => {
-            eventbus.$emit(
-              "errorMessage",
-              "Donations",
-              "Donation reservation submission for pick up failed. Retry later or contact us if the problem persists."
-            );
+          .catch((e: AxiosError): void => {
+            if (e.response.status == 401) {
+              eventbus.$emit("logout");
+              eventbus.$emit(
+                "errorMessage",
+                "User session",
+                "Session expired."
+              );
+              this.$router.push({ name: "Login" });
+            } else
+              eventbus.$emit(
+                "errorMessage",
+                "Donations",
+                "Donation reservation submission for pick up failed. Retry later or contact us if the problem persists."
+              );
           });
       }
     },

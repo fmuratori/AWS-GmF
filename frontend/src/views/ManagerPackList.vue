@@ -170,7 +170,13 @@ export default Vue.extend({
         this.packListBackup = this.packList;
         this.showYourPacks(true);
       })
-      .catch((e: AxiosError): void => console.log(e))
+      .catch((e: AxiosError): void => {
+        if (e.response.status == 401) {
+          eventbus.$emit("logout");
+          eventbus.$emit("errorMessage", "User session", "Session expired.");
+          this.$router.push({ name: "Login" });
+        }
+      })
       .then(() => {
         eventbus.$emit("stopLoading");
       });
@@ -201,12 +207,17 @@ export default Vue.extend({
             "Pack successfully deleted."
           );
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Pack",
-            "Unable to delete the pack. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Pack",
+              "Unable to delete the pack. Retry later or contact us if the problem persists."
+            );
         });
     },
     setDelivered(id: string) {
@@ -228,12 +239,17 @@ export default Vue.extend({
             "Pack state changed to delivered succesfully."
           );
         })
-        .catch((): void => {
-          eventbus.$emit(
-            "errorMessage",
-            "Foods",
-            "Unable to upgrade pack status. Retry later or contact us if the problem persists."
-          );
+        .catch((e: AxiosError): void => {
+          if (e.response.status == 401) {
+            eventbus.$emit("logout");
+            eventbus.$emit("errorMessage", "User session", "Session expired.");
+            this.$router.push({ name: "Login" });
+          } else
+            eventbus.$emit(
+              "errorMessage",
+              "Foods",
+              "Unable to upgrade pack status. Retry later or contact us if the problem persists."
+            );
         })
         .then(() => eventbus.$emit("stopLoading"));
     },
