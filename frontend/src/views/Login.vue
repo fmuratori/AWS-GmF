@@ -40,10 +40,6 @@ b-row.justify-content-center(no-gutters).mb-5
           span(v-if='isLoginSelected') SIGN IN
           span(v-else) SIGN UP
           Icon(bootstrap icon='chevron-right' aria-hidden='true' font-scale='1')
-      button(@click="login.email = 'user@user.com'") Utente
-      button(@click="login.email = 'volunteer@volunteer.com'") Volontario
-      button(@click="login.email = 'trusted@trusted.com'") Trusted
-
 
 </template>
 
